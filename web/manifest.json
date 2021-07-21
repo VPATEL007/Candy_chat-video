@@ -1,6 +1,6 @@
 {
-    "name": "gymapp",
-    "short_name": "gymapp",
+    "name": "Random video chat",
+    "short_name": "Random video chat",
     "start_url": ".",
     "display": "standalone",
     "background_color": "#0175C2",

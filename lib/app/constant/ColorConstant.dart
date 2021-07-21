@@ -5,14 +5,16 @@ import 'dart:ui';
 import 'package:flutter/material.dart';
 
 class ColorConstants {
-  static Color colorPrimary = fromHex("#2D0DB2");
+  static Color colorPrimary = fromHex("#FFFFFF");
   static Color lightPrimary = fromHex("#ADEFEF");
   static Color textGray = fromHex("#7B7E84");
   static Color borderColor = fromHex("#CCCCCC");
   static Color placeholderColor = fromHex("#7B7E84");
-  static Color bgColor = fromHex("#F2F5F7");
+  static Color bgColor = fromHex("#FFFFFF");
   static Color introgrey = fromHex("#999999");
   static Color black = fromHex("#000000");
+  static Color red = fromHex("#F55050");
+  static Color button = fromHex("#FF013E");
 
   //Error border and Text color
   static Color errorColor = fromHex("#FF4B4B");

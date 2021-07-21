@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:kiwi/kiwi.dart';
+import 'package:video_chat/components/Screens/Splash/Splash.dart';
 
 import 'app/Helper/Themehelper.dart';
 import 'app/constant/constants.dart';
@@ -84,7 +85,7 @@ class _BaseState extends State<Base> {
         highlightColor: Colors.transparent,
         fontFamily: 'Montserrat',
       ),
-      // home: Login(),
+      home: Splash(),
       routes: <String, WidgetBuilder>{
         '/ThemeSetting': (BuildContext context) => ThemeSetting(),
       },

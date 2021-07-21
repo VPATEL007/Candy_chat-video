@@ -1,16 +1,8 @@
-import 'dart:collection';
-
-import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
-import 'package:video_chat/app/constant/EnumConstant.dart';
+import 'package:video_chat/components/Screens/Language%20Selection/Language.dart';
 
 import '../app.export.dart';
 
 // AppConfiguration Constant string
-const CONFIG_LOGIN = "LOGIN";
-const CONFIG_MOBILE_VERIFICATION = "MOBILE_VERIFICATION";
-const CONFIG_BANK_DETAIL = "BANK_DETAIL";
-const CONFIG_DOC_VERIFICATION = "DOC_VERIFICATION";
 
 class AppNavigation {
   static final AppNavigation shared = AppNavigation();
@@ -27,13 +19,16 @@ class AppNavigation {
     //   // show Intro
     //   movetoIntro();
     // } else
-    if (app.resolve<PrefUtils>().isUserLogin()) {
-      //Home
-      moveToHome();
-    } else {
-      //Login
-      moveToLogin();
-    }
+    // if (app.resolve<PrefUtils>().isUserLogin()) {
+    //   //Home
+    //   moveToHome();
+    // } else {
+    //   //Login
+    //   moveToLogin();
+    // }
+
+    NavigationUtilities.pushReplacementNamed(LanguageSelection.route,
+        type: RouteType.fade);
   }
 
   void moveToHome() {

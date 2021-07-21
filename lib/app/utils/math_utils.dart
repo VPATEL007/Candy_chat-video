@@ -16,14 +16,14 @@ dynamic getSize(double px) {
   return px *
       ((MathUtilities.screenWidth(
               NavigationUtilities.key.currentState.overlay.context)) /
-          (isPad() ? 568 : 375));
+          (isPad() ? 568 : 414));
 }
 
 dynamic getFontSize(double px) {
   return px *
       (MathUtilities.screenWidth(
               NavigationUtilities.key.currentState.overlay.context) /
-          (isPad() ? 568 : 375));
+          (isPad() ? 568 : 414));
 }
 
 dynamic getPercentageWidth(double percentage) {

@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:video_chat/components/Screens/Language%20Selection/Language.dart';
+import 'package:video_chat/components/Screens/Onboarding/Onboarding.dart';
 
 import '../app.export.dart';
 import 'fade_route.dart';
@@ -83,10 +85,12 @@ Route<dynamic> onGenerateRoute(RouteSettings settings) {
   Widget screen;
 
   switch (routeName) {
-    // case Dashboard.route:
-    //   screen = Dashboard();
-    //   break;
-
+    case LanguageSelection.route:
+      screen = LanguageSelection();
+      break;
+    case OnBoarding.route:
+      screen = OnBoarding();
+      break;
   }
 
   switch (routeType) {

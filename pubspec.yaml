@@ -63,7 +63,7 @@ dev_dependencies:
 flutter_icons:
   android: "launcher_icon"
   ios: true
-  image_path: "assets/ItunesArtwork.png"
+  image_path: "assets/Splash/splashLogo.png"
 
 # The following section is specific to Flutter.
 flutter:
@@ -71,12 +71,11 @@ flutter:
   assets:
     - assets/Common/
     - assets/Splash/
-    - assets/Dashboard/
-    - assets/Drawer/
     - assets/json/
-    - assets/Login/
-    - assets/Leave/
-    - assets/Profile/
+    - assets/Language/
+    - assets/Intro/
+    
+  
 
   fonts:
     - family: Montserrat
