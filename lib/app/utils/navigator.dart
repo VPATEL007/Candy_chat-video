@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:video_chat/components/Screens/Auth/Login.dart';
 import 'package:video_chat/components/Screens/Language%20Selection/Language.dart';
 import 'package:video_chat/components/Screens/Onboarding/Onboarding.dart';
 
@@ -90,6 +91,9 @@ Route<dynamic> onGenerateRoute(RouteSettings settings) {
       break;
     case OnBoarding.route:
       screen = OnBoarding();
+      break;
+    case Login.route:
+      screen = Login();
       break;
   }
 

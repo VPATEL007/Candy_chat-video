@@ -4,6 +4,7 @@ import 'package:video_chat/app/app.export.dart';
 import 'package:video_chat/app/constant/ColorConstant.dart';
 import 'package:video_chat/app/constant/ImageConstant.dart';
 import 'package:video_chat/app/utils/CommonWidgets.dart';
+import 'package:video_chat/components/Screens/Auth/Login.dart';
 
 class OnBoarding extends StatefulWidget {
   static const route = "OnBoarding";
@@ -30,11 +31,16 @@ class _OnBoardingState extends State<OnBoarding> {
           isWhite: true,
           leadingButton: getBackButton(context),
           actionItems: [
-            getBarButtonText(context, currentIndex == 2 ? "" : "Skip", () {})
+            getBarButtonText(context, currentIndex == 2 ? "" : "Skip", () {
+              NavigationUtilities.pushReplacementNamed(Login.route,
+                  type: RouteType.fade);
+            })
           ]),
       bottomSheet: getBottomButton(
           context, currentIndex == 2 ? "Get Started" : "Next", () {
         if (currentIndex == 2) {
+          NavigationUtilities.pushReplacementNamed(Login.route,
+              type: RouteType.fade);
         } else {
           currentIndex = currentIndex + 1;
           pageController.animateToPage(currentIndex,
@@ -127,22 +133,6 @@ class _OnBoardingState extends State<OnBoarding> {
               ),
             ),
           ),
-          // Spacer(),
-          // getBottomButton(currentIndex == 2 ? "Get Started" : "Next", () {
-          //   if (currentIndex == 2) {
-          //   } else {
-          //     currentIndex = currentIndex + 1;
-          //     pageController.animateToPage(currentIndex,
-          //         duration: Duration(milliseconds: 600),
-          //         curve: Curves.linearToEaseOut);
-          //     txtPageController.animateToPage(currentIndex,
-          //         duration: Duration(milliseconds: 600),
-          //         curve: Curves.linearToEaseOut);
-          //   }
-          // }),
-          // SizedBox(
-          //   height: getSize(16),
-          // ),
         ],
       ),
     );

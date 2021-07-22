@@ -74,6 +74,7 @@ flutter:
     - assets/json/
     - assets/Language/
     - assets/Intro/
+    - assets/Login/
     
   
 

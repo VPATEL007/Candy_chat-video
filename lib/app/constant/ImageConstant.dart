@@ -17,3 +17,10 @@ const String l3 = "assets/Language/l3.png";
 const String intro1 = "assets/Intro/Introslider1.png";
 const String intro2 = "assets/Intro/Introslider2.png";
 const String intro3 = "assets/Intro/Introslider3.png";
+
+const String loginBg = "assets/Login/LoginBg.png";
+const String loginLogo = "assets/Login/LoginLogo.png";
+const String icApple = "assets/Login/icApple.png";
+const String icFacebook = "assets/Login/icFacebook.png";
+const String icGoogle = "assets/Login/icGoogle.png";
+const String icGuest = "assets/Login/icGuest.png";

@@ -1,5 +1,4 @@
 import 'dart:io';
-import 'dart:js';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -13,8 +12,8 @@ getBottomButton(BuildContext context, String text, VoidCallback onPressed) {
   return InkWell(
     onTap: onPressed,
     child: Padding(
-      padding: EdgeInsets.fromLTRB(
-          getSize(16), getSize(0), getSize(16), getSize(16)),
+      padding: EdgeInsets.fromLTRB(getSize(16), getSize(0), getSize(16),
+          MathUtilities.safeAreaBottomHeight(context) + getSize(16)),
       child: Container(
           height: getSize(50),
           decoration: BoxDecoration(
@@ -72,15 +71,18 @@ getBarButtonText(
   String title,
   VoidCallback onPressed,
 ) {
-  return Padding(
-    padding: EdgeInsets.only(
-      top: getSize(15),
-      right: getSize(20),
-      bottom: getSize(10),
-    ),
-    child: Text(
-      title,
-      style: appTheme.black_Medium_16Text,
+  return InkWell(
+    onTap: onPressed,
+    child: Padding(
+      padding: EdgeInsets.only(
+        top: getSize(15),
+        right: getSize(20),
+        bottom: getSize(10),
+      ),
+      child: Text(
+        title,
+        style: appTheme.black_Medium_16Text,
+      ),
     ),
   );
 }
