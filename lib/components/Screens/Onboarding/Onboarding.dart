@@ -146,11 +146,11 @@ class _OnBoardingState extends State<OnBoarding> {
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              getText(t1, c1),
+              getColorText(t1, c1),
               SizedBox(
                 width: getSize(8),
               ),
-              getText(t2, c2)
+              getColorText(t2, c2)
             ],
           ),
           SizedBox(
@@ -159,11 +159,11 @@ class _OnBoardingState extends State<OnBoarding> {
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              getText(t3, c3),
+              getColorText(t3, c3),
               SizedBox(
                 width: getSize(8),
               ),
-              getText(t4, c4)
+              getColorText(t4, c4)
             ],
           ),
           SizedBox(
@@ -197,13 +197,5 @@ class _OnBoardingState extends State<OnBoarding> {
     return Container(
       child: Image.asset(image),
     );
-  }
-
-  getText(String text, Color color) {
-    return Text(text,
-        style: TextStyle(
-            fontSize: getFontSize(25),
-            color: color,
-            fontWeight: FontWeight.w800));
   }
 }

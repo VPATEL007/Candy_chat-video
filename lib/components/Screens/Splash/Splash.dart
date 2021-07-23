@@ -4,6 +4,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:video_chat/app/AppConfiguration/AppNavigation.dart';
 import 'package:video_chat/app/app.export.dart';
+import 'package:video_chat/app/utils/CommonWidgets.dart';
 
 class Splash extends StatefulWidget {
   Splash({Key key}) : super(key: key);
@@ -53,37 +54,21 @@ class _SplashState extends State<Splash> {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Text("Random",
-                        style: TextStyle(
-                            fontSize: getFontSize(35),
-                            color: ColorConstants.red,
-                            fontWeight: FontWeight.w700)),
+                    getColorText("Random", ColorConstants.red, fontSize: 35),
                     SizedBox(
                       width: getSize(8),
                     ),
-                    Text("video",
-                        style: TextStyle(
-                            fontSize: getFontSize(35),
-                            color: ColorConstants.black,
-                            fontWeight: FontWeight.w700))
+                    getColorText("video", ColorConstants.black, fontSize: 35),
                   ],
                 ),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Text("chat",
-                        style: TextStyle(
-                            fontSize: getFontSize(35),
-                            color: ColorConstants.black,
-                            fontWeight: FontWeight.w700)),
+                    getColorText("chat", ColorConstants.black, fontSize: 35),
                     SizedBox(
                       width: getSize(8),
                     ),
-                    Text("app",
-                        style: TextStyle(
-                            fontSize: getFontSize(35),
-                            color: ColorConstants.red,
-                            fontWeight: FontWeight.w700))
+                    getColorText("app", ColorConstants.red, fontSize: 35),
                   ],
                 ),
               ],

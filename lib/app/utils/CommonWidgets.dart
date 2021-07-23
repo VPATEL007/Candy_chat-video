@@ -497,3 +497,12 @@ class AppBarCurveWidget extends CustomClipper<Path> {
   bool shouldReclip(CustomClipper<Path> oldClipper) =>
       oldClipper is AppBarCurveWidget;
 }
+
+getColorText(String text, Color color, {double fontSize = 25}) {
+  return Text(text,
+      textAlign: TextAlign.center,
+      style: TextStyle(
+          fontSize: getFontSize(fontSize),
+          color: color,
+          fontWeight: FontWeight.w800));
+}

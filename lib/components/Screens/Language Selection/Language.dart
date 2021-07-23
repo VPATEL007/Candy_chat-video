@@ -45,11 +45,13 @@ class _LanguageSelectionState extends State<LanguageSelection> {
               SizedBox(
                 height: getSize(20),
               ),
-              getText("Select", ColorConstants.black),
+              getColorText("Select", ColorConstants.black, fontSize: 35),
+
               SizedBox(
                 height: getSize(6),
               ),
-              getText("Language", ColorConstants.red),
+              getColorText("Language", ColorConstants.red, fontSize: 35),
+
               SizedBox(
                 height: getSize(35),
               ),
@@ -75,7 +77,8 @@ class _LanguageSelectionState extends State<LanguageSelection> {
               SizedBox(
                 height: getSize(69),
               ),
-              getText("English", ColorConstants.black),
+              getColorText("English", ColorConstants.black, fontSize: 35),
+
               SizedBox(
                 height: getSize(30),
               ),
@@ -112,14 +115,6 @@ class _LanguageSelectionState extends State<LanguageSelection> {
         ),
       ),
     );
-  }
-
-  getText(String text, Color color) {
-    return Text(text,
-        style: TextStyle(
-            fontSize: getFontSize(35),
-            color: color,
-            fontWeight: FontWeight.w800));
   }
 
   getLanguageItem(String language, String image, Function click) {

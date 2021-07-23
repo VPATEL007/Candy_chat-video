@@ -24,3 +24,11 @@ const String icApple = "assets/Login/icApple.png";
 const String icFacebook = "assets/Login/icFacebook.png";
 const String icGoogle = "assets/Login/icGoogle.png";
 const String icGuest = "assets/Login/icGuest.png";
+
+const String icCircleHome = "assets/Home/homeRound.png";
+const String icTabHomeSelected = "assets/Tab/HomeSelected.png";
+const String icTabLike = "assets/Tab/tablike.png";
+const String icTabChat = "assets/Tab/tabChat.png";
+const String icTabProfile = "assets/Tab/tabProfile.png";
+
+const String icTemp = "assets/Temp/tempP.png";

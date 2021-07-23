@@ -75,7 +75,9 @@ flutter:
     - assets/Language/
     - assets/Intro/
     - assets/Login/
-    
+    - assets/Home/
+    - assets/Tab/
+    - assets/Temp/
   
 
   fonts:

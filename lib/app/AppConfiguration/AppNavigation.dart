@@ -1,3 +1,4 @@
+import 'package:video_chat/components/Screens/Home/Home.dart';
 import 'package:video_chat/components/Screens/Language%20Selection/Language.dart';
 
 import '../app.export.dart';
@@ -32,8 +33,7 @@ class AppNavigation {
   }
 
   void moveToHome() {
-    // NavigationUtilities.pushReplacementNamed(DrawerPage.route,
-    //     type: RouteType.fade);
+    NavigationUtilities.pushReplacementNamed(Home.route, type: RouteType.fade);
   }
 
   void moveToLogin() {
