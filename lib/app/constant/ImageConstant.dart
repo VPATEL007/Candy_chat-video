@@ -32,3 +32,6 @@ const String icTabChat = "assets/Tab/tabChat.png";
 const String icTabProfile = "assets/Tab/tabProfile.png";
 
 const String icTemp = "assets/Temp/tempP.png";
+const String icHomeCurve = "assets/Home/HomeCurve.png";
+const String icDrawer = "assets/Home/icDrawer.png";
+const String icVector = "assets/Home/Vector.png";

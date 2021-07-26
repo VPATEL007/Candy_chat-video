@@ -53,7 +53,7 @@ class _TabBarWidgetState extends State<TabBarWidget> {
             Container(
               width: (MathUtilities.screenWidth(context) - getSize(72)) / 4,
               child: Center(
-                child: Image.asset(icTabChat),
+                child: Image.asset(icTabProfile),
               ),
             )
           ],
