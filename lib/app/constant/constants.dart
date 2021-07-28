@@ -15,7 +15,7 @@ const MAX_ORDER_QTY = 999;
 
 const DEFAULT_RING_SIZE_KEY = "DEFAULT_RING_SIZE_KEY";
 
-const APPNAME = "Covid App";
+const APPNAME = "Random Video Chat";
 const STRIPE_KEY = "pk_test_ZCG3mwYMaOFEFAdpcQtkNIZ300fxNZXXOj";
 
 const CODE_CREATED = 201;

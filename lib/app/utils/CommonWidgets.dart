@@ -17,10 +17,42 @@ getBottomButton(BuildContext context, String text, VoidCallback onPressed) {
       child: Container(
           height: getSize(50),
           decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(
-                getSize(12),
-              ),
-              color: ColorConstants.button),
+            borderRadius: BorderRadius.circular(
+              getSize(12),
+            ),
+            gradient: LinearGradient(
+              begin: Alignment.topLeft,
+              end: Alignment.bottomRight,
+              colors: [ColorConstants.gradiantStart, ColorConstants.red],
+            ),
+          ),
+          child: Center(
+            child: Text(text,
+                style:
+                    appTheme.whiteBold32.copyWith(fontSize: getFontSize(18))),
+          )),
+    ),
+  );
+}
+
+getPopBottomButton(BuildContext context, String text, VoidCallback onPressed) {
+  return InkWell(
+    onTap: onPressed,
+    child: Padding(
+      padding:
+          EdgeInsets.fromLTRB(getSize(0), getSize(0), getSize(0), getSize(16)),
+      child: Container(
+          height: getSize(50),
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(
+              getSize(12),
+            ),
+            gradient: LinearGradient(
+              begin: Alignment.topLeft,
+              end: Alignment.bottomRight,
+              colors: [ColorConstants.gradiantStart, ColorConstants.red],
+            ),
+          ),
           child: Center(
             child: Text(text,
                 style:

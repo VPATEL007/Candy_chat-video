@@ -9,7 +9,7 @@
     <uses-feature android:name="android.hardware.camera.autofocus" />
     <uses-feature android:name="android.hardware.camera.flash" />
    <application
-        android:label="Gym"
+        android:label="Random Video Chat"
         android:usesCleartextTraffic="true"
         android:icon="@mipmap/ic_launcher">
         
