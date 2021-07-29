@@ -79,7 +79,7 @@ flutter:
     - assets/Home/
     - assets/Tab/
     - assets/Temp/
-  
+    - assets/Chat/
 
   fonts:
     - family: Montserrat

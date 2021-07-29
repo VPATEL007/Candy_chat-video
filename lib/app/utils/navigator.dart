@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:video_chat/components/Screens/Auth/Login.dart';
+import 'package:video_chat/components/Screens/Chat/ChatList.dart';
 import 'package:video_chat/components/Screens/Home/Home.dart';
 import 'package:video_chat/components/Screens/Language%20Selection/Language.dart';
 import 'package:video_chat/components/Screens/Onboarding/Onboarding.dart';
@@ -98,6 +99,9 @@ Route<dynamic> onGenerateRoute(RouteSettings settings) {
       break;
     case Home.route:
       screen = Home();
+      break;
+    case ChatList.route:
+      screen = ChatList();
       break;
   }
 

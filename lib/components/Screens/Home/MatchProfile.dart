@@ -7,6 +7,7 @@ import 'package:flutter_tags/flutter_tags.dart';
 import 'package:video_chat/app/app.export.dart';
 import 'package:video_chat/app/utils/CommonWidgets.dart';
 import 'package:video_chat/components/Screens/Home/MatchedProfile.dart';
+import 'package:video_chat/components/Screens/Home/Reportblock.dart';
 import 'package:video_chat/components/widgets/TabBar/Tabbar.dart';
 
 import 'Card/swipe_cards.dart';
@@ -111,7 +112,9 @@ class _MathProfileState extends State<MathProfile> {
                           openFilter();
                         }),
                         Spacer(),
-                        getTopButton(icVector, () {}),
+                        getTopButton(icVector, () {
+                          NavigationUtilities.push(ReportBlock());
+                        }),
                       ],
                     )),
               ),
@@ -121,7 +124,12 @@ class _MathProfileState extends State<MathProfile> {
               child: Container(
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.end,
-                  children: [getDetailWidget(), TabBarWidget()],
+                  children: [
+                    getDetailWidget(),
+                    TabBarWidget(
+                      screen: TabType.Home,
+                    )
+                  ],
                 ),
               ),
             ),

@@ -18,7 +18,7 @@ getBottomButton(BuildContext context, String text, VoidCallback onPressed) {
           height: getSize(50),
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(
-              getSize(12),
+              getSize(16),
             ),
             gradient: LinearGradient(
               begin: Alignment.topLeft,
@@ -45,7 +45,7 @@ getPopBottomButton(BuildContext context, String text, VoidCallback onPressed) {
           height: getSize(50),
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(
-              getSize(12),
+              getSize(16),
             ),
             gradient: LinearGradient(
               begin: Alignment.topLeft,
@@ -71,8 +71,8 @@ getBackButton(BuildContext context, {bool isWhite = false}) {
       icon: Image.asset(
         back,
         color: isWhite == true ? Colors.white : Colors.black,
-        width: getSize(30),
-        height: getSize(22),
+        width: getSize(18),
+        height: getSize(18),
       ),
     ),
   );
@@ -91,7 +91,7 @@ getBarButton(
     onPressed: onPressed,
     icon: Image.asset(
       imageName,
-      color: isBlack == true ? Colors.black : Colors.white,
+      // color: isBlack == true ? Colors.black : Colors.white,
       width: getSize(22),
       height: getSize(22),
     ),
@@ -350,12 +350,12 @@ Widget getAppBar(BuildContext context, String title,
           ? AppTheme.of(context).theme.textTheme.title.color
           : appTheme.whiteColor,
     ),
-    centerTitle: centerTitle ?? false,
+    centerTitle: centerTitle ?? true,
     elevation: 0,
     title: isTitleShow
         ? Text(
             title,
-            style: appTheme.black_SemiBold_18Text,
+            style: appTheme.black16Bold.copyWith(fontSize: getFontSize(18)),
             textAlign: textalign ?? TextAlign.center,
           )
         : Container(),

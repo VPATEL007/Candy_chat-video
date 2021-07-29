@@ -33,7 +33,8 @@ class _LanguageSelectionState extends State<LanguageSelection> {
     return Scaffold(
       backgroundColor: ColorConstants.colorPrimary,
       bottomSheet: getBottomButton(context, "Next", () {
-        NavigationUtilities.pushRoute(OnBoarding.route);
+        // NavigationUtilities.pushRoute(OnBoarding.route);
+        NavigationUtilities.pushReplacementNamed(OnBoarding.route);
       }),
       body: SafeArea(
         child: Container(

@@ -6,6 +6,8 @@ import 'package:flutter/material.dart';
 const String splashBG = "assets/Splash/splashBG.png";
 const String necklace = "assets/Common/necklace.png";
 const String back = "assets/Common/back.png";
+const String radioSelected = "assets/Common/radioSelected.png";
+const String radio = "assets/Common/radio.png";
 
 const String splashLogo = "assets/Splash/splashLogo.png";
 const String splashBottom = "assets/Splash/splashBottom.png";
@@ -26,9 +28,11 @@ const String icGoogle = "assets/Login/icGoogle.png";
 const String icGuest = "assets/Login/icGuest.png";
 
 const String icCircleHome = "assets/Home/homeRound.png";
-const String icTabHomeSelected = "assets/Tab/HomeSelected.png";
+const String icTabHome = "assets/Tab/tabHome.png";
+const String icTabHomeSelected = "assets/Tab/tabHomeSelected.png";
 const String icTabLike = "assets/Tab/tablike.png";
 const String icTabChat = "assets/Tab/tabChat.png";
+const String icTabChatSelected = "assets/Tab/tabChatSelected.png";
 const String icTabProfile = "assets/Tab/tabProfile.png";
 
 const String icTemp = "assets/Temp/tempP.png";
@@ -40,3 +44,8 @@ const String icCallAccept = "assets/Home/callAccept.png";
 const String icCallEnd = "assets/Home/callEnd.png";
 const String icCoin = "assets/Home/coin.png";
 const String icCoinPurchase = "assets/Home/coinPurchase.png";
+
+const String icEmptyChat = "assets/Chat/emptyChat.png";
+const String icWavingHand = "assets/Chat/wavingHand.png";
+const String icCall = "assets/Chat/call.png";
+const String icGift = "assets/Chat/Gift.png";

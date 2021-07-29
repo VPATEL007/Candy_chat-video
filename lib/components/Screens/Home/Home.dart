@@ -17,7 +17,9 @@ class _HomeState extends State<Home> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      bottomNavigationBar: TabBarWidget(),
+      bottomNavigationBar: TabBarWidget(
+        screen: TabType.Home,
+      ),
       body: SafeArea(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.center,

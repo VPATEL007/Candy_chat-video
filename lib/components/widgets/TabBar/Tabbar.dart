@@ -1,9 +1,12 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:video_chat/app/app.export.dart';
+import 'package:video_chat/components/Screens/Chat/ChatList.dart';
+import 'package:video_chat/components/Screens/Home/Home.dart';
 
 class TabBarWidget extends StatefulWidget {
-  TabBarWidget({Key key}) : super(key: key);
+  TabType screen = TabType.Home;
+  TabBarWidget({Key key, this.screen}) : super(key: key);
 
   @override
   _TabBarWidgetState createState() => _TabBarWidgetState();
@@ -16,7 +19,9 @@ class _TabBarWidgetState extends State<TabBarWidget> {
       padding: EdgeInsets.only(
           left: getSize(36),
           right: getSize(36),
-          bottom: MathUtilities.safeAreaBottomHeight(context) + getSize(16),
+          bottom: MathUtilities.safeAreaBottomHeight(context) > 20
+              ? getSize(26)
+              : getSize(16),
           top: getSize(21)),
       child: Container(
         height: getSize(60),
@@ -32,22 +37,37 @@ class _TabBarWidgetState extends State<TabBarWidget> {
         ),
         child: Row(
           children: [
-            Container(
-              width: (MathUtilities.screenWidth(context) - getSize(72)) / 4,
-              child: Center(
-                child: Image.asset(icTabHomeSelected),
+            InkWell(
+              onTap: () {
+                NavigationUtilities.pushReplacementNamed(Home.route);
+              },
+              child: Container(
+                width: (MathUtilities.screenWidth(context) - getSize(72)) / 4,
+                child: Center(
+                  child: Image.asset(widget.screen == TabType.Home
+                      ? icTabHomeSelected
+                      : icTabHome),
+                ),
               ),
             ),
             Container(
               width: (MathUtilities.screenWidth(context) - getSize(72)) / 4,
               child: Center(
-                child: Image.asset(icTabLike),
+                child: Image.asset(
+                    widget.screen == TabType.Discover ? icTabLike : icTabLike),
               ),
             ),
-            Container(
-              width: (MathUtilities.screenWidth(context) - getSize(72)) / 4,
-              child: Center(
-                child: Image.asset(icTabChat),
+            InkWell(
+              onTap: () {
+                NavigationUtilities.pushReplacementNamed(ChatList.route);
+              },
+              child: Container(
+                width: (MathUtilities.screenWidth(context) - getSize(72)) / 4,
+                child: Center(
+                  child: Image.asset(widget.screen == TabType.Chat
+                      ? icTabChatSelected
+                      : icTabChat),
+                ),
               ),
             ),
             Container(
