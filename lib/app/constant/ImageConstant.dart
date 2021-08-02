@@ -61,3 +61,9 @@ const String icCoinP = "assets/Profile/coin.png";
 const String icPaymentHistory = "assets/Profile/paymentHistory.png";
 const String icLanguage = "assets/Profile/language.png";
 const String icSetting = "assets/Profile/setting.png";
+
+const String vip1 = "assets/Vip/vip1.png";
+const String vip2 = "assets/Vip/vip2.png";
+const String vip3 = "assets/Vip/vip3.png";
+const String vip4 = "assets/Vip/vip4.png";
+const String vip5 = "assets/Vip/vip5.png";

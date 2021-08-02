@@ -257,7 +257,7 @@ class _MatchedProfileState extends State<MatchedProfile> {
                         itemCount: 2,
                         // padding: EdgeInsets.all(getSize(9)),
                         itemBuilder: (BuildContext context, int index) {
-                          return getCoinItem(index);
+                          return getCoinItem(index == 0, context);
                         }),
                     SizedBox(
                       height: getSize(22),
@@ -269,94 +269,5 @@ class _MatchedProfileState extends State<MatchedProfile> {
             },
           );
         });
-  }
-
-  getCoinItem(int index) {
-    return Padding(
-      padding: EdgeInsets.only(right: getSize(10), bottom: getSize(10)),
-      child: Stack(
-        children: [
-          Padding(
-            padding: EdgeInsets.only(bottom: getSize(14)),
-            child: Container(
-              width: MathUtilities.screenWidth(context) / 2,
-              decoration: BoxDecoration(
-                color: index == 0 ? fromHex("#FFDEDE") : Colors.white,
-                boxShadow: [
-                  BoxShadow(
-                      color: Colors.black.withAlpha(15),
-                      blurRadius: 7,
-                      spreadRadius: 4,
-                      offset: Offset(0, 3)),
-                ],
-                border: Border.all(
-                    color: index == 0 ? ColorConstants.red : Colors.white,
-                    width: 1),
-                borderRadius: BorderRadius.circular(
-                  getSize(10),
-                ),
-              ),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                mainAxisSize: MainAxisSize.max,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  Image.asset(
-                    icCoinPurchase,
-                    height: getSize(36),
-                    width: getSize(36),
-                  ),
-                  SizedBox(height: getSize(8)),
-                  Text(
-                    "30 Coins",
-                    style: appTheme.black16Bold
-                        .copyWith(fontSize: getFontSize(18)),
-                  ),
-                  SizedBox(height: getSize(4)),
-                  Text(
-                    "\$54.23",
-                    style: appTheme.black14Normal
-                        .copyWith(fontWeight: FontWeight.w500),
-                  ),
-                  SizedBox(height: getSize(index != 0 ? 4 : 0)),
-                  index != 0
-                      ? Text(
-                          "Save -38%",
-                          style: appTheme.black16Bold.copyWith(
-                              fontWeight: FontWeight.w600, color: Colors.green),
-                        )
-                      : SizedBox()
-                ],
-              ),
-            ),
-          ),
-          index == 0
-              ? Align(
-                  alignment: Alignment.bottomCenter,
-                  child: Padding(
-                    padding:
-                        EdgeInsets.only(left: getSize(26), right: getSize(26)),
-                    child: Container(
-                      height: getSize(28),
-                      decoration: BoxDecoration(
-                        color: ColorConstants.red,
-                        borderRadius: BorderRadius.circular(
-                          getSize(14),
-                        ),
-                      ),
-                      child: Center(
-                        child: Text(
-                          "Save -38%",
-                          style: appTheme.white14Bold
-                              .copyWith(fontSize: getFontSize(12)),
-                        ),
-                      ),
-                    ),
-                  ),
-                )
-              : SizedBox()
-        ],
-      ),
-    );
   }
 }

@@ -538,3 +538,92 @@ getColorText(String text, Color color, {double fontSize = 25}) {
           color: color,
           fontWeight: FontWeight.w800));
 }
+
+getCoinItem(bool isSelected, BuildContext context) {
+  return Padding(
+    padding: EdgeInsets.only(right: getSize(10), bottom: getSize(10)),
+    child: Stack(
+      children: [
+        Padding(
+          padding: EdgeInsets.only(bottom: getSize(14)),
+          child: Container(
+            width: MathUtilities.screenWidth(context) / 2,
+            decoration: BoxDecoration(
+              color: isSelected ? fromHex("#FFDEDE") : Colors.white,
+              boxShadow: [
+                BoxShadow(
+                    color: Colors.black.withAlpha(15),
+                    blurRadius: 7,
+                    spreadRadius: 4,
+                    offset: Offset(0, 3)),
+              ],
+              border: Border.all(
+                  color: isSelected ? ColorConstants.red : Colors.white,
+                  width: 1),
+              borderRadius: BorderRadius.circular(
+                getSize(10),
+              ),
+            ),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              mainAxisSize: MainAxisSize.max,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                Image.asset(
+                  icCoinPurchase,
+                  height: getSize(36),
+                  width: getSize(36),
+                ),
+                SizedBox(height: getSize(8)),
+                Text(
+                  "30 Coins",
+                  style:
+                      appTheme.black16Bold.copyWith(fontSize: getFontSize(18)),
+                ),
+                SizedBox(height: getSize(4)),
+                Text(
+                  "\$54.23",
+                  style: appTheme.black14Normal
+                      .copyWith(fontWeight: FontWeight.w500),
+                ),
+                SizedBox(height: getSize(!isSelected ? 4 : 0)),
+                !isSelected
+                    ? Text(
+                        "Save -38%",
+                        style: appTheme.black16Bold.copyWith(
+                            fontWeight: FontWeight.w600, color: Colors.green),
+                      )
+                    : SizedBox()
+              ],
+            ),
+          ),
+        ),
+        isSelected
+            ? Align(
+                alignment: Alignment.bottomCenter,
+                child: Padding(
+                  padding:
+                      EdgeInsets.only(left: getSize(26), right: getSize(26)),
+                  child: Container(
+                    height: getSize(28),
+                    decoration: BoxDecoration(
+                      color: ColorConstants.red,
+                      borderRadius: BorderRadius.circular(
+                        getSize(14),
+                      ),
+                    ),
+                    child: Center(
+                      child: Text(
+                        "Save -38%",
+                        style: appTheme.white14Bold
+                            .copyWith(fontSize: getFontSize(12)),
+                      ),
+                    ),
+                  ),
+                ),
+              )
+            : SizedBox()
+      ],
+    ),
+  );
+}

@@ -2,6 +2,8 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:video_chat/app/app.export.dart';
 import 'package:video_chat/app/utils/CommonWidgets.dart';
+import 'package:video_chat/components/Screens/Profile/CoinList.dart';
+import 'package:video_chat/components/Screens/Profile/VipStore.dart';
 import 'package:video_chat/components/widgets/TabBar/Tabbar.dart';
 
 class Profile extends StatefulWidget {
@@ -47,12 +49,16 @@ class _ProfileState extends State<Profile> {
                     SizedBox(
                       height: getSize(16),
                     ),
-                    getNavigationItem(icVipStore, "VIP Store", true),
-                    getNavigationItem(icCoinP, "Get Coins", false),
+                    getNavigationItem(icVipStore, "VIP Store", true, () {
+                      NavigationUtilities.push(VipStore());
+                    }),
+                    getNavigationItem(icCoinP, "Get Coins", false, () {
+                      NavigationUtilities.push(CoinList());
+                    }),
                     getNavigationItem(
-                        icPaymentHistory, "Payment History ", false),
-                    getNavigationItem(icLanguage, "Language", false),
-                    getNavigationItem(icSetting, "Settings", false)
+                        icPaymentHistory, "Payment History ", false, () {}),
+                    getNavigationItem(icLanguage, "Language", false, () {}),
+                    getNavigationItem(icSetting, "Settings", false, () {})
                   ],
                 ),
               )),
@@ -63,47 +69,53 @@ class _ProfileState extends State<Profile> {
     );
   }
 
-  Widget getNavigationItem(String icon, String title, bool isColor) {
-    return Padding(
-      padding: EdgeInsets.only(bottom: getSize(16)),
-      child: Container(
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(
-            getSize(16),
+  Widget getNavigationItem(
+      String icon, String title, bool isColor, Function click) {
+    return InkWell(
+      onTap: () {
+        click();
+      },
+      child: Padding(
+        padding: EdgeInsets.only(bottom: getSize(16)),
+        child: Container(
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(
+              getSize(16),
+            ),
+            gradient: LinearGradient(
+              begin: Alignment.topLeft,
+              end: Alignment.bottomRight,
+              colors: isColor
+                  ? [ColorConstants.gradiantStart, ColorConstants.red]
+                  : [fromHex("#F7F7F7"), fromHex("#F7F7F7")],
+            ),
           ),
-          gradient: LinearGradient(
-            begin: Alignment.topLeft,
-            end: Alignment.bottomRight,
-            colors: isColor
-                ? [ColorConstants.gradiantStart, ColorConstants.red]
-                : [fromHex("#F7F7F7"), fromHex("#F7F7F7")],
-          ),
-        ),
-        child: Padding(
-          padding: EdgeInsets.only(
-              left: getSize(16),
-              top: getSize(16),
-              right: getSize(16),
-              bottom: getSize(16)),
-          child: Row(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              Image.asset(icon),
-              SizedBox(
-                width: getSize(23),
-              ),
-              Text(
-                title,
-                style: appTheme.white16Normal.copyWith(
-                    fontWeight: FontWeight.w600,
-                    color: isColor ? Colors.white : Colors.black),
-              ),
-              Spacer(),
-              Image.asset(
-                icDetail,
-                color: isColor ? Colors.white : Colors.black,
-              )
-            ],
+          child: Padding(
+            padding: EdgeInsets.only(
+                left: getSize(16),
+                top: getSize(16),
+                right: getSize(16),
+                bottom: getSize(16)),
+            child: Row(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                Image.asset(icon),
+                SizedBox(
+                  width: getSize(23),
+                ),
+                Text(
+                  title,
+                  style: appTheme.white16Normal.copyWith(
+                      fontWeight: FontWeight.w600,
+                      color: isColor ? Colors.white : Colors.black),
+                ),
+                Spacer(),
+                Image.asset(
+                  icDetail,
+                  color: isColor ? Colors.white : Colors.black,
+                )
+              ],
+            ),
           ),
         ),
       ),
