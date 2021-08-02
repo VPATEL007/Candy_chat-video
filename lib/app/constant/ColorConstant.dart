@@ -17,6 +17,7 @@ class ColorConstants {
   static Color button = fromHex("#FF013E");
   static Color facebook = fromHex("#1877F2");
   static Color gradiantStart = fromHex("#FF1A43");
+  static Color redText = fromHex("#F93E3E");
 
   //Error border and Text color
   static Color errorColor = fromHex("#FF4B4B");

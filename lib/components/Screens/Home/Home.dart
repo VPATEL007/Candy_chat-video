@@ -74,9 +74,7 @@ class _HomeState extends State<Home> {
                 ),
               ),
             ),
-            SizedBox(
-              height: getSize(40),
-            ),
+            Spacer(),
             Row(
               crossAxisAlignment: CrossAxisAlignment.center,
               mainAxisAlignment: MainAxisAlignment.center,
@@ -107,7 +105,7 @@ class _HomeState extends State<Home> {
               ],
             ),
             SizedBox(
-              height: getSize(14),
+              height: getSize(12),
             ),
             Padding(
               padding: EdgeInsets.only(left: getSize(16), right: getSize(16)),

@@ -33,8 +33,8 @@ class _LanguageSelectionState extends State<LanguageSelection> {
     return Scaffold(
       backgroundColor: ColorConstants.colorPrimary,
       bottomSheet: getBottomButton(context, "Next", () {
-        // NavigationUtilities.pushRoute(OnBoarding.route);
-        NavigationUtilities.pushReplacementNamed(OnBoarding.route);
+        NavigationUtilities.pushRoute(OnBoarding.route);
+        // NavigationUtilities.pushReplacementNamed(OnBoarding.route);
       }),
       body: SafeArea(
         child: Container(
@@ -47,12 +47,10 @@ class _LanguageSelectionState extends State<LanguageSelection> {
                 height: getSize(20),
               ),
               getColorText("Select", ColorConstants.black, fontSize: 35),
-
               SizedBox(
                 height: getSize(6),
               ),
               getColorText("Language", ColorConstants.red, fontSize: 35),
-
               SizedBox(
                 height: getSize(35),
               ),
@@ -79,7 +77,6 @@ class _LanguageSelectionState extends State<LanguageSelection> {
                 height: getSize(69),
               ),
               getColorText("English", ColorConstants.black, fontSize: 35),
-
               SizedBox(
                 height: getSize(30),
               ),
@@ -107,10 +104,6 @@ class _LanguageSelectionState extends State<LanguageSelection> {
                   })
                 ],
               ),
-              // Spacer(),
-              // getBottomButton("Next", () {
-              //   NavigationUtilities.pushRoute(OnBoarding.route);
-              // })
             ],
           ),
         ),

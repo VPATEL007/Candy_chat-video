@@ -4,6 +4,7 @@ import 'package:video_chat/components/Screens/Chat/ChatList.dart';
 import 'package:video_chat/components/Screens/Home/Home.dart';
 import 'package:video_chat/components/Screens/Language%20Selection/Language.dart';
 import 'package:video_chat/components/Screens/Onboarding/Onboarding.dart';
+import 'package:video_chat/components/Screens/Profile/Profile.dart';
 
 import '../app.export.dart';
 import 'fade_route.dart';
@@ -102,6 +103,9 @@ Route<dynamic> onGenerateRoute(RouteSettings settings) {
       break;
     case ChatList.route:
       screen = ChatList();
+      break;
+    case Profile.route:
+      screen = Profile();
       break;
   }
 

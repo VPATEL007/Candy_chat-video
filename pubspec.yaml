@@ -80,6 +80,7 @@ flutter:
     - assets/Tab/
     - assets/Temp/
     - assets/Chat/
+    - assets/Profile/
 
   fonts:
     - family: Montserrat

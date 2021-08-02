@@ -8,6 +8,7 @@ const String necklace = "assets/Common/necklace.png";
 const String back = "assets/Common/back.png";
 const String radioSelected = "assets/Common/radioSelected.png";
 const String radio = "assets/Common/radio.png";
+const String icDetail = "assets/Common/detail.png";
 
 const String splashLogo = "assets/Splash/splashLogo.png";
 const String splashBottom = "assets/Splash/splashBottom.png";
@@ -36,6 +37,8 @@ const String icTabChatSelected = "assets/Tab/tabChatSelected.png";
 const String icTabProfile = "assets/Tab/tabProfile.png";
 
 const String icTemp = "assets/Temp/tempP.png";
+const String icTempProfile = "assets/Temp/icTempProfile.png";
+
 const String icHomeCurve = "assets/Home/HomeCurve.png";
 const String icDrawer = "assets/Home/icDrawer.png";
 const String icVector = "assets/Home/Vector.png";
@@ -49,3 +52,12 @@ const String icEmptyChat = "assets/Chat/emptyChat.png";
 const String icWavingHand = "assets/Chat/wavingHand.png";
 const String icCall = "assets/Chat/call.png";
 const String icGift = "assets/Chat/Gift.png";
+
+const String icLogout = "assets/Profile/Logout.png";
+const String icEdit = "assets/Profile/icEdit.png";
+const String icFlag = "assets/Profile/icFlag.png";
+const String icVipStore = "assets/Profile/vipStore.png";
+const String icCoinP = "assets/Profile/coin.png";
+const String icPaymentHistory = "assets/Profile/paymentHistory.png";
+const String icLanguage = "assets/Profile/language.png";
+const String icSetting = "assets/Profile/setting.png";

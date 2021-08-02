@@ -30,32 +30,48 @@ class _ChatListState extends State<ChatList> {
             height: getSize(10),
           ),
           getColorText("Messages", ColorConstants.red),
-          Expanded(
-            child: ListView.separated(
-              padding: EdgeInsets.only(
-                  top: getSize(28), left: getSize(25), right: getSize(25)),
-              itemCount: 10,
-              itemBuilder: (BuildContext context, int index) {
-                return InkWell(
-                    onTap: () {
-                      NavigationUtilities.push(Chat());
-                    },
-                    child: getChatItem(index));
-              },
-              separatorBuilder: (BuildContext context, int index) {
-                return Padding(
-                  padding:
-                      EdgeInsets.only(top: getSize(14), bottom: getSize(14)),
-                  child: Container(
-                    height: 1,
-                    color: ColorConstants.borderColor,
-                  ),
-                );
-              },
-            ),
-          ),
+          chatList(),
+          // emptyChat()
         ],
       )),
+    );
+  }
+
+  //Empty Chat
+  Widget emptyChat() {
+    return Center(
+      child: Column(
+        children: [],
+      ),
+    );
+  }
+
+//Chat List
+  Widget chatList() {
+    return Expanded(
+      child: ListView.separated(
+        padding: EdgeInsets.only(
+            top: getSize(28), left: getSize(25), right: getSize(25)),
+        itemCount: 10,
+        itemBuilder: (BuildContext context, int index) {
+          return InkWell(
+              onTap: () {
+                NavigationUtilities.push(Chat(
+                  isChat: index == 0 ? false : true,
+                ));
+              },
+              child: getChatItem(index));
+        },
+        separatorBuilder: (BuildContext context, int index) {
+          return Padding(
+            padding: EdgeInsets.only(top: getSize(14), bottom: getSize(14)),
+            child: Container(
+              height: 1,
+              color: ColorConstants.borderColor,
+            ),
+          );
+        },
+      ),
     );
   }
 
@@ -103,7 +119,7 @@ class _ChatListState extends State<ChatList> {
             children: [
               SizedBox(height: getSize(2)),
               Text(
-                "Helmi Lutvyandi",
+                index == 0 ? "Empty Chat" : "Helmi Lutvyandi",
                 style: appTheme.black16Bold.copyWith(fontSize: getFontSize(14)),
               ),
               SizedBox(height: getSize(6)),

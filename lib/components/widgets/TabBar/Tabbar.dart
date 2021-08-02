@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:video_chat/app/app.export.dart';
 import 'package:video_chat/components/Screens/Chat/ChatList.dart';
 import 'package:video_chat/components/Screens/Home/Home.dart';
+import 'package:video_chat/components/Screens/Profile/Profile.dart';
 
 class TabBarWidget extends StatefulWidget {
   TabType screen = TabType.Home;
@@ -24,7 +25,7 @@ class _TabBarWidgetState extends State<TabBarWidget> {
               : getSize(16),
           top: getSize(21)),
       child: Container(
-        height: getSize(60),
+        height: getSize(74),
         decoration: BoxDecoration(
           gradient: LinearGradient(
             begin: Alignment.topLeft,
@@ -41,44 +42,92 @@ class _TabBarWidgetState extends State<TabBarWidget> {
               onTap: () {
                 NavigationUtilities.pushReplacementNamed(Home.route);
               },
-              child: Container(
-                width: (MathUtilities.screenWidth(context) - getSize(72)) / 4,
-                child: Center(
-                  child: Image.asset(widget.screen == TabType.Home
-                      ? icTabHomeSelected
-                      : icTabHome),
-                ),
-              ),
+              child:
+                  getTabItem(widget.screen == TabType.Home, "tabHome", "Home"),
             ),
-            Container(
-              width: (MathUtilities.screenWidth(context) - getSize(72)) / 4,
-              child: Center(
-                child: Image.asset(
-                    widget.screen == TabType.Discover ? icTabLike : icTabLike),
-              ),
-            ),
+            getTabItem(
+                widget.screen == TabType.Discover, "tablike", "Discovery"),
             InkWell(
               onTap: () {
                 NavigationUtilities.pushReplacementNamed(ChatList.route);
               },
-              child: Container(
-                width: (MathUtilities.screenWidth(context) - getSize(72)) / 4,
-                child: Center(
-                  child: Image.asset(widget.screen == TabType.Chat
-                      ? icTabChatSelected
-                      : icTabChat),
-                ),
-              ),
+              child: getTabItem(
+                  widget.screen == TabType.Chat, "tabChat", "Messages"),
             ),
-            Container(
-              width: (MathUtilities.screenWidth(context) - getSize(72)) / 4,
-              child: Center(
-                child: Image.asset(icTabProfile),
-              ),
-            )
+            InkWell(
+                onTap: () {
+                  NavigationUtilities.pushReplacementNamed(Profile.route);
+                },
+                child: getTabProfileItem(widget.screen == TabType.Profile)),
           ],
         ),
       ),
+    );
+  }
+
+  Widget getTabProfileItem(bool isSelected) {
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        Container(
+          width: (MathUtilities.screenWidth(context) - getSize(72)) / 4,
+          child: Center(
+            child: Container(
+              decoration: BoxDecoration(
+                  border: Border.all(
+                      color: Colors.white.withOpacity(isSelected ? 1 : 0.6),
+                      width: 1),
+                  borderRadius: BorderRadius.circular(
+                    18,
+                  )),
+              child: ClipRRect(
+                borderRadius: BorderRadius.circular(18),
+                child: Image.asset(
+                  icTemp,
+                  height: 18,
+                  width: 18,
+                  fit: BoxFit.cover,
+                ),
+              ),
+            ),
+          ),
+        ),
+        SizedBox(
+          height: getSize(6),
+        ),
+        Text(
+          "Profile",
+          style: appTheme.white12Normal.copyWith(
+              fontWeight: FontWeight.w500,
+              color:
+                  isSelected ? Colors.white : Colors.white.withOpacity(0.36)),
+        )
+      ],
+    );
+  }
+
+  Widget getTabItem(bool isSelected, String icon, String title) {
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        Container(
+          width: (MathUtilities.screenWidth(context) - getSize(72)) / 4,
+          child: Center(
+            child: Image.asset(
+                "assets/Tab/$icon" + (isSelected ? "Selected.png" : ".png")),
+          ),
+        ),
+        SizedBox(
+          height: getSize(6),
+        ),
+        Text(
+          title,
+          style: appTheme.white12Normal.copyWith(
+              fontWeight: FontWeight.w500,
+              color:
+                  isSelected ? Colors.white : Colors.white.withOpacity(0.36)),
+        )
+      ],
     );
   }
 }
