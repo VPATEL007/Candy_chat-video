@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:video_chat/app/app.export.dart';
 import 'package:video_chat/components/Screens/Chat/ChatList.dart';
+import 'package:video_chat/components/Screens/Discover/Discover.dart';
 import 'package:video_chat/components/Screens/Home/Home.dart';
 import 'package:video_chat/components/Screens/Profile/Profile.dart';
 
@@ -18,8 +19,8 @@ class _TabBarWidgetState extends State<TabBarWidget> {
   Widget build(BuildContext context) {
     return Padding(
       padding: EdgeInsets.only(
-          left: getSize(36),
-          right: getSize(36),
+          left: getSize(35),
+          right: getSize(35),
           bottom: MathUtilities.safeAreaBottomHeight(context) > 20
               ? getSize(26)
               : getSize(16),
@@ -45,8 +46,13 @@ class _TabBarWidgetState extends State<TabBarWidget> {
               child:
                   getTabItem(widget.screen == TabType.Home, "tabHome", "Home"),
             ),
-            getTabItem(
-                widget.screen == TabType.Discover, "tablike", "Discovery"),
+            InkWell(
+              onTap: () {
+                NavigationUtilities.pushReplacementNamed(Discover.route);
+              },
+              child: getTabItem(
+                  widget.screen == TabType.Discover, "tablike", "Discovery"),
+            ),
             InkWell(
               onTap: () {
                 NavigationUtilities.pushReplacementNamed(ChatList.route);

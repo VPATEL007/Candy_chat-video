@@ -8,6 +8,7 @@ import 'package:video_chat/app/app.export.dart';
 import 'package:video_chat/app/utils/CommonWidgets.dart';
 import 'package:video_chat/components/Screens/Home/MatchedProfile.dart';
 import 'package:video_chat/components/Screens/Home/Reportblock.dart';
+import 'package:video_chat/components/Screens/UserProfile/UserProfile.dart';
 import 'package:video_chat/components/widgets/TabBar/Tabbar.dart';
 
 import 'Card/swipe_cards.dart';
@@ -38,7 +39,8 @@ class _MathProfileState extends State<MathProfile> {
             print("nope");
           },
           superlikeAction: () {
-            print("supper");
+            openUserProfile();
+            // NavigationUtilities.push(UserProfile());
           }));
     }
 
@@ -214,6 +216,33 @@ class _MathProfileState extends State<MathProfile> {
     );
   }
 
+  openUserProfile() {
+    showModalBottomSheet(
+        isScrollControlled: true,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.only(
+              topLeft: Radius.circular(20.0), topRight: Radius.circular(20.0)),
+        ),
+        context: context,
+        builder: (builder) {
+          return StatefulBuilder(
+            builder: (BuildContext context, setState) {
+              return SafeArea(
+                  child: Padding(
+                padding: EdgeInsets.only(top: getSize(35)),
+                child: Container(
+                  height: getSize(500),
+                  child: UserProfile(
+                    isPopUp: true,
+                  ),
+                ),
+              ));
+            },
+          );
+        });
+  }
+
+//Open Filter
   openFilter() {
     showModalBottomSheet(
         isScrollControlled: false,

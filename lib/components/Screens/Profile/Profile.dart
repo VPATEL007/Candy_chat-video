@@ -1,9 +1,15 @@
+import 'dart:async';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:video_chat/app/app.export.dart';
 import 'package:video_chat/app/utils/CommonWidgets.dart';
 import 'package:video_chat/components/Screens/Profile/CoinList.dart';
+import 'package:video_chat/components/Screens/Profile/FollowUp.dart';
 import 'package:video_chat/components/Screens/Profile/VipStore.dart';
+import 'package:video_chat/components/Screens/Profile/Visitor.dart';
+import 'package:video_chat/components/Screens/UserProfile/UserProfile.dart';
+import 'package:video_chat/components/widgets/ProfileSlider.dart';
 import 'package:video_chat/components/widgets/TabBar/Tabbar.dart';
 
 class Profile extends StatefulWidget {
@@ -15,8 +21,12 @@ class Profile extends StatefulWidget {
 }
 
 class _ProfileState extends State<Profile> {
-  PageController pageController = new PageController(initialPage: 0);
   int currentIndex = 0;
+
+  @override
+  void initState() {
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -49,16 +59,16 @@ class _ProfileState extends State<Profile> {
                     SizedBox(
                       height: getSize(16),
                     ),
-                    getNavigationItem(icVipStore, "VIP Store", true, () {
+                    getListItem(icVipStore, "VIP Store", true, () {
                       NavigationUtilities.push(VipStore());
                     }),
-                    getNavigationItem(icCoinP, "Get Coins", false, () {
+                    getListItem(icCoinP, "Get Coins", false, () {
                       NavigationUtilities.push(CoinList());
                     }),
-                    getNavigationItem(
+                    getListItem(
                         icPaymentHistory, "Payment History ", false, () {}),
-                    getNavigationItem(icLanguage, "Language", false, () {}),
-                    getNavigationItem(icSetting, "Settings", false, () {})
+                    getListItem(icLanguage, "Language", false, () {}),
+                    getListItem(icSetting, "Settings", false, () {})
                   ],
                 ),
               )),
@@ -69,8 +79,7 @@ class _ProfileState extends State<Profile> {
     );
   }
 
-  Widget getNavigationItem(
-      String icon, String title, bool isColor, Function click) {
+  Widget getListItem(String icon, String title, bool isColor, Function click) {
     return InkWell(
       onTap: () {
         click();
@@ -144,43 +153,52 @@ class _ProfileState extends State<Profile> {
   Widget getCounts() {
     return Row(
       children: [
-        getCountItem("251", "Fans"),
+        getCountItem("251", "Fans", () {}),
         Spacer(),
-        getCountItem("2.6K", "Follow up"),
+        getCountItem("2.6K", "Follow up", () {
+          NavigationUtilities.push(FollowUp());
+        }),
         Spacer(),
-        getCountItem("36", "Visitor")
+        getCountItem("36", "Visitor", () {
+          NavigationUtilities.push(Visitor());
+        })
       ],
     );
   }
 
-  Widget getCountItem(String count, String title) {
-    return Container(
-      decoration: BoxDecoration(
-          color: fromHex("#F7F7F7"), borderRadius: BorderRadius.circular(9)),
-      child: Padding(
-        padding: EdgeInsets.only(
-            left: getSize(22),
-            right: getSize(22),
-            top: getSize(15),
-            bottom: getSize(15)),
-        child: Column(
-          children: [
-            Text(
-              count,
-              style: appTheme.black16Bold.copyWith(
-                  fontSize: getFontSize(16),
-                  fontWeight: FontWeight.w700,
-                  color: ColorConstants.redText),
-            ),
-            SizedBox(
-              height: getSize(4),
-            ),
-            Text(
-              title,
-              style: appTheme.black16Bold.copyWith(
-                  fontSize: getFontSize(16), fontWeight: FontWeight.w600),
-            ),
-          ],
+  Widget getCountItem(String count, String title, Function click) {
+    return InkWell(
+      onTap: () {
+        click();
+      },
+      child: Container(
+        decoration: BoxDecoration(
+            color: fromHex("#F7F7F7"), borderRadius: BorderRadius.circular(9)),
+        child: Padding(
+          padding: EdgeInsets.only(
+              left: getSize(22),
+              right: getSize(22),
+              top: getSize(15),
+              bottom: getSize(15)),
+          child: Column(
+            children: [
+              Text(
+                count,
+                style: appTheme.black16Bold.copyWith(
+                    fontSize: getFontSize(16),
+                    fontWeight: FontWeight.w700,
+                    color: ColorConstants.redText),
+              ),
+              SizedBox(
+                height: getSize(4),
+              ),
+              Text(
+                title,
+                style: appTheme.black16Bold.copyWith(
+                    fontSize: getFontSize(16), fontWeight: FontWeight.w600),
+              ),
+            ],
+          ),
         ),
       ),
     );
@@ -192,19 +210,10 @@ class _ProfileState extends State<Profile> {
         Container(
           height: getSize(300),
           child: ClipRRect(
-            borderRadius: BorderRadius.circular(8.0),
-            child: PageView(
-              controller: pageController,
-              children: [
-                getPageViewItem(icTempProfile),
-                getPageViewItem(loginBg),
-                getPageViewItem(icTempProfile)
-              ],
-              onPageChanged: (val) {
-                currentIndex = val;
-                pageController.animateToPage(currentIndex,
-                    duration: Duration(milliseconds: 600),
-                    curve: Curves.linearToEaseOut);
+            borderRadius: BorderRadius.circular(getSize(15)),
+            child: ProfileSlider(
+              scroll: (index) {
+                currentIndex = index;
                 setState(() {});
               },
             ),
@@ -269,33 +278,6 @@ class _ProfileState extends State<Profile> {
               ],
             ))
       ],
-    );
-  }
-
-  getPageViewItem(String image) {
-    return Image.asset(
-      image,
-      width: MathUtilities.screenWidth(context),
-      height: getSize(300),
-      fit: BoxFit.cover,
-      color: Colors.black.withOpacity(0.4),
-      colorBlendMode: BlendMode.overlay,
-    );
-  }
-
-  Widget pageIndexIndicator(bool isCuurent) {
-    return AnimatedContainer(
-      duration: Duration(milliseconds: 400),
-      margin: EdgeInsets.symmetric(vertical: 3),
-      height: getSize(10),
-      width: getSize(10),
-      decoration: BoxDecoration(
-          border: Border.all(
-              width: isCuurent ? 0 : 2,
-              color: Colors.white,
-              style: BorderStyle.solid),
-          color: isCuurent ? ColorConstants.red : Colors.white.withOpacity(0),
-          borderRadius: BorderRadius.circular(12)),
     );
   }
 }

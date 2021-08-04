@@ -9,6 +9,7 @@ const String back = "assets/Common/back.png";
 const String radioSelected = "assets/Common/radioSelected.png";
 const String radio = "assets/Common/radio.png";
 const String icDetail = "assets/Common/detail.png";
+const String icMore = "assets/Common/more.png";
 
 const String splashLogo = "assets/Splash/splashLogo.png";
 const String splashBottom = "assets/Splash/splashBottom.png";
@@ -61,6 +62,11 @@ const String icCoinP = "assets/Profile/coin.png";
 const String icPaymentHistory = "assets/Profile/paymentHistory.png";
 const String icLanguage = "assets/Profile/language.png";
 const String icSetting = "assets/Profile/setting.png";
+const String icFollow = "assets/Profile/AddUser.png";
+const String icFavourite = "assets/Profile/favourite.png";
+const String icHeartProfile = "assets/Profile/heart.png";
+const String icGiftCoin = "assets/Profile/giftCoin.png";
+const String icChatWhite = "assets/Profile/chatWhite.png";
 
 const String vip1 = "assets/Vip/vip1.png";
 const String vip2 = "assets/Vip/vip2.png";
