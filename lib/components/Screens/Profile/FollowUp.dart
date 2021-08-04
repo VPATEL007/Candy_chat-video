@@ -30,7 +30,10 @@ class _FollowUpState extends State<FollowUp> {
   Widget list() {
     return ListView.separated(
       padding: EdgeInsets.only(
-          top: getSize(28), left: getSize(25), right: getSize(25)),
+          top: getSize(16),
+          left: getSize(25),
+          right: getSize(25),
+          bottom: getSize(28)),
       itemCount: 10,
       itemBuilder: (BuildContext context, int index) {
         return InkWell(onTap: () {}, child: cellItem());
