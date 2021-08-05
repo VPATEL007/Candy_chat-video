@@ -12,7 +12,6 @@ class Gender extends StatefulWidget {
   _GenderState createState() => _GenderState();
 }
 
-// AppNavigation.shared.moveToHome();
 class _GenderState extends State<Gender> {
   @override
   Widget build(BuildContext context) {

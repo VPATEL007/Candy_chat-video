@@ -4,6 +4,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:video_chat/app/app.export.dart';
 import 'package:video_chat/app/utils/CommonWidgets.dart';
+import 'package:video_chat/components/Screens/Language%20Selection/Language.dart';
 import 'package:video_chat/components/Screens/Profile/CoinList.dart';
 import 'package:video_chat/components/Screens/Profile/FollowUp.dart';
 import 'package:video_chat/components/Screens/Profile/PaymentHistory.dart';
@@ -71,7 +72,11 @@ class _ProfileState extends State<Profile> {
                         () {
                       NavigationUtilities.push(PaymentHistory());
                     }),
-                    getListItem(icLanguage, "Language", false, () {}),
+                    getListItem(icLanguage, "Language", false, () {
+                      NavigationUtilities.push(LanguageSelection(
+                        isChange: true,
+                      ));
+                    }),
                     getListItem(icSetting, "Settings", false, () {
                       NavigationUtilities.push(Setting());
                     })

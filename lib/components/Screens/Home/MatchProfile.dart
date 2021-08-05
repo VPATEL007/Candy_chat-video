@@ -11,6 +11,7 @@ import 'package:video_chat/components/Screens/Home/Reportblock.dart';
 import 'package:video_chat/components/Screens/UserProfile/UserProfile.dart';
 import 'package:video_chat/components/widgets/TabBar/Tabbar.dart';
 
+import 'Card/draggable_card.dart';
 import 'Card/swipe_cards.dart';
 
 class MathProfile extends StatefulWidget {
@@ -26,6 +27,7 @@ class _MathProfileState extends State<MathProfile> {
   GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey();
   List<String> _names = ["Red", "Blue", "Green", "Yellow", "Orange"];
   RangeValues _currentRangeValues = const RangeValues(18, 24);
+  SlideRegion region = SlideRegion.inNopeRegion;
 
   @override
   void initState() {
@@ -41,6 +43,12 @@ class _MathProfileState extends State<MathProfile> {
           superlikeAction: () {
             openUserProfile();
             // NavigationUtilities.push(UserProfile());
+          },
+          onSlideUpdateAction: (tRegion) {
+            setState(() {
+              region = tRegion;
+              print(region);
+            });
           }));
     }
 
@@ -90,7 +98,14 @@ class _MathProfileState extends State<MathProfile> {
                             ),
                             child: Image.asset(icTemp),
                           ),
-                        )
+                        ),
+                        // region == SlideRegion.inLikeRegion
+                        //     ? Container(
+                        //         height: 50,
+                        //         width: 50,
+                        //         color: Colors.green,
+                        //       )
+                        //     : SizedBox()
                       ],
                     ),
                   ),

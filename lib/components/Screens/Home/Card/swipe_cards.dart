@@ -103,6 +103,9 @@ class _SwipeCardsState extends State<SwipeCards> {
   void _onSlideRegion(SlideRegion region) {
     setState(() {
       slideRegion = region;
+      SwipeItem currentMatch = widget.matchEngine.currentItem;
+
+      currentMatch.onSlideUpdate(region);
     });
   }
 
@@ -205,10 +208,15 @@ class SwipeItem extends ChangeNotifier {
   final Function likeAction;
   final Function superlikeAction;
   final Function nopeAction;
+  final Function(SlideRegion) onSlideUpdateAction;
   Decision decision = Decision.undecided;
 
   SwipeItem(
-      {this.content, this.likeAction, this.superlikeAction, this.nopeAction});
+      {this.content,
+      this.likeAction,
+      this.superlikeAction,
+      this.nopeAction,
+      this.onSlideUpdateAction});
 
   void like() {
     if (decision == Decision.undecided) {
@@ -245,6 +253,13 @@ class SwipeItem extends ChangeNotifier {
       decision = Decision.undecided;
       notifyListeners();
     }
+  }
+
+  void onSlideUpdate(SlideRegion region) {
+    try {
+      onSlideUpdateAction(region);
+    } catch (e) {}
+    notifyListeners();
   }
 }
 
