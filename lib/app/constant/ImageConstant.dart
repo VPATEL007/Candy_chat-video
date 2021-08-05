@@ -10,6 +10,8 @@ const String radioSelected = "assets/Common/radioSelected.png";
 const String radio = "assets/Common/radio.png";
 const String icDetail = "assets/Common/detail.png";
 const String icMore = "assets/Common/more.png";
+const String icMale = "assets/Common/male.png";
+const String icFemale = "assets/Common/feMale.png";
 
 const String splashLogo = "assets/Splash/splashLogo.png";
 const String splashBottom = "assets/Splash/splashBottom.png";
@@ -19,8 +21,8 @@ const String l2 = "assets/Language/l2.png";
 const String l3 = "assets/Language/l3.png";
 
 const String intro1 = "assets/Intro/Introslider1.png";
-const String intro2 = "assets/Intro/Introslider2.png";
-const String intro3 = "assets/Intro/Introslider3.png";
+const String intro2 = "assets/Intro/introSlider2.png";
+const String intro3 = "assets/Intro/introSlider3.png";
 
 const String loginBg = "assets/Login/LoginBg.png";
 const String loginLogo = "assets/Login/LoginLogo.png";
@@ -67,6 +69,7 @@ const String icFavourite = "assets/Profile/favourite.png";
 const String icHeartProfile = "assets/Profile/heart.png";
 const String icGiftCoin = "assets/Profile/giftCoin.png";
 const String icChatWhite = "assets/Profile/chatWhite.png";
+const String icDiamond = "assets/Profile/diamond.png";
 
 const String vip1 = "assets/Vip/vip1.png";
 const String vip2 = "assets/Vip/vip2.png";

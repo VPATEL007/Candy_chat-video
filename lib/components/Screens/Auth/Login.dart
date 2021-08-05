@@ -5,6 +5,7 @@ import 'package:video_chat/app/app.export.dart';
 import 'package:video_chat/app/constant/ColorConstant.dart';
 import 'package:video_chat/app/utils/CommonWidgets.dart';
 import 'package:video_chat/app/utils/math_utils.dart';
+import 'package:video_chat/components/Screens/Auth/Gender.dart';
 
 class Login extends StatefulWidget {
   static const route = "Login";
@@ -31,7 +32,10 @@ class _LoginState extends State<Login> {
         child: SafeArea(
           child: Column(
             children: [
-              Image.asset(loginLogo),
+              Padding(
+                padding: EdgeInsets.only(left: getSize(60), right: getSize(60)),
+                child: Image.asset(loginLogo),
+              ),
               SizedBox(
                 height: getSize(29),
               ),
@@ -65,9 +69,6 @@ class _LoginState extends State<Login> {
                     textAlign: TextAlign.center,
                     style: appTheme.white14Normal),
               ),
-              // SizedBox(
-              //   height: getSize(26),
-              // ),
               Spacer(),
               getButton(icApple, "Continue with Apple", Colors.black, () {}),
               SizedBox(
@@ -83,7 +84,7 @@ class _LoginState extends State<Login> {
                 height: getSize(12),
               ),
               getButton(icGuest, "Continue with Guest", Colors.white, () {
-                AppNavigation.shared.moveToHome();
+                NavigationUtilities.push(Gender());
               }),
               SizedBox(
                 height: getSize(12),

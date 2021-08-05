@@ -120,7 +120,10 @@ class _TabBarWidgetState extends State<TabBarWidget> {
           width: (MathUtilities.screenWidth(context) - getSize(72)) / 4,
           child: Center(
             child: Image.asset(
-                "assets/Tab/$icon" + (isSelected ? "Selected.png" : ".png")),
+              "assets/Tab/$icon" + (isSelected ? "Selected.png" : ".png"),
+              height: getSize(18),
+              width: getSize(18),
+            ),
           ),
         ),
         SizedBox(

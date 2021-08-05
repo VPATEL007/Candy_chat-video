@@ -170,11 +170,14 @@ class _DiscoverState extends State<Discover> {
                             borderRadius: BorderRadius.circular(getSize(35)),
                             child: Container(
                               color: fromHex("#00DE9B"),
-                              height: getSize(35),
-                              width: getSize(35),
-                              child: Image.asset(
-                                icCall,
-                                color: Colors.white,
+                              child: Padding(
+                                padding: EdgeInsets.all(getSize(12)),
+                                child: Image.asset(
+                                  icCall,
+                                  color: Colors.white,
+                                  height: getSize(16),
+                                  width: getSize(16),
+                                ),
                               ),
                             ),
                           )

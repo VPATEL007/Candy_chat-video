@@ -101,7 +101,11 @@ class _UserProfileState extends State<UserProfile> {
                     right: getSize(27),
                     top: getSize(17),
                     bottom: getSize(17)),
-                child: Image.asset(icChatWhite),
+                child: Image.asset(
+                  icChatWhite,
+                  width: getSize(18),
+                  height: getSize(18),
+                ),
               ),
             ),
             SizedBox(
@@ -123,6 +127,8 @@ class _UserProfileState extends State<UserProfile> {
                     Image.asset(
                       icCall,
                       color: Colors.white,
+                      width: getSize(18),
+                      height: getSize(18),
                     ),
                     SizedBox(
                       width: getSize(16),
@@ -413,8 +419,8 @@ class _UserProfileState extends State<UserProfile> {
                   getProfileButton(icFollow),
                   Spacer(),
                   Container(
-                    height: getSize(72),
-                    width: getSize(72),
+                    // height: getSize(72),
+                    // width: getSize(72),
                     decoration: BoxDecoration(
                         boxShadow: [
                           BoxShadow(
@@ -426,7 +432,7 @@ class _UserProfileState extends State<UserProfile> {
                         borderRadius: BorderRadius.circular(getSize(22)),
                         color: Colors.white),
                     child: Padding(
-                      padding: EdgeInsets.all(getSize(11)),
+                      padding: EdgeInsets.all(getSize(20)),
                       child: Image.asset(
                         icHeartProfile,
                         width: getSize(36),

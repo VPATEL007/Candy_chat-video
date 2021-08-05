@@ -6,8 +6,10 @@ import 'package:video_chat/app/app.export.dart';
 import 'package:video_chat/app/utils/CommonWidgets.dart';
 import 'package:video_chat/components/Screens/Profile/CoinList.dart';
 import 'package:video_chat/components/Screens/Profile/FollowUp.dart';
+import 'package:video_chat/components/Screens/Profile/PaymentHistory.dart';
 import 'package:video_chat/components/Screens/Profile/VipStore.dart';
 import 'package:video_chat/components/Screens/Profile/Visitor.dart';
+import 'package:video_chat/components/Screens/Setting/Setting.dart';
 import 'package:video_chat/components/Screens/UserProfile/UserProfile.dart';
 import 'package:video_chat/components/widgets/ProfileSlider.dart';
 import 'package:video_chat/components/widgets/TabBar/Tabbar.dart';
@@ -65,10 +67,14 @@ class _ProfileState extends State<Profile> {
                     getListItem(icCoinP, "Get Coins", false, () {
                       NavigationUtilities.push(CoinList());
                     }),
-                    getListItem(
-                        icPaymentHistory, "Payment History ", false, () {}),
+                    getListItem(icPaymentHistory, "Payment History ", false,
+                        () {
+                      NavigationUtilities.push(PaymentHistory());
+                    }),
                     getListItem(icLanguage, "Language", false, () {}),
-                    getListItem(icSetting, "Settings", false, () {})
+                    getListItem(icSetting, "Settings", false, () {
+                      NavigationUtilities.push(Setting());
+                    })
                   ],
                 ),
               )),
@@ -108,7 +114,11 @@ class _ProfileState extends State<Profile> {
             child: Row(
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                Image.asset(icon),
+                Image.asset(
+                  icon,
+                  height: getSize(26),
+                  width: getSize(26),
+                ),
                 SizedBox(
                   width: getSize(23),
                 ),
@@ -133,7 +143,13 @@ class _ProfileState extends State<Profile> {
 
   Widget getNavigation() {
     return Row(children: [
-      Align(alignment: Alignment.topLeft, child: Image.asset(icLogout)),
+      Align(
+          alignment: Alignment.topLeft,
+          child: Image.asset(
+            icLogout,
+            height: getSize(26),
+            width: getSize(26),
+          )),
       Spacer(),
       Row(
         crossAxisAlignment: CrossAxisAlignment.center,
@@ -146,7 +162,11 @@ class _ProfileState extends State<Profile> {
         ],
       ),
       Spacer(),
-      Image.asset(icEdit),
+      Image.asset(
+        icEdit,
+        height: getSize(26),
+        width: getSize(26),
+      ),
     ]);
   }
 

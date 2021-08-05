@@ -209,9 +209,14 @@ class _MathProfileState extends State<MathProfile> {
           ),
           color: Colors.white.withOpacity(0.3),
         ),
-        height: getSize(50),
-        width: getSize(50),
-        child: Image.asset(image),
+        child: Padding(
+          padding: EdgeInsets.all(getSize(14)),
+          child: Image.asset(
+            image,
+            height: getSize(20),
+            width: getSize(20),
+          ),
+        ),
       ),
     );
   }

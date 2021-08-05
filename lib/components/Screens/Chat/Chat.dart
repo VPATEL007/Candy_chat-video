@@ -213,7 +213,10 @@ class _ChatState extends State<Chat> {
               ),
               Padding(
                 padding: EdgeInsets.only(left: getSize(20), right: getSize(20)),
-                child: Image.asset(icGift),
+                child: Image.asset(
+                  icGift,
+                  height: getSize(32),
+                ),
               ),
             ],
           ),
@@ -260,7 +263,10 @@ class _ChatState extends State<Chat> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
-                  Image.asset(icWavingHand),
+                  Image.asset(
+                    icWavingHand,
+                    height: getSize(54),
+                  ),
                   SizedBox(
                     height: getSize(10),
                   ),

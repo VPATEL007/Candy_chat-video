@@ -89,9 +89,15 @@ class _VipStoreState extends State<VipStore> {
                 colors: [fromHex(color), Colors.white],
               )),
               child: Padding(
-                padding: EdgeInsets.only(top: getSize(61)),
-                child: SafeArea(child: Image.asset(image)),
+                padding: EdgeInsets.only(top: getSize(70)),
+                child: SafeArea(
+                    child: Image.asset(
+                  image,
+                  height: getSize(300),
+                  width: getSize(300),
+                )),
               )),
+          SizedBox(height: getSize(50)),
           Text(
             "Become Dating App VIP",
             style: appTheme.black16Bold,

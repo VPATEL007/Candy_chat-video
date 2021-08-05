@@ -173,7 +173,10 @@ class _MatchedProfileState extends State<MatchedProfile> {
             Positioned(
                 left: getSize(100),
                 bottom: getSize(40),
-                child: Image.asset(icHeart))
+                child: Image.asset(
+                  icHeart,
+                  height: getSize(60),
+                ))
           ],
         ),
       ),
@@ -225,7 +228,10 @@ class _MatchedProfileState extends State<MatchedProfile> {
                     ),
                     Row(
                       children: [
-                        Image.asset(icCoin),
+                        Image.asset(
+                          icCoin,
+                          height: getSize(20),
+                        ),
                         SizedBox(
                           width: getSize(8),
                         ),
@@ -255,7 +261,6 @@ class _MatchedProfileState extends State<MatchedProfile> {
                         shrinkWrap: true,
                         physics: NeverScrollableScrollPhysics(),
                         itemCount: 2,
-                        // padding: EdgeInsets.all(getSize(9)),
                         itemBuilder: (BuildContext context, int index) {
                           return getCoinItem(index == 0, context);
                         }),
