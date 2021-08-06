@@ -1,4 +1,4 @@
-package com.randomvideochat.flutter_files_picker.filepicker.ui.activity;
+package com.example.flutter_files_picker.filepicker.ui.activity;
 
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -11,8 +11,8 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.databinding.DataBindingUtil;
 
 import com.randomvideochat.flutter_files_picker.R;
-import com.randomvideochat.flutter_files_picker.filepicker.local.ImageCompression;
-import com.randomvideochat.flutter_files_picker.filepicker.local.fragment.BasicFragment;
+import com.example.flutter_files_picker.filepicker.local.ImageCompression;
+import com.example.flutter_files_picker.filepicker.local.fragment.BasicFragment;
 
 
 public class ImageCropActivity extends AppCompatActivity {

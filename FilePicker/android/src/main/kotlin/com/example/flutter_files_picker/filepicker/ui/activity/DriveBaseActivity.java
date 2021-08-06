@@ -1,4 +1,4 @@
-package com.randomvideochat.flutter_files_picker.filepicker.ui.activity;
+package com.example.flutter_files_picker.filepicker.ui.activity;
 
 import android.content.Intent;
 import android.content.IntentSender;

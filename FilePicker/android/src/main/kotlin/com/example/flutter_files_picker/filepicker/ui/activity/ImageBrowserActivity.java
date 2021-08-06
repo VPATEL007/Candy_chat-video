@@ -1,4 +1,4 @@
-package com.randomvideochat.flutter_files_picker.filepicker.ui.activity;
+package com.example.flutter_files_picker.filepicker.ui.activity;
 
 import android.Manifest;
 import android.content.Intent;
@@ -19,19 +19,19 @@ import androidx.viewpager.widget.ViewPager;
 import com.bm.library.PhotoView;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions;
+import com.example.flutter_files_picker.filepicker.util.permissions.PermissionsKt;
 import com.randomvideochat.flutter_files_picker.R;
-import com.randomvideochat.flutter_files_picker.filepicker.local.FilePickerConstant;
-import com.randomvideochat.flutter_files_picker.filepicker.local.ToastUtil;
-import com.randomvideochat.flutter_files_picker.filepicker.local.filter.FileFilter;
-import com.randomvideochat.flutter_files_picker.filepicker.local.filter.entity.Directory;
-import com.randomvideochat.flutter_files_picker.filepicker.local.filter.entity.ImageFile;
-import com.randomvideochat.flutter_files_picker.filepicker.ui.BaseActivity;
-import com.randomvideochat.flutter_files_picker.filepicker.util.ActivityUtils;
-import com.randomvideochat.flutter_files_picker.filepicker.util.permissions.PermissionsKt;
+import com.example.flutter_files_picker.filepicker.local.FilePickerConstant;
+import com.example.flutter_files_picker.filepicker.local.ToastUtil;
+import com.example.flutter_files_picker.filepicker.local.filter.FileFilter;
+import com.example.flutter_files_picker.filepicker.local.filter.entity.Directory;
+import com.example.flutter_files_picker.filepicker.local.filter.entity.ImageFile;
+import com.example.flutter_files_picker.filepicker.ui.BaseActivity;
+import com.example.flutter_files_picker.filepicker.util.ActivityUtils;
 import com.google.android.material.shape.MaterialShapeDrawable;
 import com.google.android.material.shape.RoundedCornerTreatment;
 import com.google.android.material.shape.ShapePathModel;
-import com.randomvideochat.flutter_files_picker.filepicker.util.permissions.util.PermissionsOptions;
+import com.example.flutter_files_picker.filepicker.util.permissions.util.PermissionsOptions;
 
 import java.util.ArrayList;
 

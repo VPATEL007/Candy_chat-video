@@ -31,12 +31,13 @@ class _ChatState extends State<Chat> {
             ),
             getBarButton(context, icCall, () {}),
             Padding(
-              padding: EdgeInsets.all(getSize(10)),
+              padding: EdgeInsets.all(getSize(14)),
               child: ClipRRect(
                 borderRadius: BorderRadius.circular(36),
                 child: Image.asset(
                   loginBg,
                   width: getSize(36),
+                  height: getSize(26),
                   fit: BoxFit.cover,
                 ),
               ),

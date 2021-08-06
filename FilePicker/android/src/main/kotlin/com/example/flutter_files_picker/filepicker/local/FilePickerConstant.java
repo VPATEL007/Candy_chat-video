@@ -1,4 +1,4 @@
-package com.randomvideochat.flutter_files_picker.filepicker.local;
+package com.example.flutter_files_picker.filepicker.local;
 
 /**
  * Created by Vincent Woo

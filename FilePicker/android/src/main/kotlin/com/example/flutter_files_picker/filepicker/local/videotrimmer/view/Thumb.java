@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package com.randomvideochat.flutter_files_picker.filepicker.local.videotrimmer.view;
+package com.example.flutter_files_picker.filepicker.local.videotrimmer.view;
 
 import android.content.res.Resources;
 import android.graphics.Bitmap;

@@ -1,4 +1,4 @@
-package com.randomvideochat.flutter_files_picker.filepicker.local.fragment;
+package com.example.flutter_files_picker.filepicker.local.fragment;
 
 import android.app.Dialog;
 import android.content.DialogInterface;

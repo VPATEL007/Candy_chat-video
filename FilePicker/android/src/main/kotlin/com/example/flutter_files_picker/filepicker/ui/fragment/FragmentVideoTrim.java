@@ -1,4 +1,4 @@
-package com.randomvideochat.flutter_files_picker.filepicker.ui.fragment;
+package com.example.flutter_files_picker.filepicker.ui.fragment;
 
 import android.app.ProgressDialog;
 import android.net.Uri;
@@ -11,13 +11,12 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.databinding.DataBindingUtil;
 
+import com.example.flutter_files_picker.filepicker.local.videotrimmer.DeepVideoTrimmer;
+import com.example.flutter_files_picker.filepicker.ui.activity.CropVideosActivity;
 import com.randomvideochat.flutter_files_picker.R;
-import com.randomvideochat.flutter_files_picker.filepicker.local.Util;
-import com.randomvideochat.flutter_files_picker.filepicker.local.fragment.VideoTrimmerBase;
-import com.randomvideochat.flutter_files_picker.filepicker.local.videotrimmer.DeepVideoTrimmer;
-import com.randomvideochat.flutter_files_picker.filepicker.local.videotrimmer.interfaces.OnTrimVideoListener;
-
-import static com.randomvideochat.flutter_files_picker.filepicker.ui.activity.CropVideosActivity.mSelectedVideos;
+import com.example.flutter_files_picker.filepicker.local.Util;
+import com.example.flutter_files_picker.filepicker.local.fragment.VideoTrimmerBase;
+import com.example.flutter_files_picker.filepicker.local.videotrimmer.interfaces.OnTrimVideoListener;
 
 
 public class FragmentVideoTrim extends VideoTrimmerBase implements OnTrimVideoListener {
@@ -81,8 +80,8 @@ public class FragmentVideoTrim extends VideoTrimmerBase implements OnTrimVideoLi
     @Override
     public void finishTrimming(Uri uri) {
         dialog.dismiss();
-        mSelectedVideos.get(position).setPath(uri.getPath());
-        mSelectedVideos.get(position).setName(Util.extractFileNameWithSuffix(uri.getPath()));
+        CropVideosActivity.mSelectedVideos.get(position).setPath(uri.getPath());
+        CropVideosActivity.mSelectedVideos.get(position).setName(Util.extractFileNameWithSuffix(uri.getPath()));
         getArguments().clear();
         Bundle bundle = new Bundle();
         bundle.putString(VIDEO_PATH, uri.getPath());

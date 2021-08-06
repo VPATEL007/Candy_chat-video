@@ -1,4 +1,4 @@
-package com.randomvideochat.flutter_files_picker.filepicker.local.videotrimmer;
+package com.example.flutter_files_picker.filepicker.local.videotrimmer;
 
 import android.content.Context;
 import android.media.MediaMetadataRetriever;
@@ -26,15 +26,15 @@ import android.widget.VideoView;
 import androidx.annotation.NonNull;
 
 import com.randomvideochat.flutter_files_picker.R;
-import com.randomvideochat.flutter_files_picker.filepicker.local.videotrimmer.interfaces.OnProgressVideoListener;
-import com.randomvideochat.flutter_files_picker.filepicker.local.videotrimmer.interfaces.OnRangeSeekBarListener;
-import com.randomvideochat.flutter_files_picker.filepicker.local.videotrimmer.interfaces.OnTrimVideoListener;
-import com.randomvideochat.flutter_files_picker.filepicker.local.videotrimmer.utils.BackgroundExecutor;
-import com.randomvideochat.flutter_files_picker.filepicker.local.videotrimmer.utils.TrimVideoUtils;
-import com.randomvideochat.flutter_files_picker.filepicker.local.videotrimmer.utils.UiThreadExecutor;
-import com.randomvideochat.flutter_files_picker.filepicker.local.videotrimmer.view.ProgressBarView;
-import com.randomvideochat.flutter_files_picker.filepicker.local.videotrimmer.view.RangeSeekBarView;
-import com.randomvideochat.flutter_files_picker.filepicker.local.videotrimmer.view.TimeLineView;
+import com.example.flutter_files_picker.filepicker.local.videotrimmer.interfaces.OnProgressVideoListener;
+import com.example.flutter_files_picker.filepicker.local.videotrimmer.interfaces.OnRangeSeekBarListener;
+import com.example.flutter_files_picker.filepicker.local.videotrimmer.interfaces.OnTrimVideoListener;
+import com.example.flutter_files_picker.filepicker.local.videotrimmer.utils.BackgroundExecutor;
+import com.example.flutter_files_picker.filepicker.local.videotrimmer.utils.TrimVideoUtils;
+import com.example.flutter_files_picker.filepicker.local.videotrimmer.utils.UiThreadExecutor;
+import com.example.flutter_files_picker.filepicker.local.videotrimmer.view.ProgressBarView;
+import com.example.flutter_files_picker.filepicker.local.videotrimmer.view.RangeSeekBarView;
+import com.example.flutter_files_picker.filepicker.local.videotrimmer.view.TimeLineView;
 
 import java.io.File;
 import java.lang.ref.WeakReference;

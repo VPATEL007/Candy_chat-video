@@ -1,4 +1,4 @@
-package com.randomvideochat.flutter_files_picker.filepicker.util;
+package com.example.flutter_files_picker.filepicker.util;
 
 import android.content.Context;
 import android.content.res.TypedArray;

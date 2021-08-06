@@ -1,4 +1,4 @@
-package com.randomvideochat.flutter_files_picker.filepicker.local.videotrimmer.interfaces;
+package com.example.flutter_files_picker.filepicker.local.videotrimmer.interfaces;
 
 import android.net.Uri;
 

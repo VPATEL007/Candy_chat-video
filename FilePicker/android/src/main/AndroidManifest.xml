@@ -1,6 +1,6 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    package="com.example.flutter_files_picker">
+    package="com.randomvideochat.flutter_files_picker">
 
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
@@ -10,58 +10,58 @@
 
     <application>
         <activity
-            android:name=".filepicker.ui.activity.PickDriveFileActivity"
+            android:name="com.randomvideochat.flutter_files_picker.com.example.flutter_files_picker.filepicker.ui.activity.PickDriveFileActivity"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme" />
 
         <activity
-            android:name=".filepicker.ui.activity.PickDropboxFileActivity"
+            android:name="com.randomvideochat.flutter_files_picker.com.example.flutter_files_picker.filepicker.ui.activity.PickDropboxFileActivity"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme"
             android:windowSoftInputMode="adjustPan" />
 
         <activity
-            android:name=".filepicker.ui.activity.ImagePickActivity"
+            android:name="com.randomvideochat.flutter_files_picker.com.example.flutter_files_picker.filepicker.ui.activity.ImagePickActivity"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme"
             android:windowSoftInputMode="adjustPan" />
 
         <activity
-            android:name=".filepicker.ui.activity.CropImagesActivity"
+            android:name="com.randomvideochat.flutter_files_picker.com.example.flutter_files_picker.filepicker.ui.activity.CropImagesActivity"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme"
             android:windowSoftInputMode="adjustPan" />
 
         <activity
-            android:name=".filepicker.ui.activity.CropVideosActivity"
+            android:name="com.randomvideochat.flutter_files_picker.com.example.flutter_files_picker.filepicker.ui.activity.CropVideosActivity"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme"
             android:windowSoftInputMode="adjustPan" />
 
         <activity
-            android:name=".filepicker.ui.activity.ImageBrowserActivity"
+            android:name="com.randomvideochat.flutter_files_picker.com.example.flutter_files_picker.filepicker.ui.activity.ImageBrowserActivity"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme"
             android:windowSoftInputMode="adjustPan" />
 
         <activity
-            android:name=".filepicker.ui.activity.AudioPickActivity"
+            android:name="com.randomvideochat.flutter_files_picker.com.example.flutter_files_picker.filepicker.ui.activity.AudioPickActivity"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme"
             android:windowSoftInputMode="adjustPan" />
 
         <activity
-            android:name=".filepicker.ui.activity.VideoPickActivity"
+            android:name="com.randomvideochat.flutter_files_picker.com.example.flutter_files_picker.filepicker.ui.activity.VideoPickActivity"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme"
             android:windowSoftInputMode="adjustPan" />
 
         <activity
-            android:name=".filepicker.ui.activity.NormalFilePickActivity"
+            android:name="com.randomvideochat.flutter_files_picker.com.example.flutter_files_picker.filepicker.ui.activity.NormalFilePickActivity"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme"
             android:windowSoftInputMode="adjustPan" />
-        <activity android:name=".filepicker.local.driverest.DriveRestPickerActivity" />
+        <activity android:name="com.randomvideochat.flutter_files_picker.com.example.flutter_files_picker.filepicker.local.driverest.DriveRestPickerActivity" />
 
 
     </application>

@@ -1,4 +1,4 @@
-package com.randomvideochat.flutter_files_picker.filepicker.ui.activity;
+package com.example.flutter_files_picker.filepicker.ui.activity;
 
 import android.app.Activity;
 import android.app.ProgressDialog;
@@ -15,14 +15,14 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.randomvideochat.flutter_files_picker.filepicker.local.FilePickerConstant;
-import com.randomvideochat.flutter_files_picker.filepicker.local.Util;
-import com.randomvideochat.flutter_files_picker.filepicker.local.filter.FileFilter;
-import com.randomvideochat.flutter_files_picker.filepicker.local.filter.entity.AudioFile;
-import com.randomvideochat.flutter_files_picker.filepicker.local.filter.entity.BaseFile;
-import com.randomvideochat.flutter_files_picker.filepicker.local.filter.entity.Directory;
-import com.randomvideochat.flutter_files_picker.filepicker.local.filter.entity.ImageFile;
-import com.randomvideochat.flutter_files_picker.filepicker.local.filter.entity.VideoFile;
+import com.example.flutter_files_picker.filepicker.local.filter.entity.AudioFile;
+import com.example.flutter_files_picker.filepicker.local.filter.entity.BaseFile;
+import com.example.flutter_files_picker.filepicker.local.filter.entity.ImageFile;
+import com.example.flutter_files_picker.filepicker.local.filter.entity.VideoFile;
+import com.example.flutter_files_picker.filepicker.local.FilePickerConstant;
+import com.example.flutter_files_picker.filepicker.local.Util;
+import com.example.flutter_files_picker.filepicker.local.filter.FileFilter;
+import com.example.flutter_files_picker.filepicker.local.filter.entity.Directory;
 
 import java.io.BufferedInputStream;
 import java.io.File;
@@ -38,7 +38,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.UUID;
 
-import static com.randomvideochat.flutter_files_picker.filepicker.ui.Picker.FILE_TYPES;
+import static com.example.flutter_files_picker.filepicker.ui.Picker.FILE_TYPES;
 
 
 public class PickDropboxFileActivity extends AppCompatActivity {

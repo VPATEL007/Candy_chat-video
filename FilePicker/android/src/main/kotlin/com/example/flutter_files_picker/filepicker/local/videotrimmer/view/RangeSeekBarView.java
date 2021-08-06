@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package com.randomvideochat.flutter_files_picker.filepicker.local.videotrimmer.view;
+package com.example.flutter_files_picker.filepicker.local.videotrimmer.view;
 
 import android.content.Context;
 import android.graphics.Canvas;
@@ -34,8 +34,8 @@ import android.view.View;
 import androidx.annotation.NonNull;
 import androidx.core.content.ContextCompat;
 
+import com.example.flutter_files_picker.filepicker.local.videotrimmer.interfaces.OnRangeSeekBarListener;
 import com.randomvideochat.flutter_files_picker.R;
-import com.randomvideochat.flutter_files_picker.filepicker.local.videotrimmer.interfaces.OnRangeSeekBarListener;
 
 import java.util.ArrayList;
 import java.util.List;

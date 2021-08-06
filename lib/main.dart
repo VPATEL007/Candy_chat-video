@@ -24,7 +24,7 @@ void main() {
       .then((value) async {
     setup();
 
-    await app.resolve<PrefUtils>().init();
+    // await app.resolve<PrefUtils>().init();
 
     // runApp(MyApp());
     runApp(SettingsModelsProvider(

@@ -1,4 +1,4 @@
-package com.randomvideochat.flutter_files_picker.filepicker.util.permissions.util
+package com.example.flutter_files_picker.filepicker.util.permissions.util
 
 data class PermissionsOptions(
         var handleRationale: Boolean = true,

@@ -1,4 +1,4 @@
-package com.randomvideochat.flutter_files_picker.filepicker.local.filter.entity;
+package com.example.flutter_files_picker.filepicker.local.filter.entity;
 
 import android.os.Parcel;
 import android.os.Parcelable;

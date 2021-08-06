@@ -1,13 +1,13 @@
-package com.randomvideochat.flutter_files_picker.filepicker.util.permissions
+package com.example.flutter_files_picker.filepicker.util.permissions
 
 import android.content.Context
 import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
-import com.randomvideochat.flutter_files_picker.filepicker.util.permissions.util.PermissionCheckerFragment
-import com.randomvideochat.flutter_files_picker.filepicker.util.permissions.util.PermissionsOptions
-import com.randomvideochat.flutter_files_picker.filepicker.util.permissions.util.PermissionsRequest
-import com.randomvideochat.flutter_files_picker.filepicker.util.permissions.util.PermissionsUtil
+import com.example.flutter_files_picker.filepicker.util.permissions.util.PermissionCheckerFragment
+import com.example.flutter_files_picker.filepicker.util.permissions.util.PermissionsOptions
+import com.example.flutter_files_picker.filepicker.util.permissions.util.PermissionsRequest
+import com.example.flutter_files_picker.filepicker.util.permissions.util.PermissionsUtil
 
 private const val TAG = "runWithPermissions"
 

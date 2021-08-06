@@ -1,4 +1,4 @@
-package com.randomvideochat.flutter_files_picker.filepicker.ui.activity;
+package com.example.flutter_files_picker.filepicker.ui.activity;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -15,14 +15,14 @@ import androidx.fragment.app.FragmentPagerAdapter;
 import androidx.viewpager.widget.ViewPager;
 
 
+import com.example.flutter_files_picker.filepicker.local.filter.entity.BaseFile;
+import com.example.flutter_files_picker.filepicker.local.filter.entity.ImageFile;
 import com.randomvideochat.flutter_files_picker.R;
-import com.randomvideochat.flutter_files_picker.filepicker.local.FilePickerConstant;
-import com.randomvideochat.flutter_files_picker.filepicker.local.Util;
-import com.randomvideochat.flutter_files_picker.filepicker.local.filter.entity.BaseFile;
-import com.randomvideochat.flutter_files_picker.filepicker.local.filter.entity.ImageFile;
-import com.randomvideochat.flutter_files_picker.filepicker.ui.BaseActivity;
-import com.randomvideochat.flutter_files_picker.filepicker.ui.fragment.FragmentImageCrop;
-import com.randomvideochat.flutter_files_picker.filepicker.util.ActivityUtils;
+import com.example.flutter_files_picker.filepicker.local.FilePickerConstant;
+import com.example.flutter_files_picker.filepicker.local.Util;
+import com.example.flutter_files_picker.filepicker.ui.BaseActivity;
+import com.example.flutter_files_picker.filepicker.ui.fragment.FragmentImageCrop;
+import com.example.flutter_files_picker.filepicker.util.ActivityUtils;
 
 import java.io.File;
 import java.io.IOException;

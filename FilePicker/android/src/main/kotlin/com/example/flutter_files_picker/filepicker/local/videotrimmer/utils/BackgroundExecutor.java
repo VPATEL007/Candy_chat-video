@@ -1,4 +1,4 @@
-package com.randomvideochat.flutter_files_picker.filepicker.local.videotrimmer.utils;
+package com.example.flutter_files_picker.filepicker.local.videotrimmer.utils;
 
 import android.util.Log;
 

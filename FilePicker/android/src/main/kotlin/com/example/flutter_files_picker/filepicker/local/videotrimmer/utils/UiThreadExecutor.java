@@ -13,7 +13,7 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package com.randomvideochat.flutter_files_picker.filepicker.local.videotrimmer.utils;
+package com.example.flutter_files_picker.filepicker.local.videotrimmer.utils;
 
 import android.os.Handler;
 import android.os.Looper;

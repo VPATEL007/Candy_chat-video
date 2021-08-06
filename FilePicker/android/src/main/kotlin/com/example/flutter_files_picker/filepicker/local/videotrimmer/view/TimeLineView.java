@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package com.randomvideochat.flutter_files_picker.filepicker.local.videotrimmer.view;
+package com.example.flutter_files_picker.filepicker.local.videotrimmer.view;
 
 import android.content.Context;
 import android.graphics.Bitmap;
@@ -34,9 +34,9 @@ import android.view.View;
 
 import androidx.annotation.NonNull;
 
+import com.example.flutter_files_picker.filepicker.local.videotrimmer.utils.BackgroundExecutor;
+import com.example.flutter_files_picker.filepicker.local.videotrimmer.utils.UiThreadExecutor;
 import com.randomvideochat.flutter_files_picker.R;
-import com.randomvideochat.flutter_files_picker.filepicker.local.videotrimmer.utils.BackgroundExecutor;
-import com.randomvideochat.flutter_files_picker.filepicker.local.videotrimmer.utils.UiThreadExecutor;
 
 
 public class TimeLineView extends View {

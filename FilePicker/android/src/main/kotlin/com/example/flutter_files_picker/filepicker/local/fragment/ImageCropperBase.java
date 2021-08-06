@@ -1,4 +1,4 @@
-package com.randomvideochat.flutter_files_picker.filepicker.local.fragment;
+package com.example.flutter_files_picker.filepicker.local.fragment;
 
 import android.content.ContentResolver;
 import android.content.ContentValues;
@@ -21,10 +21,11 @@ import android.widget.TextView;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 
+import com.example.flutter_files_picker.filepicker.ui.activity.CropImagesActivity;
+import com.example.flutter_files_picker.filepicker.ui.activity.ImageCropActivity;
+import com.example.flutter_files_picker.filepicker.ui.fragment.FragmentImageCrop;
 import com.randomvideochat.flutter_files_picker.R;
-import com.randomvideochat.flutter_files_picker.filepicker.local.Util;
-import com.randomvideochat.flutter_files_picker.filepicker.ui.activity.ImageCropActivity;
-import com.randomvideochat.flutter_files_picker.filepicker.ui.fragment.FragmentImageCrop;
+import com.example.flutter_files_picker.filepicker.local.Util;
 import com.isseiaoki.simplecropview.CropImageView;
 import com.isseiaoki.simplecropview.callback.CropCallback;
 import com.isseiaoki.simplecropview.callback.LoadCallback;
@@ -36,8 +37,6 @@ import java.io.File;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
-
-import static com.randomvideochat.flutter_files_picker.filepicker.ui.activity.CropImagesActivity.mSelectedFiles;
 
 
 public class ImageCropperBase extends Fragment {
@@ -66,8 +65,8 @@ public class ImageCropperBase extends Fragment {
         @Override
         public void onSuccess(Uri outputUri) {
             dismissProgress();
-            mSelectedFiles.get(position).setPath(outputUri.getPath());
-            mSelectedFiles.get(position).setName(Util.extractFileNameWithSuffix(outputUri.getPath()));
+            CropImagesActivity.mSelectedFiles.get(position).setPath(outputUri.getPath());
+            CropImagesActivity.mSelectedFiles.get(position).setName(Util.extractFileNameWithSuffix(outputUri.getPath()));
             mCropView.load(outputUri)
                     .initialFrameRect(mFrameRect)
                     .useThumbnail(true)

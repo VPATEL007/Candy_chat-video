@@ -1,4 +1,4 @@
-package com.randomvideochat.flutter_files_picker.filepicker.local.adapter;
+package com.example.flutter_files_picker.filepicker.local.adapter;
 
 import android.content.Context;
 

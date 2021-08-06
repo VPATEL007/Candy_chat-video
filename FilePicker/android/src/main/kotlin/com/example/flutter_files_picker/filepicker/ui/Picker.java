@@ -1,4 +1,4 @@
-package com.randomvideochat.flutter_files_picker.filepicker.ui;
+package com.example.flutter_files_picker.filepicker.ui;
 
 import android.content.Context;
 import android.content.Intent;
@@ -6,13 +6,13 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.LinearLayout;
 
+import com.example.flutter_files_picker.filepicker.ui.activity.AudioPickActivity;
+import com.example.flutter_files_picker.filepicker.ui.activity.ImagePickActivity;
+import com.example.flutter_files_picker.filepicker.ui.activity.NormalFilePickActivity;
+import com.example.flutter_files_picker.filepicker.ui.activity.PickDriveFileActivity;
+import com.example.flutter_files_picker.filepicker.ui.activity.PickDropboxFileActivity;
+import com.example.flutter_files_picker.filepicker.ui.activity.VideoPickActivity;
 import com.randomvideochat.flutter_files_picker.R;
-import com.randomvideochat.flutter_files_picker.filepicker.ui.activity.AudioPickActivity;
-import com.randomvideochat.flutter_files_picker.filepicker.ui.activity.ImagePickActivity;
-import com.randomvideochat.flutter_files_picker.filepicker.ui.activity.NormalFilePickActivity;
-import com.randomvideochat.flutter_files_picker.filepicker.ui.activity.PickDriveFileActivity;
-import com.randomvideochat.flutter_files_picker.filepicker.ui.activity.PickDropboxFileActivity;
-import com.randomvideochat.flutter_files_picker.filepicker.ui.activity.VideoPickActivity;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
 
 import java.util.ArrayList;
@@ -20,7 +20,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import static com.randomvideochat.flutter_files_picker.filepicker.ui.Picker.FileType.*;
+import static com.example.flutter_files_picker.filepicker.ui.Picker.FileType.*;
 
 /**
  * Open File Picker with specified parameters

@@ -1,11 +1,16 @@
+import 'package:apple_sign_in/apple_sign_in.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:video_chat/app/AppConfiguration/AppNavigation.dart';
+import 'package:video_chat/app/Helper/apple_login_helper.dart';
+import 'package:video_chat/app/Helper/facebook_login_helper.dart';
 import 'package:video_chat/app/app.export.dart';
 import 'package:video_chat/app/constant/ColorConstant.dart';
 import 'package:video_chat/app/utils/CommonWidgets.dart';
 import 'package:video_chat/app/utils/math_utils.dart';
 import 'package:video_chat/components/Screens/Auth/Gender.dart';
+import 'dart:io' show Platform;
 
 class Login extends StatefulWidget {
   static const route = "Login";
@@ -70,12 +75,18 @@ class _LoginState extends State<Login> {
                     style: appTheme.white14Normal),
               ),
               Spacer(),
-              getButton(icApple, "Continue with Apple", Colors.black, () {}),
+              if (Platform.isIOS)
+                getButton(icApple, "Continue with Apple", Colors.black, () {
+                  AppleLoginHealper.shared.login();
+                }),
               SizedBox(
                 height: getSize(12),
               ),
-              getButton(icFacebook, "Continue with Facebook",
-                  ColorConstants.facebook, () {}),
+              getButton(
+                  icFacebook, "Continue with Facebook", ColorConstants.facebook,
+                  () {
+                FacebookLoginHelper.shared.loginWithFacebook(() {});
+              }),
               SizedBox(
                 height: getSize(12),
               ),
