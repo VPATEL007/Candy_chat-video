@@ -1,4 +1,4 @@
-package com.example.flutter_files_picker.filepicker.util.permissions.util
+package com.randomvideochat.flutter_files_picker.filepicker.util.permissions.util
 
 
 import android.content.Intent
@@ -9,7 +9,7 @@ import android.provider.Settings.ACTION_APPLICATION_DETAILS_SETTINGS
 import android.util.Log
 import androidx.core.app.ActivityCompat
 import androidx.fragment.app.Fragment
-import com.example.flutter_files_picker.R
+import com.randomvideochat.flutter_files_picker.R
 import org.jetbrains.anko.alert
 
 class PermissionCheckerFragment : Fragment() {

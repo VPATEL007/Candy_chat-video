@@ -1,4 +1,4 @@
-package com.example.flutter_files_picker.filepicker.util;
+package com.randomvideochat.flutter_files_picker.filepicker.util;
 
 import android.content.Context;
 import android.content.res.TypedArray;
@@ -25,7 +25,7 @@ import android.view.WindowManager;
 
 import androidx.appcompat.widget.AppCompatImageView;
 
-import com.example.flutter_files_picker.R;
+import com.randomvideochat.flutter_files_picker.R;
 
 
 public class CropImageView extends AppCompatImageView {

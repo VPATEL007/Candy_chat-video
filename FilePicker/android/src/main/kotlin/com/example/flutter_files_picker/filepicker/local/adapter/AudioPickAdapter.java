@@ -1,4 +1,4 @@
-package com.example.flutter_files_picker.filepicker.local.adapter;
+package com.randomvideochat.flutter_files_picker.filepicker.local.adapter;
 
 import android.content.Context;
 import android.content.Intent;
@@ -12,11 +12,11 @@ import android.widget.TextView;
 import androidx.databinding.DataBindingUtil;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.flutter_files_picker.R;
-import com.example.flutter_files_picker.filepicker.local.ToastUtil;
-import com.example.flutter_files_picker.filepicker.local.Util;
-import com.example.flutter_files_picker.filepicker.local.filter.entity.AudioFile;
-import com.example.flutter_files_picker.filepicker.ui.activity.AudioPickActivity;
+import com.randomvideochat.flutter_files_picker.R;
+import com.randomvideochat.flutter_files_picker.filepicker.local.ToastUtil;
+import com.randomvideochat.flutter_files_picker.filepicker.local.Util;
+import com.randomvideochat.flutter_files_picker.filepicker.local.filter.entity.AudioFile;
+import com.randomvideochat.flutter_files_picker.filepicker.ui.activity.AudioPickActivity;
 
 import java.util.ArrayList;
 

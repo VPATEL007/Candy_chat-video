@@ -1,4 +1,4 @@
-package com.example.flutter_files_picker.filepicker.ui.fragment;
+package com.randomvideochat.flutter_files_picker.filepicker.ui.fragment;
 
 import android.net.Uri;
 import android.os.Bundle;
@@ -11,9 +11,9 @@ import androidx.annotation.Nullable;
 import androidx.core.content.ContextCompat;
 import androidx.databinding.DataBindingUtil;
 
-import com.example.flutter_files_picker.R;
-import com.example.flutter_files_picker.filepicker.local.ImageCompression;
-import com.example.flutter_files_picker.filepicker.local.fragment.ImageCropperBase;
+import com.randomvideochat.flutter_files_picker.R;
+import com.randomvideochat.flutter_files_picker.filepicker.local.ImageCompression;
+import com.randomvideochat.flutter_files_picker.filepicker.local.fragment.ImageCropperBase;
 import com.google.android.material.shape.MaterialShapeDrawable;
 import com.google.android.material.shape.RoundedCornerTreatment;
 import com.google.android.material.shape.ShapePathModel;

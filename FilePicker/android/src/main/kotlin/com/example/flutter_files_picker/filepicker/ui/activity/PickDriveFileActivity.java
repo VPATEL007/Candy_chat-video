@@ -1,4 +1,4 @@
-package com.example.flutter_files_picker.filepicker.ui.activity;
+package com.randomvideochat.flutter_files_picker.filepicker.ui.activity;
 
 import android.Manifest;
 import android.app.Activity;
@@ -12,21 +12,21 @@ import android.provider.MediaStore;
 
 import androidx.annotation.Nullable;
 
-import com.example.flutter_files_picker.R;
-import com.example.flutter_files_picker.filepicker.local.FilePickerConstant;
-import com.example.flutter_files_picker.filepicker.local.Util;
-import com.example.flutter_files_picker.filepicker.local.filter.FileFilter;
-import com.example.flutter_files_picker.filepicker.local.filter.entity.AudioFile;
-import com.example.flutter_files_picker.filepicker.local.filter.entity.BaseFile;
-import com.example.flutter_files_picker.filepicker.local.filter.entity.Directory;
-import com.example.flutter_files_picker.filepicker.local.filter.entity.ImageFile;
-import com.example.flutter_files_picker.filepicker.local.filter.entity.VideoFile;
-import com.example.flutter_files_picker.filepicker.util.permissions.PermissionsKt;
+import com.randomvideochat.flutter_files_picker.R;
+import com.randomvideochat.flutter_files_picker.filepicker.local.FilePickerConstant;
+import com.randomvideochat.flutter_files_picker.filepicker.local.Util;
+import com.randomvideochat.flutter_files_picker.filepicker.local.filter.FileFilter;
+import com.randomvideochat.flutter_files_picker.filepicker.local.filter.entity.AudioFile;
+import com.randomvideochat.flutter_files_picker.filepicker.local.filter.entity.BaseFile;
+import com.randomvideochat.flutter_files_picker.filepicker.local.filter.entity.Directory;
+import com.randomvideochat.flutter_files_picker.filepicker.local.filter.entity.ImageFile;
+import com.randomvideochat.flutter_files_picker.filepicker.local.filter.entity.VideoFile;
+import com.randomvideochat.flutter_files_picker.filepicker.util.permissions.PermissionsKt;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.drive.DriveApi;
 import com.google.android.gms.drive.DriveContents;
 import com.google.android.gms.drive.DriveFile;
-import com.example.flutter_files_picker.filepicker.util.permissions.util.PermissionsOptions;
+import com.randomvideochat.flutter_files_picker.filepicker.util.permissions.util.PermissionsOptions;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -36,7 +36,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
-import static com.example.flutter_files_picker.filepicker.ui.Picker.FILE_TYPES;
+import static com.randomvideochat.flutter_files_picker.filepicker.ui.Picker.FILE_TYPES;
 
 
 public class PickDriveFileActivity extends DriveBaseActivity {

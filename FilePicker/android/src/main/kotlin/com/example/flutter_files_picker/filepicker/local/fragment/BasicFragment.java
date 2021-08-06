@@ -1,4 +1,4 @@
-package com.example.flutter_files_picker.filepicker.local.fragment;
+package com.randomvideochat.flutter_files_picker.filepicker.local.fragment;
 
 import android.Manifest;
 import android.app.Activity;
@@ -21,10 +21,10 @@ import android.view.ViewGroup;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 
-import com.example.flutter_files_picker.R;
-import com.example.flutter_files_picker.filepicker.ui.activity.ImageCropActivity;
-import com.example.flutter_files_picker.filepicker.util.permissions.PermissionsKt;
-import com.example.flutter_files_picker.filepicker.util.permissions.util.PermissionsOptions;
+import com.randomvideochat.flutter_files_picker.R;
+import com.randomvideochat.flutter_files_picker.filepicker.ui.activity.ImageCropActivity;
+import com.randomvideochat.flutter_files_picker.filepicker.util.permissions.PermissionsKt;
+import com.randomvideochat.flutter_files_picker.filepicker.util.permissions.util.PermissionsOptions;
 import com.isseiaoki.simplecropview.CropImageView;
 import com.isseiaoki.simplecropview.callback.CropCallback;
 import com.isseiaoki.simplecropview.callback.LoadCallback;

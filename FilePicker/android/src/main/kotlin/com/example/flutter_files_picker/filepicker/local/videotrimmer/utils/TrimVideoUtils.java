@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package com.example.flutter_files_picker.filepicker.local.videotrimmer.utils;
+package com.randomvideochat.flutter_files_picker.filepicker.local.videotrimmer.utils;
 
 import android.net.Uri;
 import android.util.Log;
@@ -29,7 +29,7 @@ import android.util.Log;
 import androidx.annotation.NonNull;
 
 import com.coremedia.iso.boxes.Container;
-import com.example.flutter_files_picker.filepicker.local.videotrimmer.interfaces.OnTrimVideoListener;
+import com.randomvideochat.flutter_files_picker.filepicker.local.videotrimmer.interfaces.OnTrimVideoListener;
 import com.googlecode.mp4parser.FileDataSourceViaHeapImpl;
 import com.googlecode.mp4parser.authoring.Movie;
 import com.googlecode.mp4parser.authoring.Track;

@@ -1,20 +1,20 @@
-package com.example.flutter_files_picker.filepicker.local.filter;
+package com.randomvideochat.flutter_files_picker.filepicker.local.filter;
 
 import android.app.Activity;
 import android.net.Uri;
 
 import androidx.fragment.app.FragmentActivity;
 
-import com.example.flutter_files_picker.filepicker.local.Util;
-import com.example.flutter_files_picker.filepicker.local.filter.callback.FileLoaderCallbacks;
-import com.example.flutter_files_picker.filepicker.local.filter.callback.FilterResultCallback;
-import com.example.flutter_files_picker.filepicker.local.filter.entity.AudioFile;
-import com.example.flutter_files_picker.filepicker.local.filter.entity.ImageFile;
-import com.example.flutter_files_picker.filepicker.local.filter.entity.NormalFile;
-import com.example.flutter_files_picker.filepicker.local.filter.entity.VideoFile;
-import com.example.flutter_files_picker.filepicker.local.filter.loader.SingleFileLoader;
+import com.randomvideochat.flutter_files_picker.filepicker.local.Util;
+import com.randomvideochat.flutter_files_picker.filepicker.local.filter.callback.FileLoaderCallbacks;
+import com.randomvideochat.flutter_files_picker.filepicker.local.filter.callback.FilterResultCallback;
+import com.randomvideochat.flutter_files_picker.filepicker.local.filter.entity.AudioFile;
+import com.randomvideochat.flutter_files_picker.filepicker.local.filter.entity.ImageFile;
+import com.randomvideochat.flutter_files_picker.filepicker.local.filter.entity.NormalFile;
+import com.randomvideochat.flutter_files_picker.filepicker.local.filter.entity.VideoFile;
+import com.randomvideochat.flutter_files_picker.filepicker.local.filter.loader.SingleFileLoader;
 
-import static com.example.flutter_files_picker.filepicker.local.filter.callback.FileLoaderCallbacks.*;
+import static com.randomvideochat.flutter_files_picker.filepicker.local.filter.callback.FileLoaderCallbacks.*;
 
 
 /**

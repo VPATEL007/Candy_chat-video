@@ -1,4 +1,4 @@
-package com.example.flutter_files_picker.filepicker.local.filter.entity;
+package com.randomvideochat.flutter_files_picker.filepicker.local.filter.entity;
 
 import java.util.ArrayList;
 import java.util.List;

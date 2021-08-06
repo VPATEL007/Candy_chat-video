@@ -1,4 +1,4 @@
-package com.example.flutter_files_picker.filepicker.ui.activity;
+package com.randomvideochat.flutter_files_picker.filepicker.ui.activity;
 
 import android.content.Intent;
 import android.content.IntentSender;
@@ -7,7 +7,7 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.example.flutter_files_picker.R;
+import com.randomvideochat.flutter_files_picker.R;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;

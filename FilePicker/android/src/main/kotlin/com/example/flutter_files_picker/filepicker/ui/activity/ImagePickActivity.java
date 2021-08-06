@@ -1,9 +1,8 @@
-package com.example.flutter_files_picker.filepicker.ui.activity;
+package com.randomvideochat.flutter_files_picker.filepicker.ui.activity;
 
 import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
-import android.net.Uri;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.View;
@@ -12,33 +11,31 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.databinding.DataBindingUtil;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.flutter_files_picker.R;
-import com.example.flutter_files_picker.databinding.ActivityImagePickBinding;
-import com.example.flutter_files_picker.filepicker.local.DividerGridItemDecoration;
-import com.example.flutter_files_picker.filepicker.local.FilePickerConstant;
-import com.example.flutter_files_picker.filepicker.local.adapter.ImagePickAdapter;
-import com.example.flutter_files_picker.filepicker.local.filter.FileFilter;
-import com.example.flutter_files_picker.filepicker.local.filter.entity.Directory;
-import com.example.flutter_files_picker.filepicker.local.filter.entity.ImageFile;
-import com.example.flutter_files_picker.filepicker.ui.BaseActivity;
-import com.example.flutter_files_picker.filepicker.ui.Picker;
-import com.example.flutter_files_picker.filepicker.util.ActivityUtils;
-import com.example.flutter_files_picker.filepicker.util.permissions.PermissionsKt;
-import com.example.flutter_files_picker.filepicker.util.permissions.util.PermissionsOptions;
+import com.randomvideochat.flutter_files_picker.R;
+import com.randomvideochat.flutter_files_picker.filepicker.local.DividerGridItemDecoration;
+import com.randomvideochat.flutter_files_picker.filepicker.local.FilePickerConstant;
+import com.randomvideochat.flutter_files_picker.filepicker.local.adapter.ImagePickAdapter;
+import com.randomvideochat.flutter_files_picker.filepicker.local.filter.FileFilter;
+import com.randomvideochat.flutter_files_picker.filepicker.local.filter.entity.Directory;
+import com.randomvideochat.flutter_files_picker.filepicker.local.filter.entity.ImageFile;
+import com.randomvideochat.flutter_files_picker.filepicker.ui.BaseActivity;
+import com.randomvideochat.flutter_files_picker.filepicker.ui.Picker;
+import com.randomvideochat.flutter_files_picker.filepicker.util.ActivityUtils;
+import com.randomvideochat.flutter_files_picker.filepicker.util.permissions.PermissionsKt;
+import com.randomvideochat.flutter_files_picker.filepicker.util.permissions.util.PermissionsOptions;
 
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.example.flutter_files_picker.filepicker.ui.Picker.FileType.TYPE_BMP;
-import static com.example.flutter_files_picker.filepicker.ui.Picker.FileType.TYPE_JPEG;
-import static com.example.flutter_files_picker.filepicker.ui.Picker.FileType.TYPE_PNG;
-import static com.example.flutter_files_picker.filepicker.ui.Picker.FileType.TYPE_WEBP;
+import static com.randomvideochat.flutter_files_picker.filepicker.ui.Picker.FileType.TYPE_BMP;
+import static com.randomvideochat.flutter_files_picker.filepicker.ui.Picker.FileType.TYPE_JPEG;
+import static com.randomvideochat.flutter_files_picker.filepicker.ui.Picker.FileType.TYPE_PNG;
+import static com.randomvideochat.flutter_files_picker.filepicker.ui.Picker.FileType.TYPE_WEBP;
 
 
 public class ImagePickActivity extends BaseActivity {

@@ -1,4 +1,4 @@
-package com.example.flutter_files_picker.filepicker.local.filter.loader;
+package com.randomvideochat.flutter_files_picker.filepicker.local.filter.loader;
 
 import android.content.Context;
 import android.database.Cursor;
@@ -7,12 +7,12 @@ import android.provider.MediaStore;
 
 import androidx.loader.content.CursorLoader;
 
-import com.example.flutter_files_picker.filepicker.local.Util;
-import com.example.flutter_files_picker.filepicker.local.filter.callback.FilterResultCallback;
-import com.example.flutter_files_picker.filepicker.local.filter.entity.AudioFile;
-import com.example.flutter_files_picker.filepicker.local.filter.entity.Directory;
-import com.example.flutter_files_picker.filepicker.local.filter.entity.ImageFile;
-import com.example.flutter_files_picker.filepicker.local.filter.entity.VideoFile;
+import com.randomvideochat.flutter_files_picker.filepicker.local.Util;
+import com.randomvideochat.flutter_files_picker.filepicker.local.filter.callback.FilterResultCallback;
+import com.randomvideochat.flutter_files_picker.filepicker.local.filter.entity.AudioFile;
+import com.randomvideochat.flutter_files_picker.filepicker.local.filter.entity.Directory;
+import com.randomvideochat.flutter_files_picker.filepicker.local.filter.entity.ImageFile;
+import com.randomvideochat.flutter_files_picker.filepicker.local.filter.entity.VideoFile;
 
 import java.util.ArrayList;
 import java.util.List;

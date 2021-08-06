@@ -1,11 +1,11 @@
-package com.example.flutter_files_picker.filepicker.util;
+package com.randomvideochat.flutter_files_picker.filepicker.util;
 
 import android.app.Activity;
 import android.content.Intent;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.example.flutter_files_picker.R;
+import com.randomvideochat.flutter_files_picker.R;
 
 public class ActivityUtils {
 

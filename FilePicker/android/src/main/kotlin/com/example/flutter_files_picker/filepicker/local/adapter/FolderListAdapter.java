@@ -1,4 +1,4 @@
-package com.example.flutter_files_picker.filepicker.local.adapter;
+package com.randomvideochat.flutter_files_picker.filepicker.local.adapter;
 
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -10,8 +10,8 @@ import androidx.databinding.DataBindingUtil;
 import androidx.recyclerview.widget.RecyclerView;
 
 
-import com.example.flutter_files_picker.R;
-import com.example.flutter_files_picker.filepicker.local.filter.entity.Directory;
+import com.randomvideochat.flutter_files_picker.R;
+import com.randomvideochat.flutter_files_picker.filepicker.local.filter.entity.Directory;
 
 import java.util.ArrayList;
 

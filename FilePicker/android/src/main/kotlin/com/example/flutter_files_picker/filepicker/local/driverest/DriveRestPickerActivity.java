@@ -1,4 +1,4 @@
-package com.example.flutter_files_picker.filepicker.local.driverest;
+package com.randomvideochat.flutter_files_picker.filepicker.local.driverest;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -8,7 +8,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.example.flutter_files_picker.FlutterFilePickerPlugin;
+import com.randomvideochat.flutter_files_picker.FlutterFilePickerPlugin;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;

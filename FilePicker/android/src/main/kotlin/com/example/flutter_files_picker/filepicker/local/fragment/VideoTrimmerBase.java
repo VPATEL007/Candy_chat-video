@@ -1,4 +1,4 @@
-package com.example.flutter_files_picker.filepicker.local.fragment;
+package com.randomvideochat.flutter_files_picker.filepicker.local.fragment;
 
 import android.os.SystemClock;
 import android.view.View;
@@ -9,7 +9,7 @@ import androidx.appcompat.app.AppCompatDelegate;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 
-import com.example.flutter_files_picker.R;
+import com.randomvideochat.flutter_files_picker.R;
 import com.google.android.material.snackbar.Snackbar;
 
 

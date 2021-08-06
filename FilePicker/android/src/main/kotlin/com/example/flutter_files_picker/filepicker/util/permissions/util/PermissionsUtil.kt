@@ -1,4 +1,4 @@
-package com.example.flutter_files_picker.filepicker.util.permissions.util
+package com.randomvideochat.flutter_files_picker.filepicker.util.permissions.util
 
 import android.content.Context
 import android.content.pm.PackageManager

@@ -1,7 +1,5 @@
-package com.example.flutter_files_picker.filepicker.util;
+package com.randomvideochat.flutter_files_picker.filepicker.util;
 
-import android.graphics.Color;
-import android.graphics.ColorFilter;
 import android.graphics.PorterDuff;
 import android.view.View;
 import android.widget.ImageView;
@@ -9,7 +7,7 @@ import android.widget.TextView;
 
 import androidx.databinding.BindingAdapter;
 
-import com.example.flutter_files_picker.FlutterFilePickerPlugin;
+import com.randomvideochat.flutter_files_picker.FlutterFilePickerPlugin;
 
 public class CustomBindingAdapter {
 

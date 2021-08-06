@@ -1,4 +1,4 @@
-package com.example.flutter_files_picker.filepicker.ui;
+package com.randomvideochat.flutter_files_picker.filepicker.ui;
 
 import android.os.Bundle;
 import android.view.View;
@@ -6,12 +6,11 @@ import android.widget.LinearLayout;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.content.ContextCompat;
 
-import com.example.flutter_files_picker.FlutterFilePickerPlugin;
-import com.example.flutter_files_picker.R;
-import com.example.flutter_files_picker.filepicker.local.FolderListHelper;
-import com.example.flutter_files_picker.filepicker.util.ActivityUtils;
+import com.randomvideochat.flutter_files_picker.FlutterFilePickerPlugin;
+import com.randomvideochat.flutter_files_picker.R;
+import com.randomvideochat.flutter_files_picker.filepicker.local.FolderListHelper;
+import com.randomvideochat.flutter_files_picker.filepicker.util.ActivityUtils;
 import com.google.android.material.shape.MaterialShapeDrawable;
 import com.google.android.material.shape.RoundedCornerTreatment;
 import com.google.android.material.shape.ShapePathModel;

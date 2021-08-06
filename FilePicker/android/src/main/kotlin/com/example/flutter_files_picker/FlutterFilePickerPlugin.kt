@@ -1,14 +1,13 @@
-package com.example.flutter_files_picker
+package com.randomvideochat.flutter_files_picker
 
 import android.app.Activity
 import android.content.Intent
 import android.graphics.Color
 import android.text.format.Formatter
-import androidx.core.content.ContextCompat
-import com.example.flutter_files_picker.filepicker.local.FilePickerConstant
-import com.example.flutter_files_picker.filepicker.local.filter.entity.BaseFile
-import com.example.flutter_files_picker.filepicker.ui.Picker
-import com.example.flutter_files_picker.filepicker.util.ActivityUtils.startWithTransition
+import com.randomvideochat.flutter_files_picker.filepicker.local.FilePickerConstant
+import com.randomvideochat.flutter_files_picker.filepicker.local.filter.entity.BaseFile
+import com.randomvideochat.flutter_files_picker.filepicker.ui.Picker
+import com.randomvideochat.flutter_files_picker.filepicker.util.ActivityUtils.startWithTransition
 import io.flutter.plugin.common.MethodCall
 import io.flutter.plugin.common.MethodChannel
 import io.flutter.plugin.common.MethodChannel.MethodCallHandler

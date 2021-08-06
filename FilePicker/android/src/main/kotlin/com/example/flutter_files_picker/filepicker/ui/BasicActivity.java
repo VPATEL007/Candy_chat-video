@@ -1,4 +1,4 @@
-package com.example.flutter_files_picker.filepicker.ui;
+package com.randomvideochat.flutter_files_picker.filepicker.ui;
 
 import android.content.Intent;
 import android.content.res.Configuration;
@@ -10,8 +10,8 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.databinding.DataBindingUtil;
 
-import com.example.flutter_files_picker.R;
-import com.example.flutter_files_picker.filepicker.local.fragment.BasicFragment;
+import com.randomvideochat.flutter_files_picker.R;
+import com.randomvideochat.flutter_files_picker.filepicker.local.fragment.BasicFragment;
 
 
 public class BasicActivity extends AppCompatActivity {

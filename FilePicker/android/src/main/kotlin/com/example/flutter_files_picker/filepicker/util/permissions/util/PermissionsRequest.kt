@@ -1,4 +1,4 @@
-package com.example.flutter_files_picker.filepicker.util.permissions.util
+package com.randomvideochat.flutter_files_picker.filepicker.util.permissions.util
 
 data class PermissionsRequest(
         private var target: PermissionCheckerFragment,

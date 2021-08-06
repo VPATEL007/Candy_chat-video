@@ -1,4 +1,4 @@
-package com.example.flutter_files_picker.filepicker.util;
+package com.randomvideochat.flutter_files_picker.filepicker.util;
 
 import java.text.DecimalFormat;
 

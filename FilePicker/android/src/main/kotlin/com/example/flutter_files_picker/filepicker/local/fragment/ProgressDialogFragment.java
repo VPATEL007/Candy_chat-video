@@ -1,4 +1,4 @@
-package com.example.flutter_files_picker.filepicker.local.fragment;
+package com.randomvideochat.flutter_files_picker.filepicker.local.fragment;
 
 import android.app.Dialog;
 import android.content.DialogInterface;
@@ -17,7 +17,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.DialogFragment;
 
-import com.example.flutter_files_picker.R;
+import com.randomvideochat.flutter_files_picker.R;
 
 
 public class ProgressDialogFragment extends DialogFragment {

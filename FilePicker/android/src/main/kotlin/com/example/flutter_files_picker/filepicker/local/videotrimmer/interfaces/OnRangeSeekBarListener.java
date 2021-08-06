@@ -1,7 +1,7 @@
-package com.example.flutter_files_picker.filepicker.local.videotrimmer.interfaces;
+package com.randomvideochat.flutter_files_picker.filepicker.local.videotrimmer.interfaces;
 
 
-import com.example.flutter_files_picker.filepicker.local.videotrimmer.view.RangeSeekBarView;
+import com.randomvideochat.flutter_files_picker.filepicker.local.videotrimmer.view.RangeSeekBarView;
 
 /**
  * Created by Deep Patel

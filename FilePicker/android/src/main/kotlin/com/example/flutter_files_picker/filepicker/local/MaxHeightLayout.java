@@ -1,4 +1,4 @@
-package com.example.flutter_files_picker.filepicker.local;
+package com.randomvideochat.flutter_files_picker.filepicker.local;
 
 import android.content.Context;
 import android.content.res.TypedArray;
@@ -6,7 +6,7 @@ import android.util.AttributeSet;
 import android.view.WindowManager;
 import android.widget.FrameLayout;
 
-import com.example.flutter_files_picker.R;
+import com.randomvideochat.flutter_files_picker.R;
 
 /**
  * Created by Vincent Woo

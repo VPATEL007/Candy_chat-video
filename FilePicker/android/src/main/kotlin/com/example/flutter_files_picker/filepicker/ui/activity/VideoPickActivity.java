@@ -1,4 +1,4 @@
-package com.example.flutter_files_picker.filepicker.ui.activity;
+package com.randomvideochat.flutter_files_picker.filepicker.ui.activity;
 
 import android.Manifest;
 import android.content.Context;
@@ -18,23 +18,23 @@ import androidx.databinding.DataBindingUtil;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.flutter_files_picker.R;
-import com.example.flutter_files_picker.filepicker.local.DividerGridItemDecoration;
-import com.example.flutter_files_picker.filepicker.local.FilePickerConstant;
-import com.example.flutter_files_picker.filepicker.local.adapter.VideoPickAdapter;
-import com.example.flutter_files_picker.filepicker.local.filter.FileFilter;
-import com.example.flutter_files_picker.filepicker.local.filter.entity.Directory;
-import com.example.flutter_files_picker.filepicker.local.filter.entity.VideoFile;
-import com.example.flutter_files_picker.filepicker.ui.BaseActivity;
-import com.example.flutter_files_picker.filepicker.util.ActivityUtils;
-import com.example.flutter_files_picker.filepicker.util.permissions.PermissionsKt;
-import com.example.flutter_files_picker.filepicker.util.permissions.util.PermissionsOptions;
+import com.randomvideochat.flutter_files_picker.R;
+import com.randomvideochat.flutter_files_picker.filepicker.local.DividerGridItemDecoration;
+import com.randomvideochat.flutter_files_picker.filepicker.local.FilePickerConstant;
+import com.randomvideochat.flutter_files_picker.filepicker.local.adapter.VideoPickAdapter;
+import com.randomvideochat.flutter_files_picker.filepicker.local.filter.FileFilter;
+import com.randomvideochat.flutter_files_picker.filepicker.local.filter.entity.Directory;
+import com.randomvideochat.flutter_files_picker.filepicker.local.filter.entity.VideoFile;
+import com.randomvideochat.flutter_files_picker.filepicker.ui.BaseActivity;
+import com.randomvideochat.flutter_files_picker.filepicker.util.ActivityUtils;
+import com.randomvideochat.flutter_files_picker.filepicker.util.permissions.PermissionsKt;
+import com.randomvideochat.flutter_files_picker.filepicker.util.permissions.util.PermissionsOptions;
 
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.example.flutter_files_picker.filepicker.ui.Picker.FileType.*;
+import static com.randomvideochat.flutter_files_picker.filepicker.ui.Picker.FileType.*;
 
 /**
  * Created by Vincent Woo

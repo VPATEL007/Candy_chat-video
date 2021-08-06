@@ -1,4 +1,4 @@
-package com.example.flutter_files_picker.filepicker.ui.activity;
+package com.randomvideochat.flutter_files_picker.filepicker.ui.activity;
 
 import android.Manifest;
 import android.content.Context;
@@ -18,33 +18,33 @@ import androidx.databinding.DataBindingUtil;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.flutter_files_picker.R;
-import com.example.flutter_files_picker.filepicker.local.DividerListItemDecoration;
-import com.example.flutter_files_picker.filepicker.local.FilePickerConstant;
-import com.example.flutter_files_picker.filepicker.local.ToastUtil;
-import com.example.flutter_files_picker.filepicker.local.Util;
-import com.example.flutter_files_picker.filepicker.local.adapter.AudioPickAdapter;
-import com.example.flutter_files_picker.filepicker.local.adapter.FolderListAdapter;
-import com.example.flutter_files_picker.filepicker.local.adapter.OnSelectStateListener;
-import com.example.flutter_files_picker.filepicker.local.filter.FileFilter;
-import com.example.flutter_files_picker.filepicker.local.filter.callback.FilterResultCallback;
-import com.example.flutter_files_picker.filepicker.local.filter.entity.AudioFile;
-import com.example.flutter_files_picker.filepicker.local.filter.entity.Directory;
-import com.example.flutter_files_picker.filepicker.ui.BaseActivity;
-import com.example.flutter_files_picker.filepicker.util.ActivityUtils;
-import com.example.flutter_files_picker.filepicker.util.permissions.PermissionsKt;
-import com.example.flutter_files_picker.filepicker.util.permissions.util.PermissionsOptions;
+import com.randomvideochat.flutter_files_picker.R;
+import com.randomvideochat.flutter_files_picker.filepicker.local.DividerListItemDecoration;
+import com.randomvideochat.flutter_files_picker.filepicker.local.FilePickerConstant;
+import com.randomvideochat.flutter_files_picker.filepicker.local.ToastUtil;
+import com.randomvideochat.flutter_files_picker.filepicker.local.Util;
+import com.randomvideochat.flutter_files_picker.filepicker.local.adapter.AudioPickAdapter;
+import com.randomvideochat.flutter_files_picker.filepicker.local.adapter.FolderListAdapter;
+import com.randomvideochat.flutter_files_picker.filepicker.local.adapter.OnSelectStateListener;
+import com.randomvideochat.flutter_files_picker.filepicker.local.filter.FileFilter;
+import com.randomvideochat.flutter_files_picker.filepicker.local.filter.callback.FilterResultCallback;
+import com.randomvideochat.flutter_files_picker.filepicker.local.filter.entity.AudioFile;
+import com.randomvideochat.flutter_files_picker.filepicker.local.filter.entity.Directory;
+import com.randomvideochat.flutter_files_picker.filepicker.ui.BaseActivity;
+import com.randomvideochat.flutter_files_picker.filepicker.util.ActivityUtils;
+import com.randomvideochat.flutter_files_picker.filepicker.util.permissions.PermissionsKt;
+import com.randomvideochat.flutter_files_picker.filepicker.util.permissions.util.PermissionsOptions;
 
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.example.flutter_files_picker.filepicker.ui.Picker.FileType.TYPE_AAC;
-import static com.example.flutter_files_picker.filepicker.ui.Picker.FileType.TYPE_AMPEG;
-import static com.example.flutter_files_picker.filepicker.ui.Picker.FileType.TYPE_AMR;
-import static com.example.flutter_files_picker.filepicker.ui.Picker.FileType.TYPE_M4A;
-import static com.example.flutter_files_picker.filepicker.ui.Picker.FileType.TYPE_MP3;
-import static com.example.flutter_files_picker.filepicker.ui.Picker.FileType.TYPE_WAV;
+import static com.randomvideochat.flutter_files_picker.filepicker.ui.Picker.FileType.TYPE_AAC;
+import static com.randomvideochat.flutter_files_picker.filepicker.ui.Picker.FileType.TYPE_AMPEG;
+import static com.randomvideochat.flutter_files_picker.filepicker.ui.Picker.FileType.TYPE_AMR;
+import static com.randomvideochat.flutter_files_picker.filepicker.ui.Picker.FileType.TYPE_M4A;
+import static com.randomvideochat.flutter_files_picker.filepicker.ui.Picker.FileType.TYPE_MP3;
+import static com.randomvideochat.flutter_files_picker.filepicker.ui.Picker.FileType.TYPE_WAV;
 
 
 /**

@@ -1,8 +1,8 @@
-package com.example.flutter_files_picker.filepicker.local.filter.callback;
+package com.randomvideochat.flutter_files_picker.filepicker.local.filter.callback;
 
 
-import com.example.flutter_files_picker.filepicker.local.filter.entity.BaseFile;
-import com.example.flutter_files_picker.filepicker.local.filter.entity.Directory;
+import com.randomvideochat.flutter_files_picker.filepicker.local.filter.entity.BaseFile;
+import com.randomvideochat.flutter_files_picker.filepicker.local.filter.entity.Directory;
 
 import java.util.List;
 
