@@ -205,29 +205,6 @@ class _MathProfileState extends State<MathProfile> {
       }
     }
     return SizedBox();
-    // return region == SlideRegion.inLikeRegion && index == currentIndex
-    //     ? Padding(
-    //         padding: EdgeInsets.only(left: getSize(40)),
-    //         child: Container(
-    //           decoration: BoxDecoration(
-    //             border: Border.all(color: fromHex("#50F5C3"), width: 1),
-    //             borderRadius: BorderRadius.circular(getSize(12)),
-    //             color: fromHex("#50F5C3").withOpacity(0.5),
-    //           ),
-    //           child: Padding(
-    //             padding: EdgeInsets.only(
-    //                 left: getSize(46),
-    //                 right: getSize(46),
-    //                 top: getSize(15),
-    //                 bottom: getSize(15)),
-    //             child: Text(
-    //               "Like",
-    //               style: appTheme.whiteBold32,
-    //             ),
-    //           ),
-    //         ),
-    //       )
-    //     : SizedBox();
   }
 
   getDetailWidget() {
