@@ -27,7 +27,8 @@ class _MathProfileState extends State<MathProfile> {
   GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey();
   List<String> _names = ["Red", "Blue", "Green", "Yellow", "Orange"];
   RangeValues _currentRangeValues = const RangeValues(18, 24);
-  SlideRegion region = SlideRegion.inNopeRegion;
+  SlideRegion region = SlideRegion.inSuperLikeRegion;
+  int currentIndex = 0;
 
   @override
   void initState() {
@@ -44,10 +45,10 @@ class _MathProfileState extends State<MathProfile> {
             openUserProfile();
             // NavigationUtilities.push(UserProfile());
           },
-          onSlideUpdateAction: (tRegion) {
+          onSlideUpdateAction: (tRegion, index) {
             setState(() {
+              currentIndex = index;
               region = tRegion;
-              print(region);
             });
           }));
     }
@@ -99,13 +100,10 @@ class _MathProfileState extends State<MathProfile> {
                             child: Image.asset(icTemp),
                           ),
                         ),
-                        // region == SlideRegion.inLikeRegion
-                        //     ? Container(
-                        //         height: 50,
-                        //         width: 50,
-                        //         color: Colors.green,
-                        //       )
-                        //     : SizedBox()
+                        SizedBox(
+                          height: getSize(80),
+                        ),
+                        getLikeUnlike(index),
                       ],
                     ),
                   ),
@@ -154,6 +152,82 @@ class _MathProfileState extends State<MathProfile> {
         ),
       ),
     );
+  }
+
+  Widget getLikeUnlike(int index) {
+    if (index == currentIndex) {
+      if (region == SlideRegion.inLikeRegion) {
+        return Padding(
+          padding: EdgeInsets.only(left: getSize(40)),
+          child: Container(
+            decoration: BoxDecoration(
+              border: Border.all(color: fromHex("#50F5C3"), width: 1),
+              borderRadius: BorderRadius.circular(getSize(12)),
+              color: fromHex("#50F5C3").withOpacity(0.5),
+            ),
+            child: Padding(
+              padding: EdgeInsets.only(
+                  left: getSize(46),
+                  right: getSize(46),
+                  top: getSize(15),
+                  bottom: getSize(15)),
+              child: Text(
+                "Like",
+                style: appTheme.whiteBold32,
+              ),
+            ),
+          ),
+        );
+      } else if (region == SlideRegion.inNopeRegion) {
+        return Padding(
+          padding: EdgeInsets.only(
+              right: getSize(20),
+              left: MathUtilities.screenWidth(context) - 190),
+          child: Container(
+            decoration: BoxDecoration(
+              border: Border.all(color: Colors.red, width: 1),
+              borderRadius: BorderRadius.circular(getSize(12)),
+              color: Colors.red.withOpacity(0.5),
+            ),
+            child: Padding(
+              padding: EdgeInsets.only(
+                  left: getSize(46),
+                  right: getSize(46),
+                  top: getSize(15),
+                  bottom: getSize(15)),
+              child: Text(
+                "Nope",
+                style: appTheme.whiteBold32,
+              ),
+            ),
+          ),
+        );
+      }
+    }
+    return SizedBox();
+    // return region == SlideRegion.inLikeRegion && index == currentIndex
+    //     ? Padding(
+    //         padding: EdgeInsets.only(left: getSize(40)),
+    //         child: Container(
+    //           decoration: BoxDecoration(
+    //             border: Border.all(color: fromHex("#50F5C3"), width: 1),
+    //             borderRadius: BorderRadius.circular(getSize(12)),
+    //             color: fromHex("#50F5C3").withOpacity(0.5),
+    //           ),
+    //           child: Padding(
+    //             padding: EdgeInsets.only(
+    //                 left: getSize(46),
+    //                 right: getSize(46),
+    //                 top: getSize(15),
+    //                 bottom: getSize(15)),
+    //             child: Text(
+    //               "Like",
+    //               style: appTheme.whiteBold32,
+    //             ),
+    //           ),
+    //         ),
+    //       )
+    //     : SizedBox();
   }
 
   getDetailWidget() {

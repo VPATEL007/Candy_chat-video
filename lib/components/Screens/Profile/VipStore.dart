@@ -17,45 +17,46 @@ class _VipStoreState extends State<VipStore> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+        backgroundColor: Colors.white,
         body: Stack(
-      children: [
-        Container(
-          height: MathUtilities.screenHeight(context),
-          child: PageView(
-            controller: pageController,
-            onPageChanged: (val) {
-              currentIndex = val;
-              pageController.animateToPage(currentIndex,
-                  duration: Duration(milliseconds: 600),
-                  curve: Curves.linearToEaseOut);
-              setState(() {});
-            },
-            children: [
-              getPageViewItem(vip1, "#50F5C3"),
-              getPageViewItem(vip2, "#9950F5"),
-              getPageViewItem(vip3, "#F55050"),
-              getPageViewItem(vip4, "#50CDF5"),
-              getPageViewItem(vip5, "#50F57E"),
-            ],
-          ),
-        ),
-        Positioned(child: getNaviagtion()),
-        Align(
-          child: Container(
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                pageIndexIndicator(currentIndex == 0 ? true : false),
-                pageIndexIndicator(currentIndex == 1 ? true : false),
-                pageIndexIndicator(currentIndex == 2 ? true : false),
-                pageIndexIndicator(currentIndex == 3 ? true : false),
-                pageIndexIndicator(currentIndex == 4 ? true : false),
-              ],
+          children: [
+            Container(
+              height: MathUtilities.screenHeight(context),
+              child: PageView(
+                controller: pageController,
+                onPageChanged: (val) {
+                  currentIndex = val;
+                  pageController.animateToPage(currentIndex,
+                      duration: Duration(milliseconds: 600),
+                      curve: Curves.linearToEaseOut);
+                  setState(() {});
+                },
+                children: [
+                  getPageViewItem(vip1, "#50F5C3"),
+                  getPageViewItem(vip2, "#9950F5"),
+                  getPageViewItem(vip3, "#F55050"),
+                  getPageViewItem(vip4, "#50CDF5"),
+                  getPageViewItem(vip5, "#50F57E"),
+                ],
+              ),
             ),
-          ),
-        ),
-      ],
-    ));
+            Positioned(child: getNaviagtion()),
+            Align(
+              child: Container(
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    pageIndexIndicator(currentIndex == 0 ? true : false),
+                    pageIndexIndicator(currentIndex == 1 ? true : false),
+                    pageIndexIndicator(currentIndex == 2 ? true : false),
+                    pageIndexIndicator(currentIndex == 3 ? true : false),
+                    pageIndexIndicator(currentIndex == 4 ? true : false),
+                  ],
+                ),
+              ),
+            ),
+          ],
+        ));
   }
 
   getNaviagtion() {

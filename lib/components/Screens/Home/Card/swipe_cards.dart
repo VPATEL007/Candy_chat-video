@@ -105,7 +105,7 @@ class _SwipeCardsState extends State<SwipeCards> {
       slideRegion = region;
       SwipeItem currentMatch = widget.matchEngine.currentItem;
 
-      currentMatch.onSlideUpdate(region);
+      currentMatch.onSlideUpdate(region, widget.matchEngine._currentItemIndex);
     });
   }
 
@@ -208,7 +208,7 @@ class SwipeItem extends ChangeNotifier {
   final Function likeAction;
   final Function superlikeAction;
   final Function nopeAction;
-  final Function(SlideRegion) onSlideUpdateAction;
+  final Function(SlideRegion, int) onSlideUpdateAction;
   Decision decision = Decision.undecided;
 
   SwipeItem(
@@ -255,9 +255,9 @@ class SwipeItem extends ChangeNotifier {
     }
   }
 
-  void onSlideUpdate(SlideRegion region) {
+  void onSlideUpdate(SlideRegion region, int index) {
     try {
-      onSlideUpdateAction(region);
+      onSlideUpdateAction(region, index);
     } catch (e) {}
     notifyListeners();
   }
