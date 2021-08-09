@@ -10,13 +10,7 @@ const FAIL = 2;
 
 const IMAGE_FILE_SIZE = 10.0;
 
-const MIN_ORDER_QTY = 1;
-const MAX_ORDER_QTY = 999;
-
-const DEFAULT_RING_SIZE_KEY = "DEFAULT_RING_SIZE_KEY";
-
 const APPNAME = "Random Video Chat";
-const STRIPE_KEY = "pk_test_ZCG3mwYMaOFEFAdpcQtkNIZ300fxNZXXOj";
 
 const CODE_CREATED = 201;
 const CODE_OK = "OK";
@@ -27,8 +21,7 @@ const CODE_UNAUTHORIZED = "E_UNAUTHORIZED";
 const CODE_TOKEN_EXPIRE = "E_TOKEN_EXPIRE";
 const CODE_ERROR = "E_ERROR";
 const CODE_DEVICE_LOGOUT = "CODE_DEVICE_LOGOUT";
-const CODE_KILL_SWITCH = "CODE_KILL_SWITCH";
-const CODE_USER_DELETED = "CODE_USER_DELETED";
+
 const TOKEN_EXPIRY_CODE = "TOKEN_EXPIRY_CODE";
 const INTERNET_UNAWAILABLE = "INTERNET_UNAWAILABLE";
 const NO_CONNECTION = "Internet unavailable.";
@@ -56,25 +49,6 @@ const numberRegExp = r'[a-z][A-Z]!@#$%^&*()_+{}:">?<,./;';
 const alphaNumberRegEx = r'[a-zA-Z0-9]';
 const alphaRegEx = r'[a-zA-Z]';
 const spaceRegEx = r'\s';
-
-class UserRole {
-  static const ADMIN = "ADMIN";
-  static const SUPER_ADMIN = "SUPER_ADMIN";
-  static const GYM_OWNER = "GYM_OWNER";
-  static const MEMBER = "MEMBER";
-  static const STAFF = "STAFF";
-}
-
-class MasterCodeConstant {
-  static const DESIGNATION = "DESIGNATION";
-  static const DOCUMENT = "DOCUMENT";
-  static const SPECIALIZATION = "SPECIALIZATION";
-  static const LANGUAGE = "LANGUAGE";
-  static const EDUCATION_LEVEL = "GRADUATIONS";
-  static const DEPARTMENT = "DEPARTMENT";
-  static const REGIONS = "REGIONS";
-  static const LEAVE_TYPES = "LEAVE_TYPES";
-}
 
 List<Color> randomColorArr = [
   Color(0xFF6F3F87),

@@ -3,12 +3,7 @@ import 'dart:io';
 import '../app.export.dart';
 
 class ApiConstants {
-  // static const String PROXY_URL = "PROXY 192.168.1.6:8888"; //Jecky
   static const String PROXY_URL = "PROXY 172.20.10.6:8888"; // Brijesh
-
-  // static const String PROXY_URL = "PROXY 192.168.0.206:8888"; //RAJ
-  // static String PROXY_URL =
-  //     Platform.isAndroid ? "PROXY 10.0.2.2:8888" : "PROXY localhost:8888";
 
   static const String baseURL = "http://194.195.118.99";
   static const String imageBaseURL = "http://194.195.118.99";

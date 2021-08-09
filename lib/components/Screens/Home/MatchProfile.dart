@@ -182,7 +182,7 @@ class _MathProfileState extends State<MathProfile> {
         return Padding(
           padding: EdgeInsets.only(
               right: getSize(20),
-              left: MathUtilities.screenWidth(context) - 190),
+              left: MathUtilities.screenWidth(context) - 220),
           child: Container(
             decoration: BoxDecoration(
               border: Border.all(color: Colors.red, width: 1),
