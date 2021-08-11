@@ -20,18 +20,8 @@ CachedNetworkImage getImageView(String url,
     height: height,
     width: width,
     imageUrl: imageUrl,
-//    imageBuilder: (context, imageProvider) => Container(
-//      width: width,
-//      height: height,
-//      decoration: BoxDecoration(
-//        shape: shape,
-//        image: DecorationImage(
-//            image: imageProvider, fit: BoxFit.cover),
-//      ),
-//    ),
     fit: fit,
     placeholder: (context, url) => Container(
-      //decoration: decoration,
       height: height,
       width: width,
       child: SpinKitFadingCircle(
@@ -41,7 +31,7 @@ CachedNetworkImage getImageView(String url,
     ),
     errorWidget: (context, url, error) => Image.asset(
       placeHolderImage == null || placeHolderImage.length == 0
-          ? necklace
+          ? noAttachment
           : placeHolderImage,
       width: width,
       height: height,
@@ -49,18 +39,3 @@ CachedNetworkImage getImageView(String url,
     ),
   );
 }
-
-// static func getGoogleMapImageUrl(size:CGSize, startLocation:LocationModel, endLocation:LocationModel) -> String {
-
-//         let strUrl1 = "http://maps.google.com/maps/api/staticmap?path=color:0x3C97D3FF|weight:4|\(startLocation.latitude),\(startLocation.longitude)|\(endLocation.latitude),\(endLocation.longitude)&size=\(Int(size.width))x\(Int(size.height))&sensor=true&markers=size:".addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed) ?? ""
-
-//         let strUrl2 = "tiny%7C"
-
-//         let strUrl3 = "color:0xFF0000FF|\(startLocation.latitude),\(startLocation.longitude)|\(endLocation.latitude),\(endLocation.longitude)&key=\(AppConstants.googleApiKeyForImage)".addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed) ?? ""
-
-//         return "\(strUrl1)\(strUrl2)\(strUrl3)"
-
-//         //        return "http://maps.google.com/maps/api/staticmap?path=color:0x3C97D3FF|weight:4|21.171021,72.854210|21.267553,72.960861&size=\(Int(size.width))x\(Int(size.height))&sensor=true&markers=size:mid%7Ccolor:0xFF0000FF|21.171021,72.854210|21.267553,72.960861&key=\(AppConstants.googleApiKeyForImage)"
-//         //            .addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed) ?? ""
-
-//     }

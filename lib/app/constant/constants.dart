@@ -56,3 +56,8 @@ List<Color> randomColorArr = [
   Color(0xFF3186B9),
   Color(0xFF76B3CC)
 ];
+
+//Social Login
+const faceBook = "facebook";
+const google = "google";
+const apple = "apple";

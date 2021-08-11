@@ -2,13 +2,14 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:video_chat/app/app.export.dart';
 import 'package:video_chat/app/constant/ColorConstant.dart';
-import 'package:video_chat/app/constant/ImageConstant.dart';
 import 'package:video_chat/app/utils/CommonWidgets.dart';
+import 'package:video_chat/components/Model/Auth/OnboardingModel.dart';
 import 'package:video_chat/components/Screens/Auth/Login.dart';
 
 class OnBoarding extends StatefulWidget {
   static const route = "OnBoarding";
-  OnBoarding({Key key}) : super(key: key);
+  List<OnboardingModel> list;
+  OnBoarding({Key key, this.list}) : super(key: key);
 
   @override
   _OnBoardingState createState() => _OnBoardingState();
@@ -16,8 +17,12 @@ class OnBoarding extends StatefulWidget {
 
 class _OnBoardingState extends State<OnBoarding> {
   PageController pageController = new PageController(initialPage: 0);
-  PageController txtPageController = new PageController(initialPage: 0);
   int currentIndex = 0;
+
+  @override
+  void initState() {
+    super.initState();
+  }
 
   void referesh() {
     setState(() {});
@@ -31,14 +36,17 @@ class _OnBoardingState extends State<OnBoarding> {
           isWhite: true,
           leadingButton: getBackButton(context),
           actionItems: [
-            getBarButtonText(context, currentIndex == 2 ? "" : "Skip", () {
+            getBarButtonText(
+                context, currentIndex == (widget.list.length - 1) ? "" : "Skip",
+                () {
               NavigationUtilities.pushReplacementNamed(Login.route,
                   type: RouteType.fade);
             })
           ]),
-      bottomSheet: getBottomButton(
-          context, currentIndex == 2 ? "Get Started" : "Next", () {
-        if (currentIndex == 2) {
+      bottomSheet: getBottomButton(context,
+          currentIndex == (widget.list.length - 1) ? "Get Started" : "Next",
+          () {
+        if (currentIndex == (widget.list.length - 1)) {
           NavigationUtilities.pushReplacementNamed(Login.route,
               type: RouteType.fade);
         } else {
@@ -46,125 +54,68 @@ class _OnBoardingState extends State<OnBoarding> {
           pageController.animateToPage(currentIndex,
               duration: Duration(milliseconds: 600),
               curve: Curves.linearToEaseOut);
-          txtPageController.animateToPage(currentIndex,
-              duration: Duration(milliseconds: 600),
-              curve: Curves.linearToEaseOut);
         }
       }),
-      body: Column(
-        mainAxisSize: MainAxisSize.max,
-        mainAxisAlignment: MainAxisAlignment.start,
-        crossAxisAlignment: CrossAxisAlignment.center,
+      body: Stack(
         children: [
           Container(
-            height: getSize(340),
             child: PageView(
               controller: pageController,
               onPageChanged: (val) {
                 currentIndex = val;
-                txtPageController.animateToPage(currentIndex,
-                    duration: Duration(milliseconds: 600),
-                    curve: Curves.linearToEaseOut);
-                referesh();
+                setState(() {});
               },
               children: [
-                getPageViewItem(intro1),
-                getPageViewItem(intro2),
-                getPageViewItem(intro3)
+                for (var item in widget.list) getPageViewItem(item),
               ],
             ),
           ),
-          SizedBox(
-            height: getSize(45),
-          ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              pageIndexIndicator(currentIndex == 0 ? true : false),
-              pageIndexIndicator(currentIndex == 1 ? true : false),
-              pageIndexIndicator(currentIndex == 2 ? true : false),
-            ],
-          ),
-          SizedBox(
-            height: getSize(30),
-          ),
-          Expanded(
+          Positioned(
+            top: getSize(420),
+            left: (MathUtilities.screenWidth(context) / 2) -
+                getSize(((widget.list.length / 2) * 21).toDouble()),
             child: Container(
-              child: PageView(
-                controller: txtPageController,
-                onPageChanged: (val) {
-                  currentIndex = val;
-                  pageController.animateToPage(currentIndex,
-                      duration: Duration(milliseconds: 600),
-                      curve: Curves.linearToEaseOut);
-                },
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  getTextPageItem(
-                      "Find",
-                      ColorConstants.black,
-                      "Your",
-                      ColorConstants.black,
-                      "Special",
-                      ColorConstants.red,
-                      "Someone",
-                      ColorConstants.black,
-                      "Lorem Ipsum is simply dummy text of the printing and typesetting industry."),
-                  getTextPageItem(
-                      "More",
-                      ColorConstants.black,
-                      "Profiles",
-                      ColorConstants.red,
-                      "More",
-                      ColorConstants.black,
-                      "Dates",
-                      ColorConstants.black,
-                      "Lorem Ipsum is simply dummy text of the printing and typesetting industry."),
-                  getTextPageItem(
-                      "Interact",
-                      ColorConstants.black,
-                      "Around",
-                      ColorConstants.red,
-                      "The",
-                      ColorConstants.black,
-                      "World",
-                      ColorConstants.black,
-                      "Lorem Ipsum is simply dummy text of the printing and typesetting industry."),
+                  for (var i = 0; i < widget.list.length; i++)
+                    pageIndexIndicator(currentIndex == i ? true : false),
                 ],
               ),
             ),
-          ),
+          )
         ],
       ),
     );
   }
 
-  getTextPageItem(String t1, Color c1, String t2, Color c2, String t3, Color c3,
-      String t4, Color c4, String desc) {
+  getTextPageItem(String title, String desc) {
+    var split = title.split(" ");
     return Container(
       child: Column(
         children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              getColorText(t1, c1),
-              SizedBox(
-                width: getSize(8),
+          Padding(
+            padding: EdgeInsets.only(left: getSize(90), right: getSize(90)),
+            child: Text.rich(
+              TextSpan(
+                children: <TextSpan>[
+                  for (var i = 0; i < split.length; i++)
+                    new TextSpan(
+                        text: split[i] + " ",
+                        style: new TextStyle(
+                            fontSize: getFontSize(25),
+                            color: i % 2 == 0
+                                ? Colors.black
+                                : ColorConstants.redText,
+                            fontWeight: FontWeight.w800)),
+                ],
               ),
-              getColorText(t2, c2)
-            ],
-          ),
-          SizedBox(
-            height: getSize(4),
-          ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              getColorText(t3, c3),
-              SizedBox(
-                width: getSize(8),
-              ),
-              getColorText(t4, c4)
-            ],
+              textAlign: TextAlign.center,
+              style: TextStyle(
+                  fontSize: getFontSize(25),
+                  color: Colors.black,
+                  fontWeight: FontWeight.w800),
+            ),
           ),
           SizedBox(
             height: getSize(17),
@@ -193,9 +144,19 @@ class _OnBoardingState extends State<OnBoarding> {
     );
   }
 
-  getPageViewItem(String image) {
+  getPageViewItem(OnboardingModel model) {
     return Container(
-      child: Image.asset(image),
+      child: Column(
+        children: [
+          getImageView(model.imageUrl,
+              height: getSize(360),
+              width: MathUtilities.screenWidth(context) - getSize(120)),
+          Spacer(),
+          getTextPageItem(model.title, model.introText),
+          Spacer(),
+          Spacer(),
+        ],
+      ),
     );
   }
 }

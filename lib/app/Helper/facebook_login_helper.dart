@@ -1,15 +1,23 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter_facebook_auth/flutter_facebook_auth.dart';
+import 'package:video_chat/app/Helper/CommonApiHelper.dart';
+import 'package:video_chat/app/app.export.dart';
 
 class FacebookLoginHelper {
   static var shared = FacebookLoginHelper();
 
-  loginWithFacebook(Function callback) async {
+  loginWithFacebook(BuildContext context, Function callback) async {
     try {
       AccessToken accessToken = await FacebookAuth.instance
           .login(); // by the fault we request the email and the public profile
 
       final userData = await FacebookAuth.instance.getUserData();
-      print(userData);
+      Map<String, dynamic> req = {};
+      req["provider"] = faceBook;
+      req["token"] = accessToken.token;
+      // req["token"] =
+      //     "EAADVUNhhBzUBAGOprGMRITg1PFhzY3NjZCZAJZCHQl7DwJ3oUBpu8gZAvZC032VZBLPzaNUynQ5ZBGbkNW7RnocaO0iwZAIiLz5RcAtoVZBhIi4IcMxj8BsbhETOedSScQ7lgNgcnUAwXzrRgwFC2Wa8Qq5ifNsS7QZCCrXyiuOCmh1ICpW1Ho2WSqeb9Afa403SClAt90hd4wPHOuZBJA9aDrbLMHYPoBMsAiU64USX1gRI2SfCF5OZArs6";
+      CommonApiHelper.shared.callLoginApi(req, context, () {}, () {});
     } on FacebookAuthException catch (e) {
       switch (e.errorCode) {
         case FacebookAuthErrorCode.OPERATION_IN_PROGRESS:

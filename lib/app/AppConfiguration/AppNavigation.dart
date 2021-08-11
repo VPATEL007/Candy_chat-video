@@ -1,3 +1,4 @@
+import 'package:video_chat/components/Screens/Auth/Login.dart';
 import 'package:video_chat/components/Screens/Home/Home.dart';
 import 'package:video_chat/components/Screens/Language%20Selection/Language.dart';
 
@@ -8,28 +9,20 @@ import '../app.export.dart';
 class AppNavigation {
   static final AppNavigation shared = AppNavigation();
 
-  // Configuration _configuration;
-
-  Future<void> init() async {
-    // code
-    // _configuration = AppConfiguration.shared.configuration;
-  }
+  Future<void> init() async {}
 
   void goNextFromSplash() {
-    // if (!app.resolve<PrefUtils>().isShowIntro()) {
-    //   // show Intro
-    //   movetoIntro();
-    // } else
-    // if (app.resolve<PrefUtils>().isUserLogin()) {
-    //   //Home
-    //   moveToHome();
-    // } else {
-    //   //Login
-    //   moveToLogin();
-    // }
-
-    NavigationUtilities.pushReplacementNamed(LanguageSelection.route,
-        type: RouteType.fade);
+    if (!app.resolve<PrefUtils>().isShowIntro()) {
+      //show Intro
+      NavigationUtilities.pushReplacementNamed(LanguageSelection.route,
+          type: RouteType.fade);
+    } else if (app.resolve<PrefUtils>().isUserLogin()) {
+      //Home
+      moveToHome();
+    } else {
+      //Login
+      moveToLogin();
+    }
   }
 
   void moveToHome() {
@@ -37,6 +30,6 @@ class AppNavigation {
   }
 
   void moveToLogin() {
-    // NavigationUtilities.pushReplacementNamed(LoginScreen.route);
+    NavigationUtilities.pushReplacementNamed(Login.route);
   }
 }

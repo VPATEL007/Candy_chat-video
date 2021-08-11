@@ -74,18 +74,15 @@ class NetworkClient {
       }
     }
 
-    if (kDebugMode) {
-      (dio.httpClientAdapter as DefaultHttpClientAdapter).onHttpClientCreate =
-          (client) {
-        // config the http client
-        client.findProxy = (uri) {
-          //proxy all request to localhost:8888
-          return ApiConstants.PROXY_URL;
-        };
-        // you can also create a new HttpClient to dio
-        // return new HttpClient();
-      };
-    }
+    // if (kDebugMode) {
+    //   (dio.httpClientAdapter as DefaultHttpClientAdapter).onHttpClientCreate =
+    //       (client) {
+    //     // config the http client
+    //     client.findProxy = (uri) {
+    //       return ApiConstants.PROXY_URL;
+    //     };
+    //   };
+    // }
 
     switch (method) {
       case MethodType.Post:
@@ -120,10 +117,10 @@ class NetworkClient {
   parseResponse(BuildContext context, Response response,
       {Function(dynamic response, String message) successCallback,
       Function(String statusCode, String message) failureCallback}) {
-    int statusCode = response.data['statusCode'];
+    String statusCode = response.data['status'];
     String message = response.data['message'];
 
-    if (statusCode == 200 || statusCode == 201) {
+    if (statusCode == "success") {
       if (response.data["data"] is Map<String, dynamic> ||
           response.data["data"] is List<dynamic>) {
         successCallback(response.data["data"], message);

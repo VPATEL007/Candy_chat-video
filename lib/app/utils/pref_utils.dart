@@ -7,6 +7,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:video_chat/app/app.export.dart';
 
 import 'package:unique_identifier/unique_identifier.dart';
+import 'package:video_chat/components/Model/User/UserModel.dart';
 
 /// Wraps the [SharedPreferences].
 class PrefUtils {
@@ -16,23 +17,14 @@ class PrefUtils {
 
   SharedPreferences _preferences;
 
-  /// The [prefix] is used in keys for user specific preferences. You can use unique user-id for multi_user
-  // String get prefix => "my_app";
   String get keySelectedThemeId => "my_app_SelectedThemeId";
-
   String get keyPlayerID => "playerId";
-
   String get keyIsShowThemeSelection => "keyIsShowThemeSelection";
-
   String get keyUserDetail => "keyUserDetail";
-
   String get keyToken => "keyToken";
-
+  String get keyRefereshToken => "keyRefereshToken";
   String get keyIsUserLogin => "keyIsUserLogin";
-
-  // String get keyDefaultLanguage => "keyDefaultLanguage";
-
-  String get FILE_DEVIDE_INFO => "deviceDetail";
+  String get keyIsShowIntro => "keyIsUserLogin";
 
   bool isHomeVisible;
 
@@ -120,23 +112,26 @@ class PrefUtils {
     return getBool(keyIsUserLogin) ?? false;
   }
 
+  bool isShowIntro() {
+    return getBool(keyIsShowIntro) ?? false;
+  }
+
   // User Getter setter
-  // void saveUser(User user, {bool isLoggedIn = false}) {
-  //   if (isLoggedIn == true) {
-  //     _preferences.setBool(keyIsUserLogin, true);
-  //   }
+  void saveUser(UserModel user, {bool isLoggedIn = false}) {
+    if (isLoggedIn == true) {
+      _preferences.setBool(keyIsUserLogin, true);
+    }
 
-  //   _preferences.setString(keyUserDetail, json.encode(user));
-  // }
+    _preferences.setString(keyUserDetail, json.encode(user));
+  }
 
-  // User getUserDetails() {
-  //   var userJson = json.decode(_preferences.getString(keyUserDetail));
-  //   return userJson != null ? new User.fromJson(userJson) : null;
-  // }
+  UserModel getUserDetails() {
+    var userJson = json.decode(_preferences.getString(keyUserDetail));
+    return userJson != null ? new UserModel.fromJson(userJson) : null;
+  }
 
   //get Token
   String getUserToken() {
-    // return getString(keyToken);
     return _preferences.getString(keyToken) ?? "";
   }
 
@@ -144,17 +139,9 @@ class PrefUtils {
     _preferences.setString(keyToken, token);
   }
 
-  // //Get default launague
-  // String getDefaultLangauge() {
-  //   return isNullEmptyOrFalse(getString(keyDefaultLanguage)) == true
-  //       ? "en"
-  //       : getString(keyDefaultLanguage);
-  // }
-
-  // //set default langauge
-  // void setDefaultLangauge(String langaugeCode) {
-  //   _preferences.setString(keyDefaultLanguage, langaugeCode);
-  // }
+  void saveRefereshToken(String token) {
+    _preferences.setString(keyRefereshToken, token);
+  }
 
   void clearPreferenceAndDB() async {
     _preferences.clear();

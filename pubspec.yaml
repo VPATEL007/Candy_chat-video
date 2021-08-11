@@ -47,6 +47,7 @@ dependencies:
   flutter_tags: ^0.4.9+1
   flutter_facebook_auth: ^2.0.2+1
   apple_sign_in: ^0.1.0
+  http_proxy: ^1.1.0
   flutter_files_picker:
     path: ./FilePicker
 

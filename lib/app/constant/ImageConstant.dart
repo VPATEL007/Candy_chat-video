@@ -4,7 +4,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 
 const String splashBG = "assets/Splash/splashBG.png";
-const String necklace = "assets/Common/necklace.png";
+const String noAttachment = "assets/Common/icNoAttachment.png";
 const String back = "assets/Common/back.png";
 const String radioSelected = "assets/Common/radioSelected.png";
 const String radio = "assets/Common/radio.png";

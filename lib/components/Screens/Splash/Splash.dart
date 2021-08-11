@@ -20,12 +20,12 @@ class _SplashState extends State<Splash> {
     WidgetsBinding.instance.addPostFrameCallback((_) {
       Timer(
         Duration(seconds: 2),
-        () => (gotuNextScreen()),
+        () => (goToNext()),
       );
     });
   }
 
-  gotuNextScreen() {
+  goToNext() {
     AppNavigation.shared.goNextFromSplash();
   }
 

@@ -1,3 +1,6 @@
+import 'dart:io';
+
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:kiwi/kiwi.dart';
@@ -13,18 +16,24 @@ import 'app/utils/navigator.dart';
 import 'app/utils/pref_utils.dart';
 import 'app/utils/route_observer.dart';
 import 'package:video_chat/modules/ThemeSetting.dart';
+import 'package:http_proxy/http_proxy.dart';
 
 KiwiContainer app;
 
-void main() {
+Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   app = KiwiContainer();
+
+  if (kDebugMode) {
+    HttpProxy httpProxy = await HttpProxy.createHttpProxy();
+    HttpOverrides.global = httpProxy;
+  }
 
   SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp])
       .then((value) async {
     setup();
 
-    // await app.resolve<PrefUtils>().init();
+    await app.resolve<PrefUtils>().init();
 
     // runApp(MyApp());
     runApp(SettingsModelsProvider(

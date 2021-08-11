@@ -85,7 +85,7 @@ class _LoginState extends State<Login> {
               getButton(
                   icFacebook, "Continue with Facebook", ColorConstants.facebook,
                   () {
-                FacebookLoginHelper.shared.loginWithFacebook(() {});
+                FacebookLoginHelper.shared.loginWithFacebook(context, () {});
               }),
               SizedBox(
                 height: getSize(12),
