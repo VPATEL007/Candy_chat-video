@@ -68,6 +68,7 @@ class _LanguageSelectionState extends State<LanguageSelection> {
           }
         },
         failureCallback: (code, message) {
+          View.showMessage(context, message);
           NetworkClient.getInstance.hideProgressDialog();
         },
       );

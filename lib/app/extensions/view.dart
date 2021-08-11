@@ -17,7 +17,7 @@ class View {
   static void showMessage(BuildContext context, String message,
       {String title = "Alert!",
       DisplayType type = DisplayType.SNACKBAR,
-      DisplayMode mode = DisplayMode.SUCCESS,
+      DisplayMode mode = DisplayMode.ERROR,
       List<DialogAction> actions}) {
     switch (type) {
       case DisplayType.ALERT:

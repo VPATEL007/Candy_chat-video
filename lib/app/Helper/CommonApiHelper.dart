@@ -45,7 +45,7 @@ class CommonApiHelper {
       },
       failureCallback: (code, message) {
         NetworkClient.getInstance.hideProgressDialog();
-
+        View.showMessage(context, message);
         failure();
       },
     );
@@ -74,6 +74,7 @@ class CommonApiHelper {
       },
       failureCallback: (code, message) {
         NetworkClient.getInstance.hideProgressDialog();
+        View.showMessage(context, message);
         failure();
       },
     );
