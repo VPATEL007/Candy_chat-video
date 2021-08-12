@@ -71,7 +71,7 @@ class _OnBoardingState extends State<OnBoarding> {
             ),
           ),
           Positioned(
-            top: getSize(420),
+            top: getSize(360),
             left: (MathUtilities.screenWidth(context) / 2) -
                 getSize(((widget.list.length / 2) * 21).toDouble()),
             child: Container(
@@ -89,13 +89,28 @@ class _OnBoardingState extends State<OnBoarding> {
     );
   }
 
+  getPageViewItem(OnboardingModel model) {
+    return Container(
+      child: Column(
+        children: [
+          getImageView(model.imageUrl,
+              height: getSize(320),
+              width: MathUtilities.screenWidth(context) - getSize(120)),
+          Spacer(),
+          getTextPageItem(model.title, model.introText),
+          Spacer(),
+        ],
+      ),
+    );
+  }
+
   getTextPageItem(String title, String desc) {
     var split = title.split(" ");
     return Container(
       child: Column(
         children: [
           Padding(
-            padding: EdgeInsets.only(left: getSize(90), right: getSize(90)),
+            padding: EdgeInsets.only(left: getSize(80), right: getSize(80)),
             child: Text.rich(
               TextSpan(
                 children: <TextSpan>[
@@ -141,22 +156,6 @@ class _OnBoardingState extends State<OnBoarding> {
               width: 2, color: Colors.white, style: BorderStyle.solid),
           color: isCuurent ? ColorConstants.red : Colors.grey[400],
           borderRadius: BorderRadius.circular(12)),
-    );
-  }
-
-  getPageViewItem(OnboardingModel model) {
-    return Container(
-      child: Column(
-        children: [
-          getImageView(model.imageUrl,
-              height: getSize(360),
-              width: MathUtilities.screenWidth(context) - getSize(120)),
-          Spacer(),
-          getTextPageItem(model.title, model.introText),
-          Spacer(),
-          Spacer(),
-        ],
-      ),
     );
   }
 }

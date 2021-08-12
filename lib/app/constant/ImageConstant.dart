@@ -76,3 +76,9 @@ const String vip2 = "assets/Vip/vip2.png";
 const String vip3 = "assets/Vip/vip3.png";
 const String vip4 = "assets/Vip/vip4.png";
 const String vip5 = "assets/Vip/vip5.png";
+
+const String unMuteMic = "assets/Video/icunmuteMic.png";
+const String unMuteVideo = "assets/Video/icunmuteVideo.png";
+const String muteMic = "assets/Video/icmuteMic.png";
+const String muteVideo = "assets/Video/icmuteVideo.png";
+const String icEndVideoCall = "assets/Video/icEndCall.png";

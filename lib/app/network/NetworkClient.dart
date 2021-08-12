@@ -89,28 +89,52 @@ class NetworkClient {
 
     switch (method) {
       case MethodType.Post:
-        Response response = await dio.post(baseUrl + command, data: params);
-        parseResponse(context, response,
-            successCallback: successCallback, failureCallback: failureCallback);
+        try {
+          Response response = await dio.post(baseUrl + command, data: params);
+          parseResponse(context, response,
+              successCallback: successCallback,
+              failureCallback: failureCallback);
+        } catch (e) {
+          failureCallback("", e.toString());
+        }
+
         break;
 
       case MethodType.Get:
-        Response response =
-            await dio.get(baseUrl + command, queryParameters: params);
-        parseResponse(context, response,
-            successCallback: successCallback, failureCallback: failureCallback);
+        try {
+          Response response =
+              await dio.get(baseUrl + command, queryParameters: params);
+          parseResponse(context, response,
+              successCallback: successCallback,
+              failureCallback: failureCallback);
+        } catch (e) {
+          failureCallback("", e.toString());
+        }
+
         break;
 
       case MethodType.Put:
-        Response response = await dio.put(baseUrl + command, data: params);
-        parseResponse(context, response,
-            successCallback: successCallback, failureCallback: failureCallback);
+        try {
+          Response response = await dio.put(baseUrl + command, data: params);
+          parseResponse(context, response,
+              successCallback: successCallback,
+              failureCallback: failureCallback);
+        } catch (e) {
+          failureCallback("", e.toString());
+        }
+
         break;
 
       case MethodType.Delete:
-        Response response = await dio.delete(baseUrl + command, data: params);
-        parseResponse(context, response,
-            successCallback: successCallback, failureCallback: failureCallback);
+        try {
+          Response response = await dio.delete(baseUrl + command, data: params);
+          parseResponse(context, response,
+              successCallback: successCallback,
+              failureCallback: failureCallback);
+        } catch (e) {
+          failureCallback("", e.toString());
+        }
+
         break;
 
       default:

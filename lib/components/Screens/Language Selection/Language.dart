@@ -48,6 +48,9 @@ class _LanguageSelectionState extends State<LanguageSelection> {
 
   getOnBoardingData() {
     if (!app.resolve<PrefUtils>().isShowIntro()) {
+      Map<String, dynamic> req = {};
+      req["langid"] = selctedLanguage.id;
+
       NetworkClient.getInstance.showLoader(context);
       NetworkClient.getInstance.callApi(
         context: context,
@@ -55,6 +58,7 @@ class _LanguageSelectionState extends State<LanguageSelection> {
         command: ApiConstants.onboarding,
         headers: NetworkClient.getInstance.getAuthHeaders(),
         method: MethodType.Get,
+        params: req,
         successCallback: (response, message) async {
           NetworkClient.getInstance.hideProgressDialog();
           List<dynamic> list = response;
@@ -68,8 +72,8 @@ class _LanguageSelectionState extends State<LanguageSelection> {
           }
         },
         failureCallback: (code, message) {
-          View.showMessage(context, message);
           NetworkClient.getInstance.hideProgressDialog();
+          View.showMessage(context, message);
         },
       );
     } else {
@@ -125,6 +129,7 @@ class _LanguageSelectionState extends State<LanguageSelection> {
                         width: getSize(200),
                         height: getSize(200),
                         decoration: BoxDecoration(
+                          color: Colors.white,
                           boxShadow: [
                             BoxShadow(
                                 color: Colors.grey.shade400,

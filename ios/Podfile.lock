@@ -1,4 +1,8 @@
 PODS:
+  - agora_rtc_engine (4.0.6):
+    - AgoraRtcEngine_iOS (= 3.4.6)
+    - Flutter
+  - AgoraRtcEngine_iOS (3.4.6)
   - apple_sign_in (0.0.1):
     - Flutter
   - compressimage (0.0.1):
@@ -35,7 +39,7 @@ PODS:
     - Flutter
   - path_provider (0.0.1):
     - Flutter
-  - "permission_handler (4.4.0+hotfix.4)":
+  - "permission_handler (5.1.0+2)":
     - Flutter
   - Reachability (3.2)
   - shared_preferences (0.0.1):
@@ -48,6 +52,7 @@ PODS:
     - Flutter
 
 DEPENDENCIES:
+  - agora_rtc_engine (from `.symlinks/plugins/agora_rtc_engine/ios`)
   - apple_sign_in (from `.symlinks/plugins/apple_sign_in/ios`)
   - compressimage (from `.symlinks/plugins/compressimage/ios`)
   - connectivity (from `.symlinks/plugins/connectivity/ios`)
@@ -65,6 +70,7 @@ DEPENDENCIES:
 
 SPEC REPOS:
   trunk:
+    - AgoraRtcEngine_iOS
     - FBSDKCoreKit
     - FBSDKLoginKit
     - FMDB
@@ -72,6 +78,8 @@ SPEC REPOS:
     - Toast
 
 EXTERNAL SOURCES:
+  agora_rtc_engine:
+    :path: ".symlinks/plugins/agora_rtc_engine/ios"
   apple_sign_in:
     :path: ".symlinks/plugins/apple_sign_in/ios"
   compressimage:
@@ -102,6 +110,8 @@ EXTERNAL SOURCES:
     :path: ".symlinks/plugins/unique_identifier/ios"
 
 SPEC CHECKSUMS:
+  agora_rtc_engine: d3178bd63d453a2d0111bd45475f17ce1fcc754d
+  AgoraRtcEngine_iOS: 8aa4a8e46bd81963607857b1d46703b93e4de156
   apple_sign_in: 7716c7ddfa195aeab7dec0dc374ef4ff45d1adb4
   compressimage: 4f597b00f6e66bdc43d0aec5f0b9e415f3b03bbd
   connectivity: c4130b2985d4ef6fd26f9702e886bd5260681467
@@ -115,7 +125,7 @@ SPEC CHECKSUMS:
   FMDB: 2ce00b547f966261cd18927a3ddb07cb6f3db82a
   http_proxy: 20f129d3e1c70cfdef92530b374c619832027729
   path_provider: abfe2b5c733d04e238b0d8691db0cfd63a27a93c
-  permission_handler: 8278954f2382902f63f00dd8828769c0bd6d511b
+  permission_handler: ccb20a9fad0ee9b1314a52b70b76b473c5f8dab0
   Reachability: 33e18b67625424e47b6cde6d202dce689ad7af96
   shared_preferences: af6bfa751691cdc24be3045c43ec037377ada40d
   sqflite: 6d358c025f5b867b29ed92fc697fd34924e11904

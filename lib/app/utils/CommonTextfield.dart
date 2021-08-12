@@ -64,13 +64,13 @@ class _CommonTextfieldState extends State<CommonTextfield> {
       mainAxisSize: MainAxisSize.min,
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Padding(
-          padding: EdgeInsets.only(bottom: getSize(10)),
-          child: Text(
-            widget.lableText,
-            style: appTheme.black_Medium_16Text,
-          ),
-        ),
+        // Padding(
+        //   padding: EdgeInsets.only(bottom: getSize(10)),
+        //   child: Text(
+        //     widget.lableText,
+        //     style: appTheme.black_Medium_16Text,
+        //   ),
+        // ),
         TextFormField(
           textAlignVertical: TextAlignVertical(y: 0.1),
           autocorrect: widget.autoCorrect,

@@ -53,6 +53,9 @@ class CommonApiHelper {
 //Language
   callLanguageListApi(BuildContext context,
       Function(List<LanguageModel>) success, Function failure) {
+    Map<String, dynamic> req = {};
+    req["status"] = 1;
+
     NetworkClient.getInstance.showLoader(context);
     NetworkClient.getInstance.callApi(
       context: context,
@@ -60,6 +63,7 @@ class CommonApiHelper {
       command: ApiConstants.allLanguage,
       headers: NetworkClient.getInstance.getAuthHeaders(),
       method: MethodType.Get,
+      params: req,
       successCallback: (response, message) async {
         NetworkClient.getInstance.hideProgressDialog();
         List<dynamic> list = response;
