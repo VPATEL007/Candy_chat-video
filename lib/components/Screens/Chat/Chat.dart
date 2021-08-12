@@ -50,6 +50,7 @@ class _ChatState extends State<Chat> {
 
   Widget chatList() {
     return ListView.builder(
+      reverse: true,
       itemCount: 20,
       shrinkWrap: true,
       padding: EdgeInsets.only(top: getSize(20), bottom: getSize(120)),

@@ -26,18 +26,21 @@ class NetworkClient {
 
   final dio = Dio();
 
-  Map<String, dynamic> getAuthHeaders() {
+  Map<String, dynamic> getAuthHeaders({bool isRefereshToken = false}) {
     Map<String, dynamic> authHeaders = Map<String, dynamic>();
 
     if (app.resolve<PrefUtils>().isUserLogin()) {
-      authHeaders["authorization"] =
-          "Bearer " + app.resolve<PrefUtils>().getUserToken();
-      print(app.resolve<PrefUtils>().getUserToken);
-      authHeaders["Accept"] = "application/json";
-    } else {
-      authHeaders["Accept"] = "application/json";
+      if (isRefereshToken) {
+        authHeaders["authorization"] = app
+            .resolve<PrefUtils>()
+            .getUserToken(isRefereshToken: isRefereshToken);
+      } else {
+        authHeaders["authorization"] =
+            "Bearer " + app.resolve<PrefUtils>().getUserToken();
+      }
     }
 
+    authHeaders["Accept"] = "application/json";
     if (Platform.isIOS) {
       authHeaders["deviceType"] = DEVICE_TYPE_IOS;
     } else if (Platform.isAndroid) {
@@ -172,5 +175,24 @@ class NetworkClient {
 
   void hideProgressDialog() {
     Navigator.pop(NavigationUtilities.key.currentState.overlay.context);
+  }
+
+  void refereshToken(
+      {@required BuildContext context, Function success, Function failure}) {
+    NetworkClient.getInstance.callApi(
+      context: context,
+      baseUrl: ApiConstants.apiUrl,
+      command: ApiConstants.allLanguage,
+      headers: NetworkClient.getInstance.getAuthHeaders(),
+      method: MethodType.Get,
+      successCallback: (response, message) async {
+        app.resolve<PrefUtils>().saveRefereshToken(response["refreshToken"]);
+        app.resolve<PrefUtils>().saveUserToken(response["accessToken"]);
+        success();
+      },
+      failureCallback: (code, message) {
+        failure();
+      },
+    );
   }
 }
