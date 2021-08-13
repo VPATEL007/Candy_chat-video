@@ -87,7 +87,7 @@ class CommonApiHelper {
     );
   }
 
-  //Language
+  //Guest Login
   Future callGuestLogintApi(BuildContext context, Map<String, dynamic> req,
       Function success, Function failure) async {
     NetworkClient.getInstance.showLoader(context);
