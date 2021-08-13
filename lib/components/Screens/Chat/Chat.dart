@@ -13,7 +13,7 @@ class Chat extends StatefulWidget {
   Chat(
       {Key key,
       @required this.channelId,
-      @required this.userId ,
+      @required this.userId,
       @required this.token})
       : super(key: key);
 

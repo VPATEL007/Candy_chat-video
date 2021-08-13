@@ -9,8 +9,6 @@ PODS:
   - AgoraRtm_iOS (1.2.2)
   - apple_sign_in (0.0.1):
     - Flutter
-  - compressimage (0.0.1):
-    - Flutter
   - connectivity (0.0.1):
     - Flutter
     - Reachability
@@ -29,13 +27,6 @@ PODS:
     - FBSDKCoreKit (~> 9.0.0)
     - FBSDKLoginKit (~> 9.0.0)
     - Flutter
-  - flutter_files_picker (0.0.2):
-    - Flutter
-  - flutter_statusbarcolor (0.0.1):
-    - Flutter
-  - fluttertoast (0.0.2):
-    - Flutter
-    - Toast
   - FMDB (2.7.5):
     - FMDB/standard (= 2.7.5)
   - FMDB/standard (2.7.5)
@@ -51,7 +42,6 @@ PODS:
   - sqflite (0.0.2):
     - Flutter
     - FMDB (>= 2.7.5)
-  - Toast (4.0.0)
   - unique_identifier (0.0.1):
     - Flutter
 
@@ -59,13 +49,9 @@ DEPENDENCIES:
   - agora_rtc_engine (from `.symlinks/plugins/agora_rtc_engine/ios`)
   - agora_rtm (from `.symlinks/plugins/agora_rtm/ios`)
   - apple_sign_in (from `.symlinks/plugins/apple_sign_in/ios`)
-  - compressimage (from `.symlinks/plugins/compressimage/ios`)
   - connectivity (from `.symlinks/plugins/connectivity/ios`)
   - Flutter (from `Flutter`)
   - flutter_facebook_auth (from `.symlinks/plugins/flutter_facebook_auth/ios`)
-  - flutter_files_picker (from `.symlinks/plugins/flutter_files_picker/ios`)
-  - flutter_statusbarcolor (from `.symlinks/plugins/flutter_statusbarcolor/ios`)
-  - fluttertoast (from `.symlinks/plugins/fluttertoast/ios`)
   - http_proxy (from `.symlinks/plugins/http_proxy/ios`)
   - path_provider (from `.symlinks/plugins/path_provider/ios`)
   - permission_handler (from `.symlinks/plugins/permission_handler/ios`)
@@ -81,7 +67,6 @@ SPEC REPOS:
     - FBSDKLoginKit
     - FMDB
     - Reachability
-    - Toast
 
 EXTERNAL SOURCES:
   agora_rtc_engine:
@@ -90,20 +75,12 @@ EXTERNAL SOURCES:
     :path: ".symlinks/plugins/agora_rtm/ios"
   apple_sign_in:
     :path: ".symlinks/plugins/apple_sign_in/ios"
-  compressimage:
-    :path: ".symlinks/plugins/compressimage/ios"
   connectivity:
     :path: ".symlinks/plugins/connectivity/ios"
   Flutter:
     :path: Flutter
   flutter_facebook_auth:
     :path: ".symlinks/plugins/flutter_facebook_auth/ios"
-  flutter_files_picker:
-    :path: ".symlinks/plugins/flutter_files_picker/ios"
-  flutter_statusbarcolor:
-    :path: ".symlinks/plugins/flutter_statusbarcolor/ios"
-  fluttertoast:
-    :path: ".symlinks/plugins/fluttertoast/ios"
   http_proxy:
     :path: ".symlinks/plugins/http_proxy/ios"
   path_provider:
@@ -123,15 +100,11 @@ SPEC CHECKSUMS:
   AgoraRtcEngine_iOS: 8aa4a8e46bd81963607857b1d46703b93e4de156
   AgoraRtm_iOS: c6ba986a3af73dd0f02e6e2995ae4fe9c155e6ae
   apple_sign_in: 7716c7ddfa195aeab7dec0dc374ef4ff45d1adb4
-  compressimage: 4f597b00f6e66bdc43d0aec5f0b9e415f3b03bbd
   connectivity: c4130b2985d4ef6fd26f9702e886bd5260681467
   FBSDKCoreKit: fada1a6a0076724678993ff05a633848765ff18c
   FBSDKLoginKit: d5ffe6d808897019ccf16feb6f0a7ab260bc5cd6
   Flutter: 434fef37c0980e73bb6479ef766c45957d4b510c
   flutter_facebook_auth: d952ca599c6a76439c54472b0b225004e1b880c4
-  flutter_files_picker: 10942b5e4c22c90e3da2faf82dc8bf9f83660089
-  flutter_statusbarcolor: 8afb1071ed8c58be929f1e32b36c629771fd2259
-  fluttertoast: 6122fa75143e992b1d3470f61000f591a798cc58
   FMDB: 2ce00b547f966261cd18927a3ddb07cb6f3db82a
   http_proxy: 20f129d3e1c70cfdef92530b374c619832027729
   path_provider: abfe2b5c733d04e238b0d8691db0cfd63a27a93c
@@ -139,7 +112,6 @@ SPEC CHECKSUMS:
   Reachability: 33e18b67625424e47b6cde6d202dce689ad7af96
   shared_preferences: af6bfa751691cdc24be3045c43ec037377ada40d
   sqflite: 6d358c025f5b867b29ed92fc697fd34924e11904
-  Toast: 91b396c56ee72a5790816f40d3a94dd357abc196
   unique_identifier: ebb92b4bc4ad9c2c93f85cb5e02f70ad168a2bd6
 
 PODFILE CHECKSUM: aafe91acc616949ddb318b77800a7f51bffa2a4c
