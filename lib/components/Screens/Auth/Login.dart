@@ -77,7 +77,7 @@ class _LoginState extends State<Login> {
               Spacer(),
               if (Platform.isIOS)
                 getButton(icApple, "Continue with Apple", Colors.black, () {
-                  AppleLoginHealper.shared.login();
+                  AppleLoginHealper.shared.login(context, () {});
                 }),
               SizedBox(
                 height: getSize(12),
