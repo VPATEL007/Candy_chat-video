@@ -57,9 +57,7 @@ class _ChatListState extends State<ChatList> {
         itemBuilder: (BuildContext context, int index) {
           return InkWell(
               onTap: () {
-                NavigationUtilities.push(Chat(
-                  isChat: index == 0 ? false : true,
-                ));
+                NavigationUtilities.push(Chat());
               },
               child: getChatItem(index));
         },

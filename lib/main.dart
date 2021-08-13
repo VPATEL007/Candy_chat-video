@@ -4,10 +4,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:kiwi/kiwi.dart';
-import 'package:video_chat/components/Screens/Chat/Chat.dart';
-import 'package:video_chat/components/Screens/Home/Home.dart';
 import 'package:video_chat/components/Screens/Splash/Splash.dart';
-import 'package:video_chat/components/Screens/VideoCall/VideoCall.dart';
 
 import 'app/Helper/Themehelper.dart';
 import 'app/constant/constants.dart';

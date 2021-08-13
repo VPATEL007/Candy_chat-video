@@ -1,12 +1,21 @@
+import 'package:agora_rtm/agora_rtm.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:video_chat/app/app.export.dart';
-import 'package:video_chat/app/utils/CommonTextfield.dart';
-import 'package:video_chat/app/utils/CommonWidgets.dart';
+import 'package:intl/intl.dart';
+import 'package:sticky_headers/sticky_headers.dart';
+
+import '../../../app/app.export.dart';
 
 class Chat extends StatefulWidget {
-  bool isChat = false;
-  Chat({Key key, this.isChat}) : super(key: key);
+  final String channelId;
+  final String userId;
+  final String token;
+  Chat(
+      {Key key,
+      @required this.channelId,
+      @required this.userId ,
+      @required this.token})
+      : super(key: key);
 
   @override
   _ChatState createState() => _ChatState();
@@ -14,85 +23,175 @@ class Chat extends StatefulWidget {
 
 class _ChatState extends State<Chat> {
   final TextEditingController _chatController = TextEditingController();
+  AgoraService agoraService = AgoraService.instance;
+  List<MessageObj> _chatsList = [];
+  ScrollController messageListScrollController = ScrollController();
+  @override
+  void initState() {
+    super.initState();
+    init();
+  }
+
+  Future<void> init() async {
+    await agoraService.initialize(AGORA_APPID);
+    await agoraService.login(token: widget.token, userId: widget?.userId);
+    agoraService.joinChannel((widget?.channelId ?? ""),
+        onMemberJoined: (AgoraRtmMember member) {
+      print(
+          "Member joined: " + member.userId + ', channel: ' + member.channelId);
+    }, onMemberLeft: (AgoraRtmMember member) {
+      print("Member left: " + member.userId + ', channel: ' + member.channelId);
+    }, onMessageReceived: (AgoraRtmMessage message, AgoraRtmMember member) {
+      MessageObj _chat = MessageObj(
+          chatDate: DateTime.now(),
+          message: message.text,
+          isSendByMe: member.userId.toString().toLowerCase() ==
+              widget.userId.toLowerCase().toLowerCase(),
+          sendBy: member.userId);
+
+      _chatsList.add(_chat);
+      if (mounted) setState(() {});
+      print("Channel msg: " + member.userId + ", msg: " + (message.text ?? ""));
+    });
+  }
+
+  @override
+  void dispose() {
+    agoraService?.leaveChannel();
+    agoraService?.logOut();
+    messageListScrollController?.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Colors.white,
-      appBar: getAppBar(context, "Helmi Lutvyandi",
-          isWhite: true,
-          centerTitle: false,
-          leadingButton: getBackButton(context),
-          actionItems: [
-            Padding(
-              padding: EdgeInsets.only(top: getSize(20), right: getSize(6)),
-              child: Text("• Online",
-                  style: appTheme.black_Medium_16Text
-                      .copyWith(color: fromHex("#00DE9B"))),
-            ),
-            getBarButton(context, icCall, () {}),
-            Padding(
-              padding: EdgeInsets.all(getSize(14)),
-              child: ClipRRect(
-                borderRadius: BorderRadius.circular(36),
-                child: Image.asset(
-                  loginBg,
-                  width: getSize(36),
-                  height: getSize(26),
-                  fit: BoxFit.cover,
-                ),
+    return GestureDetector(
+      behavior: HitTestBehavior.opaque,
+      onTap: () {
+        FocusScope.of(context).requestFocus(FocusNode());
+        FocusScopeNode currentFocus = FocusScope.of(context);
+
+        if (!currentFocus.hasPrimaryFocus) {
+          currentFocus.unfocus();
+        }
+      },
+      child: Scaffold(
+        backgroundColor: Colors.white,
+        appBar: getAppBar(context, "Helmi Lutvyandi",
+            isWhite: true,
+            centerTitle: false,
+            leadingButton: getBackButton(context),
+            actionItems: [
+              Padding(
+                padding: EdgeInsets.only(top: getSize(20), right: getSize(6)),
+                child: Text("• Online",
+                    style: appTheme.black_Medium_16Text
+                        .copyWith(color: fromHex("#00DE9B"))),
               ),
-            )
-          ]),
-      bottomSheet: chatTextFiled(),
-      body: widget.isChat == true ? chatList() : emptyChat(),
+              getBarButton(context, icCall, () {}),
+              Padding(
+                padding: EdgeInsets.all(getSize(14)),
+                child: ClipRRect(
+                  borderRadius: BorderRadius.circular(36),
+                  child: Image.asset(
+                    loginBg,
+                    width: getSize(36),
+                    height: getSize(26),
+                    fit: BoxFit.cover,
+                  ),
+                ),
+              )
+            ]),
+        bottomSheet: chatTextFiled(),
+        body: chatList(),
+      ),
     );
   }
 
   Widget chatList() {
+    return StreamBuilder<List<ChatObj>>(
+        stream: Stream.value(sortChatByDate(_chatsList)),
+        builder: (context, snapshot) {
+          if (snapshot.hasError) {
+            return Center(
+              child: Text(
+                snapshot.error.toString(),
+                style: appTheme.black14Normal,
+              ),
+            );
+          } else if (snapshot.connectionState == ConnectionState.waiting) {
+            return CircularProgressIndicator();
+          } else if (snapshot.data?.isEmpty ?? true) {
+            return emptyChat();
+          } else {
+            return ListView.builder(
+              reverse: true,
+              itemCount: snapshot.data.length,
+              shrinkWrap: true,
+              padding: EdgeInsets.only(top: getSize(20), bottom: getSize(120)),
+              controller: messageListScrollController,
+              physics: AlwaysScrollableScrollPhysics(),
+              itemBuilder: (context, index) {
+                List<MessageObj> msgObjList = [];
+
+                if (index != snapshot.data.length) {
+                  msgObjList = snapshot.data[index].messageObjList;
+                }
+                return snapshot.data.isEmpty
+                    ? Container()
+                    : StickyHeader(
+                        // Header...
+                        header: Center(
+                          child: Container(
+                            decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(20),
+                                color: fromHex("#F1F1F1")),
+                            child: Padding(
+                              padding: EdgeInsets.only(
+                                  top: getSize(7),
+                                  bottom: getSize(7),
+                                  left: getSize(20),
+                                  right: getSize(20)),
+                              child: Text(
+                                snapshot.data[index].getChatingDates,
+                                style: appTheme.black12Normal,
+                              ),
+                            ),
+                          ),
+                        ),
+                        // Content...
+                        content: _buildChats(snapshot.data[index], msgObjList),
+                      );
+              },
+            );
+          }
+        });
+  }
+
+  // Chat date and chats...
+  Widget _buildChats(ChatObj chat, List<MessageObj> messageList) {
     return ListView.builder(
       reverse: true,
-      itemCount: 20,
       shrinkWrap: true,
-      padding: EdgeInsets.only(top: getSize(20), bottom: getSize(120)),
-      // physics: NeverScrollableScrollPhysics(),
-      itemBuilder: (context, index) {
-        return index == 0
-            ? Column(
-                children: [
-                  Container(
-                    decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(20),
-                        color: fromHex("#F1F1F1")),
-                    child: Padding(
-                      padding: EdgeInsets.only(
-                          top: getSize(7),
-                          bottom: getSize(7),
-                          left: getSize(20),
-                          right: getSize(20)),
-                      child: Text(
-                        "Yesterday",
-                        style: appTheme.black12Normal,
-                      ),
-                    ),
-                  ),
-                  SizedBox(
-                    height: getSize(6),
-                  )
-                ],
-              )
-            : getChatItem(index);
+      padding: EdgeInsets.only(top: 10),
+      physics: NeverScrollableScrollPhysics(),
+      itemCount: messageList.length,
+      itemBuilder: (context, contentIndex) {
+        return getChatItem(
+          messageList[contentIndex],
+        );
       },
     );
   }
 
-  Widget getChatItem(int index) {
+  Widget getChatItem(MessageObj messageList) {
     return Container(
       padding: EdgeInsets.only(left: 14, right: 14, top: 14, bottom: 0),
       child: Align(
-        alignment: index % 2 == 0 ? Alignment.topLeft : Alignment.topRight,
+        alignment:
+            !messageList.isSendByMe ? Alignment.topLeft : Alignment.topRight,
         child: Column(
           mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: index % 2 == 0
+          crossAxisAlignment: !messageList.isSendByMe
               ? CrossAxisAlignment.start
               : CrossAxisAlignment.end,
           children: [
@@ -100,25 +199,26 @@ class _ChatState extends State<Chat> {
               constraints: BoxConstraints(minWidth: 0, maxWidth: getSize(260)),
               decoration: BoxDecoration(
                   borderRadius: BorderRadius.only(
-                      topRight:
-                          Radius.circular(getSize(index % 2 == 0 ? 16 : 0)),
-                      topLeft:
-                          Radius.circular(getSize(index % 2 != 0 ? 16 : 0)),
+                      topRight: Radius.circular(
+                          getSize(!messageList.isSendByMe ? 16 : 0)),
+                      topLeft: Radius.circular(
+                          getSize(messageList.isSendByMe ? 16 : 0)),
                       bottomLeft: Radius.circular(getSize(16)),
                       bottomRight: Radius.circular(getSize(16))),
                   gradient: LinearGradient(
                     begin: Alignment.topLeft,
                     end: Alignment.bottomRight,
-                    colors: index % 2 != 0
+                    colors: messageList.isSendByMe
                         ? [ColorConstants.gradiantStart, ColorConstants.red]
                         : [fromHex("#F1F1F1"), fromHex("#F1F1F1")],
                   )),
               padding: EdgeInsets.all(16),
               child: Text(
-                "Would be awesome!",
+                messageList?.message,
                 style: appTheme.black12Normal.copyWith(
                     fontWeight: FontWeight.w500,
-                    color: index % 2 != 0 ? Colors.white : Colors.black),
+                    color:
+                        messageList.isSendByMe ? Colors.white : Colors.black),
               ),
             ),
             SizedBox(
@@ -127,10 +227,14 @@ class _ChatState extends State<Chat> {
             Padding(
               padding: EdgeInsets.only(left: 8, right: 8),
               child: Text(
-                "12:28 Pm",
-                textAlign: index % 2 == 0 ? TextAlign.left : TextAlign.right,
-                style: appTheme.black12Normal
-                    .copyWith(fontWeight: FontWeight.w500),
+                messageList.getChatDate,
+                textAlign: messageList.sendBy != widget.userId
+                    ? TextAlign.left
+                    : TextAlign.right,
+                style: appTheme.black12Normal.copyWith(
+                    fontWeight: FontWeight.w500,
+                    color: Color(0xFFC2C2C2),
+                    fontSize: 10),
               ),
             )
           ],
@@ -144,7 +248,7 @@ class _ChatState extends State<Chat> {
     return Column(
       mainAxisSize: MainAxisSize.min,
       children: [
-        widget.isChat == false
+        _chatsList?.isEmpty
             ? Container(
                 height: getSize(38),
                 child: ListView.separated(
@@ -201,11 +305,30 @@ class _ChatState extends State<Chat> {
                         postfixWid: Padding(
                           padding: EdgeInsets.only(
                               top: getSize(16), right: getSize(16)),
-                          child: Text(
-                            "Send",
-                            style: appTheme.black14Normal.copyWith(
-                                fontWeight: FontWeight.w700,
-                                color: ColorConstants.red),
+                          child: InkWell(
+                            onTap: () async {
+                              MessageObj _chat = MessageObj(
+                                  chatDate: DateTime.now(),
+                                  message: _chatController.text,
+                                  isSendByMe: true,
+                                  sendBy: widget.userId);
+
+                              _chatsList.add(_chat);
+                              if (mounted) setState(() {});
+                              await agoraService
+                                  .sendMessage(_chatController.text);
+
+                              _chatController.clear();
+                              if (_chatsList?.isNotEmpty ?? false)
+                                messageListScrollController?.jumpTo(0.0);
+                              if (mounted) setState(() {});
+                            },
+                            child: Text(
+                              "Send",
+                              style: appTheme.black14Normal.copyWith(
+                                  fontWeight: FontWeight.w700,
+                                  color: ColorConstants.red),
+                            ),
                           ),
                         ),
                         inputController: _chatController),
@@ -293,5 +416,31 @@ class _ChatState extends State<Chat> {
         )
       ],
     );
+  }
+
+  // Get Sorted List By Chat dates...
+  List<ChatObj> sortChatByDate(List<MessageObj> chatList) {
+    List<ChatObj> tempArray = [];
+    chatList.forEach((chats) {
+      //Get list Index...
+      int transIndex = tempArray.indexWhere((item) {
+        return DateFormat('dd MMMM yyyy').format(item.chatDate) ==
+            DateFormat('dd MMMM yyyy')
+                .format(chats.chatDate); //Sort by List Category...
+      });
+      //Check If Project Already Added, if added then add category and list in same project...
+      if (transIndex >= 0) {
+        tempArray[transIndex].messageObjList.insert(0, chats);
+      } else {
+        //New Temp List...
+        ChatObj tempList = ChatObj();
+        tempList.chatDate = chats.chatDate; // List Name...
+        tempList.messageObjList = [chats];
+
+        tempArray.add(tempList);
+      }
+    });
+
+    return tempArray;
   }
 }
