@@ -1,9 +1,11 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:video_chat/app/app.export.dart';
 import 'package:video_chat/components/Screens/Home/MatchProfile.dart';
 import 'package:video_chat/components/Screens/UserProfile/UserProfile.dart';
 import 'package:video_chat/components/widgets/TabBar/Tabbar.dart';
+import 'package:video_chat/provider/matching_profile_provider.dart';
 
 class Discover extends StatefulWidget {
   static const route = "Discover";
@@ -40,7 +42,9 @@ class _DiscoverState extends State<Discover> {
 
   Widget getMatchButton() {
     return InkWell(
-      onTap: () {
+      onTap: () async {
+        await Provider.of<MatchingProfileProvider>(context, listen: false)
+            .fetchMatchProfileList(context);
         NavigationUtilities.push(MathProfile());
       },
       child: Container(

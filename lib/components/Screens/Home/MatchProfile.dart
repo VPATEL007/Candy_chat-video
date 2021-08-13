@@ -1,15 +1,19 @@
 import 'dart:math';
 
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_tags/flutter_tags.dart';
+import 'package:provider/provider.dart';
 
 import 'package:video_chat/app/app.export.dart';
 import 'package:video_chat/app/utils/CommonWidgets.dart';
+import 'package:video_chat/components/Model/Match%20Profile/match_profile.dart';
 import 'package:video_chat/components/Screens/Home/MatchedProfile.dart';
 import 'package:video_chat/components/Screens/Home/Reportblock.dart';
 import 'package:video_chat/components/Screens/UserProfile/UserProfile.dart';
 import 'package:video_chat/components/widgets/TabBar/Tabbar.dart';
+import 'package:video_chat/provider/matching_profile_provider.dart';
 
 import 'Card/draggable_card.dart';
 import 'Card/swipe_cards.dart';
@@ -25,132 +29,145 @@ class _MathProfileState extends State<MathProfile> {
   List<SwipeItem> _swipeItems = <SwipeItem>[];
   MatchEngine _matchEngine;
   GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey();
-  List<String> _names = ["Red", "Blue", "Green", "Yellow", "Orange"];
+
   RangeValues _currentRangeValues = const RangeValues(18, 24);
   SlideRegion region = SlideRegion.inSuperLikeRegion;
   int currentIndex = 0;
 
   @override
   void initState() {
-    for (int i = 0; i < _names.length; i++) {
-      _swipeItems.add(SwipeItem(
-          content: Content(text: _names[i]),
-          likeAction: () {
-            print("like");
-          },
-          nopeAction: () {
-            print("nope");
-          },
-          superlikeAction: () {
-            openUserProfile();
-            // NavigationUtilities.push(UserProfile());
-          },
-          onSlideUpdateAction: (tRegion, index) {
-            setState(() {
-              currentIndex = index;
-              region = tRegion;
-            });
-          }));
-    }
+    super.initState();
+    _swipeItems = Provider.of<MatchingProfileProvider>(context, listen: false)
+        .matchProfileList
+        .map((e) => SwipeItem(
+            content: Content(text: e.id.toString()),
+            likeAction: () {
+              print("like");
+            },
+            nopeAction: () {
+              print("nope");
+            },
+            superlikeAction: () {
+              openUserProfile();
+              // NavigationUtilities.push(UserProfile());
+            },
+            onSlideUpdateAction: (tRegion, index) {
+              setState(() {
+                currentIndex = index;
+                region = tRegion;
+              });
+            }))
+        .toList();
 
     _matchEngine = MatchEngine(swipeItems: _swipeItems);
-    super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Container(
-        color: Colors.white,
-        child: Stack(
-          children: [
-            SwipeCards(
-              matchEngine: _matchEngine,
-              itemBuilder: (BuildContext context, int index) {
-                return Container(
-                  height: MathUtilities.screenHeight(context),
-                  width: MathUtilities.screenWidth(context),
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(
-                      getSize(MathUtilities.safeAreaTopHeight(context) > 20
-                          ? getSize(16)
-                          : getSize(0)),
-                    ),
-                    image: DecorationImage(
-                      image: AssetImage(icTemp),
-                      fit: BoxFit.cover,
-                    ),
-                  ),
-                  child: SafeArea(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Padding(
-                          padding: EdgeInsets.only(
-                              left: getSize(29), top: getSize(100)),
-                          child: Container(
-                            height: getSize(120),
-                            width: getSize(90),
-                            decoration: BoxDecoration(
-                              border: Border.all(color: Colors.white, width: 1),
-                              borderRadius: BorderRadius.circular(
-                                getSize(7),
-                              ),
-                            ),
-                            child: Image.asset(icTemp),
-                          ),
-                        ),
-                        SizedBox(
-                          height: getSize(80),
-                        ),
-                        getLikeUnlike(index),
-                      ],
-                    ),
-                  ),
-                );
-              },
-              onStackFinished: () {
-                print("asdad");
-              },
-            ),
-            SafeArea(
-              child: Align(
-                alignment: Alignment.topLeft,
-                child: Padding(
-                    padding: EdgeInsets.only(
-                        left: getSize(29),
-                        top: getSize(16),
-                        right: getFontSize(29)),
-                    child: Row(
-                      children: [
-                        getTopButton(icDrawer, () {
-                          openFilter();
-                        }),
-                        Spacer(),
-                        getTopButton(icVector, () {
-                          NavigationUtilities.push(ReportBlock());
-                        }),
-                      ],
-                    )),
-              ),
-            ),
-            Align(
-              alignment: Alignment.bottomCenter,
-              child: Container(
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.end,
+      body: Consumer<MatchingProfileProvider>(
+          builder: (ctx, matchProfileProvider, child) {
+        return (matchProfileProvider.matchProfileList?.isEmpty ?? true)
+            ? Container()
+            : Container(
+                color: Colors.white,
+                child: Stack(
                   children: [
-                    getDetailWidget(),
-                    TabBarWidget(
-                      screen: TabType.Home,
-                    )
+                    SwipeCards(
+                      matchEngine: _matchEngine,
+                      itemBuilder: (BuildContext context, int index) {
+                        MatchProfileModel _matchProfile =
+                            matchProfileProvider.matchProfileList[index];
+                        return Container(
+                          height: MathUtilities.screenHeight(context),
+                          width: MathUtilities.screenWidth(context),
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(
+                              getSize(
+                                  MathUtilities.safeAreaTopHeight(context) > 20
+                                      ? getSize(16)
+                                      : getSize(0)),
+                            ),
+                            image: DecorationImage(
+                              image: CachedNetworkImageProvider(
+                                _matchProfile?.photoUrl ?? "",
+                              ),
+                              fit: BoxFit.cover,
+                            ),
+                          ),
+                          child: SafeArea(
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Padding(
+                                  padding: EdgeInsets.only(
+                                      left: getSize(29), top: getSize(100)),
+                                  child: Container(
+                                    height: getSize(120),
+                                    width: getSize(90),
+                                    decoration: BoxDecoration(
+                                      border: Border.all(
+                                          color: Colors.white, width: 1),
+                                      borderRadius: BorderRadius.circular(
+                                        getSize(7),
+                                      ),
+                                    ),
+                                    child: Image.asset(icTemp),
+                                  ),
+                                ),
+                                SizedBox(
+                                  height: getSize(80),
+                                ),
+                                getLikeUnlike(index),
+                              ],
+                            ),
+                          ),
+                        );
+                      },
+                      onStackFinished: () {
+                        print("All Catch Up!");
+                      },
+                    ),
+                    SafeArea(
+                      child: Align(
+                        alignment: Alignment.topLeft,
+                        child: Padding(
+                            padding: EdgeInsets.only(
+                                left: getSize(29),
+                                top: getSize(16),
+                                right: getFontSize(29)),
+                            child: Row(
+                              children: [
+                                getTopButton(icDrawer, () {
+                                  openFilter();
+                                }),
+                                Spacer(),
+                                getTopButton(icVector, () {
+                                  NavigationUtilities.push(ReportBlock());
+                                }),
+                              ],
+                            )),
+                      ),
+                    ),
+                    Align(
+                      alignment: Alignment.bottomCenter,
+                      child: Container(
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.end,
+                          children: [
+                            getDetailWidget(matchProfileProvider
+                                .matchProfileList[currentIndex]),
+                            TabBarWidget(
+                              screen: TabType.Home,
+                            )
+                          ],
+                        ),
+                      ),
+                    ),
                   ],
                 ),
-              ),
-            ),
-          ],
-        ),
-      ),
+              );
+      }),
     );
   }
 
@@ -207,7 +224,7 @@ class _MathProfileState extends State<MathProfile> {
     return SizedBox();
   }
 
-  getDetailWidget() {
+  getDetailWidget(MatchProfileModel matchedProfile) {
     return InkWell(
       onTap: () {
         NavigationUtilities.push(MatchedProfile());
@@ -235,14 +252,14 @@ class _MathProfileState extends State<MathProfile> {
                       height: getSize(70),
                     ),
                     Text(
-                      "Australia",
+                      matchedProfile?.regionName ?? "",
                       style: appTheme.black16Medium,
                     ),
                     SizedBox(
                       height: getSize(12),
                     ),
                     Text(
-                      "Mihani Miller",
+                      matchedProfile?.userName ?? "",
                       style: appTheme.black16Bold
                           .copyWith(fontSize: getFontSize(25)),
                     ),

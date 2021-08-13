@@ -7,6 +7,7 @@ import 'package:kiwi/kiwi.dart';
 import 'package:provider/provider.dart';
 import 'package:video_chat/components/Screens/Splash/Splash.dart';
 import 'package:video_chat/provider/language_provider.dart';
+import 'package:video_chat/provider/matching_profile_provider.dart';
 
 import 'app/Helper/Themehelper.dart';
 import 'app/constant/constants.dart';
@@ -87,7 +88,10 @@ class _BaseState extends State<Base> {
       providers: [
         ChangeNotifierProvider.value(
           value: LanguageProvider(),
-        )
+        ),
+        ChangeNotifierProvider.value(
+          value: MatchingProfileProvider(),
+        ),
       ],
       child: MaterialApp(
         key: navigationKey,

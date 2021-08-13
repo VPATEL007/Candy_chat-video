@@ -1,8 +1,11 @@
+import 'dart:convert';
+
 import 'package:flutter/cupertino.dart';
 import 'package:video_chat/app/AppConfiguration/AppNavigation.dart';
 import 'package:video_chat/app/constant/ApiConstants.dart';
 import 'package:video_chat/app/network/NetworkClient.dart';
 import 'package:video_chat/components/Model/Language/Language.dart';
+import 'package:video_chat/components/Model/Match%20Profile/match_profile.dart';
 import 'package:video_chat/components/Model/User/UserModel.dart';
 import 'package:video_chat/components/Screens/Auth/Gender.dart';
 import 'package:video_chat/main.dart';
@@ -74,6 +77,40 @@ class CommonApiHelper {
         if (list != null) {
           List<LanguageModel> arrList =
               list.map((obj) => LanguageModel.fromJson(obj)).toList();
+          success(arrList);
+          return;
+        }
+        failure();
+      },
+      failureCallback: (code, message) {
+        if (!fetchInBackground) NetworkClient.getInstance.hideProgressDialog();
+        View.showMessage(context, message);
+        failure();
+      },
+    );
+  }
+
+  // Match profile list...
+  Future callMatchProfileListApi(
+      BuildContext context,
+      Map<String, dynamic> parms,
+      Function(List<MatchProfileModel>) success,
+      Function failure,
+      bool fetchInBackground) async {
+    if (!fetchInBackground) NetworkClient.getInstance.showLoader(context);
+    await NetworkClient.getInstance.callApi(
+      context: context,
+      baseUrl: ApiConstants.apiUrl,
+      command: ApiConstants.matchProfile,
+      headers: NetworkClient.getInstance.getAuthHeaders(),
+      method: MethodType.Get,
+      params: parms,
+      successCallback: (response, message) async {
+        if (!fetchInBackground) NetworkClient.getInstance.hideProgressDialog();
+        print(response["data"]);
+        if (response["data"] != null) {
+          List<MatchProfileModel> arrList =
+              matchProfileModelFromJson(jsonEncode(response["data"]));
           success(arrList);
           return;
         }

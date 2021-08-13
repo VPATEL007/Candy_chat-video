@@ -133,7 +133,7 @@ class PrefUtils {
   }
 
   //get Token
-  String getUserToken({bool isRefereshToken}) {
+  String getUserToken({bool isRefereshToken = false}) {
     if (isRefereshToken) {
       return _preferences.getString(keyRefereshToken) ?? "";
     }

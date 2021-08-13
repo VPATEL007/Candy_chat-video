@@ -1,9 +1,11 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:video_chat/app/app.export.dart';
 import 'package:video_chat/app/utils/CommonWidgets.dart';
 import 'package:video_chat/components/Screens/Home/MatchProfile.dart';
 import 'package:video_chat/components/widgets/TabBar/Tabbar.dart';
+import 'package:video_chat/provider/matching_profile_provider.dart';
 
 class Home extends StatefulWidget {
   static const route = "Home";
@@ -125,7 +127,9 @@ class _HomeState extends State<Home> {
 
   getMatchButton() {
     return InkWell(
-      onTap: () {
+      onTap: () async {
+        await Provider.of<MatchingProfileProvider>(context, listen: false)
+            .fetchMatchProfileList(context);
         NavigationUtilities.push(MathProfile());
       },
       child: Container(
