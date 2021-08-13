@@ -20,10 +20,6 @@ const String l1 = "assets/Language/l1.png";
 const String l2 = "assets/Language/l2.png";
 const String l3 = "assets/Language/l3.png";
 
-const String intro1 = "assets/Intro/Introslider1.png";
-const String intro2 = "assets/Intro/introSlider2.png";
-const String intro3 = "assets/Intro/introSlider3.png";
-
 const String loginBg = "assets/Login/LoginBg.png";
 const String loginLogo = "assets/Login/LoginLogo.png";
 const String icApple = "assets/Login/icApple.png";

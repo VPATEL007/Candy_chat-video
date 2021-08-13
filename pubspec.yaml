@@ -71,7 +71,6 @@ flutter:
     - assets/Splash/
     - assets/json/
     - assets/Language/
-    - assets/Intro/
     - assets/Login/
     - assets/Home/
     - assets/Tab/

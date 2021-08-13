@@ -17,8 +17,7 @@ class _GenderState extends State<Gender> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
-      appBar: getAppBar(context, "Select Gender",
-          leadingButton: getBackButton(context), isWhite: true),
+      appBar: getAppBar(context, "Select Gender", isWhite: true),
       body: SafeArea(
         child: Padding(
           padding: EdgeInsets.only(left: getSize(35), right: getSize(35)),

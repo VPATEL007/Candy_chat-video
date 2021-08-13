@@ -140,8 +140,8 @@ class PrefUtils {
     return _preferences.getString(keyToken) ?? "";
   }
 
-  void saveUserToken(String token) {
-    _preferences.setString(keyToken, token);
+  Future<void> saveUserToken(String token) async {
+    await _preferences.setString(keyToken, token);
   }
 
   void saveRefereshToken(String token) {

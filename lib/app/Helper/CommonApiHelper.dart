@@ -40,7 +40,7 @@ class CommonApiHelper {
               .saveUserToken(response["tokenData"]["accessToken"]);
           app
               .resolve<PrefUtils>()
-              .saveRefereshToken(response["tokenData"]["accessToken"]);
+              .saveRefereshToken(response["tokenData"]["refreshToken"]);
         }
         NavigationUtilities.pushReplacementNamed(Gender.route,
             type: RouteType.fade);
@@ -148,7 +148,7 @@ class CommonApiHelper {
               .saveUserToken(response["tokenData"]["accessToken"]);
           app
               .resolve<PrefUtils>()
-              .saveRefereshToken(response["tokenData"]["accessToken"]);
+              .saveRefereshToken(response["tokenData"]["refreshToken"]);
         }
 
         NavigationUtilities.pushReplacementNamed(Gender.route,

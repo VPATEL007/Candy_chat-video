@@ -20,12 +20,12 @@ class AppleLoginHealper {
       req["provider"] = apple;
       req["language_id"] = app.resolve<PrefUtils>().selectedLanguage.id;
 
-      req["token"] = result.credential.user;
+      req["token"] = String.fromCharCodes(result.credential.identityToken);
       Map<String, dynamic> user = {};
       user["name"] = (result.credential.fullName.familyName ?? "") +
           (result.credential.fullName.givenName ?? "");
       user["email"] = result.credential.email;
-      user["uid"] = String.fromCharCodes(result.credential.identityToken);
+      user["uid"] = result.credential.user;
       req["userData"] = user;
       CommonApiHelper.shared.callLoginApi(req, context, () {}, () {});
       switch (result.status) {
