@@ -29,7 +29,6 @@ class _LanguageSelectionState extends State<LanguageSelection> {
     if (widget.isChange == null || widget.isChange == false) {
       getOnBoardingData(context);
     } else {
-      getOnBoardingData(context);
       Navigator.pop(context);
     }
   }
@@ -57,7 +56,7 @@ class _LanguageSelectionState extends State<LanguageSelection> {
           if (list != null) {
             List<OnboardingModel> arrList =
                 list.map((obj) => OnboardingModel.fromJson(obj)).toList();
-
+            print(arrList);
             NavigationUtilities.push(OnBoarding(
               list: arrList,
             ));
