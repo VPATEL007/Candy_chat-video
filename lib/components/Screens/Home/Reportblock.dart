@@ -81,6 +81,9 @@ class _ReportBlockState extends State<ReportBlock> {
             height: getSize(16),
           ),
           getRadioButton("Unreasonable demands", false),
+          SizedBox(
+            height: getSize(16),
+          ),
           CommonTextfield(
             textOption: TextFieldOption(
                 hintText: "Input report reason",

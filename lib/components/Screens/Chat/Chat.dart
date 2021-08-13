@@ -214,7 +214,8 @@ class _ChatState extends State<Chat> {
                 ),
               ),
               Padding(
-                padding: EdgeInsets.only(left: getSize(20), right: getSize(20)),
+                padding: EdgeInsets.only(
+                    bottom: getSize(26), left: getSize(20), right: getSize(20)),
                 child: Image.asset(
                   icGift,
                   height: getSize(32),

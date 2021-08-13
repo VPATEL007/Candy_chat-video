@@ -29,15 +29,14 @@ class _VideoCallState extends State<VideoCall> {
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      // initPlatformState();
+      initPlatformState();
     });
   }
 
   @override
   void dispose() {
     // destroy sdk
-    engine.leaveChannel();
-    engine.destroy();
+    _endCall();
     super.dispose();
   }
 
@@ -96,6 +95,7 @@ class _VideoCallState extends State<VideoCall> {
                   ),
                 ),
               )),
+          switchCameraButton(),
           Positioned(
               bottom: getSize(40),
               child: Container(
@@ -124,7 +124,8 @@ class _VideoCallState extends State<VideoCall> {
                           onTap: () {
                             _onMicMute();
                           },
-                          child: getMicVideoButton(unMuteMic)),
+                          child: getMicVideoButton(
+                              _micMute ? muteMic : unMuteMic)),
                       SizedBox(
                         width: getSize(12),
                       ),
@@ -137,24 +138,11 @@ class _VideoCallState extends State<VideoCall> {
                       SizedBox(
                         width: getSize(12),
                       ),
-                      Container(
-                        decoration: BoxDecoration(
-                            color: Colors.green,
-                            borderRadius: BorderRadius.circular(50)),
-                        child: Padding(
-                          padding: EdgeInsets.all(getSize(10)),
-                          child: Image.asset(
-                            icGift,
-                            height: getSize(36),
-                            width: getSize(36),
-                          ),
-                        ),
-                      ),
+                      giftButton(),
                       SizedBox(
                         width: getSize(12),
                       ),
-                      Image.asset(icEndVideoCall,
-                          height: getSize(46), width: getSize(46))
+                      callEndButton()
                     ],
                   ),
                 ),
@@ -164,10 +152,54 @@ class _VideoCallState extends State<VideoCall> {
     );
   }
 
+  Widget switchCameraButton() {
+    return Positioned(
+      right: getSize(30),
+      top: getSize(30),
+      child: SafeArea(
+        child: InkWell(
+          onTap: () {
+            _onSwitchCamera();
+          },
+          child: Image.asset(
+            icSwitchCamera,
+            width: getSize(26),
+            height: getSize(26),
+            color: Colors.red,
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget giftButton() {
+    return Container(
+      decoration: BoxDecoration(
+          color: Colors.white, borderRadius: BorderRadius.circular(50)),
+      child: Padding(
+        padding: EdgeInsets.all(getSize(10)),
+        child: Image.asset(
+          icGift,
+          height: getSize(36),
+          width: getSize(36),
+        ),
+      ),
+    );
+  }
+
+  Widget callEndButton() {
+    return InkWell(
+        onTap: () {
+          _endCall();
+        },
+        child: Image.asset(icEndVideoCall,
+            height: getSize(46), width: getSize(46)));
+  }
+
   Widget getMicVideoButton(String image) {
     return Container(
       decoration: BoxDecoration(
-          color: Colors.green, borderRadius: BorderRadius.circular(50)),
+          color: Colors.white, borderRadius: BorderRadius.circular(50)),
       child: Padding(
         padding: EdgeInsets.all(6),
         child: Image.asset(
@@ -177,6 +209,15 @@ class _VideoCallState extends State<VideoCall> {
         ),
       ),
     );
+  }
+
+  void _endCall() {
+    try {
+      engine.leaveChannel();
+      engine.destroy();
+    } catch (e) {}
+
+    Navigator.pop(context);
   }
 
 //Mic Mute
@@ -214,13 +255,7 @@ class _VideoCallState extends State<VideoCall> {
     if (_remoteUid != 0) {
       return RtcRemoteView.SurfaceView(uid: _remoteUid);
     } else {
-      return Center(
-        child: Text(
-          'Please wait remote user join',
-          textAlign: TextAlign.center,
-          style: appTheme.black16Medium,
-        ),
-      );
+      return Container();
     }
   }
 }
