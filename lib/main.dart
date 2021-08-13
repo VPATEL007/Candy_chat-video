@@ -4,7 +4,9 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:kiwi/kiwi.dart';
+import 'package:provider/provider.dart';
 import 'package:video_chat/components/Screens/Splash/Splash.dart';
+import 'package:video_chat/provider/language_provider.dart';
 
 import 'app/Helper/Themehelper.dart';
 import 'app/constant/constants.dart';
@@ -22,6 +24,7 @@ KiwiContainer app;
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
+
   app = KiwiContainer();
 
   if (kDebugMode) {
@@ -55,6 +58,8 @@ Future<void> main() async {
   // runApp(MyApp());
 }
 
+GlobalKey navigationKey = GlobalKey();
+
 class Base extends StatefulWidget {
   @override
   _BaseState createState() => _BaseState();
@@ -78,27 +83,35 @@ class _BaseState extends State<Base> {
   @override
   Widget build(BuildContext context) {
     app.resolve<PrefUtils>().saveDeviceId();
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      title: APPNAME,
-      navigatorKey: NavigationUtilities.key,
-      onGenerateRoute: onGenerateRoute,
-      navigatorObservers: [
-        routeObserver,
+    return MultiProvider(
+      providers: [
+        ChangeNotifierProvider.value(
+          value: LanguageProvider(),
+        )
       ],
-      theme: ThemeData(
-        // Define the default brightness and colors.
-        brightness: Brightness.light,
-        primaryColor: appTheme.colorPrimary,
-        splashColor: Colors.transparent,
-        highlightColor: Colors.transparent,
-        fontFamily: 'Montserrat',
+      child: MaterialApp(
+        key: navigationKey,
+        debugShowCheckedModeBanner: false,
+        title: APPNAME,
+        navigatorKey: NavigationUtilities.key,
+        onGenerateRoute: onGenerateRoute,
+        navigatorObservers: [
+          routeObserver,
+        ],
+        theme: ThemeData(
+          // Define the default brightness and colors.
+          brightness: Brightness.light,
+          primaryColor: appTheme.colorPrimary,
+          splashColor: Colors.transparent,
+          highlightColor: Colors.transparent,
+          fontFamily: 'Montserrat',
+        ),
+        home: Splash(),
+        routes: <String, WidgetBuilder>{
+          '/ThemeSetting': (BuildContext context) => ThemeSetting(),
+        },
+        builder: _builder,
       ),
-      home: Splash(),
-      routes: <String, WidgetBuilder>{
-        '/ThemeSetting': (BuildContext context) => ThemeSetting(),
-      },
-      builder: _builder,
     );
   }
 

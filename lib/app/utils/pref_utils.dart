@@ -7,6 +7,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:video_chat/app/app.export.dart';
 
 import 'package:unique_identifier/unique_identifier.dart';
+import 'package:video_chat/components/Model/Language/Language.dart';
 import 'package:video_chat/components/Model/User/UserModel.dart';
 
 /// Wraps the [SharedPreferences].
@@ -25,6 +26,7 @@ class PrefUtils {
   String get keyRefereshToken => "keyRefereshToken";
   String get keyIsUserLogin => "keyIsUserLogin";
   String get keyIsShowIntro => "keyIsUserLogin";
+  String get keySelectLang => "selected_lang";
 
   bool isHomeVisible;
 
@@ -144,6 +146,22 @@ class PrefUtils {
 
   void saveRefereshToken(String token) {
     _preferences.setString(keyRefereshToken, token);
+  }
+
+  LanguageModel _selectedLanguage;
+
+  set selectedLanguage(LanguageModel languageModel) {
+    _preferences.setString(keySelectLang, languageModelToJson(languageModel));
+    _selectedLanguage = languageModel;
+  }
+
+  LanguageModel get selectedLanguage {
+    _selectedLanguage =
+        (_preferences.getString(keySelectLang)?.isEmpty ?? true)
+            ? null
+            : languageModelFromJson(_preferences.getString(keySelectLang));
+
+    return _selectedLanguage;
   }
 
   void clearPreferenceAndDB() async {
