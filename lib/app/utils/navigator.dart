@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:video_chat/components/Screens/Auth/Gender.dart';
 import 'package:video_chat/components/Screens/Auth/Login.dart';
 import 'package:video_chat/components/Screens/Chat/ChatList.dart';
 import 'package:video_chat/components/Screens/Discover/Discover.dart';
@@ -110,6 +111,9 @@ Route<dynamic> onGenerateRoute(RouteSettings settings) {
       break;
     case Discover.route:
       screen = Discover();
+      break;
+    case Gender.route:
+      screen = Gender();
       break;
   }
 

@@ -4,6 +4,7 @@ import 'package:video_chat/app/constant/ApiConstants.dart';
 import 'package:video_chat/app/network/NetworkClient.dart';
 import 'package:video_chat/components/Model/Language/Language.dart';
 import 'package:video_chat/components/Model/User/UserModel.dart';
+import 'package:video_chat/components/Screens/Auth/Gender.dart';
 import 'package:video_chat/main.dart';
 
 import '../app.export.dart';
@@ -38,8 +39,9 @@ class CommonApiHelper {
               .resolve<PrefUtils>()
               .saveRefereshToken(response["tokenData"]["accessToken"]);
         }
+        NavigationUtilities.pushReplacementNamed(Gender.route,
+            type: RouteType.fade);
 
-        AppNavigation.shared.moveToHome();
         success();
       },
       failureCallback: (code, message) {
@@ -112,7 +114,8 @@ class CommonApiHelper {
               .saveRefereshToken(response["tokenData"]["accessToken"]);
         }
 
-        AppNavigation.shared.moveToHome();
+        NavigationUtilities.pushReplacementNamed(Gender.route,
+            type: RouteType.fade);
         success();
       },
       failureCallback: (code, message) {
