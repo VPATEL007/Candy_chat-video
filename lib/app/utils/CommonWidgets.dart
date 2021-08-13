@@ -3,7 +3,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
-import 'package:flutter_statusbarcolor/flutter_statusbarcolor.dart';
+// import 'package:flutter_statusbarcolor/flutter_statusbarcolor.dart';
 
 import '../app.export.dart';
 import '../theme/app_theme.dart';
@@ -441,33 +441,33 @@ Text getBodyText(BuildContext context, String text,
 bool useWhiteForeground(Color backgroundColor) =>
     1.05 / (backgroundColor.computeLuminance() + 0.05) > 4.5;
 
-changeStatusColor(Color color) async {
-  try {
-    await FlutterStatusbarcolor.setStatusBarColor(color, animate: false);
-    if (useWhiteForeground(color)) {
-      FlutterStatusbarcolor.setStatusBarWhiteForeground(true);
-    } else {
-      FlutterStatusbarcolor.setStatusBarWhiteForeground(false);
-    }
-  } on PlatformException catch (e) {
-    debugPrint(e.toString());
-  }
-}
+// changeStatusColor(Color color) async {
+//   try {
+//     await FlutterStatusbarcolor.setStatusBarColor(color, animate: false);
+//     if (useWhiteForeground(color)) {
+//       FlutterStatusbarcolor.setStatusBarWhiteForeground(true);
+//     } else {
+//       FlutterStatusbarcolor.setStatusBarWhiteForeground(false);
+//     }
+//   } on PlatformException catch (e) {
+//     debugPrint(e.toString());
+//   }
+// }
 
-changeNavigationColor(Color color) async {
-  if (Platform.isAndroid) {
-    try {
-      await FlutterStatusbarcolor.setNavigationBarColor(color, animate: false);
-      if (useWhiteForeground(color)) {
-        FlutterStatusbarcolor.setNavigationBarWhiteForeground(true);
-      } else {
-        FlutterStatusbarcolor.setNavigationBarWhiteForeground(false);
-      }
-    } on PlatformException catch (e) {
-      debugPrint(e.toString());
-    }
-  }
-}
+// changeNavigationColor(Color color) async {
+//   if (Platform.isAndroid) {
+//     try {
+//       await FlutterStatusbarcolor.setNavigationBarColor(color, animate: false);
+//       if (useWhiteForeground(color)) {
+//         FlutterStatusbarcolor.setNavigationBarWhiteForeground(true);
+//       } else {
+//         FlutterStatusbarcolor.setNavigationBarWhiteForeground(false);
+//       }
+//     } on PlatformException catch (e) {
+//       debugPrint(e.toString());
+//     }
+//   }
+// }
 
 class CustomAppBar extends StatefulWidget implements PreferredSizeWidget {
   final AppBar appBar;
