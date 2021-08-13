@@ -25,7 +25,7 @@ class PrefUtils {
   String get keyToken => "keyToken";
   String get keyRefereshToken => "keyRefereshToken";
   String get keyIsUserLogin => "keyIsUserLogin";
-  String get keyIsShowIntro => "keyIsUserLogin";
+  String get keyIsShowIntro => "keyIsShowIntro";
   String get keySelectLang => "selected_lang";
 
   bool isHomeVisible;
@@ -156,10 +156,9 @@ class PrefUtils {
   }
 
   LanguageModel get selectedLanguage {
-    _selectedLanguage =
-        (_preferences.getString(keySelectLang)?.isEmpty ?? true)
-            ? null
-            : languageModelFromJson(_preferences.getString(keySelectLang));
+    _selectedLanguage = (_preferences.getString(keySelectLang)?.isEmpty ?? true)
+        ? null
+        : languageModelFromJson(_preferences.getString(keySelectLang));
 
     return _selectedLanguage;
   }

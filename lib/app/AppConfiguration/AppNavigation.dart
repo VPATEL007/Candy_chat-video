@@ -12,7 +12,8 @@ class AppNavigation {
   Future<void> init() async {}
 
   void goNextFromSplash() {
-    if (app.resolve<PrefUtils>().selectedLanguage == null) {
+    if (!app.resolve<PrefUtils>().isShowIntro() ||
+        app.resolve<PrefUtils>().selectedLanguage == null) {
       //show Intro
       NavigationUtilities.pushReplacementNamed(LanguageSelection.route,
           type: RouteType.fade);
