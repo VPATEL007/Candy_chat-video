@@ -51,21 +51,23 @@ class CommonApiHelper {
   }
 
 //Language
-  callLanguageListApi(BuildContext context,
-      Function(List<LanguageModel>) success, Function failure) {
+  Future callLanguageListApi(
+      BuildContext context,
+      Function(List<LanguageModel>) success,
+      Function failure,
+      bool fetchInBackground) async {
     Map<String, dynamic> req = {};
     req["status"] = 1;
 
-    NetworkClient.getInstance.showLoader(context);
-    NetworkClient.getInstance.callApi(
+    if (!fetchInBackground) NetworkClient.getInstance.showLoader(context);
+    await NetworkClient.getInstance.callApi(
       context: context,
       baseUrl: ApiConstants.apiUrl,
       command: ApiConstants.allLanguage,
-      headers: NetworkClient.getInstance.getAuthHeaders(),
       method: MethodType.Get,
       params: req,
       successCallback: (response, message) async {
-        NetworkClient.getInstance.hideProgressDialog();
+        if (!fetchInBackground) NetworkClient.getInstance.hideProgressDialog();
         List<dynamic> list = response;
         if (list != null) {
           List<LanguageModel> arrList =
@@ -74,6 +76,44 @@ class CommonApiHelper {
           return;
         }
         failure();
+      },
+      failureCallback: (code, message) {
+        if (!fetchInBackground) NetworkClient.getInstance.hideProgressDialog();
+        View.showMessage(context, message);
+        failure();
+      },
+    );
+  }
+
+  //Language
+  Future callGuestLogintApi(BuildContext context, Map<String, dynamic> req,
+      Function success, Function failure) async {
+    NetworkClient.getInstance.showLoader(context);
+    await NetworkClient.getInstance.callApi(
+      context: context,
+      baseUrl: ApiConstants.apiUrl,
+      command: ApiConstants.guestLogin,
+      headers: NetworkClient.getInstance.getAuthHeaders(),
+      method: MethodType.Post,
+      params: req,
+      successCallback: (response, message) async {
+        NetworkClient.getInstance.hideProgressDialog();
+        if (response["userData"] != null) {
+          UserModel model = UserModel.fromJson(response["userData"]);
+          app.resolve<PrefUtils>().saveUser(model, isLoggedIn: true);
+        }
+
+        if (response["tokenData"] != null) {
+          app
+              .resolve<PrefUtils>()
+              .saveUserToken(response["tokenData"]["accessToken"]);
+          app
+              .resolve<PrefUtils>()
+              .saveRefereshToken(response["tokenData"]["accessToken"]);
+        }
+
+        AppNavigation.shared.moveToHome();
+        success();
       },
       failureCallback: (code, message) {
         NetworkClient.getInstance.hideProgressDialog();

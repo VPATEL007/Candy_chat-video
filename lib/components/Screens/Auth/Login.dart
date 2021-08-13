@@ -2,7 +2,9 @@ import 'package:apple_sign_in/apple_sign_in.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:video_chat/app/AppConfiguration/AppNavigation.dart';
+import 'package:video_chat/app/Helper/CommonApiHelper.dart';
 import 'package:video_chat/app/Helper/apple_login_helper.dart';
 import 'package:video_chat/app/Helper/facebook_login_helper.dart';
 import 'package:video_chat/app/app.export.dart';
@@ -11,6 +13,8 @@ import 'package:video_chat/app/utils/CommonWidgets.dart';
 import 'package:video_chat/app/utils/math_utils.dart';
 import 'package:video_chat/components/Screens/Auth/Gender.dart';
 import 'dart:io' show Platform;
+
+import 'package:video_chat/provider/language_provider.dart';
 
 class Login extends StatefulWidget {
   static const route = "Login";
@@ -94,7 +98,17 @@ class _LoginState extends State<Login> {
               SizedBox(
                 height: getSize(12),
               ),
-              getButton(icGuest, "Continue with Guest", Colors.white, () {
+              getButton(icGuest, "Continue with Guest", Colors.white, () async {
+                int langId =
+                    context.read<LanguageProvider>().selctedLanguage?.id;
+                String deviceId = app.resolve<PrefUtils>().deviceId ?? "";
+                Map<String, dynamic> req = {
+                  "device_id": deviceId,
+                  "language_id": langId
+                };
+                print(req);
+                await CommonApiHelper.shared
+                    .callGuestLogintApi(context, req, () {}, () {});
                 NavigationUtilities.push(Gender());
               }),
               SizedBox(

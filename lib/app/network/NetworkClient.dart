@@ -65,6 +65,9 @@ class NetworkClient {
       return null;
     }
 
+    print(
+        "Call Api: URL: ${baseUrl + command} Method: $method Parms: $params Headers: $headers");
+
     dio.options.validateStatus = (status) {
       return status < 500;
     };

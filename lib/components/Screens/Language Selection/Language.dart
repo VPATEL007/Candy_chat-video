@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:video_chat/app/AppConfiguration/AppNavigation.dart';
 import 'package:video_chat/app/Helper/CommonApiHelper.dart';
 import 'package:video_chat/app/app.export.dart';
@@ -11,6 +12,7 @@ import 'package:video_chat/app/utils/pref_utils.dart';
 import 'package:video_chat/components/Model/Auth/OnboardingModel.dart';
 import 'package:video_chat/components/Model/Language/Language.dart';
 import 'package:video_chat/components/Screens/Onboarding/Onboarding.dart';
+import 'package:video_chat/provider/language_provider.dart';
 
 class LanguageSelection extends StatefulWidget {
   static const route = "LanguageSelection";
@@ -23,33 +25,23 @@ class LanguageSelection extends StatefulWidget {
 }
 
 class _LanguageSelectionState extends State<LanguageSelection> {
-  LanguageModel selctedLanguage;
-  List<LanguageModel> arrList = [];
-
-  @override
-  void initState() {
-    super.initState();
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      CommonApiHelper.shared.callLanguageListApi(context, (list) {
-        arrList = list;
-        selctedLanguage = arrList.first;
-        setState(() {});
-      }, () {});
-    });
-  }
-
-  goToNext() {
+  goToNext(BuildContext context) {
     if (widget.isChange == null || widget.isChange == false) {
-      getOnBoardingData();
+      getOnBoardingData(context);
     } else {
+      getOnBoardingData(context);
       Navigator.pop(context);
     }
   }
 
-  getOnBoardingData() {
+  getOnBoardingData(BuildContext context) {
     if (!app.resolve<PrefUtils>().isShowIntro()) {
       Map<String, dynamic> req = {};
-      req["langid"] = selctedLanguage.id;
+      req["langid"] = Provider.of<LanguageProvider>(context, listen: false)
+              ?.selctedLanguage
+              ?.id ??
+          "";
+      print(req);
 
       NetworkClient.getInstance.showLoader(context);
       NetworkClient.getInstance.callApi(
@@ -81,117 +73,134 @@ class _LanguageSelectionState extends State<LanguageSelection> {
     }
   }
 
-  void referesh() {
-    setState(() {});
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      Provider.of<LanguageProvider>(context, listen: false)
+          .fetchLanguageList(context, false);
+    });
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: ColorConstants.colorPrimary,
-      bottomSheet: getBottomButton(context, "Next", () {
-        goToNext();
+      bottomSheet: getBottomButton(
+          context, widget.isChange == null ? "Next" : "Change", () {
+        goToNext(context);
       }),
-      body: SafeArea(
-        child: selctedLanguage == null
-            ? SizedBox()
-            : Container(
-                width: MathUtilities.screenWidth(context),
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    widget.isChange == null
-                        ? SizedBox()
-                        : getBackButton(context),
-                    SizedBox(
-                      height: getSize(widget.isChange == null ? 20 : 0),
-                    ),
-                    Center(
-                      child: getColorText(
-                          widget.isChange == null ? "Select" : "Change",
-                          ColorConstants.black,
-                          fontSize: 35),
-                    ),
-                    SizedBox(
-                      height: getSize(6),
-                    ),
-                    Center(
-                      child: getColorText("Language", ColorConstants.red,
-                          fontSize: 35),
-                    ),
-                    SizedBox(
-                      height: getSize(35),
-                    ),
-                    Center(
-                      child: Container(
-                        width: getSize(200),
-                        height: getSize(200),
-                        decoration: BoxDecoration(
-                          color: Colors.white,
-                          boxShadow: [
-                            BoxShadow(
-                                color: Colors.grey.shade400,
-                                blurRadius: 7,
-                                spreadRadius: 5,
-                                offset: Offset(0, 3)),
-                          ],
-                          border: Border.all(color: Colors.white, width: 4),
-                          borderRadius: BorderRadius.circular(
-                            getSize(210),
+      body: Consumer<LanguageProvider>(
+        builder: (ctx, languageProvider, _) => SafeArea(
+          child: (languageProvider?.arrList?.isEmpty ?? true)
+              ? Container()
+              : Container(
+                  width: MathUtilities.screenWidth(context),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      widget.isChange == null
+                          ? SizedBox()
+                          : getBackButton(context),
+                      SizedBox(
+                        height: getSize(widget.isChange == null ? 20 : 0),
+                      ),
+                      Center(
+                        child: getColorText(
+                            widget.isChange == null ? "Select" : "Change",
+                            ColorConstants.black,
+                            fontSize: 35),
+                      ),
+                      SizedBox(
+                        height: getSize(6),
+                      ),
+                      Center(
+                        child: getColorText("Language", ColorConstants.red,
+                            fontSize: 35),
+                      ),
+                      SizedBox(
+                        height: getSize(35),
+                      ),
+                      Center(
+                        child: Container(
+                          width: getSize(200),
+                          height: getSize(200),
+                          decoration: BoxDecoration(
+                            color: Colors.white,
+                            boxShadow: [
+                              BoxShadow(
+                                  color: Colors.grey.shade400,
+                                  blurRadius: 7,
+                                  spreadRadius: 5,
+                                  offset: Offset(0, 3)),
+                            ],
+                            border: Border.all(color: Colors.white, width: 4),
+                            borderRadius: BorderRadius.circular(
+                              getSize(210),
+                            ),
+                          ),
+                          child: ClipRRect(
+                            borderRadius: BorderRadius.circular(getSize(210)),
+                            child: getImageView(
+                                languageProvider?.selctedLanguage?.flagUrl,
+                                height: getSize(200),
+                                width: getSize(200)),
                           ),
                         ),
-                        child: ClipRRect(
-                          borderRadius: BorderRadius.circular(getSize(210)),
-                          child: getImageView(selctedLanguage.flagUrl,
-                              height: getSize(200), width: getSize(200)),
+                      ),
+                      SizedBox(
+                        height: getSize(69),
+                      ),
+                      Center(
+                        child: getColorText(
+                            languageProvider?.selctedLanguage?.languageName ??
+                                "",
+                            ColorConstants.black,
+                            fontSize: 35),
+                      ),
+                      SizedBox(
+                        height: getSize(30),
+                      ),
+                      Center(
+                        child: Container(
+                          height: getSize(100),
+                          child: ListView.separated(
+                              shrinkWrap: true,
+                              scrollDirection: Axis.horizontal,
+                              itemCount: languageProvider.arrList.length,
+                              itemBuilder: (BuildContext context, int index) {
+                                return getLanguageItem(
+                                    languageProvider.arrList[index],
+                                    languageProvider);
+                              },
+                              separatorBuilder:
+                                  (BuildContext context, int index) {
+                                return SizedBox(
+                                  width: getSize(16),
+                                );
+                              }),
                         ),
                       ),
-                    ),
-                    SizedBox(
-                      height: getSize(69),
-                    ),
-                    Center(
-                      child: getColorText(
-                          selctedLanguage.languageName, ColorConstants.black,
-                          fontSize: 35),
-                    ),
-                    SizedBox(
-                      height: getSize(30),
-                    ),
-                    Center(
-                      child: Container(
-                        height: getSize(100),
-                        child: ListView.separated(
-                            shrinkWrap: true,
-                            scrollDirection: Axis.horizontal,
-                            itemCount: arrList.length,
-                            itemBuilder: (BuildContext context, int index) {
-                              return getLanguageItem(arrList[index]);
-                            },
-                            separatorBuilder:
-                                (BuildContext context, int index) {
-                              return SizedBox(
-                                width: getSize(16),
-                              );
-                            }),
-                      ),
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
-              ),
+        ),
       ),
     );
   }
 
-  getLanguageItem(LanguageModel model) {
-    var height = model.id == selctedLanguage.id ? getSize(100) : getSize(62);
-    var width = model.id == selctedLanguage.id ? getSize(100) : getSize(62);
+  getLanguageItem(LanguageModel model, LanguageProvider languageProvider) {
+    var height = model.id == languageProvider.selctedLanguage.id
+        ? getSize(100)
+        : getSize(62);
+    var width = model.id == languageProvider.selctedLanguage.id
+        ? getSize(100)
+        : getSize(62);
     return InkWell(
       onTap: () {
-        selctedLanguage = model;
-        setState(() {});
+        languageProvider.selctedLanguage = model;
       },
       child: Center(
         child: Container(
