@@ -15,4 +15,6 @@ class ApiConstants {
   static const String onboarding = "app-home-screen/get-by-language";
   static const String allLanguage = "language/get-active";
   static const String matchProfile = "profile/get-profiles-conversation";
+  static const String reportReason = "report/get-reasons";
+  static const String reportBlock = "report/block";
 }

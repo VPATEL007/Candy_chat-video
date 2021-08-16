@@ -16,7 +16,7 @@ class MatchingProfileProvider with ChangeNotifier {
 
   // Fetch match profile list...
   Future<void> fetchMatchProfileList(BuildContext context,
-      {int pageNumber = 1}) async {
+      {int pageNumber = 1, bool isbackgroundCall = false}) async {
     try {
       int userId = app.resolve<PrefUtils>().getUserDetails()?.userId;
       Map<String, dynamic> _parms = {
@@ -26,8 +26,12 @@ class MatchingProfileProvider with ChangeNotifier {
       };
       await CommonApiHelper.shared.callMatchProfileListApi(context, _parms,
           (matchProfile) {
-        matchProfileList = matchProfile;
-      }, () {}, false);
+        if (pageNumber == 1) {
+          matchProfileList = matchProfile;
+        } else {
+          matchProfileList.addAll(matchProfile);
+        }
+      }, () {}, isbackgroundCall);
     } catch (e) {
       View.showMessage(context, e.toString());
     }

@@ -1,12 +1,15 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:video_chat/app/app.export.dart';
 import 'package:video_chat/app/utils/CommonTextfield.dart';
 import 'package:video_chat/app/utils/CommonWidgets.dart';
 import 'package:video_chat/app/utils/math_utils.dart';
+import 'package:video_chat/provider/report_and_block_provider.dart';
 
 class ReportBlock extends StatefulWidget {
-  ReportBlock({Key key}) : super(key: key);
+  final int userId;
+  ReportBlock({Key key, @required this.userId}) : super(key: key);
 
   @override
   _ReportBlockState createState() => _ReportBlockState();
@@ -24,25 +27,80 @@ class _ReportBlockState extends State<ReportBlock> {
         isWhite: true,
         leadingButton: getBackButton(context),
       ),
-      body: SafeArea(
-        child: Padding(
-          padding: EdgeInsets.only(left: getSize(32), right: getSize(32)),
-          child: Column(
-            children: [
-              Expanded(child: getScrollView()),
-              getReportButton(),
-              SizedBox(
-                height: getSize(16),
-              ),
-              getPopBottomButton(context, "Report & Block", () {}),
-            ],
+      body: Consumer<ReportAndBlockProvider>(
+        builder: (context, reportProvider, child) => SafeArea(
+          child: Padding(
+            padding: EdgeInsets.only(left: getSize(32), right: getSize(32)),
+            child: Column(
+              children: [
+                Expanded(
+                  child: SingleChildScrollView(
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        getProfileImage(),
+                        SizedBox(
+                          height: getSize(20),
+                        ),
+                        ListView.builder(
+                          shrinkWrap: true,
+                          physics: NeverScrollableScrollPhysics(),
+                          itemBuilder: (context, index) => Padding(
+                            padding: const EdgeInsets.only(bottom: 15),
+                            child: getRadioButton(
+                                reportProvider
+                                        .reportReasonList[index]?.reason ??
+                                    "",
+                                reportProvider,
+                                index),
+                          ),
+                          itemCount: reportProvider.reportReasonList.length,
+                        ),
+                        CommonTextfield(
+                          textOption: TextFieldOption(
+                              hintText: "Input report reason",
+                              maxLine: 5,
+                              inputController: _reasonController),
+                          textCallback: (text) {},
+                        ),
+                        SizedBox(
+                          height: getSize(16),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+                getReportButton(),
+                SizedBox(
+                  height: getSize(16),
+                ),
+                getPopBottomButton(context, "Report & Block", () async {
+                  int reasonId = reportProvider.reportReasonList.firstWhere(
+                      (element) => element.isSelected == true, orElse: () {
+                    View.showMessage(context, "Please select any reason");
+                  })?.id;
+                  if (reasonId == null) {
+                    return;
+                  }
+                  reportProvider.blockAndReportUser(context, widget.userId,
+                      reasonId, _reasonController?.text ?? "");
+
+                  reportProvider.reportReasonList.forEach((element) {
+                    if (element.isSelected == true) {
+                      element.isSelected = false;
+                    }
+                  });
+                  Navigator.pop(context);
+                }),
+              ],
+            ),
           ),
         ),
       ),
     );
   }
 
-  getReportButton() {
+  Widget getReportButton() {
     return Container(
         height: getSize(50),
         decoration: BoxDecoration(
@@ -59,74 +117,51 @@ class _ReportBlockState extends State<ReportBlock> {
         ));
   }
 
-  getScrollView() {
-    return SingleChildScrollView(
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          getProfileImage(),
-          SizedBox(
-            height: getSize(20),
+  Widget getRadioButton(
+      String text, ReportAndBlockProvider reportProvider, int index) {
+    return InkWell(
+      highlightColor: Colors.transparent,
+      splashColor: Colors.transparent,
+      onTap: () {
+        if (mounted) setState(() {});
+        reportProvider.reportReasonList.forEach((element) {
+          if (element.isSelected == true) {
+            element.isSelected = false;
+          }
+        });
+        reportProvider.reportReasonList[index].isSelected =
+            !reportProvider.reportReasonList[index].isSelected;
+      },
+      child: Container(
+        width: MathUtilities.screenWidth(context),
+        decoration: BoxDecoration(
+          color: fromHex("#F6F6F6"),
+          borderRadius: BorderRadius.circular(
+            getSize(10),
           ),
-          getRadioButton("Incorrect information", true),
-          SizedBox(
-            height: getSize(16),
-          ),
-          getRadioButton("Sexal contact", false),
-          SizedBox(
-            height: getSize(16),
-          ),
-          getRadioButton("Harassment or repulsive language", false),
-          SizedBox(
-            height: getSize(16),
-          ),
-          getRadioButton("Unreasonable demands", false),
-          SizedBox(
-            height: getSize(16),
-          ),
-          CommonTextfield(
-            textOption: TextFieldOption(
-                hintText: "Input report reason",
-                maxLine: 5,
-                inputController: _reasonController),
-            textCallback: (text) {},
-          ),
-          SizedBox(
-            height: getSize(16),
-          ),
-        ],
-      ),
-    );
-  }
-
-  getRadioButton(String text, bool isSelected) {
-    return Container(
-      width: MathUtilities.screenWidth(context),
-      decoration: BoxDecoration(
-        color: fromHex("#F6F6F6"),
-        borderRadius: BorderRadius.circular(
-          getSize(10),
         ),
-      ),
-      child: Padding(
-          padding: EdgeInsets.all(getSize(16)),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.start,
-            children: [
-              Expanded(
-                child: Text(
-                  text,
-                  style: appTheme.black14Normal
-                      .copyWith(fontWeight: FontWeight.w500),
+        child: Padding(
+            padding: EdgeInsets.all(getSize(16)),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: [
+                Expanded(
+                  child: Text(
+                    text,
+                    style: appTheme.black14Normal
+                        .copyWith(fontWeight: FontWeight.w500),
+                  ),
                 ),
-              ),
-              Image.asset(
-                isSelected ? radioSelected : radio,
-                height: getSize(18),
-                width: getSize(18),
-              )
-            ],
-          )),
+                Image.asset(
+                  reportProvider.reportReasonList[index].isSelected
+                      ? radioSelected
+                      : radio,
+                  height: getSize(18),
+                  width: getSize(18),
+                )
+              ],
+            )),
+      ),
     );
   }
 

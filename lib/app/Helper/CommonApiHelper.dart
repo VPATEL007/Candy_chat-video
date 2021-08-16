@@ -7,6 +7,7 @@ import 'package:video_chat/app/network/NetworkClient.dart';
 import 'package:video_chat/components/Model/Language/Language.dart';
 import 'package:video_chat/components/Model/Match%20Profile/match_profile.dart';
 import 'package:video_chat/components/Model/User/UserModel.dart';
+import 'package:video_chat/components/Model/User/report_reason_model.dart';
 import 'package:video_chat/components/Screens/Auth/Gender.dart';
 import 'package:video_chat/main.dart';
 
@@ -118,6 +119,60 @@ class CommonApiHelper {
       },
       failureCallback: (code, message) {
         if (!fetchInBackground) NetworkClient.getInstance.hideProgressDialog();
+        View.showMessage(context, message);
+        failure();
+      },
+    );
+  }
+
+  Future callReportReasonApi(
+      BuildContext context,
+      Function(List<ReportReasonModel>) success,
+      Function failure,
+      bool fetchInBackground) async {
+    if (!fetchInBackground) NetworkClient.getInstance.showLoader(context);
+    await NetworkClient.getInstance.callApi(
+      context: context,
+      baseUrl: ApiConstants.apiUrl,
+      command: ApiConstants.reportReason,
+      headers: NetworkClient.getInstance.getAuthHeaders(),
+      method: MethodType.Get,
+      successCallback: (response, message) async {
+        if (!fetchInBackground) NetworkClient.getInstance.hideProgressDialog();
+
+        if (response != null) {
+          List<ReportReasonModel> arrList =
+              reportReasonModelFromJson(jsonEncode(response));
+          success(arrList);
+          return;
+        }
+        failure();
+      },
+      failureCallback: (code, message) {
+        if (!fetchInBackground) NetworkClient.getInstance.hideProgressDialog();
+        View.showMessage(context, message);
+        failure();
+      },
+    );
+  }
+
+  Future callReportReasonSubmitApi(BuildContext context,
+      Map<String, dynamic> req, Function success, Function failure) async {
+    NetworkClient.getInstance.showLoader(context);
+    await NetworkClient.getInstance.callApi(
+      context: context,
+      baseUrl: ApiConstants.apiUrl,
+      command: ApiConstants.reportBlock,
+      headers: NetworkClient.getInstance.getAuthHeaders(),
+      method: MethodType.Post,
+      params: req,
+      successCallback: (response, message) {
+        NetworkClient.getInstance.hideProgressDialog();
+        View.showMessage(context, message);
+        success();
+      },
+      failureCallback: (code, message) {
+        NetworkClient.getInstance.hideProgressDialog();
         View.showMessage(context, message);
         failure();
       },
