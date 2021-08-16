@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -9,7 +10,9 @@ import 'package:video_chat/provider/report_and_block_provider.dart';
 
 class ReportBlock extends StatefulWidget {
   final int userId;
-  ReportBlock({Key key, @required this.userId}) : super(key: key);
+  final String reportImageURl;
+  ReportBlock({Key key, @required this.userId, @required this.reportImageURl})
+      : super(key: key);
 
   @override
   _ReportBlockState createState() => _ReportBlockState();
@@ -17,6 +20,18 @@ class ReportBlock extends StatefulWidget {
 
 class _ReportBlockState extends State<ReportBlock> {
   final TextEditingController _reasonController = TextEditingController();
+  @override
+  void deactivate() {
+    super.deactivate();
+    Provider.of<ReportAndBlockProvider>(context, listen: false)
+        .reportReasonList
+        .forEach((element) {
+      if (element.isSelected == true) {
+        element.isSelected = false;
+      }
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -84,12 +99,6 @@ class _ReportBlockState extends State<ReportBlock> {
                   }
                   reportProvider.blockAndReportUser(context, widget.userId,
                       reasonId, _reasonController?.text ?? "");
-
-                  reportProvider.reportReasonList.forEach((element) {
-                    if (element.isSelected == true) {
-                      element.isSelected = false;
-                    }
-                  });
                   Navigator.pop(context);
                 }),
               ],
@@ -184,7 +193,7 @@ class _ReportBlockState extends State<ReportBlock> {
               getSize(20),
             ),
             image: DecorationImage(
-              image: AssetImage(icTemp),
+              image: CachedNetworkImageProvider(widget.reportImageURl),
               fit: BoxFit.cover,
             ),
           ),

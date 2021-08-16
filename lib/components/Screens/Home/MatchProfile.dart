@@ -172,6 +172,8 @@ class _MathProfileState extends State<MathProfile> {
                                       child: getTopButton(icVector, () {
                                         NavigationUtilities.push(ReportBlock(
                                           userId: _matchProfile.id,
+                                          reportImageURl:
+                                              _matchProfile.photoUrl,
                                         ));
                                       })),
                                 ),
