@@ -33,7 +33,6 @@ const String icTabHomeSelected = "assets/Tab/tabHomeSelected.png";
 const String icTabLike = "assets/Tab/tablike.png";
 const String icTabChat = "assets/Tab/tabChat.png";
 const String icTabChatSelected = "assets/Tab/tabChatSelected.png";
-const String icTabProfile = "assets/Tab/tabProfile.png";
 
 const String icTemp = "assets/Temp/tempP.png";
 const String icTempProfile = "assets/Temp/icTempProfile.png";
