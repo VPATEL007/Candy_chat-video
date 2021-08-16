@@ -109,6 +109,12 @@ class _MatchedProfileState extends State<MatchedProfile> {
     );
   }
 
+//Received Call
+  receivedCall() {
+
+
+  }
+
   getProfileWidget() {
     return Center(
       child: Container(
