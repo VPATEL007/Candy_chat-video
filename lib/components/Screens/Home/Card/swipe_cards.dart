@@ -21,7 +21,7 @@ class SwipeCards extends StatefulWidget {
 class _SwipeCardsState extends State<SwipeCards> {
   Key _frontCard;
   SwipeItem _currentItem;
-  double _nextCardScale = 0.9;
+  double _nextCardScale = 1.0;
   SlideRegion slideRegion;
 
   @override
@@ -96,7 +96,7 @@ class _SwipeCardsState extends State<SwipeCards> {
 
   void _onSlideUpdate(double distance) {
     setState(() {
-      _nextCardScale = 0.9 + (0.1 * (distance / 100.0)).clamp(0.0, 0.1);
+      _nextCardScale = 1.0 + (0.0 * (distance / 100.0)).clamp(0.0, 0.1);
     });
   }
 

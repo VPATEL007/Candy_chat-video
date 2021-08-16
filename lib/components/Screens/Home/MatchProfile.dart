@@ -4,6 +4,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_tags/flutter_tags.dart';
+import 'package:lazy_loading_list/lazy_loading_list.dart';
 import 'package:provider/provider.dart';
 
 import 'package:video_chat/app/app.export.dart';
@@ -14,6 +15,7 @@ import 'package:video_chat/components/Screens/Home/Reportblock.dart';
 import 'package:video_chat/components/Screens/UserProfile/UserProfile.dart';
 import 'package:video_chat/components/widgets/TabBar/Tabbar.dart';
 import 'package:video_chat/provider/matching_profile_provider.dart';
+import 'package:video_chat/provider/report_and_block_provider.dart';
 
 import 'Card/draggable_card.dart';
 import 'Card/swipe_cards.dart';
@@ -33,10 +35,15 @@ class _MathProfileState extends State<MathProfile> {
   RangeValues _currentRangeValues = const RangeValues(18, 24);
   SlideRegion region = SlideRegion.inSuperLikeRegion;
   int currentIndex = 0;
+  int page = 1;
 
   @override
   void initState() {
     super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+      Provider.of<ReportAndBlockProvider>(context, listen: false)
+          .fetchReportReason(context);
+    });
     _swipeItems = Provider.of<MatchingProfileProvider>(context, listen: false)
         .matchProfileList
         .map((e) => SwipeItem(
@@ -78,49 +85,98 @@ class _MathProfileState extends State<MathProfile> {
                       itemBuilder: (BuildContext context, int index) {
                         MatchProfileModel _matchProfile =
                             matchProfileProvider.matchProfileList[index];
-                        return Container(
-                          height: MathUtilities.screenHeight(context),
-                          width: MathUtilities.screenWidth(context),
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(
-                              getSize(
-                                  MathUtilities.safeAreaTopHeight(context) > 20
-                                      ? getSize(16)
-                                      : getSize(0)),
-                            ),
-                            image: DecorationImage(
-                              image: CachedNetworkImageProvider(
-                                _matchProfile?.photoUrl ?? "",
-                              ),
-                              fit: BoxFit.cover,
-                            ),
-                          ),
-                          child: SafeArea(
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Padding(
-                                  padding: EdgeInsets.only(
-                                      left: getSize(29), top: getSize(100)),
-                                  child: Container(
-                                    height: getSize(120),
-                                    width: getSize(90),
-                                    decoration: BoxDecoration(
-                                      border: Border.all(
-                                          color: Colors.white, width: 1),
-                                      borderRadius: BorderRadius.circular(
-                                        getSize(7),
-                                      ),
+                        return LazyLoadingList(
+                          initialSizeOfItems: 20,
+                          index: index,
+                          hasMore: true,
+                          loadMore: () {
+                            print(
+                                "--------========================= Lazy Loading ==========================---------");
+                            page++;
+                            Provider.of<MatchingProfileProvider>(context,
+                                    listen: false)
+                                .fetchMatchProfileList(context,
+                                    isbackgroundCall: true, pageNumber: page);
+                          },
+                          child: Stack(
+                            children: [
+                              Container(
+                                height: MathUtilities.screenHeight(context),
+                                width: MathUtilities.screenWidth(context),
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(
+                                    getSize(MathUtilities.safeAreaTopHeight(
+                                                context) >
+                                            20
+                                        ? getSize(16)
+                                        : getSize(0)),
+                                  ),
+                                  image: DecorationImage(
+                                    image: CachedNetworkImageProvider(
+                                      _matchProfile?.photoUrl ?? "",
                                     ),
-                                    child: Image.asset(icTemp),
+                                    fit: BoxFit.cover,
                                   ),
                                 ),
-                                SizedBox(
-                                  height: getSize(80),
+                                child: SafeArea(
+                                  child: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      Padding(
+                                        padding: EdgeInsets.only(
+                                            left: getSize(29),
+                                            top: getSize(100)),
+                                        child: Container(
+                                          height: getSize(120),
+                                          width: getSize(90),
+                                          decoration: BoxDecoration(
+                                            border: Border.all(
+                                                color: Colors.white, width: 1),
+                                            borderRadius: BorderRadius.circular(
+                                              getSize(7),
+                                            ),
+                                          ),
+                                          child: Image.asset(icTemp),
+                                        ),
+                                      ),
+                                      SizedBox(
+                                        height: getSize(80),
+                                      ),
+                                      getLikeUnlike(index),
+                                    ],
+                                  ),
                                 ),
-                                getLikeUnlike(index),
-                              ],
-                            ),
+                              ),
+                              Align(
+                                alignment: Alignment.bottomCenter,
+                                child: Padding(
+                                  padding: EdgeInsets.only(
+                                      bottom: getSize(90) +
+                                          ((MathUtilities.safeAreaBottomHeight(
+                                                      context) >
+                                                  20)
+                                              ? getSize(26)
+                                              : getSize(16))),
+                                  child: getDetailWidget(_matchProfile),
+                                ),
+                              ),
+                              SafeArea(
+                                child: Align(
+                                  alignment: Alignment.topRight,
+                                  child: Padding(
+                                      padding: EdgeInsets.only(
+                                          left: getSize(29),
+                                          top: getSize(16),
+                                          right: getFontSize(29)),
+                                      child: getTopButton(icVector, () {
+                                        NavigationUtilities.push(ReportBlock(
+                                          userId: _matchProfile.id,
+                                        ));
+                                      })),
+                                ),
+                              ),
+                            ],
                           ),
                         );
                       },
@@ -136,32 +192,15 @@ class _MathProfileState extends State<MathProfile> {
                                 left: getSize(29),
                                 top: getSize(16),
                                 right: getFontSize(29)),
-                            child: Row(
-                              children: [
-                                getTopButton(icDrawer, () {
-                                  openFilter();
-                                }),
-                                Spacer(),
-                                getTopButton(icVector, () {
-                                  NavigationUtilities.push(ReportBlock());
-                                }),
-                              ],
-                            )),
+                            child: getTopButton(icDrawer, () {
+                              openFilter();
+                            })),
                       ),
                     ),
                     Align(
                       alignment: Alignment.bottomCenter,
-                      child: Container(
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.end,
-                          children: [
-                            getDetailWidget(matchProfileProvider
-                                .matchProfileList[currentIndex]),
-                            TabBarWidget(
-                              screen: TabType.Home,
-                            )
-                          ],
-                        ),
+                      child: TabBarWidget(
+                        screen: TabType.Home,
                       ),
                     ),
                   ],
@@ -224,7 +263,7 @@ class _MathProfileState extends State<MathProfile> {
     return SizedBox();
   }
 
-  getDetailWidget(MatchProfileModel matchedProfile) {
+  Widget getDetailWidget(MatchProfileModel matchedProfile) {
     return InkWell(
       onTap: () {
         NavigationUtilities.push(MatchedProfile());
@@ -307,6 +346,7 @@ class _MathProfileState extends State<MathProfile> {
   openUserProfile() {
     showModalBottomSheet(
         isScrollControlled: true,
+        backgroundColor: Colors.white,
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.only(
               topLeft: Radius.circular(20.0), topRight: Radius.circular(20.0)),

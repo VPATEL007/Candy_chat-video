@@ -48,7 +48,6 @@ class _DraggableCardState extends State<DraggableCard>
   @override
   void initState() {
     super.initState();
-    print("draggable ${widget.isDraggable}");
 
     slideBackAnimation = AnimationController(
       duration: const Duration(milliseconds: 1000),
@@ -60,8 +59,6 @@ class _DraggableCardState extends State<DraggableCard>
               const Offset(0.0, 0.0),
               Curves.elasticOut.transform(slideBackAnimation.value),
             );
-
-            print("draggable ${widget.isDraggable}");
 
             if (null != widget.onSlideUpdate) {
               widget.onSlideUpdate(cardOffset.distance);

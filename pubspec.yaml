@@ -44,6 +44,7 @@ dependencies:
   agora_rtm: ^0.9.14
   sticky_headers: ^0.2.0
   intl: ^0.16.1
+  lazy_loading_list: ^1.0.1
 
 
 dev_dependencies:
