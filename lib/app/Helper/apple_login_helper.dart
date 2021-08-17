@@ -9,14 +9,15 @@ import 'CommonApiHelper.dart';
 class AppleLoginHealper {
   static var shared = AppleLoginHealper();
 
-  login(BuildContext context, Function callback) async {
+  login(
+      BuildContext context, Map<String, dynamic> req, Function callback) async {
     revoked();
     if (await AppleSignIn.isAvailable()) {
       //Check if Apple SignIn isn available for the device or not
       final AuthorizationResult result = await AppleSignIn.performRequests([
         AppleIdRequest(requestedScopes: [Scope.email, Scope.fullName])
       ]);
-      Map<String, dynamic> req = {};
+
       req["provider"] = apple;
       req["language_id"] = app.resolve<PrefUtils>().selectedLanguage.id;
 

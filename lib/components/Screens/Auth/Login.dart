@@ -81,7 +81,14 @@ class _LoginState extends State<Login> {
               Spacer(),
               if (Platform.isIOS)
                 getButton(icApple, "Continue with Apple", Colors.black, () {
-                  AppleLoginHealper.shared.login(context, () {});
+                  int langId =
+                      context.read<LanguageProvider>().selctedLanguage?.id;
+                  String deviceId = app.resolve<PrefUtils>().deviceId ?? "";
+                  Map<String, dynamic> req = {
+                    "language_id": langId
+                  };
+                  print(req);
+                  AppleLoginHealper.shared.login(context,req, () {});
                 }),
               SizedBox(
                 height: getSize(12),
@@ -89,7 +96,15 @@ class _LoginState extends State<Login> {
               getButton(
                   icFacebook, "Continue with Facebook", ColorConstants.facebook,
                   () {
-                FacebookLoginHelper.shared.loginWithFacebook(context, () {});
+                int langId =
+                    context.read<LanguageProvider>().selctedLanguage?.id;
+                String deviceId = app.resolve<PrefUtils>().deviceId ?? "";
+                Map<String, dynamic> req = {
+                  "language_id": langId
+                };
+                print(req);
+                FacebookLoginHelper.shared
+                    .loginWithFacebook(context, req, () {});
               }),
               SizedBox(
                 height: getSize(12),

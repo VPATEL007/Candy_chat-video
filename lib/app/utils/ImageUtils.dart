@@ -19,7 +19,7 @@ CachedNetworkImage getImageView(String url,
   return new CachedNetworkImage(
     height: height,
     width: width,
-    imageUrl: imageUrl,
+    imageUrl: imageUrl??"",
     fit: fit,
     placeholder: (context, url) => Container(
       height: height,

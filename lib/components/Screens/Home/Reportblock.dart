@@ -193,7 +193,7 @@ class _ReportBlockState extends State<ReportBlock> {
               getSize(20),
             ),
             image: DecorationImage(
-              image: CachedNetworkImageProvider(widget.reportImageURl),
+              image: CachedNetworkImageProvider(widget.reportImageURl ?? ""),
               fit: BoxFit.cover,
             ),
           ),
