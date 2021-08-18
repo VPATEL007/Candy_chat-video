@@ -1,8 +1,10 @@
 import 'dart:async';
+import 'dart:io';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:in_app_purchase/in_app_purchase.dart';
+import 'package:video_chat/app/app.export.dart';
 import 'package:video_chat/app/constant/ColorConstant.dart';
 import 'package:video_chat/app/utils/CommonWidgets.dart';
 import 'package:video_chat/app/utils/math_utils.dart';
@@ -18,16 +20,11 @@ class _CoinsState extends State<Coins> {
   final InAppPurchaseConnection _connection = InAppPurchaseConnection.instance;
   List<String> _kProductIds = <String>[
     "com.randomvideochat.videochat.30",
+    "com.randomvideochat.videochat.203"
   ];
   StreamSubscription<List<PurchaseDetails>> _subscription;
   List<String> _notFoundIds = [];
   List<ProductDetails> _products = [];
-  List<PurchaseDetails> _purchases = [];
-  List<String> _consumables = [];
-  bool _isAvailable = false;
-  bool _purchasePending = false;
-  bool _loading = true;
-  String _queryProductError;
 
   @override
   void initState() {
@@ -48,75 +45,53 @@ class _CoinsState extends State<Coins> {
     final bool isAvailable = await _connection.isAvailable();
     if (!isAvailable) {
       setState(() {
-        _isAvailable = isAvailable;
         _products = [];
-        _purchases = [];
+
         _notFoundIds = [];
-        _consumables = [];
-        _purchasePending = false;
-        _loading = false;
       });
       return;
     }
 
+    NetworkClient.getInstance.showLoader(context);
     ProductDetailsResponse productDetailResponse =
         await _connection.queryProductDetails(_kProductIds.toSet());
-    if (productDetailResponse.error != null) {
-      setState(() {
-        _queryProductError = productDetailResponse.error.message;
-        _isAvailable = isAvailable;
-        _products = productDetailResponse.productDetails;
-        _purchases = [];
-        _notFoundIds = productDetailResponse.notFoundIDs;
-        _consumables = [];
-        _purchasePending = false;
-        _loading = false;
+
+    if (productDetailResponse.productDetails != null) {
+      _products = productDetailResponse.productDetails;
+      _products.sort((a, b) {
+        return a.rawPrice.compareTo(b.rawPrice);
       });
-      return;
+      ;
+      _notFoundIds = productDetailResponse.notFoundIDs;
+    } else {
+      _products = [];
     }
 
-    if (productDetailResponse.productDetails.isEmpty) {
-      setState(() {
-        _queryProductError = null;
-        _isAvailable = isAvailable;
-        _products = productDetailResponse.productDetails;
-        _purchases = [];
-        _notFoundIds = productDetailResponse.notFoundIDs;
-        _consumables = [];
-        _purchasePending = false;
-        _loading = false;
-      });
-      return;
-    }
-
-    // final QueryPurchaseDetailsResponse purchaseResponse =
-    //     await _connection.queryPastPurchases();
-    // if (purchaseResponse.error != null) {
-    //   // handle query past purchase error..
-    // }
-    // final List<PurchaseDetails> verifiedPurchases = [];
-    // for (PurchaseDetails purchase in purchaseResponse.pastPurchases) {
-    //   if (await _verifyPurchase(purchase)) {
-    //     verifiedPurchases.add(purchase);
-    //   }
-    // }
-    // List<String> consumables = await ConsumableStore.load();
-    // setState(() {
-    //   _isAvailable = isAvailable;
-    //   _products = productDetailResponse.productDetails;
-    //   _purchases = verifiedPurchases;
-    //   _notFoundIds = productDetailResponse.notFoundIDs;
-    //   _consumables = consumables;
-    //   _purchasePending = false;
-    //   _loading = false;
-    // });
+    setState(() {
+      NetworkClient.getInstance.hideProgressDialog();
+    });
   }
 
   void _listenToPurchaseUpdated(List<PurchaseDetails> purchaseDetailsList) {
     purchaseDetailsList.forEach((PurchaseDetails purchaseDetails) async {
-      if (purchaseDetails.status == PurchaseStatus.pending) {
+      if (purchaseDetails.status == PurchaseStatus.purchased) {
+        bool valid = await _verifyPurchase(purchaseDetails);
+        if (valid) {
+          deliverProduct(purchaseDetails);
+        } else {}
       } else {}
     });
+  }
+
+  Future<bool> _verifyPurchase(PurchaseDetails purchaseDetails) {
+    // IMPORTANT!! Always verify a purchase before delivering the product.
+    // For the purpose of an example, we directly return true.
+
+    return Future<bool>.value(true);
+  }
+
+  void deliverProduct(PurchaseDetails purchaseDetails) async {
+    // IMPORTANT!! Always verify purchase details before delivering the product.
   }
 
   @override
@@ -135,11 +110,15 @@ class _CoinsState extends State<Coins> {
                   gridDelegate: new SliverGridDelegateWithFixedCrossAxisCount(
                       crossAxisCount: 2),
                   shrinkWrap: true,
-                  itemCount: 15,
+                  itemCount: _products.length,
                   padding:
                       EdgeInsets.only(left: getSize(28), right: getSize(28)),
                   itemBuilder: (BuildContext context, int index) {
-                    return getCoinItem(index == 1, context);
+                    return InkWell(
+                        onTap: () {
+                          purchaseProduct(_products[index]);
+                        },
+                        child: getCoinItem(_products[index], false, context));
                   }),
             ),
           ],
@@ -159,5 +138,14 @@ class _CoinsState extends State<Coins> {
         Spacer(),
       ],
     );
+  }
+
+//Purchase
+  purchaseProduct(ProductDetails product) {
+    PurchaseParam purchaseParam = PurchaseParam(
+        productDetails: product,
+        applicationUserName: null,
+        changeSubscriptionParam: null);
+    _connection.buyConsumable(purchaseParam: purchaseParam);
   }
 }
