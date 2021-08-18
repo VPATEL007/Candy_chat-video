@@ -17,5 +17,8 @@ class ApiConstants {
   static const String matchProfile = "profile/get-profiles-conversation";
   static const String reportReason = "report/get-reasons";
   static const String reportBlock = "report/block";
-  static const String selectGender = "/profile/set-prefered-gender";
+  static const String selectGender = "profile/set-prefered-gender";
+  static const String getFollowing = "follow/get-following";
+  static const String unFollowUser = "follow/remove";
+  static const String getFollowes = "follow/get-follower";
 }

@@ -1,25 +1,33 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:lazy_loading_list/lazy_loading_list.dart';
+import 'package:provider/provider.dart';
 import 'package:video_chat/app/Helper/Themehelper.dart';
 import 'package:video_chat/app/constant/ColorConstant.dart';
 import 'package:video_chat/app/constant/ImageConstant.dart';
 import 'package:video_chat/app/theme/app_theme.dart';
 import 'package:video_chat/app/utils/CommonWidgets.dart';
 import 'package:video_chat/app/utils/math_utils.dart';
+import 'package:video_chat/components/Model/Follwers/follow_model.dart';
+import 'package:video_chat/provider/followes_provider.dart';
 
 class FollowUp extends StatefulWidget {
-  FollowUp({Key key}) : super(key: key);
+  bool isFromFollowing;
+  FollowUp({Key key, this.isFromFollowing = false}) : super(key: key);
 
   @override
   _FollowUpState createState() => _FollowUpState();
 }
 
 class _FollowUpState extends State<FollowUp> {
+  int page = 1;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
-      appBar: getAppBar(context, "Follow Up",
+      appBar: getAppBar(
+          context, widget.isFromFollowing ? "Following" : "Followes",
           isWhite: true, leadingButton: getBackButton(context)),
       body: SafeArea(
         child: list(),
@@ -28,25 +36,58 @@ class _FollowUpState extends State<FollowUp> {
   }
 
   Widget list() {
-    return ListView.separated(
-      padding: EdgeInsets.only(
-          top: getSize(16),
-          left: getSize(25),
-          right: getSize(25),
-          bottom: getSize(28)),
-      itemCount: 10,
-      itemBuilder: (BuildContext context, int index) {
-        return InkWell(onTap: () {}, child: cellItem());
-      },
-      separatorBuilder: (BuildContext context, int index) {
-        return SizedBox(
-          height: getSize(15),
-        );
-      },
-    );
+    return Consumer<FollowesProvider>(
+        builder: (context, followesProvider, child) {
+      List<FollowesModel> _followes = widget.isFromFollowing
+          ? followesProvider.followingList
+          : followesProvider.followersList;
+      String noContentLabel = widget.isFromFollowing
+          ? "No Following Found! "
+          : "No Followers Found! ";
+      return (_followes?.isEmpty ?? true)
+          ? Center(
+              child: Text(
+                noContentLabel,
+                style: appTheme.black14Normal.copyWith(
+                    fontSize: getFontSize(16), fontWeight: FontWeight.w700),
+              ),
+            )
+          : ListView.separated(
+              padding: EdgeInsets.only(
+                  top: getSize(16),
+                  left: getSize(25),
+                  right: getSize(25),
+                  bottom: getSize(28)),
+              itemCount: _followes.length,
+              itemBuilder: (BuildContext context, int index) {
+                return LazyLoadingList(
+                    initialSizeOfItems: 20,
+                    index: index,
+                    hasMore: true,
+                    loadMore: () {
+                      page++;
+                      print(
+                          "--------========================= Lazy Loading $page ==========================---------");
+                      if (widget.isFromFollowing) {
+                        Provider.of<FollowesProvider>(context, listen: false)
+                            .fetchFollowing(context, pageNumber: page);
+                      } else {
+                        Provider.of<FollowesProvider>(context, listen: false)
+                            .fetchFollowes(context, pageNumber: page);
+                      }
+                    },
+                    child: cellItem(_followes[index], followesProvider));
+              },
+              separatorBuilder: (BuildContext context, int index) {
+                return SizedBox(
+                  height: getSize(15),
+                );
+              },
+            );
+    });
   }
 
-  Widget cellItem() {
+  Widget cellItem(FollowesModel followes, FollowesProvider followesProvider) {
     return Container(
       decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(12),
@@ -70,8 +111,8 @@ class _FollowUpState extends State<FollowUp> {
           children: [
             ClipRRect(
               borderRadius: BorderRadius.circular(10),
-              child: Image.asset(
-                icTempProfile,
+              child: CachedNetworkImage(
+                imageUrl: followes?.user?.photoUrl ?? "",
                 height: getSize(48),
                 width: getSize(51),
                 fit: BoxFit.cover,
@@ -85,7 +126,7 @@ class _FollowUpState extends State<FollowUp> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  "Calbert Warner",
+                  followes?.user?.providerDisplayName ?? "",
                   style: appTheme.black14Normal.copyWith(
                       fontSize: getFontSize(16), fontWeight: FontWeight.w700),
                 ),
@@ -109,7 +150,7 @@ class _FollowUpState extends State<FollowUp> {
                       width: getSize(6),
                     ),
                     Text(
-                      "Australia",
+                      followes?.user?.country ?? "",
                       style: appTheme.black14Normal
                           .copyWith(fontWeight: FontWeight.w500),
                     ),
@@ -118,11 +159,19 @@ class _FollowUpState extends State<FollowUp> {
               ],
             ),
             Spacer(),
-            Text(
-              "Remove",
-              style: appTheme.black12Normal.copyWith(
-                  color: ColorConstants.redText, fontWeight: FontWeight.w700),
-            )
+            widget.isFromFollowing
+                ? TextButton(
+                    onPressed: () {
+                      followesProvider.unfollowUser(context, followes.user.id);
+                    },
+                    child: Text(
+                      "Remove",
+                      style: appTheme.black12Normal.copyWith(
+                          color: ColorConstants.redText,
+                          fontWeight: FontWeight.w700),
+                    ),
+                  )
+                : Container()
           ],
         ),
       ),

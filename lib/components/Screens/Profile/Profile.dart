@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:video_chat/app/app.export.dart';
 import 'package:video_chat/app/utils/CommonWidgets.dart';
 import 'package:video_chat/components/Screens/Language%20Selection/Language.dart';
@@ -14,6 +15,7 @@ import 'package:video_chat/components/Screens/Setting/Setting.dart';
 import 'package:video_chat/components/Screens/UserProfile/UserProfile.dart';
 import 'package:video_chat/components/widgets/ProfileSlider.dart';
 import 'package:video_chat/components/widgets/TabBar/Tabbar.dart';
+import 'package:video_chat/provider/followes_provider.dart';
 
 class Profile extends StatefulWidget {
   static const route = "Profile";
@@ -29,6 +31,10 @@ class _ProfileState extends State<Profile> {
   @override
   void initState() {
     super.initState();
+    Provider.of<FollowesProvider>(context, listen: false)
+        .fetchFollowes(context);
+    Provider.of<FollowesProvider>(context, listen: false)
+        .fetchFollowing(context);
   }
 
   @override
@@ -178,15 +184,24 @@ class _ProfileState extends State<Profile> {
   Widget getCounts() {
     return Row(
       children: [
-        getCountItem("251", "Fans", () {}),
-        Spacer(),
-        getCountItem("2.6K", "Follow up", () {
-          NavigationUtilities.push(FollowUp());
-        }),
-        Spacer(),
-        getCountItem("36", "Visitor", () {
-          NavigationUtilities.push(Visitor());
-        })
+        Expanded(
+            child: getCountItem("251", "Following", () {
+          NavigationUtilities.push(FollowUp(
+            isFromFollowing: true,
+          ));
+        })),
+        SizedBox(width: 15),
+        Expanded(
+          child: getCountItem("2.6K", "Followes", () {
+            NavigationUtilities.push(FollowUp());
+          }),
+        ),
+        SizedBox(width: 15),
+        Expanded(
+          child: getCountItem("36", "Visitor", () {
+            NavigationUtilities.push(Visitor());
+          }),
+        )
       ],
     );
   }
@@ -209,6 +224,8 @@ class _ProfileState extends State<Profile> {
             children: [
               Text(
                 count,
+                overflow: TextOverflow.ellipsis,
+                maxLines: 1,
                 style: appTheme.black16Bold.copyWith(
                     fontSize: getFontSize(16),
                     fontWeight: FontWeight.w700,
@@ -219,6 +236,8 @@ class _ProfileState extends State<Profile> {
               ),
               Text(
                 title,
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
                 style: appTheme.black16Bold.copyWith(
                     fontSize: getFontSize(16), fontWeight: FontWeight.w600),
               ),
