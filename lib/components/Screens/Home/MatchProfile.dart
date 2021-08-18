@@ -10,9 +10,12 @@ import 'package:provider/provider.dart';
 import 'package:video_chat/app/app.export.dart';
 import 'package:video_chat/app/utils/CommonWidgets.dart';
 import 'package:video_chat/components/Model/Match%20Profile/match_profile.dart';
+import 'package:video_chat/components/Model/Match%20Profile/video_call.dart';
+import 'package:video_chat/components/Model/User/UserModel.dart';
 import 'package:video_chat/components/Screens/Home/MatchedProfile.dart';
 import 'package:video_chat/components/Screens/Home/Reportblock.dart';
 import 'package:video_chat/components/Screens/UserProfile/UserProfile.dart';
+import 'package:video_chat/components/Screens/VideoCall/VideoCall.dart';
 import 'package:video_chat/components/widgets/TabBar/Tabbar.dart';
 import 'package:video_chat/provider/matching_profile_provider.dart';
 import 'package:video_chat/provider/report_and_block_provider.dart';
@@ -48,14 +51,62 @@ class _MathProfileState extends State<MathProfile> {
         .matchProfileList
         .map((e) => SwipeItem(
             content: Content(text: e.id.toString()),
-            likeAction: () {
-              print("like");
+            likeAction: (index) async {
+              print("like $index");
+              Provider.of<MatchingProfileProvider>(context, listen: false)
+                  .leftAndRightSwipe(context, SwipeType.Right);
+              VideoCallModel videoCallModel =
+                  await Provider.of<MatchingProfileProvider>(context,
+                          listen: false)
+                      .startVideoCall(
+                          context,
+                          Provider.of<MatchingProfileProvider>(context,
+                                  listen: false)
+                              .matchProfileList[index]
+                              .id);
+              if (videoCallModel != null)
+                Navigator.of(context).push(MaterialPageRoute(
+                  builder: (context) => VideoCall(
+                    channelName: videoCallModel.channelName,
+                    token: videoCallModel.sessionId,
+                  ),
+                ));
             },
-            nopeAction: () {
+            nopeAction: (index) {
+              Provider.of<MatchingProfileProvider>(context, listen: false)
+                  .leftAndRightSwipe(context, SwipeType.Left);
               print("nope");
             },
-            superlikeAction: () {
-              openUserProfile();
+            superlikeAction: (index) {
+              MatchProfileModel matchProfileModel =
+                  Provider.of<MatchingProfileProvider>(context, listen: false)
+                      .matchProfileList[index];
+              if (matchProfileModel == null) return;
+              UserModel userModel = UserModel(
+                about: matchProfileModel.about,
+                dob: matchProfileModel.dob,
+                callRate: matchProfileModel.callRate,
+                gender: matchProfileModel.gender,
+                preferedGender: matchProfileModel.preferedGender,
+                photoUrl: matchProfileModel.photoUrl,
+                userName: matchProfileModel.userName,
+                region: Region(
+                    regionName: matchProfileModel.regionName,
+                    regionFlagUrl: matchProfileModel.regionFlagUrl),
+                language:
+                    Language(languageName: matchProfileModel.languageName),
+                userImages: matchProfileModel.imageUrl,
+                byUserUserFollowers: [],
+                providerDisplayName: matchProfileModel.providerDisplayName,
+                id: matchProfileModel.id,
+                userFollowers: [
+                  ByUserUserFollower(
+                      followersCount: matchProfileModel.followers)
+                ],
+                totalPoint: matchProfileModel.totalPoint,
+                onlineStatus: matchProfileModel.onlineStatus,
+              );
+              openUserProfile(userModel);
               // NavigationUtilities.push(UserProfile());
             },
             onSlideUpdateAction: (tRegion, index) {
@@ -77,12 +128,12 @@ class _MathProfileState extends State<MathProfile> {
         return (matchProfileProvider.matchProfileList?.isEmpty ?? true)
             ? Container()
             : Container(
-                color: Colors.white,
+                color: Colors.red,
                 child: Stack(
                   children: [
                     SwipeCards(
                       matchEngine: _matchEngine,
-                      itemBuilder: (BuildContext context, int index) {
+                      itemBuilder: (BuildContext ctx, int index) {
                         MatchProfileModel _matchProfile =
                             matchProfileProvider.matchProfileList[index];
                         return LazyLoadingList(
@@ -92,7 +143,7 @@ class _MathProfileState extends State<MathProfile> {
                           loadMore: () {
                             print(
                                 "--------========================= Lazy Loading ==========================---------");
-                            page++;
+                            // page++;
                             Provider.of<MatchingProfileProvider>(context,
                                     listen: false)
                                 .fetchMatchProfileList(context,
@@ -285,26 +336,31 @@ class _MathProfileState extends State<MathProfile> {
         child: Padding(
             padding: EdgeInsets.only(left: getSize(16), right: getSize(16)),
             child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    SizedBox(
-                      height: getSize(70),
-                    ),
-                    Text(
-                      matchedProfile?.regionName ?? "",
-                      style: appTheme.black16Medium,
-                    ),
-                    SizedBox(
-                      height: getSize(12),
-                    ),
-                    Text(
-                      matchedProfile?.userName ?? "",
-                      style: appTheme.black16Bold
-                          .copyWith(fontSize: getFontSize(25)),
-                    ),
-                  ],
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      SizedBox(
+                        height: getSize(70),
+                      ),
+                      Text(
+                        matchedProfile?.regionName ?? "",
+                        style: appTheme.black16Medium,
+                      ),
+                      SizedBox(
+                        height: getSize(12),
+                      ),
+                      Text(
+                        matchedProfile?.userName ?? "",
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                        style: appTheme.black16Bold
+                            .copyWith(fontSize: getFontSize(25)),
+                      ),
+                    ],
+                  ),
                 ),
                 Spacer(),
                 Padding(
@@ -345,7 +401,7 @@ class _MathProfileState extends State<MathProfile> {
     );
   }
 
-  openUserProfile() {
+  openUserProfile(UserModel userModel) {
     showModalBottomSheet(
         isScrollControlled: true,
         backgroundColor: Colors.white,
@@ -364,6 +420,7 @@ class _MathProfileState extends State<MathProfile> {
                   height: getSize(500),
                   child: UserProfile(
                     isPopUp: true,
+                    userModel: userModel,
                   ),
                 ),
               ));

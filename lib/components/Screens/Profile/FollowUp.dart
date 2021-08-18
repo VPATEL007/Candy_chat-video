@@ -150,7 +150,7 @@ class _FollowUpState extends State<FollowUp> {
                       width: getSize(6),
                     ),
                     Text(
-                      followes?.user?.country ?? "",
+                      followes?.user?.region?.regionName ?? "",
                       style: appTheme.black14Normal
                           .copyWith(fontWeight: FontWeight.w500),
                     ),

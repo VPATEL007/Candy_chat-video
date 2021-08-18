@@ -5,12 +5,15 @@ import 'package:video_chat/app/app.export.dart';
 import 'package:video_chat/app/constant/ColorConstant.dart';
 import 'package:video_chat/app/utils/CommonWidgets.dart';
 import 'package:video_chat/app/utils/math_utils.dart';
+import 'package:video_chat/components/Model/User/UserModel.dart';
 import 'package:video_chat/components/Screens/Home/Reportblock.dart';
 import 'package:video_chat/components/widgets/ProfileSlider.dart';
 
 class UserProfile extends StatefulWidget {
   final bool isPopUp;
-  UserProfile({Key key, this.isPopUp}) : super(key: key);
+  final UserModel userModel;
+  UserProfile({Key key, this.isPopUp, @required this.userModel})
+      : super(key: key);
 
   @override
   _UserProfileState createState() => _UserProfileState();

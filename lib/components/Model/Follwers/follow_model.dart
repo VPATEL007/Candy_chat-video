@@ -31,22 +31,45 @@ class FollowesModel {
 }
 
 class User {
-  User({this.providerDisplayName, this.photoUrl, this.id, this.country});
+  User({
+    this.providerDisplayName,
+    this.photoUrl,
+    this.id,
+    this.region,
+  });
 
   String providerDisplayName;
-  String photoUrl, country;
+  String photoUrl;
   int id;
+  Region region;
 
   factory User.fromJson(Map<String, dynamic> json) => User(
-      providerDisplayName: json["provider_display_name"],
-      photoUrl: json["photo_url"],
-      id: json["id"],
-      country: json["country"]);
+        providerDisplayName: json["provider_display_name"],
+        photoUrl: json["photo_url"],
+        id: json["id"],
+        region: Region.fromJson(json["region"]),
+      );
 
   Map<String, dynamic> toJson() => {
         "provider_display_name": providerDisplayName,
         "photo_url": photoUrl,
         "id": id,
-        "country": country
+        "region": region.toJson(),
+      };
+}
+
+class Region {
+  Region({
+    this.regionName,
+  });
+
+  String regionName;
+
+  factory Region.fromJson(Map<String, dynamic> json) => Region(
+        regionName: json["region_name"],
+      );
+
+  Map<String, dynamic> toJson() => {
+        "region_name": regionName,
       };
 }

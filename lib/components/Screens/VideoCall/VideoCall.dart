@@ -10,7 +10,10 @@ import 'package:agora_rtc_engine/rtc_local_view.dart' as RtcLocalView;
 import 'package:video_chat/app/utils/CommonTextfield.dart';
 
 class VideoCall extends StatefulWidget {
-  VideoCall({Key key}) : super(key: key);
+  final String token;
+  final String channelName;
+  VideoCall({Key key, @required this.channelName, @required this.token})
+      : super(key: key);
 
   @override
   _VideoCallState createState() => _VideoCallState();
@@ -69,7 +72,7 @@ class _VideoCallState extends State<VideoCall> {
     }));
     // Enable video
     await engine.enableVideo();
-    await engine.joinChannel(AGORA_TOKEN, "test", null, 0);
+    await engine.joinChannel(widget.token, widget.channelName, null, 0);
   }
 
   @override

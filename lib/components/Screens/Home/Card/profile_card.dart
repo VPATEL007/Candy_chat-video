@@ -12,6 +12,6 @@ class ProfileCard extends StatefulWidget {
 class _ProfileCardState extends State<ProfileCard> {
   @override
   Widget build(BuildContext context) {
-    return Container(child: widget.child);
+    return widget.child;
   }
 }

@@ -21,4 +21,5 @@ class ApiConstants {
   static const String getFollowing = "follow/get-following";
   static const String unFollowUser = "follow/remove";
   static const String getFollowes = "follow/get-follower";
+  static const String startVideoCall = "call-history/video-call-start";
 }

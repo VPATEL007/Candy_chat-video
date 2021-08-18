@@ -113,13 +113,13 @@ class _SwipeCardsState extends State<SwipeCards> {
     SwipeItem currentMatch = widget.matchEngine.currentItem;
     switch (direction) {
       case SlideDirection.left:
-        currentMatch.nope();
+        currentMatch.nope(widget.matchEngine._currentItemIndex);
         break;
       case SlideDirection.right:
-        currentMatch.like();
+        currentMatch.like(widget.matchEngine._currentItemIndex);
         break;
       case SlideDirection.up:
-        currentMatch.superLike();
+        currentMatch.superLike(widget.matchEngine._currentItemIndex);
         break;
     }
 
@@ -205,9 +205,9 @@ class MatchEngine extends ChangeNotifier {
 
 class SwipeItem extends ChangeNotifier {
   final dynamic content;
-  final Function likeAction;
-  final Function superlikeAction;
-  final Function nopeAction;
+  final Function(int) likeAction;
+  final Function(int) superlikeAction;
+  final Function(int) nopeAction;
   final Function(SlideRegion, int) onSlideUpdateAction;
   Decision decision = Decision.undecided;
 
@@ -218,31 +218,31 @@ class SwipeItem extends ChangeNotifier {
       this.nopeAction,
       this.onSlideUpdateAction});
 
-  void like() {
+  void like(int index) {
     if (decision == Decision.undecided) {
       decision = Decision.like;
       try {
-        likeAction();
+        likeAction(index);
       } catch (e) {}
       notifyListeners();
     }
   }
 
-  void nope() {
+  void nope(int index) {
     if (decision == Decision.undecided) {
       decision = Decision.nope;
       try {
-        nopeAction();
+        nopeAction(index);
       } catch (e) {}
       notifyListeners();
     }
   }
 
-  void superLike() {
+  void superLike(int index) {
     if (decision == Decision.undecided) {
       decision = Decision.superLike;
       try {
-        superlikeAction();
+        superlikeAction(index);
       } catch (e) {}
       notifyListeners();
     }

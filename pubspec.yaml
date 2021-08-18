@@ -46,6 +46,7 @@ dependencies:
   intl: ^0.16.1
   lazy_loading_list: ^1.0.1
   in_app_purchase: 0.5.2
+  flutter_tindercard: ^0.2.0
 
 
 

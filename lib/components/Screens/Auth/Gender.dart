@@ -112,7 +112,10 @@ class _GenderState extends State<Gender> {
                     command: ApiConstants.selectGender,
                     headers: NetworkClient.getInstance.getAuthHeaders(),
                     method: MethodType.Post,
-                    params: {"gender": describeEnum(_genders).toLowerCase()},
+                    params: {
+                      "prefgender": describeEnum(_genders).toLowerCase(),
+                      "gender": describeEnum(_genders).toLowerCase()
+                    },
                     successCallback: (response, message) {
                       NetworkClient.getInstance.hideProgressDialog();
                       View.showMessage(context, message);
