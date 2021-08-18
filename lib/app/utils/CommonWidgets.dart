@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
+import 'package:in_app_purchase/in_app_purchase.dart';
 // import 'package:flutter_statusbarcolor/flutter_statusbarcolor.dart';
 
 import '../app.export.dart';
@@ -539,7 +540,8 @@ getColorText(String text, Color color, {double fontSize = 25}) {
           fontWeight: FontWeight.w800));
 }
 
-getCoinItem(bool isSelected, BuildContext context) {
+Widget getCoinItem(
+    ProductDetails product, bool isSelected, BuildContext context) {
   return Padding(
     padding: EdgeInsets.only(right: getSize(10), bottom: getSize(10)),
     child: Stack(
@@ -576,24 +578,24 @@ getCoinItem(bool isSelected, BuildContext context) {
                 ),
                 SizedBox(height: getSize(8)),
                 Text(
-                  "30 Coins",
+                  product.title,
                   style:
                       appTheme.black16Bold.copyWith(fontSize: getFontSize(18)),
                 ),
                 SizedBox(height: getSize(4)),
                 Text(
-                  "\$54.23",
+                  product.price,
                   style: appTheme.black14Normal
                       .copyWith(fontWeight: FontWeight.w500),
                 ),
-                SizedBox(height: getSize(!isSelected ? 4 : 0)),
-                !isSelected
-                    ? Text(
-                        "Save -38%",
-                        style: appTheme.black16Bold.copyWith(
-                            fontWeight: FontWeight.w600, color: Colors.green),
-                      )
-                    : SizedBox()
+                // SizedBox(height: getSize(!isSelected ? 4 : 0)),
+                // !isSelected
+                //     ? Text(
+                //         "Save -38%",
+                //         style: appTheme.black16Bold.copyWith(
+                //             fontWeight: FontWeight.w600, color: Colors.green),
+                //       )
+                //     : SizedBox()
               ],
             ),
           ),

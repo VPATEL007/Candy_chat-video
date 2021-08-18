@@ -110,10 +110,7 @@ class _MatchedProfileState extends State<MatchedProfile> {
   }
 
 //Received Call
-  receivedCall() {
-
-
-  }
+  receivedCall() {}
 
   getProfileWidget() {
     return Center(
@@ -268,7 +265,8 @@ class _MatchedProfileState extends State<MatchedProfile> {
                         physics: NeverScrollableScrollPhysics(),
                         itemCount: 2,
                         itemBuilder: (BuildContext context, int index) {
-                          return getCoinItem(index == 0, context);
+                          return Container();
+                          // return getCoinItem(index == 0, context);
                         }),
                     SizedBox(
                       height: getSize(22),
