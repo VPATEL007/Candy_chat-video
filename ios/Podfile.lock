@@ -32,6 +32,8 @@ PODS:
   - FMDB/standard (2.7.5)
   - http_proxy (0.0.1):
     - Flutter
+  - in_app_purchase (0.0.1):
+    - Flutter
   - path_provider (0.0.1):
     - Flutter
   - "permission_handler (5.1.0+2)":
@@ -53,6 +55,7 @@ DEPENDENCIES:
   - Flutter (from `Flutter`)
   - flutter_facebook_auth (from `.symlinks/plugins/flutter_facebook_auth/ios`)
   - http_proxy (from `.symlinks/plugins/http_proxy/ios`)
+  - in_app_purchase (from `.symlinks/plugins/in_app_purchase/ios`)
   - path_provider (from `.symlinks/plugins/path_provider/ios`)
   - permission_handler (from `.symlinks/plugins/permission_handler/ios`)
   - shared_preferences (from `.symlinks/plugins/shared_preferences/ios`)
@@ -83,6 +86,8 @@ EXTERNAL SOURCES:
     :path: ".symlinks/plugins/flutter_facebook_auth/ios"
   http_proxy:
     :path: ".symlinks/plugins/http_proxy/ios"
+  in_app_purchase:
+    :path: ".symlinks/plugins/in_app_purchase/ios"
   path_provider:
     :path: ".symlinks/plugins/path_provider/ios"
   permission_handler:
@@ -107,6 +112,7 @@ SPEC CHECKSUMS:
   flutter_facebook_auth: d952ca599c6a76439c54472b0b225004e1b880c4
   FMDB: 2ce00b547f966261cd18927a3ddb07cb6f3db82a
   http_proxy: 20f129d3e1c70cfdef92530b374c619832027729
+  in_app_purchase: 3e2155afa9d03d4fa32d9e62d567885080ce97d6
   path_provider: abfe2b5c733d04e238b0d8691db0cfd63a27a93c
   permission_handler: ccb20a9fad0ee9b1314a52b70b76b473c5f8dab0
   Reachability: 33e18b67625424e47b6cde6d202dce689ad7af96
