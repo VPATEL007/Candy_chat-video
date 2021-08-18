@@ -1,4 +1,5 @@
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:video_chat/app/AppConfiguration/AppNavigation.dart';
 import 'package:video_chat/app/app.export.dart';
@@ -12,7 +13,10 @@ class Gender extends StatefulWidget {
   _GenderState createState() => _GenderState();
 }
 
+enum Genders { Male, Female, None }
+
 class _GenderState extends State<Gender> {
+  Genders _genders = Genders.Male;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -30,22 +34,56 @@ class _GenderState extends State<Gender> {
                 SizedBox(
                   height: getSize(70),
                 ),
-                Image.asset(
-                  icMale,
-                  height: getSize(140),
-                ),
-                Image.asset(
-                  radioSelected,
-                  height: getSize(22),
+                InkWell(
+                  onTap: () {
+                    if (mounted)
+                      setState(() {
+                        _genders = Genders.Male;
+                      });
+                  },
+                  child: Column(
+                    children: [
+                      Image.asset(
+                        icMale,
+                        height: getSize(140),
+                      ),
+                      _genders == Genders.Male
+                          ? Image.asset(
+                              radioSelected,
+                              height: getSize(22),
+                            )
+                          : Image.asset(
+                              radio,
+                              height: getSize(22),
+                            ),
+                    ],
+                  ),
                 ),
                 Spacer(),
-                Image.asset(
-                  icFemale,
-                  height: getSize(140),
-                ),
-                Image.asset(
-                  radioSelected,
-                  height: getSize(22),
+                InkWell(
+                  onTap: () {
+                    if (mounted)
+                      setState(() {
+                        _genders = Genders.Female;
+                      });
+                  },
+                  child: Column(
+                    children: [
+                      Image.asset(
+                        icFemale,
+                        height: getSize(140),
+                      ),
+                      _genders == Genders.Female
+                          ? Image.asset(
+                              radioSelected,
+                              height: getSize(22),
+                            )
+                          : Image.asset(
+                              radio,
+                              height: getSize(22),
+                            ),
+                    ],
+                  ),
                 ),
                 Spacer(),
                 Row(
@@ -66,8 +104,25 @@ class _GenderState extends State<Gender> {
                   style: appTheme.black14Normal,
                 ),
                 Spacer(),
-                getPopBottomButton(context, "Next", () {
-                  AppNavigation.shared.moveToHome();
+                getPopBottomButton(context, "Next", () async {
+                  NetworkClient.getInstance.showLoader(context);
+                  await NetworkClient.getInstance.callApi(
+                    context: context,
+                    baseUrl: ApiConstants.apiUrl,
+                    command: ApiConstants.selectGender,
+                    headers: NetworkClient.getInstance.getAuthHeaders(),
+                    method: MethodType.Post,
+                    params: {"gender": describeEnum(_genders).toLowerCase()},
+                    successCallback: (response, message) {
+                      NetworkClient.getInstance.hideProgressDialog();
+                      View.showMessage(context, message);
+                      AppNavigation.shared.moveToHome();
+                    },
+                    failureCallback: (code, message) {
+                      NetworkClient.getInstance.hideProgressDialog();
+                      View.showMessage(context, message);
+                    },
+                  );
                 })
               ],
             ),
