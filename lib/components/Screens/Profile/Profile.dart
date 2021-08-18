@@ -1,18 +1,15 @@
-import 'dart:async';
-
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:video_chat/app/app.export.dart';
 import 'package:video_chat/app/utils/CommonWidgets.dart';
 import 'package:video_chat/components/Screens/Language%20Selection/Language.dart';
-import 'package:video_chat/components/Screens/Profile/CoinList.dart';
+import 'package:video_chat/components/Screens/Profile/Coins.dart';
 import 'package:video_chat/components/Screens/Profile/FollowUp.dart';
 import 'package:video_chat/components/Screens/Profile/PaymentHistory.dart';
 import 'package:video_chat/components/Screens/Profile/VipStore.dart';
 import 'package:video_chat/components/Screens/Profile/Visitor.dart';
 import 'package:video_chat/components/Screens/Setting/Setting.dart';
-import 'package:video_chat/components/Screens/UserProfile/UserProfile.dart';
 import 'package:video_chat/components/widgets/ProfileSlider.dart';
 import 'package:video_chat/components/widgets/TabBar/Tabbar.dart';
 import 'package:video_chat/provider/followes_provider.dart';
@@ -72,7 +69,7 @@ class _ProfileState extends State<Profile> {
                       NavigationUtilities.push(VipStore());
                     }),
                     getListItem(icCoinP, "Get Coins", false, () {
-                      NavigationUtilities.push(CoinList());
+                      NavigationUtilities.push(Coins());
                     }),
                     getListItem(icPaymentHistory, "Payment History ", false,
                         () {
