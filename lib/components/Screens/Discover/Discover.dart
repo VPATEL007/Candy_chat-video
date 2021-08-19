@@ -1,10 +1,15 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:video_chat/app/app.export.dart';
+import 'package:video_chat/components/Model/Match%20Profile/match_profile.dart';
+import 'package:video_chat/components/Model/User/UserModel.dart';
 import 'package:video_chat/components/Screens/Home/MatchProfile.dart';
 import 'package:video_chat/components/Screens/UserProfile/UserProfile.dart';
 import 'package:video_chat/components/widgets/TabBar/Tabbar.dart';
+import 'package:video_chat/provider/discover_provider.dart';
 import 'package:video_chat/provider/matching_profile_provider.dart';
 import 'package:video_chat/provider/report_and_block_provider.dart';
 
@@ -17,7 +22,8 @@ class Discover extends StatefulWidget {
 }
 
 class _DiscoverState extends State<Discover> {
-  List<String> tab = ["All Users", "Online", "Hot", "New Users", "Tranded"];
+  List<SortBy> tab = SortBy.values;
+  int selectedIndex = 0;
 
   @override
   Widget build(BuildContext context) {
@@ -26,18 +32,20 @@ class _DiscoverState extends State<Discover> {
       bottomNavigationBar: TabBarWidget(
         screen: TabType.Discover,
       ),
-      body: SafeArea(
-          child: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          getTabBar(),
-          SizedBox(
-            height: getSize(10),
-          ),
-          getUserList(),
-          // getMatchButton()
-        ],
-      )),
+      body: Consumer<DiscoverProvider>(
+        builder: (context, discover, child) => SafeArea(
+            child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            getTabBar(discover),
+            SizedBox(
+              height: getSize(10),
+            ),
+            getUserList(discover.discoverProfileList),
+            // getMatchButton()
+          ],
+        )),
+      ),
     );
   }
 
@@ -69,26 +77,57 @@ class _DiscoverState extends State<Discover> {
   }
 
   //List
-  getUserList() {
+  getUserList(List<MatchProfileModel> discoverList) {
     return Expanded(
       child: GridView.builder(
           gridDelegate:
               new SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 2),
           shrinkWrap: true,
-          itemCount: 10,
+          itemCount: discoverList.length,
           padding: EdgeInsets.only(
               left: getSize(35), right: getSize(35), top: getSize(14)),
           itemBuilder: (BuildContext context, int index) {
             return InkWell(
                 onTap: () {
-                  NavigationUtilities.push(UserProfile());
+                  MatchProfileModel matchProfileModel = discoverList[index];
+                  if (matchProfileModel == null) return;
+                  UserModel userModel = UserModel(
+                    about: matchProfileModel.about,
+                    dob: matchProfileModel.dob,
+                    callRate: matchProfileModel.callRate,
+                    gender: matchProfileModel.gender,
+                    preferedGender: matchProfileModel.preferedGender,
+                    photoUrl: matchProfileModel.photoUrl,
+                    userName: matchProfileModel.userName,
+                    region: Region(
+                        regionName: matchProfileModel.regionName,
+                        regionFlagUrl: matchProfileModel.regionFlagUrl),
+                    language:
+                        Language(languageName: matchProfileModel.languageName),
+                    userImages: matchProfileModel?.imageUrl
+                            ?.map((e) => UserImage(photoUrl: e))
+                            ?.toList() ??
+                        [],
+                    byUserUserFollowers: [],
+                    providerDisplayName: matchProfileModel.providerDisplayName,
+                    id: matchProfileModel.id,
+                    userFollowers: [
+                      ByUserUserFollower(
+                          followersCount: matchProfileModel.followers)
+                    ],
+                    totalPoint: matchProfileModel.totalPoint,
+                    onlineStatus: matchProfileModel.onlineStatus,
+                  );
+                  NavigationUtilities.push(UserProfile(
+                    userModel: userModel,
+                  ));
                 },
-                child: getUserItem());
+                child: getUserItem(discoverList[index]));
           }),
     );
   }
 
-  Widget getUserItem() {
+  Widget getUserItem(MatchProfileModel discover) {
     return Padding(
       padding: EdgeInsets.only(right: getSize(11), bottom: getSize(11)),
       child: ClipRRect(
@@ -97,24 +136,27 @@ class _DiscoverState extends State<Discover> {
             color: Colors.red,
             height: 200,
             child: Stack(
+              fit: StackFit.expand,
               children: [
-                Image.asset(
-                  icTemp,
+                CachedNetworkImage(
+                  imageUrl: discover?.photoUrl ?? "",
                   width: (MathUtilities.screenWidth(context) / 2) - getSize(28),
                   fit: BoxFit.cover,
                 ),
-                Positioned(
-                    left: 8,
-                    top: 8,
-                    child: ClipRRect(
-                      borderRadius: BorderRadius.circular(getSize(12)),
-                      child: Image.asset(
-                        l2,
-                        height: getSize(20),
-                        width: getSize(20),
-                        fit: BoxFit.cover,
-                      ),
-                    )),
+                (discover?.regionFlagUrl?.isEmpty ?? true)
+                    ? Container()
+                    : Positioned(
+                        left: 8,
+                        top: 8,
+                        child: ClipRRect(
+                          borderRadius: BorderRadius.circular(getSize(12)),
+                          child: CachedNetworkImage(
+                            imageUrl: discover?.regionFlagUrl ?? "",
+                            height: getSize(20),
+                            width: getSize(20),
+                            fit: BoxFit.cover,
+                          ),
+                        )),
                 Positioned(
                     top: 8,
                     right: 8,
@@ -126,7 +168,7 @@ class _DiscoverState extends State<Discover> {
                         padding: EdgeInsets.only(
                             left: 4, right: 4, top: 2, bottom: 4),
                         child: Text(
-                          "• Online",
+                          "• ${discover?.onlineStatus ?? ""}",
                           style: appTheme.black16Bold.copyWith(
                               fontSize: getSize(10), color: fromHex("#00DE9B")),
                         ),
@@ -161,7 +203,7 @@ class _DiscoverState extends State<Discover> {
                           ),
                           Flexible(
                             child: Text(
-                              "Ballaa",
+                              discover?.userName,
                               overflow: TextOverflow.ellipsis,
                               maxLines: 1,
                               style: appTheme.white14Bold
@@ -196,7 +238,7 @@ class _DiscoverState extends State<Discover> {
   }
 
 //Tab
-  Widget getTabBar() {
+  Widget getTabBar(DiscoverProvider discoverProvider) {
     return Container(
       height: getSize(50),
       child: ListView.builder(
@@ -205,31 +247,46 @@ class _DiscoverState extends State<Discover> {
         scrollDirection: Axis.horizontal,
         itemCount: tab.length,
         itemBuilder: (BuildContext context, int index) {
-          return Padding(
-            padding: EdgeInsets.only(right: getSize(12)),
-            child: Container(
-              height: getSize(25),
-              decoration: BoxDecoration(
-                  border: Border.all(
-                      color: index == 0 ? ColorConstants.red : Colors.white,
-                      width: 1),
-                  borderRadius: BorderRadius.circular(50),
-                  color: index == 0
-                      ? fromHex("#FFDFDF")
-                      : Colors.black.withOpacity(0.03)),
-              child: Padding(
-                padding: EdgeInsets.only(
-                    left: getSize(18),
-                    right: getSize(18),
-                    top: getSize(12),
-                    bottom: getSize(12)),
-                child: Text(
-                  tab[index],
-                  style: appTheme.black12Normal.copyWith(
-                      fontWeight:
-                          index == 0 ? FontWeight.w700 : FontWeight.w600,
-                      color:
-                          index == 0 ? ColorConstants.redText : Colors.black),
+          return InkWell(
+            onTap: () {
+              if (mounted) {
+                setState(() {
+                  selectedIndex = index;
+                });
+              }
+              discoverProvider.fetchDiscoverProfileList(context, tab[index],
+                  isbackgroundCall: false);
+            },
+            child: Padding(
+              padding: EdgeInsets.only(right: getSize(12)),
+              child: Container(
+                height: getSize(25),
+                decoration: BoxDecoration(
+                    border: Border.all(
+                        color: index == selectedIndex
+                            ? ColorConstants.red
+                            : Colors.white,
+                        width: 1),
+                    borderRadius: BorderRadius.circular(50),
+                    color: index == selectedIndex
+                        ? fromHex("#FFDFDF")
+                        : Colors.black.withOpacity(0.03)),
+                child: Padding(
+                  padding: EdgeInsets.only(
+                      left: getSize(18),
+                      right: getSize(18),
+                      top: getSize(12),
+                      bottom: getSize(12)),
+                  child: Text(
+                    describeEnum(tab[index]),
+                    style: appTheme.black12Normal.copyWith(
+                        fontWeight: index == selectedIndex
+                            ? FontWeight.w700
+                            : FontWeight.w600,
+                        color: index == selectedIndex
+                            ? ColorConstants.redText
+                            : Colors.black),
+                  ),
                 ),
               ),
             ),

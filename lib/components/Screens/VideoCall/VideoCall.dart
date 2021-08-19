@@ -8,11 +8,17 @@ import 'package:video_chat/app/constant/KeyConsant.dart';
 import 'package:agora_rtc_engine/rtc_remote_view.dart' as RtcRemoteView;
 import 'package:agora_rtc_engine/rtc_local_view.dart' as RtcLocalView;
 import 'package:video_chat/app/utils/CommonTextfield.dart';
+import 'package:video_chat/components/Screens/Chat/Chat.dart';
 
 class VideoCall extends StatefulWidget {
   final String token;
   final String channelName;
-  VideoCall({Key key, @required this.channelName, @required this.token})
+  final String userId;
+  VideoCall(
+      {Key key,
+      @required this.channelName,
+      @required this.token,
+      @required this.userId})
       : super(key: key);
 
   @override
@@ -98,6 +104,13 @@ class _VideoCallState extends State<VideoCall> {
                   ),
                 ),
               )),
+          Align(
+            alignment: Alignment.bottomLeft,
+            child: Chat(
+                channelId: widget.channelName,
+                userId: widget.userId,
+                token: widget.token),
+          ),
           switchCameraButton(),
           Positioned(
               bottom: getSize(40),

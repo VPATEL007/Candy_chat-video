@@ -11,6 +11,7 @@ import 'package:video_chat/components/Model/User/UserModel.dart';
 import 'package:video_chat/components/Screens/Home/Reportblock.dart';
 import 'package:video_chat/components/widgets/ProfileSlider.dart';
 import 'package:video_chat/provider/followes_provider.dart';
+import 'package:video_chat/provider/tags_provider.dart';
 
 class UserProfile extends StatefulWidget {
   final bool isPopUp;
@@ -156,9 +157,9 @@ class _UserProfileState extends State<UserProfile> {
 
   //FeedBack
   Widget getFeedback() {
-    return Container(
-      child: Tags(
-          itemCount: 8,
+    return Consumer<TagsProvider>(
+    builder: (context, tagsProvider, child) =>  Tags(
+          itemCount: tagsProvider.tagsList.length,
           spacing: getSize(6),
           runSpacing: getSize(20),
           alignment: WrapAlignment.center,
@@ -167,7 +168,7 @@ class _UserProfileState extends State<UserProfile> {
               active: true,
               pressEnabled: false,
               activeColor: fromHex("#FFDFDF"),
-              title: "Beautiful",
+              title: tagsProvider.tagsList[index]?.tag??"",
               index: index,
               textStyle:
                   appTheme.black12Normal.copyWith(fontWeight: FontWeight.w500),

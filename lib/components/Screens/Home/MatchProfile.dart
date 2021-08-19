@@ -70,6 +70,11 @@ class _MathProfileState extends State<MathProfile> {
                   builder: (context) => VideoCall(
                     channelName: videoCallModel.channelName,
                     token: videoCallModel.sessionId,
+                    userId: Provider.of<MatchingProfileProvider>(context,
+                            listen: false)
+                        .matchProfileList[index]
+                        .id
+                        ?.toString(),
                   ),
                 ));
             },

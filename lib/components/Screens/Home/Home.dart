@@ -5,8 +5,10 @@ import 'package:video_chat/app/app.export.dart';
 import 'package:video_chat/app/utils/CommonWidgets.dart';
 import 'package:video_chat/components/Screens/Home/MatchProfile.dart';
 import 'package:video_chat/components/widgets/TabBar/Tabbar.dart';
+import 'package:video_chat/provider/discover_provider.dart';
 import 'package:video_chat/provider/followes_provider.dart';
 import 'package:video_chat/provider/matching_profile_provider.dart';
+import 'package:video_chat/provider/tags_provider.dart';
 
 class Home extends StatefulWidget {
   static const route = "Home";
@@ -22,6 +24,11 @@ class _HomeState extends State<Home> {
     super.initState();
     Provider.of<FollowesProvider>(context, listen: false)
         .fetchMyProfile(context);
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+      Provider.of<DiscoverProvider>(context, listen: false)
+          .fetchDiscoverProfileList(context, SortBy.General);
+          Provider.of<TagsProvider>(context, listen: false).fetchTags(context);
+    });
   }
 
   @override
