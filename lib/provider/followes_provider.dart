@@ -3,10 +3,12 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:video_chat/app/app.export.dart';
 import 'package:video_chat/components/Model/Follwers/follow_model.dart';
+import 'package:video_chat/components/Model/User/UserModel.dart';
 
 class FollowesProvider with ChangeNotifier {
   List<FollowesModel> _followersList = [];
   List<FollowesModel> _followingList = [];
+  UserModel userModel;
 
   List<FollowesModel> get followingList => this._followingList;
 
@@ -106,5 +108,48 @@ class FollowesProvider with ChangeNotifier {
       },
     );
     notifyListeners();
+  }
+
+  // follow user
+  Future<void> followUser(
+    BuildContext context,
+    int userId,
+  ) async {
+    await NetworkClient.getInstance.callApi(
+      context: context,
+      baseUrl: ApiConstants.apiUrl,
+      command: ApiConstants.followUser,
+      headers: NetworkClient.getInstance.getAuthHeaders(),
+      method: MethodType.Post,
+      params: {"userId": userId},
+      successCallback: (response, message) {
+        View.showMessage(context, message, mode: DisplayMode.SUCCESS);
+      },
+      failureCallback: (code, message) {
+        View.showMessage(context, message);
+      },
+    );
+    notifyListeners();
+  }
+
+  // Fetch my profile...
+  Future<UserModel> fetchMyProfile(
+    BuildContext context,
+  ) async {
+    await NetworkClient.getInstance.callApi(
+      context: context,
+      baseUrl: ApiConstants.apiUrl,
+      command: ApiConstants.myProfile,
+      headers: NetworkClient.getInstance.getAuthHeaders(),
+      method: MethodType.Get,
+      successCallback: (response, message) {
+        userModel = userModelFromJson(jsonEncode(response));
+      },
+      failureCallback: (code, message) {
+        View.showMessage(context, message);
+      },
+    );
+    notifyListeners();
+    return userModel;
   }
 }

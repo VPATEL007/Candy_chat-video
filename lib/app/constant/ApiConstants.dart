@@ -15,11 +15,14 @@ class ApiConstants {
   static const String onboarding = "app-home-screen/get-by-language";
   static const String allLanguage = "language/get-active";
   static const String matchProfile = "profile/get-profiles-conversation";
+  static const String myProfile = "profile/me";
   static const String reportReason = "report/get-reasons";
+  static const String feedbacks = "feedback/get-categories";
   static const String reportBlock = "report/block";
   static const String selectGender = "profile/set-prefered-gender";
   static const String getFollowing = "follow/get-following";
   static const String unFollowUser = "follow/remove";
+  static const String followUser = "follow/set";
   static const String getFollowes = "follow/get-follower";
   static const String startVideoCall = "call-history/video-call-start";
 }

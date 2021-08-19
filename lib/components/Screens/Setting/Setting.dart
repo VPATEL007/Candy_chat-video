@@ -8,6 +8,7 @@ import 'package:video_chat/app/utils/CommonWidgets.dart';
 import 'package:video_chat/app/utils/math_utils.dart';
 import 'package:video_chat/components/Screens/Setting/BlockList.dart';
 import 'package:video_chat/components/Screens/Setting/FavouriteList.dart';
+import 'package:video_chat/components/Screens/Setting/feedback.dart';
 
 class Setting extends StatefulWidget {
   Setting({Key key}) : super(key: key);
@@ -38,7 +39,9 @@ class _SettingState extends State<Setting> {
                 }),
                 getListItem("Rate Us", () {}),
                 getListItem("Privacy Policy", () {}),
-                getListItem("Feedback", () {}),
+                getListItem("Feedback", () {
+                  NavigationUtilities.push(FeedbackScreen());
+                }),
                 getListItem("About Us", () {})
               ],
             ),

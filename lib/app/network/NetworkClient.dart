@@ -49,6 +49,49 @@ class NetworkClient {
     return authHeaders;
   }
 
+  Future<Response> uploadImages({
+    @required BuildContext context,
+    @required String baseUrl,
+    @required String command,
+    @required String image,
+    Map<String, dynamic> headers,
+    @required Function(dynamic response, String message) successCallback,
+    @required Function(String message, String statusCode) failureCallback,
+  }) async {
+    var connectivityResult = await Connectivity().checkConnectivity();
+    if (connectivityResult == ConnectivityResult.none) {
+      failureCallback("", "No Internet Connection");
+      return null;
+    }
+
+    dio.options.validateStatus = (status) {
+      return status < 500;
+    };
+    dio.options.connectTimeout = 50000; //5s
+    dio.options.receiveTimeout = 50000;
+
+    if (headers != null) {
+      for (var key in headers.keys) {
+        dio.options.headers[key] = headers[key];
+      }
+    }
+
+    var formData = FormData.fromMap({
+      'file': await MultipartFile.fromFile(
+        image,
+        filename:
+            'image_${DateTime.now().microsecondsSinceEpoch.toString()}.jpg',
+      ),
+    });
+    var response = await dio.post(
+      baseUrl + command,
+      data: formData,
+    );
+
+    parseResponse(context, response,
+        successCallback: successCallback, failureCallback: failureCallback);
+  }
+
   Future<Response> callApi({
     @required BuildContext context,
     @required String baseUrl,

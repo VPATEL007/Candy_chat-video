@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:video_chat/app/constant/ColorConstant.dart';
@@ -6,7 +7,9 @@ import 'package:video_chat/app/utils/math_utils.dart';
 
 class ProfileSlider extends StatefulWidget {
   Function(int) scroll;
-  ProfileSlider({Key key, this.scroll}) : super(key: key);
+  List<String> images;
+  ProfileSlider({Key key, this.scroll, @required this.images})
+      : super(key: key);
 
   @override
   _ProfileSliderState createState() => _ProfileSliderState();
@@ -25,11 +28,8 @@ class _ProfileSliderState extends State<ProfileSlider> {
         child: PageView(
           scrollDirection: Axis.vertical,
           controller: pageController,
-          children: [
-            getPageViewItem(icTempProfile),
-            getPageViewItem(loginBg),
-            getPageViewItem(icTempProfile)
-          ],
+          children: List.generate(widget.images.length,
+              (index) => getPageViewItem(widget.images[index])),
           onPageChanged: (val) {
             currentIndex = val;
             pageController.animateToPage(currentIndex,
@@ -43,8 +43,8 @@ class _ProfileSliderState extends State<ProfileSlider> {
   }
 
   getPageViewItem(String image) {
-    return Image.asset(
-      image,
+    return CachedNetworkImage(
+      imageUrl: image,
       width: MathUtilities.screenWidth(context),
       height: getSize(300),
       fit: BoxFit.cover,

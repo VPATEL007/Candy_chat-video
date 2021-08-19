@@ -48,7 +48,7 @@ class View {
   static FlushbarType getFromType(DisplayMode mode) {
     switch (mode) {
       case DisplayMode.SUCCESS:
-        return FlushbarType.error;
+        return FlushbarType.success;
         break;
       case DisplayMode.ERROR:
         return FlushbarType.error;

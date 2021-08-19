@@ -9,6 +9,7 @@ PODS:
   - AgoraRtm_iOS (1.2.2)
   - apple_sign_in (0.0.1):
     - Flutter
+  - BSImagePicker (3.3.1)
   - connectivity (0.0.1):
     - Flutter
     - Reachability
@@ -23,10 +24,17 @@ PODS:
   - FBSDKLoginKit/Login (9.0.1):
     - FBSDKCoreKit (~> 9.0.1)
   - Flutter (1.0.0)
+  - flutter_absolute_path (0.0.1):
+    - Flutter
   - flutter_facebook_auth (1.0.0):
     - FBSDKCoreKit (~> 9.0.0)
     - FBSDKLoginKit (~> 9.0.0)
     - Flutter
+  - flutter_image_compress (0.0.1):
+    - Flutter
+    - Mantle
+    - SDWebImage
+    - SDWebImageWebPCoder
   - FMDB (2.7.5):
     - FMDB/standard (= 2.7.5)
   - FMDB/standard (2.7.5)
@@ -34,11 +42,32 @@ PODS:
     - Flutter
   - in_app_purchase (0.0.1):
     - Flutter
+  - libwebp (1.2.0):
+    - libwebp/demux (= 1.2.0)
+    - libwebp/mux (= 1.2.0)
+    - libwebp/webp (= 1.2.0)
+  - libwebp/demux (1.2.0):
+    - libwebp/webp
+  - libwebp/mux (1.2.0):
+    - libwebp/demux
+  - libwebp/webp (1.2.0)
+  - Mantle (2.1.6):
+    - Mantle/extobjc (= 2.1.6)
+  - Mantle/extobjc (2.1.6)
+  - multi_image_picker2 (5.0.00):
+    - BSImagePicker (~> 3.3.1)
+    - Flutter
   - path_provider (0.0.1):
     - Flutter
   - "permission_handler (5.1.0+2)":
     - Flutter
   - Reachability (3.2)
+  - SDWebImage (5.11.1):
+    - SDWebImage/Core (= 5.11.1)
+  - SDWebImage/Core (5.11.1)
+  - SDWebImageWebPCoder (0.8.4):
+    - libwebp (~> 1.0)
+    - SDWebImage/Core (~> 5.10)
   - shared_preferences (0.0.1):
     - Flutter
   - sqflite (0.0.2):
@@ -53,9 +82,12 @@ DEPENDENCIES:
   - apple_sign_in (from `.symlinks/plugins/apple_sign_in/ios`)
   - connectivity (from `.symlinks/plugins/connectivity/ios`)
   - Flutter (from `Flutter`)
+  - flutter_absolute_path (from `.symlinks/plugins/flutter_absolute_path/ios`)
   - flutter_facebook_auth (from `.symlinks/plugins/flutter_facebook_auth/ios`)
+  - flutter_image_compress (from `.symlinks/plugins/flutter_image_compress/ios`)
   - http_proxy (from `.symlinks/plugins/http_proxy/ios`)
   - in_app_purchase (from `.symlinks/plugins/in_app_purchase/ios`)
+  - multi_image_picker2 (from `.symlinks/plugins/multi_image_picker2/ios`)
   - path_provider (from `.symlinks/plugins/path_provider/ios`)
   - permission_handler (from `.symlinks/plugins/permission_handler/ios`)
   - shared_preferences (from `.symlinks/plugins/shared_preferences/ios`)
@@ -66,10 +98,15 @@ SPEC REPOS:
   trunk:
     - AgoraRtcEngine_iOS
     - AgoraRtm_iOS
+    - BSImagePicker
     - FBSDKCoreKit
     - FBSDKLoginKit
     - FMDB
+    - libwebp
+    - Mantle
     - Reachability
+    - SDWebImage
+    - SDWebImageWebPCoder
 
 EXTERNAL SOURCES:
   agora_rtc_engine:
@@ -82,12 +119,18 @@ EXTERNAL SOURCES:
     :path: ".symlinks/plugins/connectivity/ios"
   Flutter:
     :path: Flutter
+  flutter_absolute_path:
+    :path: ".symlinks/plugins/flutter_absolute_path/ios"
   flutter_facebook_auth:
     :path: ".symlinks/plugins/flutter_facebook_auth/ios"
+  flutter_image_compress:
+    :path: ".symlinks/plugins/flutter_image_compress/ios"
   http_proxy:
     :path: ".symlinks/plugins/http_proxy/ios"
   in_app_purchase:
     :path: ".symlinks/plugins/in_app_purchase/ios"
+  multi_image_picker2:
+    :path: ".symlinks/plugins/multi_image_picker2/ios"
   path_provider:
     :path: ".symlinks/plugins/path_provider/ios"
   permission_handler:
@@ -105,17 +148,25 @@ SPEC CHECKSUMS:
   AgoraRtcEngine_iOS: 8aa4a8e46bd81963607857b1d46703b93e4de156
   AgoraRtm_iOS: c6ba986a3af73dd0f02e6e2995ae4fe9c155e6ae
   apple_sign_in: 7716c7ddfa195aeab7dec0dc374ef4ff45d1adb4
+  BSImagePicker: 0fe04b574d4d6b81093785d2af6c26227efc8428
   connectivity: c4130b2985d4ef6fd26f9702e886bd5260681467
   FBSDKCoreKit: fada1a6a0076724678993ff05a633848765ff18c
   FBSDKLoginKit: d5ffe6d808897019ccf16feb6f0a7ab260bc5cd6
   Flutter: 434fef37c0980e73bb6479ef766c45957d4b510c
+  flutter_absolute_path: 5adb13678c88f0bdfba527f3851f9543d01dde66
   flutter_facebook_auth: d952ca599c6a76439c54472b0b225004e1b880c4
+  flutter_image_compress: fd2b476345226e1a10ea352fa306af95704642c1
   FMDB: 2ce00b547f966261cd18927a3ddb07cb6f3db82a
   http_proxy: 20f129d3e1c70cfdef92530b374c619832027729
   in_app_purchase: 3e2155afa9d03d4fa32d9e62d567885080ce97d6
+  libwebp: e90b9c01d99205d03b6bb8f2c8c415e5a4ef66f0
+  Mantle: 4c0ed6ce47c96eccc4dc3bb071deb3def0e2c3be
+  multi_image_picker2: f81a13124e7a2bc48e7d15ee539a5f8b9ff4d407
   path_provider: abfe2b5c733d04e238b0d8691db0cfd63a27a93c
   permission_handler: ccb20a9fad0ee9b1314a52b70b76b473c5f8dab0
   Reachability: 33e18b67625424e47b6cde6d202dce689ad7af96
+  SDWebImage: a7f831e1a65eb5e285e3fb046a23fcfbf08e696d
+  SDWebImageWebPCoder: f93010f3f6c031e2f8fb3081ca4ee6966c539815
   shared_preferences: af6bfa751691cdc24be3045c43ec037377ada40d
   sqflite: 6d358c025f5b867b29ed92fc697fd34924e11904
   unique_identifier: ebb92b4bc4ad9c2c93f85cb5e02f70ad168a2bd6

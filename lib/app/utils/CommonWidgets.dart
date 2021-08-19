@@ -9,7 +9,7 @@ import 'package:in_app_purchase/in_app_purchase.dart';
 import '../app.export.dart';
 import '../theme/app_theme.dart';
 
-getBottomButton(BuildContext context, String text, VoidCallback onPressed) {
+Widget getBottomButton(BuildContext context, String text, VoidCallback onPressed) {
   return InkWell(
     onTap: onPressed,
     child: Padding(

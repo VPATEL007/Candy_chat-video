@@ -1,6 +1,8 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_tags/flutter_tags.dart';
+import 'package:provider/provider.dart';
 import 'package:video_chat/app/app.export.dart';
 import 'package:video_chat/app/constant/ColorConstant.dart';
 import 'package:video_chat/app/utils/CommonWidgets.dart';
@@ -8,6 +10,7 @@ import 'package:video_chat/app/utils/math_utils.dart';
 import 'package:video_chat/components/Model/User/UserModel.dart';
 import 'package:video_chat/components/Screens/Home/Reportblock.dart';
 import 'package:video_chat/components/widgets/ProfileSlider.dart';
+import 'package:video_chat/provider/followes_provider.dart';
 
 class UserProfile extends StatefulWidget {
   final bool isPopUp;
@@ -137,7 +140,7 @@ class _UserProfileState extends State<UserProfile> {
                       width: getSize(16),
                     ),
                     Text(
-                      "2000 Token/minute",
+                      "${widget.userModel?.callRate ?? 0} Token/minute",
                       style: appTheme.white16Normal
                           .copyWith(fontWeight: FontWeight.w600),
                     ),
@@ -221,7 +224,7 @@ class _UserProfileState extends State<UserProfile> {
         Row(
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            getHeaderTitle("Francisco Rivera"),
+            getHeaderTitle(widget.userModel?.userName ?? ""),
             SizedBox(
               width: getSize(10),
             ),
@@ -236,7 +239,7 @@ class _UserProfileState extends State<UserProfile> {
                     top: getSize(2),
                     bottom: getSize(2)),
                 child: Text(
-                  "25",
+                  widget.userModel?.totalPoint ?? '0',
                   style: appTheme.white12Normal,
                 ),
               ),
@@ -249,7 +252,7 @@ class _UserProfileState extends State<UserProfile> {
         Row(
           children: [
             Text(
-              "ID : 13245686",
+              "ID : ${widget.userModel?.id}",
               style: appTheme.black16Medium.copyWith(color: fromHex("#696968")),
             ),
             SizedBox(
@@ -292,20 +295,24 @@ class _UserProfileState extends State<UserProfile> {
           crossAxisAlignment: CrossAxisAlignment.center,
           mainAxisAlignment: MainAxisAlignment.start,
           children: [
-            ClipRRect(
-              borderRadius: BorderRadius.circular(getSize(12)),
-              child: Image.asset(
-                l2,
-                height: getSize(16),
-                width: getSize(16),
-                fit: BoxFit.cover,
-              ),
-            ),
-            SizedBox(
-              width: getSize(6),
-            ),
+            (widget.userModel?.region?.regionFlagUrl?.isEmpty ?? true)
+                ? Container()
+                : ClipRRect(
+                    borderRadius: BorderRadius.circular(getSize(12)),
+                    child: CachedNetworkImage(
+                      imageUrl: widget.userModel?.region?.regionFlagUrl,
+                      height: getSize(16),
+                      width: getSize(16),
+                      fit: BoxFit.cover,
+                    ),
+                  ),
+            (widget.userModel?.region?.regionFlagUrl?.isEmpty ?? true)
+                ? Container()
+                : SizedBox(
+                    width: getSize(6),
+                  ),
             Text(
-              "Australia",
+              widget.userModel?.region?.regionName ?? "",
               style: appTheme.black14Normal.copyWith(
                 fontSize: getSize(18),
                 fontWeight: FontWeight.w500,
@@ -321,7 +328,7 @@ class _UserProfileState extends State<UserProfile> {
           height: getSize(9),
         ),
         Text(
-          "Hello, cute and sweet girl",
+          widget.userModel?.about ?? "-",
           style: appTheme.black_Medium_14Text,
         )
       ],
@@ -332,12 +339,24 @@ class _UserProfileState extends State<UserProfile> {
   Widget getCounts() {
     return Center(
       child: Container(
-        width: getSize(230),
         child: Row(
           children: [
-            getCountItem("251", "Fans", () {}),
+            getCountItem(
+                widget.userModel?.userFollowers?.first?.followersCount
+                    ?.toString(),
+                "Followers",
+                () {}),
             Spacer(),
-            getCountItem("2.6K", "Followers", () {}),
+            getCountItem(
+                (widget.userModel?.byUserUserFollowers?.isEmpty ?? true)
+                    ? "0"
+                    : widget
+                        .userModel?.byUserUserFollowers?.first?.followersCount
+                        ?.toString(),
+                "Following",
+                () {}),
+            Spacer(),
+            getCountItem("251", "Fans", () {}),
           ],
         ),
       ),
@@ -394,6 +413,10 @@ class _UserProfileState extends State<UserProfile> {
             child: ClipRRect(
               borderRadius: BorderRadius.circular(getSize(15)),
               child: ProfileSlider(
+                images: widget.userModel?.userImages
+                        ?.map((e) => e.photoUrl)
+                        ?.toList() ??
+                    [],
                 scroll: (index) {
                   currentIndex = index;
                   setState(() {});
@@ -406,11 +429,10 @@ class _UserProfileState extends State<UserProfile> {
             left: getSize(10),
             bottom: getSize(140),
             child: Column(
-              children: [
-                pageIndexIndicator(currentIndex == 2 ? true : false),
-                pageIndexIndicator(currentIndex == 1 ? true : false),
-                pageIndexIndicator(currentIndex == 0 ? true : false),
-              ],
+              children: List.generate(
+                  widget.userModel?.userImages?.length,
+                  (index) =>
+                      pageIndexIndicator(currentIndex == index ? true : false)),
             )),
         Positioned(
             bottom: 0,
@@ -419,7 +441,22 @@ class _UserProfileState extends State<UserProfile> {
               width: getSize(220),
               child: Row(
                 children: [
-                  getProfileButton(icFollow),
+                  InkWell(
+                      onTap: () {
+                        if (widget.userModel.id != null)
+                          Provider.of<FollowesProvider>(context, listen: false)
+                              .followUser(context, widget.userModel.id);
+                        if (mounted) {
+                          setState(() {
+                            if (widget.userModel?.userFollowers?.isNotEmpty ??
+                                false) {
+                              widget.userModel.userFollowers.first
+                                  .followersCount++;
+                            }
+                          });
+                        }
+                      },
+                      child: getProfileButton(icFollow)),
                   Spacer(),
                   Container(
                     // height: getSize(72),
@@ -501,7 +538,10 @@ class _UserProfileState extends State<UserProfile> {
           ),
           onChanged: (String newValue) {
             if (newValue == "Report") {
-              NavigationUtilities.push(ReportBlock());
+              NavigationUtilities.push(ReportBlock(
+                userId: widget.userModel?.id,
+                reportImageURl: widget.userModel?.photoUrl ?? "",
+              ));
             } else {
               openBlockConfirmation();
             }

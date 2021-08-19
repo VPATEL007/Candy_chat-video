@@ -6,8 +6,6 @@ import 'dart:convert';
 
 UserModel userModelFromJson(String str) => UserModel.fromJson(json.decode(str));
 
-String userModelToJson(UserModel data) => json.encode(data.toJson());
-
 class UserModel {
   UserModel(
       {this.userName,
@@ -45,7 +43,7 @@ class UserModel {
   List<ByUserUserFollower> byUserUserFollowers;
   List<ByUserUserFollower> userFollowers;
   Region region;
-  List<dynamic> userImages;
+  List<UserImage> userImages;
   Language language;
   String totalPoint;
   String onlineStatus;
@@ -74,7 +72,8 @@ class UserModel {
         region: json["region"] == null ? null : Region.fromJson(json["region"]),
         userImages: json["user_images"] == null
             ? []
-            : List<dynamic>.from(json["user_images"].map((x) => x)),
+            : List<UserImage>.from(
+                json["user_images"].map((x) => UserImage.fromJson(x))),
         language: json["language"] == null
             ? null
             : Language.fromJson(json["language"]),
@@ -99,6 +98,7 @@ class UserModel {
         "language": language?.toJson(),
         "total_point": totalPoint,
         "online_status": onlineStatus,
+        "user_images": List<dynamic>.from(userImages.map((x) => x.toJson())),
       };
 }
 
@@ -148,4 +148,20 @@ class Region {
 
   Map<String, dynamic> toJson() =>
       {"region_name": regionName, "region_flag_url": regionFlagUrl};
+}
+
+class UserImage {
+  UserImage({
+    this.photoUrl,
+  });
+
+  String photoUrl;
+
+  factory UserImage.fromJson(Map<String, dynamic> json) => UserImage(
+        photoUrl: json["photo_url"],
+      );
+
+  Map<String, dynamic> toJson() => {
+        "photo_url": photoUrl,
+      };
 }

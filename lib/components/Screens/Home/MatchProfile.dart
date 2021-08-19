@@ -17,6 +17,7 @@ import 'package:video_chat/components/Screens/Home/Reportblock.dart';
 import 'package:video_chat/components/Screens/UserProfile/UserProfile.dart';
 import 'package:video_chat/components/Screens/VideoCall/VideoCall.dart';
 import 'package:video_chat/components/widgets/TabBar/Tabbar.dart';
+import 'package:video_chat/provider/followes_provider.dart';
 import 'package:video_chat/provider/matching_profile_provider.dart';
 import 'package:video_chat/provider/report_and_block_provider.dart';
 
@@ -78,36 +79,43 @@ class _MathProfileState extends State<MathProfile> {
               print("nope");
             },
             superlikeAction: (index) {
-              MatchProfileModel matchProfileModel =
-                  Provider.of<MatchingProfileProvider>(context, listen: false)
-                      .matchProfileList[index];
-              if (matchProfileModel == null) return;
-              UserModel userModel = UserModel(
-                about: matchProfileModel.about,
-                dob: matchProfileModel.dob,
-                callRate: matchProfileModel.callRate,
-                gender: matchProfileModel.gender,
-                preferedGender: matchProfileModel.preferedGender,
-                photoUrl: matchProfileModel.photoUrl,
-                userName: matchProfileModel.userName,
-                region: Region(
-                    regionName: matchProfileModel.regionName,
-                    regionFlagUrl: matchProfileModel.regionFlagUrl),
-                language:
-                    Language(languageName: matchProfileModel.languageName),
-                userImages: matchProfileModel.imageUrl,
-                byUserUserFollowers: [],
-                providerDisplayName: matchProfileModel.providerDisplayName,
-                id: matchProfileModel.id,
-                userFollowers: [
-                  ByUserUserFollower(
-                      followersCount: matchProfileModel.followers)
-                ],
-                totalPoint: matchProfileModel.totalPoint,
-                onlineStatus: matchProfileModel.onlineStatus,
-              );
-              openUserProfile(userModel);
-              // NavigationUtilities.push(UserProfile());
+              try {
+                MatchProfileModel matchProfileModel =
+                    Provider.of<MatchingProfileProvider>(context, listen: false)
+                        .matchProfileList[index];
+                if (matchProfileModel == null) return;
+                UserModel userModel = UserModel(
+                  about: matchProfileModel.about,
+                  dob: matchProfileModel.dob,
+                  callRate: matchProfileModel.callRate,
+                  gender: matchProfileModel.gender,
+                  preferedGender: matchProfileModel.preferedGender,
+                  photoUrl: matchProfileModel.photoUrl,
+                  userName: matchProfileModel.userName,
+                  region: Region(
+                      regionName: matchProfileModel.regionName,
+                      regionFlagUrl: matchProfileModel.regionFlagUrl),
+                  language:
+                      Language(languageName: matchProfileModel.languageName),
+                  userImages: matchProfileModel?.imageUrl
+                          ?.map((e) => UserImage(photoUrl: e))
+                          ?.toList() ??
+                      [],
+                  byUserUserFollowers: [],
+                  providerDisplayName: matchProfileModel.providerDisplayName,
+                  id: matchProfileModel.id,
+                  userFollowers: [
+                    ByUserUserFollower(
+                        followersCount: matchProfileModel.followers)
+                  ],
+                  totalPoint: matchProfileModel.totalPoint,
+                  onlineStatus: matchProfileModel.onlineStatus,
+                );
+                openUserProfile(userModel);
+                // NavigationUtilities.push(UserProfile());
+              } catch (e) {
+                print(e);
+              }
             },
             onSlideUpdateAction: (tRegion, index) {
               setState(() {

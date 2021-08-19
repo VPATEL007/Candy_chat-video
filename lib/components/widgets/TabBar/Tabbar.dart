@@ -1,10 +1,15 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:video_chat/app/app.export.dart';
+import 'package:video_chat/app/utils/fade_route.dart';
+import 'package:video_chat/components/Model/User/UserModel.dart';
 import 'package:video_chat/components/Screens/Chat/ChatList.dart';
 import 'package:video_chat/components/Screens/Discover/Discover.dart';
 import 'package:video_chat/components/Screens/Home/Home.dart';
 import 'package:video_chat/components/Screens/Profile/Profile.dart';
+import 'package:video_chat/provider/followes_provider.dart';
 
 class TabBarWidget extends StatefulWidget {
   TabType screen = TabType.Home;
@@ -60,18 +65,34 @@ class _TabBarWidgetState extends State<TabBarWidget> {
               child: getTabItem(
                   widget.screen == TabType.Chat, "tabChat", "Messages"),
             ),
-            InkWell(
-                onTap: () {
-                  NavigationUtilities.pushReplacementNamed(Profile.route);
-                },
-                child: getTabProfileItem(widget.screen == TabType.Profile)),
+            Consumer<FollowesProvider>(
+              builder: (context, mutedProvider, child) => InkWell(
+                  onTap: () async {
+                    UserModel userModel = mutedProvider.userModel;
+                    if (userModel == null) {
+                      userModel = await mutedProvider.fetchMyProfile(context);
+                    }
+                    setState(() {});
+                    NavigationUtilities.key.currentState
+                        .pushReplacement(FadeRoute(
+                      builder: (context) => Profile(userModel: userModel),
+                    ));
+                  },
+                  child: getTabProfileItem(
+                      widget.screen == TabType.Profile,
+                      (mutedProvider.userModel?.userImages?.isEmpty ?? true)
+                          ? ""
+                          : (mutedProvider
+                                  .userModel?.userImages?.first?.photoUrl ??
+                              ""))),
+            ),
           ],
         ),
       ),
     );
   }
 
-  Widget getTabProfileItem(bool isSelected) {
+  Widget getTabProfileItem(bool isSelected, String image) {
     return Column(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
@@ -88,12 +109,19 @@ class _TabBarWidgetState extends State<TabBarWidget> {
                   )),
               child: ClipRRect(
                 borderRadius: BorderRadius.circular(18),
-                child: Image.asset(
-                  icTemp,
-                  height: 18,
-                  width: 18,
-                  fit: BoxFit.cover,
-                ),
+                child: (image?.isEmpty ?? true)
+                    ? Image.asset(
+                        icTemp,
+                        height: 18,
+                        width: 18,
+                        fit: BoxFit.cover,
+                      )
+                    : CachedNetworkImage(
+                        imageUrl: image,
+                        height: 18,
+                        width: 18,
+                        fit: BoxFit.cover,
+                      ),
               ),
             ),
           ),

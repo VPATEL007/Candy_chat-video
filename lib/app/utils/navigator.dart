@@ -63,6 +63,9 @@ class NavigationUtilities {
     );
   }
 
+
+
+
   /// Returns a [RoutePredicate] similar to [ModalRoute.withName] except it
   /// compares a list of route names.
   ///
@@ -105,9 +108,6 @@ Route<dynamic> onGenerateRoute(RouteSettings settings) {
       break;
     case ChatList.route:
       screen = ChatList();
-      break;
-    case Profile.route:
-      screen = Profile();
       break;
     case Discover.route:
       screen = Discover();

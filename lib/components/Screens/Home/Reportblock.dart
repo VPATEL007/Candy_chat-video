@@ -89,8 +89,8 @@ class _ReportBlockState extends State<ReportBlock> {
                 SizedBox(
                   height: getSize(16),
                 ),
-                getPopBottomButton(context, "Report & Block", () async {
-                  int reasonId = reportProvider.reportReasonList.firstWhere(
+                getPopBottomButton(context, "Report & Block", () {
+                  int reasonId = reportProvider?.reportReasonList?.firstWhere(
                       (element) => element.isSelected == true, orElse: () {
                     View.showMessage(context, "Please select any reason");
                   })?.id;
