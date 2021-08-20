@@ -6,9 +6,11 @@ import 'package:lazy_loading_list/lazy_loading_list.dart';
 import 'package:provider/provider.dart';
 import 'package:video_chat/app/app.export.dart';
 import 'package:video_chat/components/Model/Match%20Profile/match_profile.dart';
+import 'package:video_chat/components/Model/Match%20Profile/video_call.dart';
 import 'package:video_chat/components/Model/User/UserModel.dart';
 import 'package:video_chat/components/Screens/Home/MatchProfile.dart';
 import 'package:video_chat/components/Screens/UserProfile/UserProfile.dart';
+import 'package:video_chat/components/Screens/VideoCall/VideoCall.dart';
 import 'package:video_chat/components/widgets/TabBar/Tabbar.dart';
 import 'package:video_chat/provider/discover_provider.dart';
 import 'package:video_chat/provider/matching_profile_provider.dart';
@@ -214,7 +216,7 @@ class _DiscoverState extends State<Discover> {
                               padding: EdgeInsets.only(
                                   left: 10, right: 10, top: 4, bottom: 4),
                               child: Text(
-                                "21",
+                                discover?.id.toString() ?? "",
                                 style: appTheme.white14Bold.copyWith(
                                     fontWeight: FontWeight.w600,
                                     fontSize: getSize(10)),
@@ -238,15 +240,32 @@ class _DiscoverState extends State<Discover> {
                           ),
                           ClipRRect(
                             borderRadius: BorderRadius.circular(getSize(35)),
-                            child: Container(
-                              color: fromHex("#00DE9B"),
-                              child: Padding(
-                                padding: EdgeInsets.all(getSize(12)),
-                                child: Image.asset(
-                                  icCall,
-                                  color: Colors.white,
-                                  height: getSize(16),
-                                  width: getSize(16),
+                            child: InkWell(
+                              onTap: () async {
+                                VideoCallModel videoCallModel =
+                                    await Provider.of<MatchingProfileProvider>(
+                                            context,
+                                            listen: false)
+                                        .startVideoCall(context, discover.id);
+                                if (videoCallModel != null)
+                                  Navigator.of(context).push(MaterialPageRoute(
+                                    builder: (context) => VideoCall(
+                                      channelName: videoCallModel.channelName,
+                                      token: videoCallModel.sessionId,
+                                      userId: discover.id?.toString(),
+                                    ),
+                                  ));
+                              },
+                              child: Container(
+                                color: fromHex("#00DE9B"),
+                                child: Padding(
+                                  padding: EdgeInsets.all(getSize(12)),
+                                  child: Image.asset(
+                                    icCall,
+                                    color: Colors.white,
+                                    height: getSize(16),
+                                    width: getSize(16),
+                                  ),
                                 ),
                               ),
                             ),
