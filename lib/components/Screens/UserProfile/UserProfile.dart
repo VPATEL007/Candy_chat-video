@@ -25,6 +25,7 @@ class UserProfile extends StatefulWidget {
 
 class _UserProfileState extends State<UserProfile> {
   int currentIndex = 0;
+  List<String> selectedTags = [];
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -158,32 +159,50 @@ class _UserProfileState extends State<UserProfile> {
   //FeedBack
   Widget getFeedback() {
     return Consumer<TagsProvider>(
-      builder: (context, tagsProvider, child) => Tags(
-          itemCount: tagsProvider.tagsList.length,
-          spacing: getSize(6),
-          runSpacing: getSize(20),
-          alignment: WrapAlignment.center,
-          itemBuilder: (int index) {
-            return ItemTags(
-              active: true,
-              pressEnabled: false,
-              activeColor: fromHex("#FFDFDF"),
-              title: tagsProvider.tagsList[index]?.tag ?? "",
-              index: index,
-              textStyle:
-                  appTheme.black12Normal.copyWith(fontWeight: FontWeight.w500),
-              textColor: Colors.black,
-              textActiveColor: ColorConstants.red,
-              color: fromHex("#F1F1F1"),
-              elevation: 0,
-              borderRadius: BorderRadius.circular(6),
-              padding: EdgeInsets.only(
-                  left: getSize(14),
-                  right: getSize(14),
-                  top: getSize(7),
-                  bottom: getSize(7)),
-            );
-          }),
+      builder: (context, tagsProvider, child) => Column(
+        mainAxisAlignment: MainAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Tags(
+              itemCount: tagsProvider.tagsList.length,
+              spacing: getSize(6),
+              runSpacing: getSize(20),
+              alignment: WrapAlignment.center,
+              itemBuilder: (int index) {
+                return ItemTags(
+                  active: false,
+                  pressEnabled: true,
+                  activeColor: fromHex("#FFDFDF"),
+                  title: tagsProvider.tagsList[index]?.tag ?? "",
+                  index: index,
+                  onPressed: (item) {
+                    if (mounted) {
+                      setState(() {
+                        selectedTags.add(
+                            tagsProvider.tagsList[item.index].id.toString());
+                      });
+                    }
+                  },
+                  textStyle: appTheme.black12Normal
+                      .copyWith(fontWeight: FontWeight.w500),
+                  textColor: Colors.black,
+                  textActiveColor: ColorConstants.red,
+                  color: fromHex("#F1F1F1"),
+                  elevation: 0,
+                  borderRadius: BorderRadius.circular(6),
+                  padding: EdgeInsets.only(
+                      left: getSize(14),
+                      right: getSize(14),
+                      top: getSize(7),
+                      bottom: getSize(7)),
+                );
+              }),
+          SizedBox(height: 10),
+          getPopBottomButton(context, "Submit FeedBack", () {
+            tagsProvider.submitTags(context, selectedTags);
+          })
+        ],
+      ),
     );
   }
 
@@ -306,7 +325,7 @@ class _UserProfileState extends State<UserProfile> {
                       width: getSize(16),
                       fit: BoxFit.cover,
                       errorWidget: (context, url, error) =>
-                         Image.asset("assets/Profile/no_image.png"),
+                          Image.asset("assets/Profile/no_image.png"),
                     ),
                   ),
             (widget.userModel?.region?.regionFlagUrl?.isEmpty ?? true)
