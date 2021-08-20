@@ -44,7 +44,6 @@ Future<void> main() async {
 
     await app.resolve<PrefUtils>().init();
 
-    // runApp(MyApp());
     runApp(SettingsModelsProvider(
       child: GlobalModelsProvider(
         child: StreamBuilder<String>(
@@ -60,8 +59,6 @@ Future<void> main() async {
       ),
     ));
   });
-
-  // runApp(MyApp());
 }
 
 GlobalKey navigationKey = GlobalKey();
@@ -109,7 +106,7 @@ class _BaseState extends State<Base> {
         ChangeNotifierProvider.value(
           value: DiscoverProvider(),
         ),
-         ChangeNotifierProvider.value(
+        ChangeNotifierProvider.value(
           value: TagsProvider(),
         ),
       ],

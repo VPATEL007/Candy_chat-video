@@ -54,29 +54,33 @@ class _MathProfileState extends State<MathProfile> {
             content: Content(text: e.id.toString()),
             likeAction: (index) async {
               print("like $index");
-              Provider.of<MatchingProfileProvider>(context, listen: false)
+              bool startCall = await Provider.of<MatchingProfileProvider>(
+                      context,
+                      listen: false)
                   .leftAndRightSwipe(context, SwipeType.Right);
-              VideoCallModel videoCallModel =
-                  await Provider.of<MatchingProfileProvider>(context,
-                          listen: false)
-                      .startVideoCall(
-                          context,
-                          Provider.of<MatchingProfileProvider>(context,
-                                  listen: false)
-                              .matchProfileList[index]
-                              .id);
-              if (videoCallModel != null)
-                Navigator.of(context).push(MaterialPageRoute(
-                  builder: (context) => VideoCall(
-                    channelName: videoCallModel.channelName,
-                    token: videoCallModel.sessionId,
-                    userId: Provider.of<MatchingProfileProvider>(context,
+              if (startCall == true) {
+                VideoCallModel videoCallModel =
+                    await Provider.of<MatchingProfileProvider>(context,
                             listen: false)
-                        .matchProfileList[index]
-                        .id
-                        ?.toString(),
-                  ),
-                ));
+                        .startVideoCall(
+                            context,
+                            Provider.of<MatchingProfileProvider>(context,
+                                    listen: false)
+                                .matchProfileList[index]
+                                .id);
+                if (videoCallModel != null)
+                  Navigator.of(context).push(MaterialPageRoute(
+                    builder: (context) => VideoCall(
+                      channelName: videoCallModel.channelName,
+                      token: videoCallModel.sessionId,
+                      userId: Provider.of<MatchingProfileProvider>(context,
+                              listen: false)
+                          .matchProfileList[index]
+                          .id
+                          ?.toString(),
+                    ),
+                  ));
+              }
             },
             nopeAction: (index) {
               Provider.of<MatchingProfileProvider>(context, listen: false)
@@ -141,7 +145,6 @@ class _MathProfileState extends State<MathProfile> {
         return (matchProfileProvider.matchProfileList?.isEmpty ?? true)
             ? Container()
             : Container(
-                color: Colors.red,
                 child: Stack(
                   children: [
                     SwipeCards(
@@ -156,13 +159,14 @@ class _MathProfileState extends State<MathProfile> {
                           loadMore: () {
                             print(
                                 "--------========================= Lazy Loading ==========================---------");
-                            // page++;
+                            page++;
                             Provider.of<MatchingProfileProvider>(context,
                                     listen: false)
                                 .fetchMatchProfileList(context,
                                     isbackgroundCall: true, pageNumber: page);
                           },
                           child: Stack(
+                            fit: StackFit.expand,
                             children: [
                               Container(
                                 height: MathUtilities.screenHeight(context),
@@ -178,6 +182,10 @@ class _MathProfileState extends State<MathProfile> {
                                   image: DecorationImage(
                                     image: CachedNetworkImageProvider(
                                       _matchProfile?.photoUrl ?? "",
+                                    ),
+                                    onError: (exception, stackTrace) =>
+                                        Image.asset(
+                                      "assets/Profile/no_image.png",
                                     ),
                                     fit: BoxFit.cover,
                                   ),

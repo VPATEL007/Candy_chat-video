@@ -121,6 +121,12 @@ class _TabBarWidgetState extends State<TabBarWidget> {
                         height: 18,
                         width: 18,
                         fit: BoxFit.cover,
+                        errorWidget: (context, url, error) => Image.asset(
+                          icTemp,
+                          height: 18,
+                          width: 18,
+                          fit: BoxFit.cover,
+                        ),
                       ),
               ),
             ),

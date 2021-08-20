@@ -140,6 +140,8 @@ class NetworkClient {
           parseResponse(context, response,
               successCallback: successCallback,
               failureCallback: failureCallback);
+        } on DioError catch (e) {
+          failureCallback("", e.message.toString());
         } catch (e) {
           failureCallback("", e.toString());
         }
@@ -153,6 +155,8 @@ class NetworkClient {
           parseResponse(context, response,
               successCallback: successCallback,
               failureCallback: failureCallback);
+        } on DioError catch (e) {
+          failureCallback("", e.message.toString());
         } catch (e) {
           failureCallback("", e.toString());
         }
@@ -165,6 +169,8 @@ class NetworkClient {
           parseResponse(context, response,
               successCallback: successCallback,
               failureCallback: failureCallback);
+        } on DioError catch (e) {
+          failureCallback("", e.message.toString());
         } catch (e) {
           failureCallback("", e.toString());
         }
@@ -177,6 +183,8 @@ class NetworkClient {
           parseResponse(context, response,
               successCallback: successCallback,
               failureCallback: failureCallback);
+        } on DioError catch (e) {
+          failureCallback("", e.message.toString());
         } catch (e) {
           failureCallback("", e.toString());
         }

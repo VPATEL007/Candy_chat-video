@@ -158,7 +158,7 @@ class _UserProfileState extends State<UserProfile> {
   //FeedBack
   Widget getFeedback() {
     return Consumer<TagsProvider>(
-    builder: (context, tagsProvider, child) =>  Tags(
+      builder: (context, tagsProvider, child) => Tags(
           itemCount: tagsProvider.tagsList.length,
           spacing: getSize(6),
           runSpacing: getSize(20),
@@ -168,7 +168,7 @@ class _UserProfileState extends State<UserProfile> {
               active: true,
               pressEnabled: false,
               activeColor: fromHex("#FFDFDF"),
-              title: tagsProvider.tagsList[index]?.tag??"",
+              title: tagsProvider.tagsList[index]?.tag ?? "",
               index: index,
               textStyle:
                   appTheme.black12Normal.copyWith(fontWeight: FontWeight.w500),
@@ -305,6 +305,8 @@ class _UserProfileState extends State<UserProfile> {
                       height: getSize(16),
                       width: getSize(16),
                       fit: BoxFit.cover,
+                      errorWidget: (context, url, error) =>
+                         Image.asset("assets/Profile/no_image.png"),
                     ),
                   ),
             (widget.userModel?.region?.regionFlagUrl?.isEmpty ?? true)
