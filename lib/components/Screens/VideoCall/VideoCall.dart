@@ -104,13 +104,6 @@ class _VideoCallState extends State<VideoCall> {
                   ),
                 ),
               )),
-          Align(
-            alignment: Alignment.bottomLeft,
-            child: Chat(
-                channelId: widget.channelName,
-                userId: widget.userId,
-                token: widget.token),
-          ),
           switchCameraButton(),
           Positioned(
               bottom: getSize(40),
