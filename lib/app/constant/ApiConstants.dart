@@ -26,6 +26,7 @@ class ApiConstants {
   static const String reportReason = "report/get-reasons";
   static const String feedbacks = "feedback/get-categories";
   static const String fetchTags = "feedback/get-all";
+  static const String setFeedback = "feedback/set";
   static const String reportBlock = "report/block";
   static const String selectGender = "profile/set-prefered-gender";
   static const String getFollowing = "follow/get-following";

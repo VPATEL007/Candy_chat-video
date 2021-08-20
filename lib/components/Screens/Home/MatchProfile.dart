@@ -393,7 +393,7 @@ class _MathProfileState extends State<MathProfile> {
                 Padding(
                   padding: EdgeInsets.only(top: getSize(40)),
                   child: Text(
-                    "26",
+                   matchedProfile?.id.toString(),
                     style: appTheme.black16Bold
                         .copyWith(fontSize: getFontSize(35)),
                   ),

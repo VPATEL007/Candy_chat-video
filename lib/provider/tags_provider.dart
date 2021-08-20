@@ -31,4 +31,27 @@ class TagsProvider with ChangeNotifier {
       View.showMessage(context, e.toString());
     }
   }
+
+  // Submit tags...
+  Future<void> submitTags(BuildContext context, List<String> tags) async {
+    try {
+      int userId = app.resolve<PrefUtils>().getUserDetails()?.id;
+      await NetworkClient.getInstance.callApi(
+        context: context,
+        baseUrl: ApiConstants.apiUrl,
+        command: ApiConstants.setFeedback,
+        headers: NetworkClient.getInstance.getAuthHeaders(),
+        method: MethodType.Post,
+        params: {"tags": tags, "id": userId},
+        successCallback: (response, message) {
+          View.showMessage(context, message, mode: DisplayMode.SUCCESS);
+        },
+        failureCallback: (code, message) {
+          View.showMessage(context, message);
+        },
+      );
+    } catch (e) {
+      View.showMessage(context, e.toString());
+    }
+  }
 }
