@@ -118,6 +118,11 @@ class _DiscoverState extends State<Discover> {
                     totalPoint: matchProfileModel.totalPoint,
                     onlineStatus: matchProfileModel.onlineStatus,
                   );
+
+                  if (userModel.photoUrl.isNotEmpty) {
+                    userModel.userImages
+                        .insert(0, UserImage(photoUrl: userModel.photoUrl));
+                  }
                   NavigationUtilities.push(UserProfile(
                     userModel: userModel,
                   ));

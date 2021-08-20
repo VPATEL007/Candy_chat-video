@@ -26,6 +26,8 @@ import 'app/utils/route_observer.dart';
 import 'package:video_chat/modules/ThemeSetting.dart';
 import 'package:http_proxy/http_proxy.dart';
 
+import 'components/Screens/Profile/Coins.dart';
+
 KiwiContainer app;
 
 Future<void> main() async {
@@ -109,7 +111,7 @@ class _BaseState extends State<Base> {
         ChangeNotifierProvider.value(
           value: DiscoverProvider(),
         ),
-         ChangeNotifierProvider.value(
+        ChangeNotifierProvider.value(
           value: TagsProvider(),
         ),
       ],

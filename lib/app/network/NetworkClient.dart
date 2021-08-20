@@ -190,8 +190,19 @@ class NetworkClient {
   parseResponse(BuildContext context, Response response,
       {Function(dynamic response, String message) successCallback,
       Function(String statusCode, String message) failureCallback}) {
-    String statusCode = response.data['status'];
+    String statusCode = response.data['status'].toString();
     String message = response.data['message'];
+
+    if (statusCode == "0") {
+      int status = response.data['status'];
+
+      if (status == 0) {
+        successCallback(response, "");
+      } else {
+        failureCallback(response.toString(), "Purchase fail");
+      }
+      return;
+    }
 
     if (statusCode == "success") {
       if (response.data["data"] is Map<String, dynamic> ||

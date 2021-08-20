@@ -4,6 +4,7 @@ import 'dart:io';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:in_app_purchase/in_app_purchase.dart';
+import 'package:in_app_purchase/store_kit_wrappers.dart';
 import 'package:video_chat/app/app.export.dart';
 import 'package:video_chat/app/constant/ColorConstant.dart';
 import 'package:video_chat/app/utils/CommonWidgets.dart';
@@ -61,7 +62,7 @@ class _CoinsState extends State<Coins> {
       _products.sort((a, b) {
         return a.rawPrice.compareTo(b.rawPrice);
       });
-      ;
+
       _notFoundIds = productDetailResponse.notFoundIDs;
     } else {
       _products = [];
@@ -70,24 +71,61 @@ class _CoinsState extends State<Coins> {
     setState(() {
       NetworkClient.getInstance.hideProgressDialog();
     });
+
+    completeTransaction();
+
+    // final QueryPurchaseDetailsResponse purchaseResponse =
+    //     await _connection.queryPastPurchases();
+    // if (purchaseResponse.error != null) {
+
+    // }
   }
 
-  void _listenToPurchaseUpdated(List<PurchaseDetails> purchaseDetailsList) {
+  Future<void> _listenToPurchaseUpdated(
+      List<PurchaseDetails> purchaseDetailsList) async {
     purchaseDetailsList.forEach((PurchaseDetails purchaseDetails) async {
       if (purchaseDetails.status == PurchaseStatus.purchased) {
-        bool valid = await _verifyPurchase(purchaseDetails);
-        if (valid) {
-          deliverProduct(purchaseDetails);
-        } else {}
-      } else {}
+        InAppPurchaseConnection.instance.completePurchase(purchaseDetails);
+        await _verifyPurchase(purchaseDetails);
+        completeTransaction();
+      }
+    });
+  }
+
+  Future<void> completeTransaction() async {
+    var transactions = await SKPaymentQueueWrapper().transactions();
+    transactions.forEach((skPaymentTransactionWrapper) {
+      SKPaymentQueueWrapper().finishTransaction(skPaymentTransactionWrapper);
     });
   }
 
   Future<bool> _verifyPurchase(PurchaseDetails purchaseDetails) {
     // IMPORTANT!! Always verify a purchase before delivering the product.
     // For the purpose of an example, we directly return true.
-
-    return Future<bool>.value(true);
+    Map<String, dynamic> req = {};
+    // req["password"] = ApiConstants.appleAppSpecificPassword;
+    req["receipt-data"] =
+        purchaseDetails.verificationData.serverVerificationData;
+    NetworkClient.getInstance.showLoader(context);
+    NetworkClient.getInstance.callApi(
+      context: context,
+      baseUrl: ApiConstants.inAppVerfiySandBoxURL,
+      command: "",
+      params: req,
+      headers: NetworkClient.getInstance.getAuthHeaders(),
+      method: MethodType.Post,
+      successCallback: (response, message) async {
+        NetworkClient.getInstance.hideProgressDialog();
+        View.showMessage(context, "Your coin credited in your account.",
+            mode: DisplayMode.SUCCESS);
+        return Future<bool>.value(true);
+      },
+      failureCallback: (code, message) {
+        NetworkClient.getInstance.hideProgressDialog();
+        View.showMessage(context, message);
+        return Future<bool>.value(true);
+      },
+    );
   }
 
   void deliverProduct(PurchaseDetails purchaseDetails) async {
@@ -144,8 +182,9 @@ class _CoinsState extends State<Coins> {
   purchaseProduct(ProductDetails product) {
     PurchaseParam purchaseParam = PurchaseParam(
         productDetails: product,
-        applicationUserName: null,
-        changeSubscriptionParam: null);
+        applicationUserName: app.resolve<PrefUtils>().getUserDetails().userName,
+        changeSubscriptionParam: null,
+        sandboxTesting: false);
     _connection.buyConsumable(purchaseParam: purchaseParam);
   }
 }
