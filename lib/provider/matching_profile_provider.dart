@@ -73,13 +73,14 @@ class MatchingProfileProvider with ChangeNotifier {
   }
 
   // Left or right swipe...
-  Future<void> leftAndRightSwipe(
+  Future<bool> leftAndRightSwipe(
       BuildContext context, SwipeType swipeType) async {
     try {
       int userId = app.resolve<PrefUtils>().getUserDetails()?.id;
       Map<String, dynamic> _parms = {
         "userid": userId,
       };
+      bool startCall = false;
       if (swipeType != null)
         await NetworkClient.getInstance.callApi(
           context: context,
@@ -88,11 +89,14 @@ class MatchingProfileProvider with ChangeNotifier {
           headers: NetworkClient.getInstance.getAuthHeaders(),
           method: MethodType.Post,
           params: _parms,
-          successCallback: (response, message) {},
+          successCallback: (response, message) {
+            startCall = response;
+          },
           failureCallback: (code, message) {
             View.showMessage(context, message);
           },
         );
+      return startCall;
     } catch (e) {
       View.showMessage(context, e.toString());
     }

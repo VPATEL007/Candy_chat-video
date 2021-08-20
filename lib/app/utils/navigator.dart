@@ -112,9 +112,6 @@ Route<dynamic> onGenerateRoute(RouteSettings settings) {
     case Discover.route:
       screen = Discover();
       break;
-    case Gender.route:
-      screen = Gender();
-      break;
   }
 
   switch (routeType) {

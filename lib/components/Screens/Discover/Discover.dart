@@ -2,6 +2,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:lazy_loading_list/lazy_loading_list.dart';
 import 'package:provider/provider.dart';
 import 'package:video_chat/app/app.export.dart';
 import 'package:video_chat/components/Model/Match%20Profile/match_profile.dart';
@@ -24,6 +25,7 @@ class Discover extends StatefulWidget {
 class _DiscoverState extends State<Discover> {
   List<SortBy> tab = SortBy.values;
   int selectedIndex = 0;
+  int page = 1;
 
   @override
   Widget build(BuildContext context) {
@@ -41,7 +43,7 @@ class _DiscoverState extends State<Discover> {
             SizedBox(
               height: getSize(10),
             ),
-            getUserList(discover.discoverProfileList),
+            getUserList(discover.discoverProfileList, discover),
             // getMatchButton()
           ],
         )),
@@ -77,7 +79,8 @@ class _DiscoverState extends State<Discover> {
   }
 
   //List
-  getUserList(List<MatchProfileModel> discoverList) {
+  getUserList(
+      List<MatchProfileModel> discoverList, DiscoverProvider discoverProvider) {
     return Expanded(
       child: GridView.builder(
           gridDelegate:
@@ -87,47 +90,59 @@ class _DiscoverState extends State<Discover> {
           padding: EdgeInsets.only(
               left: getSize(35), right: getSize(35), top: getSize(14)),
           itemBuilder: (BuildContext context, int index) {
-            return InkWell(
-                onTap: () {
-                  MatchProfileModel matchProfileModel = discoverList[index];
-                  if (matchProfileModel == null) return;
-                  UserModel userModel = UserModel(
-                    about: matchProfileModel.about,
-                    dob: matchProfileModel.dob,
-                    callRate: matchProfileModel.callRate,
-                    gender: matchProfileModel.gender,
-                    preferedGender: matchProfileModel.preferedGender,
-                    photoUrl: matchProfileModel.photoUrl,
-                    userName: matchProfileModel.userName,
-                    region: Region(
-                        regionName: matchProfileModel.regionName,
-                        regionFlagUrl: matchProfileModel.regionFlagUrl),
-                    language:
-                        Language(languageName: matchProfileModel.languageName),
-                    userImages: matchProfileModel?.imageUrl
-                            ?.map((e) => UserImage(photoUrl: e))
-                            ?.toList() ??
-                        [],
-                    byUserUserFollowers: [],
-                    providerDisplayName: matchProfileModel.providerDisplayName,
-                    id: matchProfileModel.id,
-                    userFollowers: [
-                      ByUserUserFollower(
-                          followersCount: matchProfileModel.followers)
-                    ],
-                    totalPoint: matchProfileModel.totalPoint,
-                    onlineStatus: matchProfileModel.onlineStatus,
-                  );
-
-                  if (userModel.photoUrl.isNotEmpty) {
-                    userModel.userImages
-                        .insert(0, UserImage(photoUrl: userModel.photoUrl));
-                  }
-                  NavigationUtilities.push(UserProfile(
-                    userModel: userModel,
-                  ));
-                },
-                child: getUserItem(discoverList[index]));
+            return LazyLoadingList(
+              initialSizeOfItems: 20,
+              index: index,
+              hasMore: true,
+              loadMore: () {
+                print(
+                    "--------========================= Lazy Loading ==========================---------");
+                page++;
+                discoverProvider.fetchDiscoverProfileList(context, tab[index],
+                    pageNumber: page, isbackgroundCall: false);
+              },
+              child: InkWell(
+                  onTap: () {
+                    MatchProfileModel matchProfileModel = discoverList[index];
+                    if (matchProfileModel == null) return;
+                    UserModel userModel = UserModel(
+                      about: matchProfileModel.about,
+                      dob: matchProfileModel.dob,
+                      callRate: matchProfileModel.callRate,
+                      gender: matchProfileModel.gender,
+                      preferedGender: matchProfileModel.preferedGender,
+                      photoUrl: matchProfileModel.photoUrl,
+                      userName: matchProfileModel.userName,
+                      region: Region(
+                          regionName: matchProfileModel.regionName,
+                          regionFlagUrl: matchProfileModel.regionFlagUrl),
+                      language: Language(
+                          languageName: matchProfileModel.languageName),
+                      userImages: matchProfileModel?.imageUrl
+                              ?.map((e) => UserImage(photoUrl: e))
+                              ?.toList() ??
+                          [],
+                      byUserUserFollowers: [],
+                      providerDisplayName:
+                          matchProfileModel.providerDisplayName,
+                      id: matchProfileModel.id,
+                      userFollowers: [
+                        ByUserUserFollower(
+                            followersCount: matchProfileModel.followers)
+                      ],
+                      totalPoint: matchProfileModel.totalPoint,
+                      onlineStatus: matchProfileModel.onlineStatus,
+                    );
+                    if (userModel.photoUrl.isNotEmpty) {
+                      userModel.userImages
+                          .insert(0, UserImage(photoUrl: userModel.photoUrl));
+                    }
+                    NavigationUtilities.push(UserProfile(
+                      userModel: userModel,
+                    ));
+                  },
+                  child: getUserItem(discoverList[index])),
+            );
           }),
     );
   }
@@ -138,7 +153,6 @@ class _DiscoverState extends State<Discover> {
       child: ClipRRect(
           borderRadius: BorderRadius.circular(14),
           child: Container(
-            color: Colors.red,
             height: 200,
             child: Stack(
               fit: StackFit.expand,
@@ -147,6 +161,10 @@ class _DiscoverState extends State<Discover> {
                   imageUrl: discover?.photoUrl ?? "",
                   width: (MathUtilities.screenWidth(context) / 2) - getSize(28),
                   fit: BoxFit.cover,
+                  errorWidget: (context, url, error) => Image.asset(
+                    "assets/Profile/no_image.png",
+                    fit: BoxFit.cover,
+                  ),
                 ),
                 (discover?.regionFlagUrl?.isEmpty ?? true)
                     ? Container()

@@ -190,8 +190,9 @@ class _ProfileState extends State<Profile> {
           child: getCountItem(
               (widget.userModel?.userFollowers?.isEmpty ?? true)
                   ? "0"
-                  : (widget.userModel?.userFollowers?.first?.followersCount ?? 0)
-                  ?.toString(),
+                  : (widget.userModel?.userFollowers?.first?.followersCount ??
+                          0)
+                      ?.toString(),
               "Followers", () {
             NavigationUtilities.push(FollowUp());
           }),
@@ -308,6 +309,8 @@ class _ProfileState extends State<Profile> {
                                 height: getSize(16),
                                 width: getSize(16),
                                 fit: BoxFit.cover,
+                                errorWidget: (context, url, error) =>
+                                    Image.asset("assets/Profile/no_image.png"),
                               ),
                             ),
                       widget.userModel?.region?.regionFlagUrl?.isEmpty ?? true

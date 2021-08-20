@@ -195,6 +195,8 @@ class _ReportBlockState extends State<ReportBlock> {
             image: DecorationImage(
               image: CachedNetworkImageProvider(widget.reportImageURl ?? ""),
               fit: BoxFit.cover,
+              onError: (exception, stackTrace) =>
+                  Image.asset("assets/Profile/no_image.png"),
             ),
           ),
         ),

@@ -28,7 +28,10 @@ class _ProfileSliderState extends State<ProfileSlider> {
         child: PageView(
           scrollDirection: Axis.vertical,
           controller: pageController,
-          children: List.generate(widget.images.length,
+          children: (widget.images?.isEmpty??true)?[Image.asset(
+                    "assets/Profile/no_image.png",
+                    fit: BoxFit.cover,
+                  )]: List.generate(widget.images.length,
               (index) => getPageViewItem(widget.images[index])),
           onPageChanged: (val) {
             currentIndex = val;
@@ -50,6 +53,8 @@ class _ProfileSliderState extends State<ProfileSlider> {
       fit: BoxFit.cover,
       color: Colors.black.withOpacity(0.4),
       colorBlendMode: BlendMode.overlay,
+      errorWidget: (context, url, error) =>
+          Image.asset("assets/Profile/no_image.png"),
     );
   }
 }

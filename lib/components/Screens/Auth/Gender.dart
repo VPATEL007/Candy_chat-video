@@ -6,8 +6,8 @@ import 'package:video_chat/app/app.export.dart';
 import 'package:video_chat/app/utils/CommonWidgets.dart';
 
 class Gender extends StatefulWidget {
-  static const route = "Gender";
-  Gender({Key key}) : super(key: key);
+  final bool isFromPreGender;
+  Gender({Key key, this.isFromPreGender = false}) : super(key: key);
 
   @override
   _GenderState createState() => _GenderState();
@@ -21,7 +21,12 @@ class _GenderState extends State<Gender> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
-      appBar: getAppBar(context, "Select Gender", isWhite: true),
+      appBar: getAppBar(
+          context,
+          widget.isFromPreGender
+              ? "Select Preferred Gender"
+              : "Select your gender",
+          isWhite: true),
       body: SafeArea(
         child: Padding(
           padding: EdgeInsets.only(left: getSize(35), right: getSize(35)),
@@ -100,32 +105,58 @@ class _GenderState extends State<Gender> {
                   height: getSize(6),
                 ),
                 Text(
-                  "Choose your favorite gender",
+                  widget.isFromPreGender
+                      ? "Select preferred opposite gender"
+                      : "Choose your gender",
                   style: appTheme.black14Normal,
                 ),
                 Spacer(),
                 getPopBottomButton(context, "Next", () async {
-                  NetworkClient.getInstance.showLoader(context);
-                  await NetworkClient.getInstance.callApi(
-                    context: context,
-                    baseUrl: ApiConstants.apiUrl,
-                    command: ApiConstants.selectGender,
-                    headers: NetworkClient.getInstance.getAuthHeaders(),
-                    method: MethodType.Post,
-                    params: {
-                      "prefgender": describeEnum(_genders).toLowerCase(),
-                      "gender": describeEnum(_genders).toLowerCase()
-                    },
-                    successCallback: (response, message) {
-                      NetworkClient.getInstance.hideProgressDialog();
-                      View.showMessage(context, message);
-                      AppNavigation.shared.moveToHome();
-                    },
-                    failureCallback: (code, message) {
-                      NetworkClient.getInstance.hideProgressDialog();
-                      View.showMessage(context, message);
-                    },
-                  );
+                  if (widget.isFromPreGender == false) {
+                    NetworkClient.getInstance.showLoader(context);
+                    await NetworkClient.getInstance.callApi(
+                      context: context,
+                      baseUrl: ApiConstants.apiUrl,
+                      command: ApiConstants.selectGender,
+                      headers: NetworkClient.getInstance.getAuthHeaders(),
+                      method: MethodType.Post,
+                      params: {
+                        "prefgender": describeEnum(_genders).toLowerCase(),
+                      },
+                      successCallback: (response, message) {
+                        NetworkClient.getInstance.hideProgressDialog();
+                        View.showMessage(context, message);
+                        Navigator.of(context).push(MaterialPageRoute(
+                          builder: (context) => Gender(
+                            isFromPreGender: true,
+                          ),
+                        ));
+                      },
+                      failureCallback: (code, message) {
+                        NetworkClient.getInstance.hideProgressDialog();
+                        View.showMessage(context, message);
+                      },
+                    );
+                  } else {
+                    NetworkClient.getInstance.showLoader(context);
+                    await NetworkClient.getInstance.callApi(
+                      context: context,
+                      baseUrl: ApiConstants.apiUrl,
+                      command: ApiConstants.selectGender,
+                      headers: NetworkClient.getInstance.getAuthHeaders(),
+                      method: MethodType.Post,
+                      params: {"gender": describeEnum(_genders).toLowerCase()},
+                      successCallback: (response, message) {
+                        NetworkClient.getInstance.hideProgressDialog();
+                        View.showMessage(context, message);
+                        AppNavigation.shared.moveToHome();
+                      },
+                      failureCallback: (code, message) {
+                        NetworkClient.getInstance.hideProgressDialog();
+                        View.showMessage(context, message);
+                      },
+                    );
+                  }
                 })
               ],
             ),

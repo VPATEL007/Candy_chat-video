@@ -9,6 +9,7 @@ import 'package:video_chat/components/Model/Match%20Profile/match_profile.dart';
 import 'package:video_chat/components/Model/User/UserModel.dart';
 import 'package:video_chat/components/Model/User/report_reason_model.dart';
 import 'package:video_chat/components/Screens/Auth/Gender.dart';
+import 'package:video_chat/components/widgets/shared/routes.dart';
 import 'package:video_chat/main.dart';
 
 import '../app.export.dart';
@@ -43,8 +44,9 @@ class CommonApiHelper {
               .resolve<PrefUtils>()
               .saveRefereshToken(response["tokenData"]["refreshToken"]);
         }
-        NavigationUtilities.pushReplacementNamed(Gender.route,
-            type: RouteType.fade);
+        NavigationUtilities.key.currentState.pushReplacement(FadeRoute(
+          builder: (context) => Gender(),
+        ));
 
         success();
       },
@@ -205,9 +207,10 @@ class CommonApiHelper {
               .resolve<PrefUtils>()
               .saveRefereshToken(response["tokenData"]["refreshToken"]);
         }
+        NavigationUtilities.key.currentState.pushReplacement(FadeRoute(
+          builder: (context) => Gender(),
+        ));
 
-        NavigationUtilities.pushReplacementNamed(Gender.route,
-            type: RouteType.fade);
         success();
       },
       failureCallback: (code, message) {
