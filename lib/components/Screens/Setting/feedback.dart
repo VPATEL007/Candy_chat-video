@@ -159,11 +159,7 @@ class _FeedbackScreenState extends State<FeedbackScreen> {
         enableCamera: true,
         selectedAssets: images,
         materialOptions: MaterialOptions(
-          actionBarColor: "#ffffff",
           actionBarTitle: "Video chat App",
-          allViewTitle: "All Photos",
-          useDetailsView: false,
-          selectCircleStrokeColor: "#000000",
         ),
       );
     } on Exception catch (e) {

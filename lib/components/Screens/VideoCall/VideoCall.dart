@@ -1,6 +1,8 @@
 import 'package:agora_rtc_engine/rtc_engine.dart';
+import 'package:agora_rtm/agora_rtm.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:video_chat/app/app.export.dart';
 import 'package:video_chat/app/constant/ColorConstant.dart';
@@ -33,20 +35,48 @@ class _VideoCallState extends State<VideoCall> {
   bool _micMute = false;
   bool _videoMute = false;
   int _remoteUid = 0;
-
+  AgoraService agoraService = AgoraService.instance;
+  List<MessageObj> _chatsList = [];
   @override
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) {
       initPlatformState();
     });
+    init();
   }
+
 
   @override
   void dispose() {
     // destroy sdk
     _endCall();
+    agoraService?.leaveChannel();
+    agoraService?.logOut();
     super.dispose();
+  }
+
+  Future<void> init() async {
+    await agoraService.initialize(AGORA_APPID);
+    await agoraService.login(token: widget.token, userId: widget?.userId);
+    agoraService.joinChannel((widget?.channelName ?? ""),
+        onMemberJoined: (AgoraRtmMember member) {
+      print(
+          "Member joined: " + member.userId + ', channel: ' + member.channelId);
+    }, onMemberLeft: (AgoraRtmMember member) {
+      print("Member left: " + member.userId + ', channel: ' + member.channelId);
+    }, onMessageReceived: (AgoraRtmMessage message, AgoraRtmMember member) {
+      MessageObj _chat = MessageObj(
+          chatDate: DateTime.now(),
+          message: message.text,
+          isSendByMe: member.userId.toString().toLowerCase() ==
+              widget.userId.toLowerCase().toLowerCase(),
+          sendBy: member.userId);
+
+      _chatsList.add(_chat);
+      if (mounted) setState(() {});
+      print("Channel msg: " + member.userId + ", msg: " + (message.text ?? ""));
+    });
   }
 
   // Init the app
@@ -266,5 +296,31 @@ class _VideoCallState extends State<VideoCall> {
     } else {
       return Container();
     }
+  }
+
+  // Get Sorted List By Chat dates...
+  List<ChatObj> sortChatByDate(List<MessageObj> chatList) {
+    List<ChatObj> tempArray = [];
+    chatList.forEach((chats) {
+      //Get list Index...
+      int transIndex = tempArray.indexWhere((item) {
+        return DateFormat('dd MMMM yyyy').format(item.chatDate) ==
+            DateFormat('dd MMMM yyyy')
+                .format(chats.chatDate); //Sort by List Category...
+      });
+      //Check If Project Already Added, if added then add category and list in same project...
+      if (transIndex >= 0) {
+        tempArray[transIndex].messageObjList.insert(0, chats);
+      } else {
+        //New Temp List...
+        ChatObj tempList = ChatObj();
+        tempList.chatDate = chats.chatDate; // List Name...
+        tempList.messageObjList = [chats];
+
+        tempArray.add(tempList);
+      }
+    });
+
+    return tempArray;
   }
 }
