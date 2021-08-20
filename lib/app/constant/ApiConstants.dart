@@ -9,6 +9,13 @@ class ApiConstants {
 
   static const String apiUrl = baseURL + "/dev/";
 
+  static const String inAppVerfiySandBoxURL =
+      "https://sandbox.itunes.apple.com/verifyReceipt";
+  static const String inAppVerfiyURL =
+      "https://buy.itunes.apple.com/verifyReceipt";
+
+  static const String appleAppSpecificPassword = "ddbf-lijs-mjtx-ixam";
+
   //Authentication API
   static const String login = "auth/social-login";
   static const String guestLogin = "auth/guest-login";

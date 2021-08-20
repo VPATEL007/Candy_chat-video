@@ -41,6 +41,7 @@ class _FeedbackScreenState extends State<FeedbackScreen> {
           padding: const EdgeInsets.all(15.0),
           child: getBottomButton(context, "Submit", () {
             int categoryId = feedbackProvider?.feedBackList?.firstWhere(
+                // ignore: missing_return
                 (element) => element.isSelected == true, orElse: () {
               View.showMessage(context, "Please select any reason");
             })?.id;

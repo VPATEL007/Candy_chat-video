@@ -120,6 +120,12 @@ class _MathProfileState extends State<MathProfile> {
                   totalPoint: matchProfileModel.totalPoint,
                   onlineStatus: matchProfileModel.onlineStatus,
                 );
+
+                if (userModel.photoUrl.isNotEmpty) {
+                  userModel.userImages
+                      .insert(0, UserImage(photoUrl: userModel.photoUrl));
+                }
+
                 openUserProfile(userModel);
                 // NavigationUtilities.push(UserProfile());
               } catch (e) {
