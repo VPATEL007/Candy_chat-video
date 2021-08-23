@@ -33,7 +33,7 @@ class _ChatState extends State<Chat> {
   }
 
   Future<void> init() async {
-    await agoraService.initialize(AGORA_APPID);
+    // await agoraService.initialize(AGORA_APPID);
     await agoraService.login(token: widget.token, userId: widget?.userId);
     agoraService.joinChannel((widget?.channelId ?? ""),
         onMemberJoined: (AgoraRtmMember member) {

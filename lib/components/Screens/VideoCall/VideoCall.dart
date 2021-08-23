@@ -16,11 +16,13 @@ class VideoCall extends StatefulWidget {
   final String token;
   final String channelName;
   final String userId;
+  final String toUserId;
   VideoCall(
       {Key key,
       @required this.channelName,
       @required this.token,
-      @required this.userId})
+      @required this.userId,
+      @required this.toUserId})
       : super(key: key);
 
   @override
@@ -46,7 +48,6 @@ class _VideoCallState extends State<VideoCall> {
     init();
   }
 
-
   @override
   void dispose() {
     // destroy sdk
@@ -57,9 +58,8 @@ class _VideoCallState extends State<VideoCall> {
   }
 
   Future<void> init() async {
-    await agoraService.initialize(AGORA_APPID);
     await agoraService.login(token: widget.token, userId: widget?.userId);
-    agoraService.joinChannel((widget?.channelName ?? ""),
+    await agoraService.joinChannel((widget?.channelName ?? ""),
         onMemberJoined: (AgoraRtmMember member) {
       print(
           "Member joined: " + member.userId + ', channel: ' + member.channelId);
@@ -77,6 +77,9 @@ class _VideoCallState extends State<VideoCall> {
       if (mounted) setState(() {});
       print("Channel msg: " + member.userId + ", msg: " + (message.text ?? ""));
     });
+
+    await agoraService.client.sendMessageToPeer(
+        widget.toUserId, AgoraRtmMessage.fromText('message'));
   }
 
   // Init the app

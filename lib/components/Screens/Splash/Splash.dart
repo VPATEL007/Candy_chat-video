@@ -19,6 +19,7 @@ class _SplashState extends State<Splash> {
   @override
   void initState() {
     super.initState();
+    AgoraService.instance.initialize(AGORA_APPID);
     WidgetsBinding.instance.addPostFrameCallback((_) {
       Timer(
         Duration(seconds: 2),

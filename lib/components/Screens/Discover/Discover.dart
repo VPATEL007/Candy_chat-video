@@ -252,7 +252,10 @@ class _DiscoverState extends State<Discover> {
                                     builder: (context) => VideoCall(
                                       channelName: videoCallModel.channelName,
                                       token: videoCallModel.sessionId,
-                                      userId: discover.id?.toString(),
+                                      userId:
+                                          videoCallModel.fromUserId.toString(),
+                                      toUserId:
+                                          videoCallModel.toUserId.toString(),
                                     ),
                                   ));
                               },

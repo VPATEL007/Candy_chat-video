@@ -9,6 +9,8 @@ class AgoraService {
   static AgoraService instance = AgoraService._();
 
   AgoraRtmClient _client;
+  get client => this._client;
+
   AgoraRtmChannel _channel;
 
   Future<void> initialize(String appId) async {
@@ -57,6 +59,7 @@ class AgoraService {
 
   Future<void> login({@required String token, @required String userId}) async {
     try {
+      // await _client.logout();
       await _client?.login(token, userId);
       debugPrint('Login success: ' + userId);
     } on AgoraRtmClientException catch (e) {

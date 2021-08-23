@@ -1,6 +1,8 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:in_app_purchase/in_app_purchase.dart';
+import 'package:video_chat/app/Helper/inAppPurchase_service.dart';
 import 'package:video_chat/app/app.export.dart';
 import 'package:video_chat/app/constant/ColorConstant.dart';
 import 'package:video_chat/app/utils/CommonWidgets.dart';
@@ -13,6 +15,8 @@ class MatchedProfile extends StatefulWidget {
 }
 
 class _MatchedProfileState extends State<MatchedProfile> {
+  List<ProductDetails> _products = [];
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -186,7 +190,8 @@ class _MatchedProfileState extends State<MatchedProfile> {
     );
   }
 
-  openCoinPurchasePopUp() {
+  openCoinPurchasePopUp() async {
+    _products = await InAppPurchase.instance.getProducts(context);
     showModalBottomSheet(
         isScrollControlled: true,
         shape: RoundedRectangleBorder(
@@ -263,9 +268,15 @@ class _MatchedProfileState extends State<MatchedProfile> {
                                 crossAxisCount: 2),
                         shrinkWrap: true,
                         physics: NeverScrollableScrollPhysics(),
-                        itemCount: 2,
+                        itemCount: _products.length,
                         itemBuilder: (BuildContext context, int index) {
-                          return Container();
+                          return InkWell(
+                              onTap: () {
+                                InAppPurchase.instance
+                                    .purchaseProduct(_products[index]);
+                              },
+                              child: getCoinItem(
+                                  _products[index], false, context));
                           // return getCoinItem(index == 0, context);
                         }),
                     SizedBox(

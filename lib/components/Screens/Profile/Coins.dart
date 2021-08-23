@@ -1,10 +1,7 @@
-import 'dart:async';
-import 'dart:io';
-
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:in_app_purchase/in_app_purchase.dart';
-import 'package:in_app_purchase/store_kit_wrappers.dart';
+import 'package:video_chat/app/Helper/inAppPurchase_service.dart';
 import 'package:video_chat/app/app.export.dart';
 import 'package:video_chat/app/constant/ColorConstant.dart';
 import 'package:video_chat/app/utils/CommonWidgets.dart';
@@ -18,118 +15,19 @@ class Coins extends StatefulWidget {
 }
 
 class _CoinsState extends State<Coins> {
-  final InAppPurchaseConnection _connection = InAppPurchaseConnection.instance;
-  List<String> _kProductIds = <String>[
-    "com.randomvideochat.videochat.30",
-    "com.randomvideochat.videochat.203"
-  ];
-  StreamSubscription<List<PurchaseDetails>> _subscription;
-  List<String> _notFoundIds = [];
+  InAppPurchase purchase = InAppPurchase.instance;
+
   List<ProductDetails> _products = [];
 
   @override
   void initState() {
     super.initState();
-    final Stream<List<PurchaseDetails>> purchaseUpdated =
-        InAppPurchaseConnection.instance.purchaseUpdatedStream;
-    _subscription = purchaseUpdated.listen((purchaseDetailsList) {
-      _listenToPurchaseUpdated(purchaseDetailsList);
-    }, onDone: () {
-      _subscription.cancel();
-    }, onError: (error) {
-      // handle error here.
-    });
-    initStoreInfo();
+    getList();
   }
 
-  Future<void> initStoreInfo() async {
-    final bool isAvailable = await _connection.isAvailable();
-    if (!isAvailable) {
-      setState(() {
-        _products = [];
-
-        _notFoundIds = [];
-      });
-      return;
-    }
-
-    NetworkClient.getInstance.showLoader(context);
-    ProductDetailsResponse productDetailResponse =
-        await _connection.queryProductDetails(_kProductIds.toSet());
-
-    if (productDetailResponse.productDetails != null) {
-      _products = productDetailResponse.productDetails;
-      _products.sort((a, b) {
-        return a.rawPrice.compareTo(b.rawPrice);
-      });
-
-      _notFoundIds = productDetailResponse.notFoundIDs;
-    } else {
-      _products = [];
-    }
-
-    setState(() {
-      NetworkClient.getInstance.hideProgressDialog();
-    });
-
-    completeTransaction();
-
-    // final QueryPurchaseDetailsResponse purchaseResponse =
-    //     await _connection.queryPastPurchases();
-    // if (purchaseResponse.error != null) {
-
-    // }
-  }
-
-  Future<void> _listenToPurchaseUpdated(
-      List<PurchaseDetails> purchaseDetailsList) async {
-    purchaseDetailsList.forEach((PurchaseDetails purchaseDetails) async {
-      if (purchaseDetails.status == PurchaseStatus.purchased) {
-        InAppPurchaseConnection.instance.completePurchase(purchaseDetails);
-        await _verifyPurchase(purchaseDetails);
-        completeTransaction();
-      }
-    });
-  }
-
-  Future<void> completeTransaction() async {
-    var transactions = await SKPaymentQueueWrapper().transactions();
-    transactions.forEach((skPaymentTransactionWrapper) {
-      SKPaymentQueueWrapper().finishTransaction(skPaymentTransactionWrapper);
-    });
-  }
-
-  Future<bool> _verifyPurchase(PurchaseDetails purchaseDetails) {
-    // IMPORTANT!! Always verify a purchase before delivering the product.
-    // For the purpose of an example, we directly return true.
-    Map<String, dynamic> req = {};
-    // req["password"] = ApiConstants.appleAppSpecificPassword;
-    req["receipt-data"] =
-        purchaseDetails.verificationData.serverVerificationData;
-    NetworkClient.getInstance.showLoader(context);
-    NetworkClient.getInstance.callApi(
-      context: context,
-      baseUrl: ApiConstants.inAppVerfiySandBoxURL,
-      command: "",
-      params: req,
-      headers: NetworkClient.getInstance.getAuthHeaders(),
-      method: MethodType.Post,
-      successCallback: (response, message) async {
-        NetworkClient.getInstance.hideProgressDialog();
-        View.showMessage(context, "Your coin credited in your account.",
-            mode: DisplayMode.SUCCESS);
-        return Future<bool>.value(true);
-      },
-      failureCallback: (code, message) {
-        NetworkClient.getInstance.hideProgressDialog();
-        View.showMessage(context, message);
-        return Future<bool>.value(true);
-      },
-    );
-  }
-
-  void deliverProduct(PurchaseDetails purchaseDetails) async {
-    // IMPORTANT!! Always verify purchase details before delivering the product.
+  getList() async {
+    _products = await purchase.getProducts(context);
+    setState(() {});
   }
 
   @override
@@ -154,7 +52,7 @@ class _CoinsState extends State<Coins> {
                   itemBuilder: (BuildContext context, int index) {
                     return InkWell(
                         onTap: () {
-                          purchaseProduct(_products[index]);
+                          purchase.purchaseProduct(_products[index]);
                         },
                         child: getCoinItem(_products[index], false, context));
                   }),
@@ -176,15 +74,5 @@ class _CoinsState extends State<Coins> {
         Spacer(),
       ],
     );
-  }
-
-//Purchase
-  purchaseProduct(ProductDetails product) {
-    PurchaseParam purchaseParam = PurchaseParam(
-        productDetails: product,
-        applicationUserName: app.resolve<PrefUtils>().getUserDetails().userName,
-        changeSubscriptionParam: null,
-        sandboxTesting: false);
-    _connection.buyConsumable(purchaseParam: purchaseParam);
   }
 }
