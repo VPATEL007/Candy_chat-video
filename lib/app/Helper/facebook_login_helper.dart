@@ -9,14 +9,14 @@ class FacebookLoginHelper {
 
   loginWithFacebook(
       BuildContext context, Map<String, dynamic> req, Function callback) async {
-    if (kDebugMode) {
-      //For Simulator Testing
+    // if (kDebugMode) {
+    //   //For Simulator Testing
 
-      req["provider"] = faceBook;
-      req["token"] =
-          "EAADVUNhhBzUBAGOprGMRITg1PFhzY3NjZCZAJZCHQl7DwJ3oUBpu8gZAvZC032VZBLPzaNUynQ5ZBGbkNW7RnocaO0iwZAIiLz5RcAtoVZBhIi4IcMxj8BsbhETOedSScQ7lgNgcnUAwXzrRgwFC2Wa8Qq5ifNsS7QZCCrXyiuOCmh1ICpW1Ho2WSqeb9Afa403SClAt90hd4wPHOuZBJA9aDrbLMHYPoBMsAiU64USX1gRI2SfCF5OZArs6";
-      CommonApiHelper.shared.callLoginApi(req, context, () {}, () {});
-    } else {
+    //   req["provider"] = faceBook;
+    //   req["token"] =
+    //       "EAADVUNhhBzUBAGOprGMRITg1PFhzY3NjZCZAJZCHQl7DwJ3oUBpu8gZAvZC032VZBLPzaNUynQ5ZBGbkNW7RnocaO0iwZAIiLz5RcAtoVZBhIi4IcMxj8BsbhETOedSScQ7lgNgcnUAwXzrRgwFC2Wa8Qq5ifNsS7QZCCrXyiuOCmh1ICpW1Ho2WSqeb9Afa403SClAt90hd4wPHOuZBJA9aDrbLMHYPoBMsAiU64USX1gRI2SfCF5OZArs6";
+    //   CommonApiHelper.shared.callLoginApi(req, context, () {}, () {});
+    // } else {
       try {
         AccessToken accessToken = await FacebookAuth.instance
             .login(); // by the fault we request the email and the public profile
@@ -43,7 +43,7 @@ class FacebookLoginHelper {
         print(e);
         print(s);
       } finally {}
-    }
+    // }
   }
 
   logout() async {
