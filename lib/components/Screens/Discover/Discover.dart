@@ -208,7 +208,9 @@ class _DiscoverState extends State<Discover> {
                       child: Row(
                         crossAxisAlignment: CrossAxisAlignment.end,
                         children: [
-                          Container(
+                         discover?.age == null
+                                  ? Container()
+                                  :  Container(
                             decoration: BoxDecoration(
                                 borderRadius: BorderRadius.circular(10),
                                 color: ColorConstants.button),
@@ -216,11 +218,11 @@ class _DiscoverState extends State<Discover> {
                               padding: EdgeInsets.only(
                                   left: 10, right: 10, top: 4, bottom: 4),
                               child: Text(
-                                discover?.id.toString() ?? "",
-                                style: appTheme.white14Bold.copyWith(
-                                    fontWeight: FontWeight.w600,
-                                    fontSize: getSize(10)),
-                              ),
+                                      discover?.age.toString() ?? "",
+                                      style: appTheme.white14Bold.copyWith(
+                                          fontWeight: FontWeight.w600,
+                                          fontSize: getSize(10)),
+                                    ),
                             ),
                           ),
                           SizedBox(
