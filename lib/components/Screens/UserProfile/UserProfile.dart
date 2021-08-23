@@ -197,7 +197,7 @@ class _UserProfileState extends State<UserProfile> {
                       bottom: getSize(7)),
                 );
               }),
-          SizedBox(height: 10),
+          SizedBox(height: 20),
           getPopBottomButton(context, "Submit FeedBack", () {
             tagsProvider.submitTags(context, selectedTags);
           })
@@ -381,7 +381,11 @@ class _UserProfileState extends State<UserProfile> {
                 "Following",
                 () {}),
             Spacer(),
-            getCountItem("251", "Fans", () {}),
+            getCountItem((widget
+                        .userModel?.userVisiteds?.isEmpty ?? true)
+                    ? "0"
+                    : widget
+                        .userModel?.userVisiteds?.first?.visitorsCount?.toString(), "Fans", () {}),
           ],
         ),
       ),

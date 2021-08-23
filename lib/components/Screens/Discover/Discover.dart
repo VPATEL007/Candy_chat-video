@@ -124,7 +124,14 @@ class _DiscoverState extends State<Discover> {
                               ?.map((e) => UserImage(photoUrl: e))
                               ?.toList() ??
                           [],
-                      byUserUserFollowers: [],
+                      byUserUserFollowers: [
+                        ByUserUserFollower(
+                            followersCount: matchProfileModel.followings)
+                      ],
+                      userVisiteds: [
+                        UserVisited(
+                            visitorsCount: matchProfileModel?.visitorCount ?? 0)
+                      ],
                       providerDisplayName:
                           matchProfileModel.providerDisplayName,
                       id: matchProfileModel.id,
@@ -208,23 +215,23 @@ class _DiscoverState extends State<Discover> {
                       child: Row(
                         crossAxisAlignment: CrossAxisAlignment.end,
                         children: [
-                         discover?.age == null
-                                  ? Container()
-                                  :  Container(
-                            decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(10),
-                                color: ColorConstants.button),
-                            child: Padding(
-                              padding: EdgeInsets.only(
-                                  left: 10, right: 10, top: 4, bottom: 4),
-                              child: Text(
+                          discover?.age == null
+                              ? Container()
+                              : Container(
+                                  decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(10),
+                                      color: ColorConstants.button),
+                                  child: Padding(
+                                    padding: EdgeInsets.only(
+                                        left: 10, right: 10, top: 4, bottom: 4),
+                                    child: Text(
                                       discover?.age.toString() ?? "",
                                       style: appTheme.white14Bold.copyWith(
                                           fontWeight: FontWeight.w600,
                                           fontSize: getSize(10)),
                                     ),
-                            ),
-                          ),
+                                  ),
+                                ),
                           SizedBox(
                             width: getSize(8),
                           ),
