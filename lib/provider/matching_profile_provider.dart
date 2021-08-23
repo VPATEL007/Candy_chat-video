@@ -72,6 +72,36 @@ class MatchingProfileProvider with ChangeNotifier {
     }
   }
 
+    Future<VideoCallModel> receiveVideoCall(BuildContext context, int id) async {
+    try {
+      int userId = app.resolve<PrefUtils>().getUserDetails()?.id;
+      Map<String, dynamic> _parms = {
+        "to_user_id": id,
+        "from_user_id": userId,
+        "influencer_id": id
+      };
+      VideoCallModel videoCallModel;
+      await NetworkClient.getInstance.callApi(
+        context: context,
+        baseUrl: ApiConstants.apiUrl,
+        command: ApiConstants.receiveVideoCall,
+        headers: NetworkClient.getInstance.getAuthHeaders(),
+        method: MethodType.Post,
+        params: _parms,
+        successCallback: (response, message) {
+          videoCallModel = videoCallModelFromJson(jsonEncode(response));
+        },
+        failureCallback: (code, message) {
+          View.showMessage(context, message);
+        },
+      );
+
+      return videoCallModel;
+    } catch (e) {
+      View.showMessage(context, e.toString());
+    }
+  }
+
   // Left or right swipe...
   Future<bool> leftAndRightSwipe(
       BuildContext context, SwipeType swipeType) async {

@@ -34,5 +34,6 @@ class ApiConstants {
   static const String followUser = "follow/set";
   static const String getFollowes = "follow/get-follower";
   static const String startVideoCall = "call-history/video-call-start";
+  static const String receiveVideoCall = "call-history/video-call-received";
   static const String getRTMToken = "call-history/rtm-token";
 }

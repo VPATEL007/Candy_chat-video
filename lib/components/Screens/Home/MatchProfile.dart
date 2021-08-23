@@ -353,9 +353,7 @@ class _MathProfileState extends State<MathProfile> {
 
   Widget getDetailWidget(MatchProfileModel matchedProfile) {
     return InkWell(
-      onTap: () {
-        NavigationUtilities.push(MatchedProfile());
-      },
+      onTap: () {},
       child: Container(
         height: getSize(150),
         width: MathUtilities.screenWidth(context) - getSize(72),

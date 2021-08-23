@@ -1,7 +1,14 @@
 import 'dart:async';
+import 'dart:convert';
 
 import 'package:agora_rtm/agora_rtm.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:video_chat/app/app.export.dart';
+import 'package:video_chat/components/Model/Match%20Profile/video_call.dart';
+import 'package:video_chat/components/Model/User/UserModel.dart';
+import 'package:video_chat/components/Screens/Home/MatchedProfile.dart';
+import 'package:video_chat/provider/followes_provider.dart';
 
 class AgoraService {
   AgoraService._();
@@ -9,7 +16,7 @@ class AgoraService {
   static AgoraService instance = AgoraService._();
 
   AgoraRtmClient _client;
-  get client => this._client;
+  AgoraRtmClient get client => this._client;
 
   AgoraRtmChannel _channel;
 
@@ -27,9 +34,29 @@ class AgoraService {
           _client?.logout();
         }
       };
-      // _client?.onMessageReceived = (AgoraRtmMessage message, String peerId) {
-      //   debugPrint("Peer msg: " + peerId + ", msg: " + (message.text ?? ""));
-      // };
+      _client?.onMessageReceived = (AgoraRtmMessage message, String peerId) {
+        debugPrint("Peer msg: " + peerId + ", msg: " + (message.text ?? ""));
+        StartVideoCallModel startVideoCallModel =
+            startVideoCallModelFromJson((message.text ?? ""));
+        if (startVideoCallModel == null) return;
+        UserModel userModel = Provider.of<FollowesProvider>(
+                navigationKey.currentContext,
+                listen: false)
+            .userModel;
+        if (startVideoCallModel.videoCall == true) {
+          NavigationUtilities.push(MatchedProfile(
+            id: peerId,
+            name: startVideoCallModel.name ?? "",
+            toImageUrl: startVideoCallModel?.image?.photoUrl ?? "",
+            fromImageUrl: (userModel?.userImages?.isEmpty ?? true)
+                ? ""
+                : userModel?.userImages?.first ?? "",
+            channelName: startVideoCallModel.channelName,
+            token: startVideoCallModel.sessionId,
+            fromId: app.resolve<PrefUtils>().getUserDetails()?.id?.toString(),
+          ));
+        }
+      };
     } on AgoraRtmClientException catch (e) {
       throw e.reason.toString();
     } on AgoraRtmChannelException catch (e) {

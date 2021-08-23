@@ -64,3 +64,57 @@ class StartedOn {
         "val": val,
       };
 }
+
+StartVideoCallModel startVideoCallModelFromJson(String str) =>
+    StartVideoCallModel.fromJson(json.decode(str));
+
+String startVideoCallModelToJson(StartVideoCallModel data) =>
+    json.encode(data.toJson());
+
+class StartVideoCallModel {
+    StartVideoCallModel({
+        this.videoCall,
+        this.name,
+        this.sessionId,
+        this.channelName,
+        this.image,
+    });
+
+    bool videoCall;
+    String name;
+    String sessionId;
+    String channelName;
+    ImageResponse image;
+
+    factory StartVideoCallModel.fromJson(Map<String, dynamic> json) => StartVideoCallModel(
+        videoCall: json["VideoCall"],
+        name: json["name"],
+        sessionId: json["session_id"],
+        channelName: json["channel_name"],
+        image: ImageResponse.fromJson(json["image"]),
+    );
+
+    Map<String, dynamic> toJson() => {
+        "VideoCall": videoCall,
+        "name": name,
+        "session_id": sessionId,
+        "channel_name": channelName,
+        "image": image.toJson(),
+    };
+}
+
+class ImageResponse {
+  ImageResponse({
+    this.photoUrl,
+  });
+
+  String photoUrl;
+
+  factory ImageResponse.fromJson(Map<String, dynamic> json) => ImageResponse(
+        photoUrl: json["photo_url"],
+      );
+
+  Map<String, dynamic> toJson() => {
+        "photo_url": photoUrl,
+      };
+}
