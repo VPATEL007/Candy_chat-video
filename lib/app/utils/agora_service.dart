@@ -99,6 +99,24 @@ class AgoraService {
     }
   }
 
+  sendVideoCallMessage(String toUserId, String sessionId, String channelName,
+      BuildContext context) async {
+    Map<String, dynamic> req = {};
+    req["VideoCall"] = true;
+    var user = Provider.of<FollowesProvider>(context, listen: false).userModel;
+    req["name"] = user.providerDisplayName;
+    req["session_id"] = sessionId;
+    req["channel_name"] = channelName;
+
+    var image = user.userImages;
+    if (image != null && image.length > 0) {
+      req["image"] = image?.first ?? "";
+    }
+
+    await _client.sendMessageToPeer(
+        "41", AgoraRtmMessage.fromText(jsonEncode(req)));
+  }
+
   Future<void> logOut() async {
     try {
       await _client?.logout();

@@ -257,16 +257,21 @@ class _DiscoverState extends State<Discover> {
                                             listen: false)
                                         .startVideoCall(context, discover.id);
                                 if (videoCallModel != null)
-                                  Navigator.of(context).push(MaterialPageRoute(
-                                    builder: (context) => VideoCall(
-                                      channelName: videoCallModel.channelName,
-                                      token: videoCallModel.sessionId,
-                                      userId:
-                                          videoCallModel.fromUserId.toString(),
-                                      toUserId:
-                                          videoCallModel.toUserId.toString(),
-                                    ),
-                                  ));
+                                  AgoraService.instance.sendVideoCallMessage(
+                                      videoCallModel.toUserId.toString(),
+                                      videoCallModel.sessionId,
+                                      videoCallModel.channelName,
+                                      context);
+                                Navigator.of(context).push(MaterialPageRoute(
+                                  builder: (context) => VideoCall(
+                                    channelName: videoCallModel.channelName,
+                                    token: videoCallModel.sessionId,
+                                    userId:
+                                        videoCallModel.fromUserId.toString(),
+                                    toUserId:
+                                        videoCallModel.toUserId.toString(),
+                                  ),
+                                ));
                               },
                               child: Container(
                                 color: fromHex("#00DE9B"),

@@ -45,7 +45,7 @@ class _VideoCallState extends State<VideoCall> {
     WidgetsBinding.instance.addPostFrameCallback((_) {
       initPlatformState();
     });
-    init();
+    // init();
   }
 
   @override
@@ -58,7 +58,6 @@ class _VideoCallState extends State<VideoCall> {
   }
 
   Future<void> init() async {
-    await agoraService.login(token: widget.token, userId: widget?.userId);
     await agoraService.joinChannel((widget?.channelName ?? ""),
         onMemberJoined: (AgoraRtmMember member) {
       print(
@@ -77,9 +76,6 @@ class _VideoCallState extends State<VideoCall> {
       if (mounted) setState(() {});
       print("Channel msg: " + member.userId + ", msg: " + (message.text ?? ""));
     });
-
-    await agoraService.client.sendMessageToPeer(
-        widget.toUserId, AgoraRtmMessage.fromText('message'));
   }
 
   // Init the app
