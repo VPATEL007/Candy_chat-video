@@ -114,7 +114,7 @@ class AgoraService {
     }
 
     await _client.sendMessageToPeer(
-        "41", AgoraRtmMessage.fromText(jsonEncode(req)));
+        toUserId, AgoraRtmMessage.fromText(jsonEncode(req)));
   }
 
   Future<void> logOut() async {
