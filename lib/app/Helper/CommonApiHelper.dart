@@ -30,7 +30,10 @@ class CommonApiHelper {
       method: MethodType.Post,
       successCallback: (response, message) async {
         NetworkClient.getInstance.hideProgressDialog();
-
+        if (response["userData"] != null) {
+          UserModel model = UserModel.fromJson(response["userData"]);
+          app.resolve<PrefUtils>().saveUser(model, isLoggedIn: true);
+        }
         if (response["tokenData"] != null) {
           app
               .resolve<PrefUtils>()

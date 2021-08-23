@@ -1,14 +1,30 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:in_app_purchase/in_app_purchase.dart';
+import 'package:provider/provider.dart';
 import 'package:video_chat/app/Helper/inAppPurchase_service.dart';
 import 'package:video_chat/app/app.export.dart';
 import 'package:video_chat/app/constant/ColorConstant.dart';
 import 'package:video_chat/app/utils/CommonWidgets.dart';
+import 'package:video_chat/components/Screens/VideoCall/VideoCall.dart';
+import 'package:video_chat/provider/matching_profile_provider.dart';
 
 class MatchedProfile extends StatefulWidget {
-  MatchedProfile({Key key}) : super(key: key);
+  final String name;
+  final String id, fromId;
+  final String toImageUrl, fromImageUrl, channelName, token;
+  MatchedProfile(
+      {Key key,
+      @required this.id,
+      @required this.fromId,
+      @required this.toImageUrl,
+      @required this.fromImageUrl,
+      @required this.name,
+      @required this.channelName,
+      @required this.token})
+      : super(key: key);
 
   @override
   _MatchedProfileState createState() => _MatchedProfileState();
@@ -39,7 +55,7 @@ class _MatchedProfileState extends State<MatchedProfile> {
                 ),
                 Center(
                   child: Text(
-                    "You and Piyu like each other!",
+                    "You and ${widget.name} like each other!",
                     style: appTheme.black14Normal.copyWith(
                         fontWeight: FontWeight.w500, fontSize: getFontSize(16)),
                   ),
@@ -66,7 +82,7 @@ class _MatchedProfileState extends State<MatchedProfile> {
                 ),
                 Center(
                   child: Text(
-                    "Pihu invites you to a video call",
+                    "${widget.name} invites you to a video call",
                     style: appTheme.black14Normal.copyWith(
                         fontWeight: FontWeight.w500, fontSize: getFontSize(16)),
                   ),
@@ -101,7 +117,15 @@ class _MatchedProfileState extends State<MatchedProfile> {
         ),
         InkWell(
           onTap: () {
-            openCoinPurchasePopUp();
+            // Provider.of<MatchingProfileProvider>(context, listen: false)
+            //     .receiveVideoCall(context, 0);
+            Navigator.of(context).push(MaterialPageRoute(
+              builder: (context) => VideoCall(
+                  channelName: widget.channelName,
+                  token: widget.token,
+                  userId: widget.fromId,
+                  toUserId: widget.id),
+            ));
           },
           child: Image.asset(
             icCallAccept,
@@ -143,7 +167,11 @@ class _MatchedProfileState extends State<MatchedProfile> {
                       getSize(20),
                     ),
                     image: DecorationImage(
-                      image: AssetImage(icTemp),
+                      image: CachedNetworkImageProvider(widget.toImageUrl),
+                      onError: (exception, stackTrace) => Image.asset(
+                        "assets/Profile/no_image.png",
+                        fit: BoxFit.cover,
+                      ),
                       fit: BoxFit.cover,
                     ),
                   ),
@@ -170,7 +198,11 @@ class _MatchedProfileState extends State<MatchedProfile> {
                       getSize(20),
                     ),
                     image: DecorationImage(
-                      image: AssetImage(loginBg),
+                      image: CachedNetworkImageProvider(widget.fromImageUrl),
+                      onError: (exception, stackTrace) => Image.asset(
+                        "assets/Profile/no_image.png",
+                        fit: BoxFit.cover,
+                      ),
                       fit: BoxFit.cover,
                     ),
                   ),
