@@ -35,9 +35,11 @@ class MatchProfileModel {
         this.followers,
         this.favourites,
         this.totalPoint,
+        this.visitorCount,
+        this.followings
     });
 
-    int id,age;
+    int id,age,visitorCount;
     String providerDisplayName;
     String photoUrl;
     List<String> imageUrl;
@@ -56,13 +58,14 @@ class MatchProfileModel {
     int callRate;
     String fcmId;
     String onlineStatus;
-    int followers;
+    int followers,followings;
     int favourites;
     String totalPoint;
 
     factory MatchProfileModel.fromJson(Map<String, dynamic> json) => MatchProfileModel(
         id: json["id"],
         age: json["age"],
+        visitorCount: json["visitor_count"],
         providerDisplayName: json["provider_display_name"],
         photoUrl: json["photo_url"],
         imageUrl: List<String>.from(json["image_url"].map((x) => x)),
@@ -84,11 +87,14 @@ class MatchProfileModel {
         followers: json["followers"],
         favourites: json["favourites"],
         totalPoint: json["total_point"],
+        followings: json["followings"]
     );
 
     Map<String, dynamic> toJson() => {
         "id": id,
         "age":age,
+        "visitor_count":visitorCount,
+        "followings":followings,
         "provider_display_name": providerDisplayName,
         "photo_url": photoUrl,
         "image_url": List<dynamic>.from(imageUrl.map((x) => x)),

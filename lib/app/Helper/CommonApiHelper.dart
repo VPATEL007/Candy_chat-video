@@ -31,11 +31,6 @@ class CommonApiHelper {
       successCallback: (response, message) async {
         NetworkClient.getInstance.hideProgressDialog();
 
-        if (response["userData"] != null) {
-          UserModel model = UserModel.fromJson(response["userData"]);
-          app.resolve<PrefUtils>().saveUser(model, isLoggedIn: true);
-        }
-
         if (response["tokenData"] != null) {
           app
               .resolve<PrefUtils>()
@@ -44,9 +39,15 @@ class CommonApiHelper {
               .resolve<PrefUtils>()
               .saveRefereshToken(response["tokenData"]["refreshToken"]);
         }
-        NavigationUtilities.key.currentState.pushReplacement(FadeRoute(
-          builder: (context) => Gender(),
-        ));
+        if (response["userData"] != null) {
+          UserModel model = UserModel.fromJson(response["userData"]);
+          app.resolve<PrefUtils>().saveUser(model, isLoggedIn: true);
+          if (model?.gender?.isEmpty ?? true) {
+            NavigationUtilities.key.currentState.pushReplacement(FadeRoute(
+              builder: (context) => Gender(),
+            ));
+          }
+        }
 
         success();
       },
