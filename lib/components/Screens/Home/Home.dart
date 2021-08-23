@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:video_chat/app/Helper/CommonApiHelper.dart';
 import 'package:video_chat/app/app.export.dart';
 import 'package:video_chat/app/utils/CommonWidgets.dart';
 import 'package:video_chat/components/Screens/Home/MatchProfile.dart';
@@ -27,7 +28,8 @@ class _HomeState extends State<Home> {
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
       Provider.of<DiscoverProvider>(context, listen: false)
           .fetchDiscoverProfileList(context, SortBy.General);
-          Provider.of<TagsProvider>(context, listen: false).fetchTags(context);
+      Provider.of<TagsProvider>(context, listen: false).fetchTags(context);
+      CommonApiHelper.shared.getRTMToken(context);
     });
   }
 

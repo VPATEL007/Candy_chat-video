@@ -30,9 +30,8 @@ class _SplashState extends State<Splash> {
   }
 
   goToNext() async {
-    AppNavigation.shared.goNextFromSplash();
     await AgoraService.instance.initialize(AGORA_APPID);
-    CommonApiHelper.shared.getRTMToken(context);
+    AppNavigation.shared.goNextFromSplash();
   }
 
   @override
