@@ -1,7 +1,12 @@
 import 'dart:async';
+import 'dart:convert';
 
 import 'package:agora_rtm/agora_rtm.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:video_chat/provider/followes_provider.dart';
+
+import '../app.export.dart';
 
 class AgoraService {
   AgoraService._();
@@ -27,9 +32,9 @@ class AgoraService {
           _client?.logout();
         }
       };
-      // _client?.onMessageReceived = (AgoraRtmMessage message, String peerId) {
-      //   debugPrint("Peer msg: " + peerId + ", msg: " + (message.text ?? ""));
-      // };
+      _client?.onMessageReceived = (AgoraRtmMessage message, String peerId) {
+        debugPrint("Peer msg: " + peerId + ", msg: " + (message.text ?? ""));
+      };
     } on AgoraRtmClientException catch (e) {
       throw e.reason.toString();
     } on AgoraRtmChannelException catch (e) {
@@ -70,6 +75,24 @@ class AgoraService {
     } catch (e) {
       throw e.toString();
     }
+  }
+
+  sendVideoCallMessage(String toUserId, String sessionId, String channelName,
+      BuildContext context) async {
+    Map<String, dynamic> req = {};
+    req["VideoCall"] = true;
+    var user = Provider.of<FollowesProvider>(context, listen: false).userModel;
+    req["name"] = user.providerDisplayName;
+    req["session_id"] = sessionId;
+    req["channel_name"] = channelName;
+
+    var image = user.userImages;
+    if (image != null && image.length > 0) {
+      req["image"] = image?.first ?? "";
+    }
+
+    await _client.sendMessageToPeer(
+        "41", AgoraRtmMessage.fromText(jsonEncode(req)));
   }
 
   Future<void> logOut() async {
