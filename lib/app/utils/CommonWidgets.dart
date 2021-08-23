@@ -531,7 +531,7 @@ class AppBarCurveWidget extends CustomClipper<Path> {
       oldClipper is AppBarCurveWidget;
 }
 
-getColorText(String text, Color color, {double fontSize = 25}) {
+Widget getColorText(String text, Color color, {double fontSize = 25}) {
   return Text(text,
       textAlign: TextAlign.center,
       style: TextStyle(

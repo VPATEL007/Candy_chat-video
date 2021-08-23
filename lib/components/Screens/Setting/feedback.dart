@@ -119,24 +119,34 @@ class _FeedbackScreenState extends State<FeedbackScreen> {
                           return Stack(
                             fit: StackFit.expand,
                             children: [
-                              AssetThumb(
-                                asset: asset,
-                                width: 100,
-                                height: 100,
+                              Padding(
+                                padding: const EdgeInsets.all(3.0),
+                                child: SizedBox.expand(
+                                  child: ClipRRect(
+                                    borderRadius: BorderRadius.circular(10),
+                                    child: AssetThumb(
+                                      asset: asset,
+                                      width: 100,
+                                      height: 100,
+                                    ),
+                                  ),
+                                ),
                               ),
-                              Container(
-                                color: Colors.black26,
-                                child: IconButton(
-                                    onPressed: () {
+                              Positioned(
+                                top: 0,
+                                right: 0,
+                                child: InkWell(
+                                    onTap: () {
                                       if (mounted) {
                                         setState(() {
                                           images.removeAt(index);
                                         });
                                       }
                                     },
-                                    icon: Icon(
-                                      Icons.remove,
-                                      color: Colors.red,
+                                    child: Image.asset(
+                                      "assets/Profile/close.png",
+                                      height: 15,
+                                      width: 15,
                                     )),
                               )
                             ],

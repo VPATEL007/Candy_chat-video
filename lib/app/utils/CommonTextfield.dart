@@ -75,6 +75,7 @@ class _CommonTextfieldState extends State<CommonTextfield> {
           textAlignVertical: TextAlignVertical(y: 0.1),
           autocorrect: widget.autoCorrect,
           enabled: widget.enable,
+          onTap: widget.tapCallback,
           maxLines: widget.textOption.maxLine,
           textInputAction: widget.inputAction ?? TextInputAction.done,
           focusNode: widget.focusNode ?? null,

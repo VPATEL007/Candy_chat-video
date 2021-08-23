@@ -324,8 +324,11 @@ class _UserProfileState extends State<UserProfile> {
                       height: getSize(16),
                       width: getSize(16),
                       fit: BoxFit.cover,
-                      errorWidget: (context, url, error) =>
-                          Image.asset("assets/Profile/no_image.png"),
+                      errorWidget: (context, url, error) => Image.asset(
+                        "assets/Profile/no_image.png",
+                        height: getSize(16),
+                        width: getSize(16),
+                      ),
                     ),
                   ),
             (widget.userModel?.region?.regionFlagUrl?.isEmpty ?? true)
@@ -465,20 +468,54 @@ class _UserProfileState extends State<UserProfile> {
                 children: [
                   InkWell(
                       onTap: () {
-                        if (widget.userModel.id != null)
-                          Provider.of<FollowesProvider>(context, listen: false)
-                              .followUser(context, widget.userModel.id);
-                        if (mounted) {
-                          setState(() {
-                            if (widget.userModel?.userFollowers?.isNotEmpty ??
-                                false) {
-                              widget.userModel.userFollowers.first
-                                  .followersCount++;
+                        if (widget.userModel.id != null) {
+                          if (((widget.userModel?.userFollowers?.isNotEmpty ??
+                                  false) &&
+                              (widget.userModel.userFollowers.first
+                                      .isFollowByMe ==
+                                  false))) {
+                            Provider.of<FollowesProvider>(context,
+                                    listen: false)
+                                .followUser(context, widget.userModel.id);
+                            if (mounted) {
+                              setState(() {
+                                if (widget
+                                        .userModel?.userFollowers?.isNotEmpty ??
+                                    false) {
+                                  widget.userModel.userFollowers.first
+                                      .isFollowByMe = true;
+                                  widget.userModel.userFollowers.first
+                                      .followersCount++;
+                                }
+                              });
                             }
-                          });
+                          } else {
+                            Provider.of<FollowesProvider>(context,
+                                    listen: false)
+                                .unfollowUser(context, widget.userModel.id);
+                            if (mounted) {
+                              setState(() {
+                                if (widget
+                                        .userModel?.userFollowers?.isNotEmpty ??
+                                    false) {
+                                  widget.userModel.userFollowers.first
+                                      .isFollowByMe = false;
+                                  widget.userModel.userFollowers.first
+                                      .followersCount--;
+                                }
+                              });
+                            }
+                          }
                         }
                       },
-                      child: getProfileButton(icFollow)),
+                      child: getProfileButton(
+                          ((widget.userModel?.userFollowers?.isNotEmpty ??
+                                      false) &&
+                                  (widget.userModel.userFollowers.first
+                                          .isFollowByMe ==
+                                      true))
+                              ? "assets/Profile/remove_user.png"
+                              : icFollow)),
                   Spacer(),
                   Container(
                     // height: getSize(72),
@@ -516,15 +553,19 @@ class _UserProfileState extends State<UserProfile> {
         height: getSize(46),
         width: getSize(46),
         decoration: BoxDecoration(
-            boxShadow: [
-              BoxShadow(
-                  color: Colors.grey.shade100,
-                  blurRadius: 0,
-                  spreadRadius: 2,
-                  offset: Offset(0, 3)),
-            ],
+            boxShadow: image == "assets/Profile/remove_user.png"
+                ? []
+                : [
+                    BoxShadow(
+                        color: Colors.grey.shade100,
+                        blurRadius: 0,
+                        spreadRadius: 2,
+                        offset: Offset(0, 3)),
+                  ],
             borderRadius: BorderRadius.circular(getSize(14)),
-            color: Colors.white),
+            color: image == "assets/Profile/remove_user.png"
+                ? ColorConstants.red
+                : Colors.white),
         child: Padding(
           padding: EdgeInsets.all(getSize(11)),
           child: Image.asset(

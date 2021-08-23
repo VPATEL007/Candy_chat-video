@@ -11,6 +11,7 @@ import 'package:video_chat/components/Screens/Profile/FollowUp.dart';
 import 'package:video_chat/components/Screens/Profile/PaymentHistory.dart';
 import 'package:video_chat/components/Screens/Profile/VipStore.dart';
 import 'package:video_chat/components/Screens/Profile/Visitor.dart';
+import 'package:video_chat/components/Screens/Profile/edit_profile.dart';
 import 'package:video_chat/components/Screens/Setting/Setting.dart';
 import 'package:video_chat/components/widgets/ProfileSlider.dart';
 import 'package:video_chat/components/widgets/TabBar/Tabbar.dart';
@@ -18,8 +19,9 @@ import 'package:video_chat/provider/feedback_provider.dart';
 import 'package:video_chat/provider/followes_provider.dart';
 
 class Profile extends StatefulWidget {
-  final UserModel userModel;
-  Profile({Key key, @required this.userModel}) : super(key: key);
+  Profile({
+    Key key,
+  }) : super(key: key);
 
   @override
   _ProfileState createState() => _ProfileState();
@@ -46,52 +48,54 @@ class _ProfileState extends State<Profile> {
         screen: TabType.Profile,
       ),
       backgroundColor: Colors.white,
-      body: SafeArea(
-        child: Padding(
-          padding: EdgeInsets.only(left: getSize(35), right: getSize(35)),
-          child: Column(
-            children: [
-              SizedBox(
-                height: getSize(16),
-              ),
-              getNavigation(),
-              SizedBox(
-                height: getSize(19),
-              ),
-              Expanded(
-                  child: SingleChildScrollView(
-                child: Column(
-                  children: [
-                    getProfile(),
-                    SizedBox(
-                      height: getSize(16),
-                    ),
-                    getCounts(),
-                    SizedBox(
-                      height: getSize(16),
-                    ),
-                    getListItem(icVipStore, "VIP Store", true, () {
-                      NavigationUtilities.push(VipStore());
-                    }),
-                    getListItem(icCoinP, "Get Coins", false, () {
-                      NavigationUtilities.push(Coins());
-                    }),
-                    getListItem(icPaymentHistory, "Payment History ", false,
-                        () {
-                      NavigationUtilities.push(PaymentHistory());
-                    }),
-                    getListItem(icLanguage, "Language", false, () {
-                      NavigationUtilities.push(LanguageSelection(
-                        isChange: true,
-                      ));
-                    }),
-                    getListItem(icSetting, "Settings", false, () {
-                      NavigationUtilities.push(Setting());
-                    })
-                  ],
+      body: Consumer<FollowesProvider>(
+        builder: (context, profie, child) => SafeArea(
+          child: Padding(
+            padding: EdgeInsets.only(left: getSize(35), right: getSize(35)),
+            child: Column(
+              children: [
+                SizedBox(
+                  height: getSize(16),
                 ),
-              )),
-            ],
+                getNavigation(),
+                SizedBox(
+                  height: getSize(19),
+                ),
+                Expanded(
+                    child: SingleChildScrollView(
+                  child: Column(
+                    children: [
+                      getProfile(profie.userModel),
+                      SizedBox(
+                        height: getSize(16),
+                      ),
+                      getCounts(profie.userModel),
+                      SizedBox(
+                        height: getSize(16),
+                      ),
+                      getListItem(icVipStore, "VIP Store", true, () {
+                        NavigationUtilities.push(VipStore());
+                      }),
+                      getListItem(icCoinP, "Get Coins", false, () {
+                        NavigationUtilities.push(Coins());
+                      }),
+                      getListItem(icPaymentHistory, "Payment History ", false,
+                          () {
+                        NavigationUtilities.push(PaymentHistory());
+                      }),
+                      getListItem(icLanguage, "Language", false, () {
+                        NavigationUtilities.push(LanguageSelection(
+                          isChange: true,
+                        ));
+                      }),
+                      getListItem(icSetting, "Settings", false, () {
+                        NavigationUtilities.push(Setting());
+                      })
+                    ],
+                  ),
+                )),
+              ],
+            ),
           ),
         ),
       ),
@@ -175,23 +179,29 @@ class _ProfileState extends State<Profile> {
         ],
       ),
       Spacer(),
-      Image.asset(
-        icEdit,
-        height: getSize(26),
-        width: getSize(26),
+      InkWell(
+        onTap: () {
+          Navigator.of(context).push(MaterialPageRoute(
+            builder: (context) => EditProfileScreen(),
+          ));
+        },
+        child: Image.asset(
+          icEdit,
+          height: getSize(26),
+          width: getSize(26),
+        ),
       ),
     ]);
   }
 
-  Widget getCounts() {
+  Widget getCounts(UserModel userModel) {
     return Row(
       children: [
         Expanded(
           child: getCountItem(
-              (widget.userModel?.userFollowers?.isEmpty ?? true)
+              (userModel?.userFollowers?.isEmpty ?? true)
                   ? "0"
-                  : (widget.userModel?.userFollowers?.first?.followersCount ??
-                          0)
+                  : (userModel?.userFollowers?.first?.followersCount ?? 0)
                       ?.toString(),
               "Followers", () {
             NavigationUtilities.push(FollowUp());
@@ -200,9 +210,9 @@ class _ProfileState extends State<Profile> {
         SizedBox(width: 15),
         Expanded(
           child: getCountItem(
-              (widget.userModel?.byUserUserFollowers?.isEmpty ?? true)
+              (userModel?.byUserUserFollowers?.isEmpty ?? true)
                   ? "0"
-                  : widget.userModel?.byUserUserFollowers?.first?.followersCount
+                  : userModel?.byUserUserFollowers?.first?.followersCount
                       ?.toString(),
               "Following", () {
             NavigationUtilities.push(FollowUp(
@@ -212,7 +222,11 @@ class _ProfileState extends State<Profile> {
         ),
         SizedBox(width: 15),
         Expanded(
-            child: getCountItem("251", "Visitor", () {
+            child: getCountItem(
+                (userModel?.userVisiteds?.isEmpty ?? true)
+                    ? "0"
+                    : userModel?.userVisiteds?.first?.visitorsCount?.toString(),
+                "Visitor", () {
           NavigationUtilities.push(Visitor());
         })),
       ],
@@ -261,7 +275,7 @@ class _ProfileState extends State<Profile> {
     );
   }
 
-  Widget getProfile() {
+  Widget getProfile(UserModel userModel) {
     return Stack(
       children: [
         Container(
@@ -269,10 +283,8 @@ class _ProfileState extends State<Profile> {
           child: ClipRRect(
             borderRadius: BorderRadius.circular(getSize(15)),
             child: ProfileSlider(
-              images: widget.userModel?.userImages
-                      ?.map((e) => e.photoUrl)
-                      ?.toList() ??
-                  [],
+              images:
+                  userModel?.userImages?.map((e) => e.photoUrl)?.toList() ?? [],
               scroll: (index) {
                 currentIndex = index;
                 setState(() {});
@@ -290,7 +302,7 @@ class _ProfileState extends State<Profile> {
                 mainAxisAlignment: MainAxisAlignment.start,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  getColorText(widget.userModel?.userName ?? "", Colors.white),
+                  getColorText(userModel?.userName ?? "", Colors.white),
                   SizedBox(
                     height: getSize(8),
                   ),
@@ -298,14 +310,13 @@ class _ProfileState extends State<Profile> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     mainAxisAlignment: MainAxisAlignment.start,
                     children: [
-                      widget.userModel?.region?.regionFlagUrl?.isEmpty ?? true
+                      userModel?.region?.regionFlagUrl?.isEmpty ?? true
                           ? Container()
                           : ClipRRect(
                               borderRadius: BorderRadius.circular(getSize(12)),
                               child: CachedNetworkImage(
                                 imageUrl:
-                                    widget.userModel?.region?.regionFlagUrl ??
-                                        "",
+                                    userModel?.region?.regionFlagUrl ?? "",
                                 height: getSize(16),
                                 width: getSize(16),
                                 fit: BoxFit.cover,
@@ -313,19 +324,19 @@ class _ProfileState extends State<Profile> {
                                     Image.asset("assets/Profile/no_image.png"),
                               ),
                             ),
-                      widget.userModel?.region?.regionFlagUrl?.isEmpty ?? true
+                      userModel?.region?.regionFlagUrl?.isEmpty ?? true
                           ? Container()
                           : SizedBox(
                               width: getSize(6),
                             ),
                       Text(
-                        widget.userModel?.region?.regionName ?? "",
+                        userModel?.region?.regionName ?? "",
                         style: appTheme.white14Normal
                             .copyWith(fontWeight: FontWeight.w500),
                       ),
                       Spacer(),
                       Text(
-                        "ID : ${widget.userModel?.id}",
+                        "ID : ${userModel?.id}",
                         style: appTheme.white14Normal
                             .copyWith(fontWeight: FontWeight.w500),
                       )
@@ -341,7 +352,7 @@ class _ProfileState extends State<Profile> {
             bottom: getSize(140),
             child: Column(
                 children: List.generate(
-                    widget.userModel?.userImages?.length ?? 0,
+                    userModel?.userImages?.length ?? 0,
                     (index) => pageIndexIndicator(
                         currentIndex == index ? true : false))))
       ],

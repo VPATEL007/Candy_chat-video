@@ -25,7 +25,8 @@ class _GenderState extends State<Gender> {
           context,
           widget.isFromPreGender
               ? "Select Preferred Gender"
-              : "Select your gender",
+              : "Select Your Gender",
+          leadingButton: widget.isFromPreGender ? getBackButton(context) : null,
           isWhite: true),
       body: SafeArea(
         child: Padding(

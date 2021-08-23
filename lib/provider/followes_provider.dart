@@ -99,8 +99,12 @@ class FollowesProvider with ChangeNotifier {
       headers: NetworkClient.getInstance.getAuthHeaders(),
       method: MethodType.Post,
       params: {"userId": userId},
-      successCallback: (response, message) async {
+      successCallback: (response, message) {
         if (!fetchInBackground) NetworkClient.getInstance.hideProgressDialog();
+         if(userModel.byUserUserFollowers?.isNotEmpty??false){
+          userModel.byUserUserFollowers.first.followersCount--;
+        }
+        View.showMessage(context, message, mode: DisplayMode.SUCCESS);
       },
       failureCallback: (code, message) {
         if (!fetchInBackground) NetworkClient.getInstance.hideProgressDialog();
@@ -123,6 +127,10 @@ class FollowesProvider with ChangeNotifier {
       method: MethodType.Post,
       params: {"userId": userId},
       successCallback: (response, message) {
+        if(userModel.byUserUserFollowers?.isNotEmpty??false){
+          print(userModel.byUserUserFollowers.first.followersCount);
+          userModel.byUserUserFollowers.first.followersCount++;
+        }
         View.showMessage(context, message, mode: DisplayMode.SUCCESS);
       },
       failureCallback: (code, message) {
@@ -133,7 +141,7 @@ class FollowesProvider with ChangeNotifier {
   }
 
   // Fetch my profile...
-  Future<UserModel> fetchMyProfile(
+  Future<void> fetchMyProfile(
     BuildContext context,
   ) async {
     await NetworkClient.getInstance.callApi(
@@ -150,6 +158,5 @@ class FollowesProvider with ChangeNotifier {
       },
     );
     notifyListeners();
-    return userModel;
   }
 }

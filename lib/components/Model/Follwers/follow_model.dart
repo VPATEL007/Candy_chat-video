@@ -14,10 +14,12 @@ class FollowesModel {
   FollowesModel({
     this.id,
     this.user,
+
   });
 
   int id;
   User user;
+  
 
   factory FollowesModel.fromJson(Map<String, dynamic> json) => FollowesModel(
         id: json["id"],

@@ -391,14 +391,16 @@ class _MathProfileState extends State<MathProfile> {
                   ),
                 ),
                 Spacer(),
-                Padding(
-                  padding: EdgeInsets.only(top: getSize(40)),
-                  child: Text(
-                    matchedProfile?.id.toString(),
-                    style: appTheme.black16Bold
-                        .copyWith(fontSize: getFontSize(35)),
-                  ),
-                ),
+                matchedProfile?.age == null
+                    ? Container()
+                    : Padding(
+                        padding: EdgeInsets.only(top: getSize(40)),
+                        child: Text(
+                          matchedProfile?.age?.toString(),
+                          style: appTheme.black16Bold
+                              .copyWith(fontSize: getFontSize(35)),
+                        ),
+                      ),
               ],
             )),
       ),
