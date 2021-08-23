@@ -116,8 +116,11 @@ class _FollowUpState extends State<FollowUp> {
                 height: getSize(48),
                 width: getSize(51),
                 fit: BoxFit.cover,
-                errorWidget: (context, url, error) =>
-                    Image.asset("assets/Profile/no_image.png"),
+                errorWidget: (context, url, error) => Image.asset(
+                  "assets/Profile/no_image.png",
+                  height: getSize(48),
+                  width: getSize(51),
+                ),
               ),
             ),
             SizedBox(

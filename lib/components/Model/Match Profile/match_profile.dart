@@ -13,6 +13,7 @@ String matchProfileModelToJson(MatchProfileModel data) => json.encode(data.toJso
 class MatchProfileModel {
     MatchProfileModel({
         this.id,
+        this.age,
         this.providerDisplayName,
         this.photoUrl,
         this.imageUrl,
@@ -36,7 +37,7 @@ class MatchProfileModel {
         this.totalPoint,
     });
 
-    int id;
+    int id,age;
     String providerDisplayName;
     String photoUrl;
     List<String> imageUrl;
@@ -61,6 +62,7 @@ class MatchProfileModel {
 
     factory MatchProfileModel.fromJson(Map<String, dynamic> json) => MatchProfileModel(
         id: json["id"],
+        age: json["age"],
         providerDisplayName: json["provider_display_name"],
         photoUrl: json["photo_url"],
         imageUrl: List<String>.from(json["image_url"].map((x) => x)),
@@ -86,6 +88,7 @@ class MatchProfileModel {
 
     Map<String, dynamic> toJson() => {
         "id": id,
+        "age":age,
         "provider_display_name": providerDisplayName,
         "photo_url": photoUrl,
         "image_url": List<dynamic>.from(imageUrl.map((x) => x)),

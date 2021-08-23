@@ -70,12 +70,12 @@ class _TabBarWidgetState extends State<TabBarWidget> {
                   onTap: () async {
                     UserModel userModel = mutedProvider.userModel;
                     if (userModel == null) {
-                      userModel = await mutedProvider.fetchMyProfile(context);
+                      await mutedProvider.fetchMyProfile(context);
                     }
                     setState(() {});
                     NavigationUtilities.key.currentState
                         .pushReplacement(FadeRoute(
-                      builder: (context) => Profile(userModel: userModel),
+                      builder: (context) => Profile(),
                     ));
                   },
                   child: getTabProfileItem(
