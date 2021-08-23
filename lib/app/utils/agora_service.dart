@@ -22,13 +22,14 @@ class AgoraService {
             state.toString() +
             ', reason: ' +
             reason.toString());
+
         if (state == 5) {
           _client?.logout();
         }
       };
-      _client?.onMessageReceived = (AgoraRtmMessage message, String peerId) {
-        debugPrint("Peer msg: " + peerId + ", msg: " + (message.text ?? ""));
-      };
+      // _client?.onMessageReceived = (AgoraRtmMessage message, String peerId) {
+      //   debugPrint("Peer msg: " + peerId + ", msg: " + (message.text ?? ""));
+      // };
     } on AgoraRtmClientException catch (e) {
       throw e.reason.toString();
     } on AgoraRtmChannelException catch (e) {

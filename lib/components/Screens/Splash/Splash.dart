@@ -4,6 +4,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:video_chat/app/AppConfiguration/AppNavigation.dart';
+import 'package:video_chat/app/Helper/CommonApiHelper.dart';
 import 'package:video_chat/app/app.export.dart';
 import 'package:video_chat/app/utils/CommonWidgets.dart';
 import 'package:video_chat/provider/language_provider.dart';
@@ -19,7 +20,7 @@ class _SplashState extends State<Splash> {
   @override
   void initState() {
     super.initState();
-    AgoraService.instance.initialize(AGORA_APPID);
+
     WidgetsBinding.instance.addPostFrameCallback((_) {
       Timer(
         Duration(seconds: 2),
@@ -30,6 +31,8 @@ class _SplashState extends State<Splash> {
 
   goToNext() async {
     AppNavigation.shared.goNextFromSplash();
+    await AgoraService.instance.initialize(AGORA_APPID);
+    CommonApiHelper.shared.getRTMToken(context);
   }
 
   @override
