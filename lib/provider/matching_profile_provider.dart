@@ -72,15 +72,14 @@ class MatchingProfileProvider with ChangeNotifier {
     }
   }
 
-    Future<VideoCallModel> receiveVideoCall(BuildContext context, int id) async {
+  Future<void> receiveVideoCall(
+      BuildContext context, String sessionId, String channelName) async {
     try {
-      int userId = app.resolve<PrefUtils>().getUserDetails()?.id;
       Map<String, dynamic> _parms = {
-        "to_user_id": id,
-        "from_user_id": userId,
-        "influencer_id": id
+        "session_id": sessionId,
+        "channel_name": channelName,
       };
-      VideoCallModel videoCallModel;
+
       await NetworkClient.getInstance.callApi(
         context: context,
         baseUrl: ApiConstants.apiUrl,
@@ -88,15 +87,11 @@ class MatchingProfileProvider with ChangeNotifier {
         headers: NetworkClient.getInstance.getAuthHeaders(),
         method: MethodType.Post,
         params: _parms,
-        successCallback: (response, message) {
-          videoCallModel = videoCallModelFromJson(jsonEncode(response));
-        },
+        successCallback: (response, message) {},
         failureCallback: (code, message) {
           View.showMessage(context, message);
         },
       );
-
-      return videoCallModel;
     } catch (e) {
       View.showMessage(context, e.toString());
     }
