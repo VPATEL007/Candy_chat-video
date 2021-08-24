@@ -8,10 +8,7 @@ import 'package:video_chat/app/app.export.dart';
 import 'package:video_chat/components/Model/Match%20Profile/video_call.dart';
 import 'package:video_chat/components/Model/User/UserModel.dart';
 import 'package:video_chat/components/Screens/Home/MatchedProfile.dart';
-import 'package:video_chat/components/Screens/VideoCall/VideoCall.dart';
 import 'package:video_chat/provider/followes_provider.dart';
-import 'package:video_chat/provider/matching_profile_provider.dart';
-import 'package:video_chat/provider/video_call_status_provider.dart';
 
 class AgoraService {
   AgoraService._();
@@ -98,13 +95,11 @@ class AgoraService {
 
     var image = user.userImages;
     if (image != null && image.length > 0) {
-      req["image"] = image?.first ?? UserImage(photoUrl: "");
-    } else {
-      req["image"] = UserImage(photoUrl: "");
+      req["image"] = image?.first ?? "";
     }
 
     await _client.sendMessageToPeer(
-        toUserId, AgoraRtmMessage.fromText(jsonEncode(req)));
+        "41", AgoraRtmMessage.fromText(jsonEncode(req)));
   }
 
 //Reject Call
@@ -227,28 +222,11 @@ class AgoraService {
     }
   }
 
-  void setCallStatus(StartVideoCallModel model) {
-    VideoCallStatusProvider mutedProvider =
-        Provider.of<VideoCallStatusProvider>(navigationKey.currentContext,
-            listen: false);
-    if (model.videoCall == true) {
-      mutedProvider.setCallStatus = CallStatus.None;
-    } else if (model.rejectCall == true) {
-      mutedProvider.setCallStatus = CallStatus.Reject;
-    } else if (model.receiveCall == true) {
-      mutedProvider.setCallStatus = CallStatus.Receive;
-    } else if (model.endCall == true) {
-      mutedProvider.setCallStatus = CallStatus.End;
-    }
-  }
-
-  void handleVideoCallEvent(StartVideoCallModel model, String peerId) {
+  handleVideoCallEvent(StartVideoCallModel model, String peerId) {
     UserModel userModel = Provider.of<FollowesProvider>(
             navigationKey.currentContext,
             listen: false)
         .userModel;
-    setCallStatus(model);
-
     if (model.videoCall == true) {
       NavigationUtilities.push(MatchedProfile(
         id: peerId,
@@ -262,35 +240,12 @@ class AgoraService {
         fromId: app.resolve<PrefUtils>().getUserDetails()?.id?.toString(),
       ));
     } else if (model.rejectCall == true) {
-      Future.delayed(Duration(seconds: 1), () {
-        NavigationUtilities.pop();
-      });
       //Reject Call
 
     } else if (model.receiveCall == true) {
       //Receive Call
-      VideoCallModel videoCallModel = Provider.of<MatchingProfileProvider>(
-              navigationKey.currentContext,
-              listen: false)
-          .videoCallModel;
-      NavigationUtilities.pop();
-      Provider.of<MatchingProfileProvider>(navigationKey.currentContext,
-              listen: false)
-          .receiveVideoCall(navigationKey.currentContext,
-              videoCallModel.sessionId, videoCallModel.channelName);
-      NavigationUtilities.push(
-        VideoCall(
-            channelName: videoCallModel.channelName,
-            token: videoCallModel.sessionId,
-            userId: app.resolve<PrefUtils>().getUserDetails()?.id?.toString(),
-            toUserId: peerId),
-      );
+
     } else if (model.endCall == true) {
-      print("endCall");
-      View.showMessage(NavigationUtilities.key.currentContext, "Call Ended");
-      // Future.delayed(Duration(seconds: 1), () {
-        NavigationUtilities.pop();
-      // });
       //End Call
     }
   }
