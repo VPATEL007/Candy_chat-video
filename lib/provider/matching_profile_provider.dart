@@ -42,7 +42,8 @@ class MatchingProfileProvider with ChangeNotifier {
     }
   }
 
-  Future<VideoCallModel> startVideoCall(BuildContext context, int id) async {
+  VideoCallModel videoCallModel;
+  Future<void> startVideoCall(BuildContext context, int id) async {
     try {
       int userId = app.resolve<PrefUtils>().getUserDetails()?.id;
       Map<String, dynamic> _parms = {
@@ -50,7 +51,7 @@ class MatchingProfileProvider with ChangeNotifier {
         "from_user_id": userId,
         "influencer_id": id
       };
-      VideoCallModel videoCallModel;
+
       await NetworkClient.getInstance.callApi(
         context: context,
         baseUrl: ApiConstants.apiUrl,
@@ -65,8 +66,6 @@ class MatchingProfileProvider with ChangeNotifier {
           View.showMessage(context, message);
         },
       );
-
-      return videoCallModel;
     } catch (e) {
       View.showMessage(context, e.toString());
     }

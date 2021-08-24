@@ -9,12 +9,15 @@ import 'package:video_chat/components/Model/Match%20Profile/match_profile.dart';
 import 'package:video_chat/components/Model/Match%20Profile/video_call.dart';
 import 'package:video_chat/components/Model/User/UserModel.dart';
 import 'package:video_chat/components/Screens/Home/MatchProfile.dart';
+import 'package:video_chat/components/Screens/Home/MatchedProfile.dart';
 import 'package:video_chat/components/Screens/UserProfile/UserProfile.dart';
 import 'package:video_chat/components/Screens/VideoCall/VideoCall.dart';
 import 'package:video_chat/components/widgets/TabBar/Tabbar.dart';
 import 'package:video_chat/provider/discover_provider.dart';
+import 'package:video_chat/provider/followes_provider.dart';
 import 'package:video_chat/provider/matching_profile_provider.dart';
 import 'package:video_chat/provider/report_and_block_provider.dart';
+import 'package:video_chat/provider/video_call_status_provider.dart';
 
 class Discover extends StatefulWidget {
   static const route = "Discover";
@@ -251,25 +254,39 @@ class _DiscoverState extends State<Discover> {
                             borderRadius: BorderRadius.circular(getSize(35)),
                             child: InkWell(
                               onTap: () async {
+                                await Provider.of<MatchingProfileProvider>(
+                                        context,
+                                        listen: false)
+                                    .startVideoCall(context, discover.id);
                                 VideoCallModel videoCallModel =
-                                    await Provider.of<MatchingProfileProvider>(
+                                    Provider.of<MatchingProfileProvider>(
                                             context,
                                             listen: false)
-                                        .startVideoCall(context, discover.id);
+                                        .videoCallModel;
                                 if (videoCallModel != null)
                                   AgoraService.instance.sendVideoCallMessage(
                                       videoCallModel.toUserId.toString(),
                                       videoCallModel.sessionId,
                                       videoCallModel.channelName,
                                       context);
+                                Provider.of<VideoCallStatusProvider>(context,
+                                        listen: false)
+                                    .setCallStatus = CallStatus.Start;
                                 Navigator.of(context).push(MaterialPageRoute(
-                                  builder: (context) => VideoCall(
+                                  builder: (context) => MatchedProfile(
                                     channelName: videoCallModel.channelName,
                                     token: videoCallModel.sessionId,
-                                    userId:
+                                    fromId:
                                         videoCallModel.fromUserId.toString(),
-                                    toUserId:
-                                        videoCallModel.toUserId.toString(),
+                                    fromImageUrl: Provider.of<FollowesProvider>(
+                                                context,
+                                                listen: false)
+                                            ?.userModel
+                                            ?.photoUrl ??
+                                        "",
+                                    name: discover?.userName,
+                                    toImageUrl: discover?.photoUrl ?? "",
+                                    id: videoCallModel.toUserId.toString(),
                                   ),
                                 ));
                               },

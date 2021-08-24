@@ -59,15 +59,17 @@ class _MathProfileState extends State<MathProfile> {
                       listen: false)
                   .leftAndRightSwipe(context, SwipeType.Right);
               if (startCall == true) {
+                await Provider.of<MatchingProfileProvider>(context,
+                        listen: false)
+                    .startVideoCall(
+                        context,
+                        Provider.of<MatchingProfileProvider>(context,
+                                listen: false)
+                            .matchProfileList[index]
+                            .id);
                 VideoCallModel videoCallModel =
-                    await Provider.of<MatchingProfileProvider>(context,
-                            listen: false)
-                        .startVideoCall(
-                            context,
-                            Provider.of<MatchingProfileProvider>(context,
-                                    listen: false)
-                                .matchProfileList[index]
-                                .id);
+                    Provider.of<MatchingProfileProvider>(context, listen: false)
+                        .videoCallModel;
                 if (videoCallModel != null)
                   AgoraService.instance.sendVideoCallMessage(
                       videoCallModel.toUserId.toString(),
@@ -162,7 +164,12 @@ class _MathProfileState extends State<MathProfile> {
       body: Consumer<MatchingProfileProvider>(
           builder: (ctx, matchProfileProvider, child) {
         return (matchProfileProvider.matchProfileList?.isEmpty ?? true)
-            ? Container()
+            ? Center(
+                child: Text(
+                  "You have viewed all the profiles. Go to home to restart match.",
+                  textAlign: TextAlign.center,
+                ),
+              )
             : Container(
                 child: Stack(
                   children: [
