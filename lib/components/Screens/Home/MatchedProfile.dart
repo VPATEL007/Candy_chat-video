@@ -10,6 +10,7 @@ import 'package:video_chat/app/constant/ColorConstant.dart';
 import 'package:video_chat/app/utils/CommonWidgets.dart';
 import 'package:video_chat/components/Screens/VideoCall/VideoCall.dart';
 import 'package:video_chat/provider/matching_profile_provider.dart';
+import 'package:video_chat/provider/video_call_status_provider.dart';
 
 class MatchedProfile extends StatefulWidget {
   final String name;
@@ -37,74 +38,80 @@ class _MatchedProfileState extends State<MatchedProfile> {
   Widget build(BuildContext context) {
     return Scaffold(
         backgroundColor: ColorConstants.bgColor,
-        body: SafeArea(
-          child: Container(
-            width: MathUtilities.screenWidth(context),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                SizedBox(
-                  height: getSize(37),
-                ),
-                Center(
-                  child: getColorText("Congratulations", ColorConstants.red,
-                      fontSize: 25),
-                ),
-                SizedBox(
-                  height: getSize(14),
-                ),
-                Center(
-                  child: Text(
-                    "You and ${widget.name} like each other!",
-                    style: appTheme.black14Normal.copyWith(
-                        fontWeight: FontWeight.w500, fontSize: getFontSize(16)),
+        body: Consumer<VideoCallStatusProvider>(
+          builder: (context, videoCallStatus, child) => SafeArea(
+            child: Container(
+              width: MathUtilities.screenWidth(context),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  SizedBox(
+                    height: getSize(37),
                   ),
-                ),
-                SizedBox(
-                  height: getSize(37),
-                ),
-                getProfileWidget(),
-                SizedBox(
-                  height: getSize(60),
-                ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    getColorText("It’s a", ColorConstants.black, fontSize: 35),
-                    SizedBox(
-                      width: getSize(8),
+                  Center(
+                    child: getColorText("Congratulations", ColorConstants.red,
+                        fontSize: 25),
+                  ),
+                  SizedBox(
+                    height: getSize(14),
+                  ),
+                  Center(
+                    child: Text(
+                      videoCallStatus.statusText,
+                      style: appTheme.black14Normal.copyWith(
+                          fontWeight: FontWeight.w500,
+                          fontSize: getFontSize(16)),
                     ),
-                    getColorText("Match!", ColorConstants.red, fontSize: 35),
-                  ],
-                ),
-                SizedBox(
-                  height: getSize(12),
-                ),
-                Center(
-                  child: Text(
-                    "${widget.name} invites you to a video call",
-                    style: appTheme.black14Normal.copyWith(
-                        fontWeight: FontWeight.w500, fontSize: getFontSize(16)),
                   ),
-                ),
-                Spacer(),
-                getCallButton(),
-                SizedBox(
-                  height: getSize(10),
-                ),
-              ],
+                  SizedBox(
+                    height: getSize(37),
+                  ),
+                  getProfileWidget(),
+                  SizedBox(
+                    height: getSize(60),
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      getColorText("It’s a", ColorConstants.black,
+                          fontSize: 35),
+                      SizedBox(
+                        width: getSize(8),
+                      ),
+                      getColorText("Match!", ColorConstants.red, fontSize: 35),
+                    ],
+                  ),
+                  SizedBox(
+                    height: getSize(12),
+                  ),
+                  Center(
+                    child: Text(
+                      "${widget.name} invites you to a video call",
+                      style: appTheme.black14Normal.copyWith(
+                          fontWeight: FontWeight.w500,
+                          fontSize: getFontSize(16)),
+                    ),
+                  ),
+                  Spacer(),
+                  getCallButton(videoCallStatus.callStatus),
+                  SizedBox(
+                    height: getSize(10),
+                  ),
+                ],
+              ),
             ),
           ),
         ));
   }
 
-  getCallButton() {
+  getCallButton(CallStatus callStatus) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
         InkWell(
           onTap: () {
             Navigator.pop(context);
+            AgoraService.instance.sendRejectCallMessage(widget.id);
           },
           child: Image.asset(
             icCallEnd,
@@ -115,31 +122,32 @@ class _MatchedProfileState extends State<MatchedProfile> {
         SizedBox(
           width: getSize(36),
         ),
-        InkWell(
-          onTap: () {
-            Navigator.pop(context);
-            // Provider.of<MatchingProfileProvider>(context, listen: false)
-            //     .receiveVideoCall(context, widget.token, widget.channelName);
-            Navigator.of(context).push(MaterialPageRoute(
-              builder: (context) => VideoCall(
-                  channelName: widget.channelName,
-                  token: widget.token,
-                  userId: widget.fromId,
-                  toUserId: widget.id),
-            ));
-          },
-          child: Image.asset(
-            icCallAccept,
-            height: getSize(120),
-            width: getSize(120),
-          ),
-        )
+        callStatus == CallStatus.Start
+            ? Container()
+            : InkWell(
+                onTap: () {
+                  AgoraService.instance.sendReceiveCallMessage(widget.id);
+                  Navigator.pop(context);
+                  Provider.of<MatchingProfileProvider>(context, listen: false)
+                      .receiveVideoCall(
+                          context, widget.token, widget.channelName);
+                  Navigator.of(context).push(MaterialPageRoute(
+                    builder: (context) => VideoCall(
+                        channelName: widget.channelName,
+                        token: widget.token,
+                        userId: widget.fromId,
+                        toUserId: widget.id),
+                  ));
+                },
+                child: Image.asset(
+                  icCallAccept,
+                  height: getSize(120),
+                  width: getSize(120),
+                ),
+              )
       ],
     );
   }
-
-//Received Call
-  receivedCall() {}
 
   getProfileWidget() {
     return Center(

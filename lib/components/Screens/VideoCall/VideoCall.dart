@@ -26,10 +26,10 @@ class VideoCall extends StatefulWidget {
       : super(key: key);
 
   @override
-  _VideoCallState createState() => _VideoCallState();
+  VideoCallState createState() => VideoCallState();
 }
 
-class _VideoCallState extends State<VideoCall> {
+class VideoCallState extends State<VideoCall> {
   final TextEditingController _chatController = TextEditingController();
   RtcEngine engine;
   bool _joined = false;
@@ -228,6 +228,7 @@ class _VideoCallState extends State<VideoCall> {
   Widget callEndButton() {
     return InkWell(
         onTap: () {
+          agoraService.endCallMessage(widget.toUserId);
           _endCall();
         },
         child: Image.asset(icEndVideoCall,
@@ -253,7 +254,9 @@ class _VideoCallState extends State<VideoCall> {
     try {
       engine.leaveChannel();
       engine.destroy();
-    } catch (e) {}
+    } catch (e) {
+      print(e);
+    }
 
     Navigator.pop(context);
   }

@@ -13,6 +13,7 @@ import 'package:video_chat/provider/language_provider.dart';
 import 'package:video_chat/provider/matching_profile_provider.dart';
 import 'package:video_chat/provider/report_and_block_provider.dart';
 import 'package:video_chat/provider/tags_provider.dart';
+import 'package:video_chat/provider/video_call_status_provider.dart';
 
 import 'app/Helper/Themehelper.dart';
 import 'app/constant/constants.dart';
@@ -110,6 +111,9 @@ class _BaseState extends State<Base> {
         ),
         ChangeNotifierProvider.value(
           value: TagsProvider(),
+        ),
+        ChangeNotifierProvider.value(
+          value: VideoCallStatusProvider(),
         ),
       ],
       child: MaterialApp(

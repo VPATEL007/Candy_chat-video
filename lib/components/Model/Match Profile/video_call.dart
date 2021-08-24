@@ -100,7 +100,7 @@ class StartVideoCallModel {
         name: json["name"],
         sessionId: json["session_id"],
         channelName: json["channel_name"],
-        image: ImageResponse.fromJson(json["image"]),
+        image: json["image"]==null ? ImageResponse(photoUrl: "") : ImageResponse.fromJson(json["image"]),
       );
 
   Map<String, dynamic> toJson() => {

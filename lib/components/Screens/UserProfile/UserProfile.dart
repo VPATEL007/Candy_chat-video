@@ -385,7 +385,7 @@ class _UserProfileState extends State<UserProfile> {
                         .userModel?.userVisiteds?.isEmpty ?? true)
                     ? "0"
                     : widget
-                        .userModel?.userVisiteds?.first?.visitorsCount?.toString(), "Fans", () {}),
+                        .userModel?.userVisiteds?.first?.visitorsCount?.toString(), "Visitor", () {}),
           ],
         ),
       ),
