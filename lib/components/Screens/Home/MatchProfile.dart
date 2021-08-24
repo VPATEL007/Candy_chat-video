@@ -69,18 +69,23 @@ class _MathProfileState extends State<MathProfile> {
                                 .matchProfileList[index]
                                 .id);
                 if (videoCallModel != null)
-                  Navigator.of(context).push(MaterialPageRoute(
-                    builder: (context) => VideoCall(
-                      channelName: videoCallModel.channelName,
-                      token: videoCallModel.sessionId,
-                      userId: Provider.of<MatchingProfileProvider>(context,
-                              listen: false)
-                          .matchProfileList[index]
-                          .id
-                          ?.toString(),
-                      toUserId: videoCallModel.toUserId.toString(),
-                    ),
-                  ));
+                  AgoraService.instance.sendVideoCallMessage(
+                      videoCallModel.toUserId.toString(),
+                      videoCallModel.sessionId,
+                      videoCallModel.channelName,
+                      context);
+                Navigator.of(context).push(MaterialPageRoute(
+                  builder: (context) => VideoCall(
+                    channelName: videoCallModel.channelName,
+                    token: videoCallModel.sessionId,
+                    userId: Provider.of<MatchingProfileProvider>(context,
+                            listen: false)
+                        .matchProfileList[index]
+                        .id
+                        ?.toString(),
+                    toUserId: videoCallModel.toUserId.toString(),
+                  ),
+                ));
               }
             },
             nopeAction: (index) {

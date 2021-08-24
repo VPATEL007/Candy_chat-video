@@ -36,26 +36,10 @@ class AgoraService {
       };
       _client?.onMessageReceived = (AgoraRtmMessage message, String peerId) {
         debugPrint("Peer msg: " + peerId + ", msg: " + (message.text ?? ""));
-        StartVideoCallModel startVideoCallModel =
+        StartVideoCallModel videoCallModel =
             startVideoCallModelFromJson((message.text ?? ""));
-        if (startVideoCallModel == null) return;
-        UserModel userModel = Provider.of<FollowesProvider>(
-                navigationKey.currentContext,
-                listen: false)
-            .userModel;
-        if (startVideoCallModel.videoCall == true) {
-          NavigationUtilities.push(MatchedProfile(
-            id: peerId,
-            name: startVideoCallModel.name ?? "",
-            toImageUrl: startVideoCallModel?.image?.photoUrl ?? "",
-            fromImageUrl: (userModel?.userImages?.isEmpty ?? true)
-                ? ""
-                : userModel?.userImages?.first ?? "",
-            channelName: startVideoCallModel.channelName,
-            token: startVideoCallModel.sessionId,
-            fromId: app.resolve<PrefUtils>().getUserDetails()?.id?.toString(),
-          ));
-        }
+        if (videoCallModel == null) return;
+        handleVideoCallEvent(videoCallModel, peerId);
       };
     } on AgoraRtmClientException catch (e) {
       throw e.reason.toString();
@@ -99,6 +83,7 @@ class AgoraService {
     }
   }
 
+//Start Call
   sendVideoCallMessage(String toUserId, String sessionId, String channelName,
       BuildContext context) async {
     Map<String, dynamic> req = {};
@@ -114,7 +99,39 @@ class AgoraService {
     }
 
     await _client.sendMessageToPeer(
-        "41", AgoraRtmMessage.fromText(jsonEncode(req)));
+        toUserId, AgoraRtmMessage.fromText(jsonEncode(req)));
+  }
+
+//Reject Call
+  sendRejectCallMessage(String toUserId) async {
+    Map<String, dynamic> req = {};
+    req["RejectCall"] = true;
+    await _client.sendMessageToPeer(
+        toUserId, AgoraRtmMessage.fromText(jsonEncode(req)));
+  }
+
+  //Receive Call
+  sendReceiveCallMessage(String toUserId) async {
+    Map<String, dynamic> req = {};
+    req["ReceiveCall"] = true;
+    await _client.sendMessageToPeer(
+        toUserId, AgoraRtmMessage.fromText(jsonEncode(req)));
+  }
+
+  //End Call
+  endCallMessage(String toUserId) async {
+    Map<String, dynamic> req = {};
+    req["EndCall"] = true;
+    await _client.sendMessageToPeer(
+        toUserId, AgoraRtmMessage.fromText(jsonEncode(req)));
+  }
+
+  //Drop Call
+  dropCallMessage(String toUserId) async {
+    Map<String, dynamic> req = {};
+    req["DropCall"] = true;
+    await _client.sendMessageToPeer(
+        toUserId, AgoraRtmMessage.fromText(jsonEncode(req)));
   }
 
   Future<void> logOut() async {
@@ -202,6 +219,34 @@ class AgoraService {
       throw e.reason.toString();
     } catch (e) {
       throw e.toString();
+    }
+  }
+
+  handleVideoCallEvent(StartVideoCallModel model, String peerId) {
+    UserModel userModel = Provider.of<FollowesProvider>(
+            navigationKey.currentContext,
+            listen: false)
+        .userModel;
+    if (model.videoCall == true) {
+      NavigationUtilities.push(MatchedProfile(
+        id: peerId,
+        name: model.name ?? "",
+        toImageUrl: model?.image?.photoUrl ?? "",
+        fromImageUrl: (userModel?.userImages?.isEmpty ?? true)
+            ? ""
+            : userModel?.userImages?.first ?? "",
+        channelName: model.channelName,
+        token: model.sessionId,
+        fromId: app.resolve<PrefUtils>().getUserDetails()?.id?.toString(),
+      ));
+    } else if (model.rejectCall == true) {
+      //Reject Call
+
+    } else if (model.receiveCall == true) {
+      //Receive Call
+
+    } else if (model.endCall == true) {
+      //End Call
     }
   }
 }

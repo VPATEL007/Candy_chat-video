@@ -72,35 +72,47 @@ String startVideoCallModelToJson(StartVideoCallModel data) =>
     json.encode(data.toJson());
 
 class StartVideoCallModel {
-    StartVideoCallModel({
-        this.videoCall,
-        this.name,
-        this.sessionId,
-        this.channelName,
-        this.image,
-    });
+  StartVideoCallModel(
+      {this.videoCall,
+      this.name,
+      this.sessionId,
+      this.channelName,
+      this.image,
+      this.rejectCall,
+      this.receiveCall,
+      this.endCall});
 
-    bool videoCall;
-    String name;
-    String sessionId;
-    String channelName;
-    ImageResponse image;
+  bool videoCall;
+  String name;
+  String sessionId;
+  String channelName;
+  ImageResponse image;
+  bool rejectCall;
+  bool receiveCall;
+  bool endCall;
 
-    factory StartVideoCallModel.fromJson(Map<String, dynamic> json) => StartVideoCallModel(
+  factory StartVideoCallModel.fromJson(Map<String, dynamic> json) =>
+      StartVideoCallModel(
         videoCall: json["VideoCall"],
+        rejectCall: json["RejectCall"],
+        receiveCall: json["ReceiveCall"],
+        endCall: json["EndCall"],
         name: json["name"],
         sessionId: json["session_id"],
         channelName: json["channel_name"],
         image: ImageResponse.fromJson(json["image"]),
-    );
+      );
 
-    Map<String, dynamic> toJson() => {
+  Map<String, dynamic> toJson() => {
         "VideoCall": videoCall,
         "name": name,
         "session_id": sessionId,
         "channel_name": channelName,
         "image": image.toJson(),
-    };
+        "RejectCall": rejectCall,
+        "ReceiveCall": receiveCall,
+        "EndCall": endCall,
+      };
 }
 
 class ImageResponse {
