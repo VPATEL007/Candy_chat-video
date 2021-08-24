@@ -103,8 +103,8 @@ class _DiscoverState extends State<Discover> {
                 print(
                     "--------========================= Lazy Loading ==========================---------");
                 page++;
-                discoverProvider.fetchDiscoverProfileList(context, tab[index],
-                    pageNumber: page, isbackgroundCall: false);
+                discoverProvider.fetchDiscoverProfileList(context, tab[selectedIndex],
+                    pageNumber: page, isbackgroundCall: true);
               },
               child: InkWell(
                   onTap: () {
@@ -170,7 +170,9 @@ class _DiscoverState extends State<Discover> {
               fit: StackFit.expand,
               children: [
                 CachedNetworkImage(
-                  imageUrl: discover?.photoUrl ?? "",
+                  imageUrl: (discover?.imageUrl?.isEmpty ?? true)
+                      ? ""
+                      : discover?.imageUrl?.first ?? "",
                   width: (MathUtilities.screenWidth(context) / 2) - getSize(28),
                   fit: BoxFit.cover,
                   errorWidget: (context, url, error) => Image.asset(

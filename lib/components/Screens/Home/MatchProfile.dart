@@ -42,6 +42,8 @@ class _MathProfileState extends State<MathProfile> {
   int currentIndex = 0;
   int page = 1;
 
+  bool isLoadAll = false;
+
   @override
   void initState() {
     super.initState();
@@ -174,7 +176,8 @@ class _MathProfileState extends State<MathProfile> {
     return Scaffold(
       body: Consumer<MatchingProfileProvider>(
           builder: (ctx, matchProfileProvider, child) {
-        return (matchProfileProvider.matchProfileList?.isEmpty ?? true)
+        return (matchProfileProvider.matchProfileList?.isEmpty ?? true) ||
+                (isLoadAll == true)
             ? Center(
                 child: Text(
                   "You have viewed all the profiles. Go to home to restart match.",
@@ -218,7 +221,10 @@ class _MathProfileState extends State<MathProfile> {
                                   ),
                                   image: DecorationImage(
                                     image: CachedNetworkImageProvider(
-                                      _matchProfile?.photoUrl ?? "",
+                                      (_matchProfile?.imageUrl?.isEmpty ?? true)
+                                          ? ""
+                                          : _matchProfile?.imageUrl?.first ??
+                                              "",
                                     ),
                                     onError: (exception, stackTrace) =>
                                         Image.asset(
@@ -292,6 +298,11 @@ class _MathProfileState extends State<MathProfile> {
                         );
                       },
                       onStackFinished: () {
+                        if (mounted) {
+                          setState(() {
+                            isLoadAll = true;
+                          });
+                        }
                         print("All Catch Up!");
                       },
                     ),
@@ -408,16 +419,18 @@ class _MathProfileState extends State<MathProfile> {
                       SizedBox(
                         height: getSize(20),
                       ),
-                      FittedBox(
-                        fit: BoxFit.scaleDown,
-                        child: Text(
-                          matchedProfile?.userName ?? "",
-                          maxLines: 1,
-                          overflow: TextOverflow.ellipsis,
-                          style: appTheme.black16Bold
-                              .copyWith(fontSize: getFontSize(25)),
-                        ),
-                      ),
+                      (matchedProfile?.userName?.isEmpty ?? true)
+                          ? Container()
+                          : FittedBox(
+                              fit: BoxFit.scaleDown,
+                              child: Text(
+                                matchedProfile?.userName ?? "",
+                                maxLines: 1,
+                                overflow: TextOverflow.ellipsis,
+                                style: appTheme.black16Bold
+                                    .copyWith(fontSize: getFontSize(25)),
+                              ),
+                            ),
                     ],
                   ),
                 ),
