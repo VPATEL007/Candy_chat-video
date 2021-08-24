@@ -51,9 +51,8 @@ class VideoCallState extends State<VideoCall> {
   @override
   void dispose() {
     // destroy sdk
-    _endCall();
+    endCall();
     agoraService?.leaveChannel();
-    agoraService?.logOut();
     super.dispose();
   }
 
@@ -228,8 +227,9 @@ class VideoCallState extends State<VideoCall> {
   Widget callEndButton() {
     return InkWell(
         onTap: () {
+          Navigator.pop(context);
           agoraService.endCallMessage(widget.toUserId);
-          _endCall();
+          endCall();
         },
         child: Image.asset(icEndVideoCall,
             height: getSize(46), width: getSize(46)));
@@ -250,15 +250,13 @@ class VideoCallState extends State<VideoCall> {
     );
   }
 
-  void _endCall() {
+  void endCall() {
     try {
       engine.leaveChannel();
       engine.destroy();
     } catch (e) {
       print(e);
     }
-
-    Navigator.pop(context);
   }
 
 //Mic Mute

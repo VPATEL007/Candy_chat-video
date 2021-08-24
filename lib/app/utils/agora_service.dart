@@ -8,6 +8,7 @@ import 'package:video_chat/app/app.export.dart';
 import 'package:video_chat/components/Model/Match%20Profile/video_call.dart';
 import 'package:video_chat/components/Model/User/UserModel.dart';
 import 'package:video_chat/components/Screens/Home/MatchedProfile.dart';
+import 'package:video_chat/components/Screens/Splash/Splash.dart';
 import 'package:video_chat/components/Screens/VideoCall/VideoCall.dart';
 import 'package:video_chat/provider/followes_provider.dart';
 import 'package:video_chat/provider/matching_profile_provider.dart';
@@ -104,7 +105,7 @@ class AgoraService {
     }
 
     await _client.sendMessageToPeer(
-        toUserId, AgoraRtmMessage.fromText(jsonEncode(req)));
+        "41", AgoraRtmMessage.fromText(jsonEncode(req)));
   }
 
 //Reject Call
@@ -286,12 +287,13 @@ class AgoraService {
             toUserId: peerId),
       );
     } else if (model.endCall == true) {
+      Future.delayed(Duration(seconds: 1), () {
+        NavigationUtilities.pop();
+      });
       print("endCall");
       View.showMessage(NavigationUtilities.key.currentContext, "Call Ended");
-      // Future.delayed(Duration(seconds: 1), () {
-        NavigationUtilities.pop();
-      // });
-      //End Call
+      VideoCallState().endCall();
+      leaveChannel();
     }
   }
 }

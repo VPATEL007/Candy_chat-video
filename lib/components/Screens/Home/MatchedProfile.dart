@@ -122,7 +122,7 @@ class _MatchedProfileState extends State<MatchedProfile> {
         SizedBox(
           width: getSize(36),
         ),
-        callStatus == CallStatus.Start
+        callStatus == CallStatus.Start || callStatus == CallStatus.Reject
             ? Container()
             : InkWell(
                 onTap: () {

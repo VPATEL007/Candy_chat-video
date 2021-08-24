@@ -272,18 +272,21 @@ class _DiscoverState extends State<Discover> {
                                 Provider.of<VideoCallStatusProvider>(context,
                                         listen: false)
                                     .setCallStatus = CallStatus.Start;
+                                UserModel userModel =
+                                    Provider.of<FollowesProvider>(context,
+                                            listen: false)
+                                        .userModel;
                                 Navigator.of(context).push(MaterialPageRoute(
                                   builder: (context) => MatchedProfile(
                                     channelName: videoCallModel.channelName,
                                     token: videoCallModel.sessionId,
                                     fromId:
                                         videoCallModel.fromUserId.toString(),
-                                    fromImageUrl: Provider.of<FollowesProvider>(
-                                                context,
-                                                listen: false)
-                                            ?.userModel
-                                            ?.photoUrl ??
-                                        "",
+                                    fromImageUrl:
+                                        (userModel?.userImages?.isEmpty ?? true)
+                                            ? ""
+                                            : userModel?.userImages?.first ??
+                                                "",
                                     name: discover?.userName,
                                     toImageUrl: discover?.photoUrl ?? "",
                                     id: videoCallModel.toUserId.toString(),

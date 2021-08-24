@@ -70,6 +70,9 @@ class _MathProfileState extends State<MathProfile> {
                 VideoCallModel videoCallModel =
                     Provider.of<MatchingProfileProvider>(context, listen: false)
                         .videoCallModel;
+                UserModel userModel =
+                    Provider.of<FollowesProvider>(context, listen: false)
+                        .userModel;
                 if (videoCallModel != null)
                   AgoraService.instance.sendVideoCallMessage(
                       videoCallModel.toUserId.toString(),
@@ -77,15 +80,20 @@ class _MathProfileState extends State<MathProfile> {
                       videoCallModel.channelName,
                       context);
                 Navigator.of(context).push(MaterialPageRoute(
-                  builder: (context) => VideoCall(
+                  builder: (context) => MatchedProfile(
                     channelName: videoCallModel.channelName,
                     token: videoCallModel.sessionId,
-                    userId: Provider.of<MatchingProfileProvider>(context,
+                    fromId: Provider.of<MatchingProfileProvider>(context,
                             listen: false)
                         .matchProfileList[index]
                         .id
                         ?.toString(),
-                    toUserId: videoCallModel.toUserId.toString(),
+                    name: e?.providerDisplayName ?? "",
+                    toImageUrl: e?.photoUrl ?? "",
+                    fromImageUrl: (userModel?.userImages?.isEmpty ?? true)
+                        ? ""
+                        : userModel?.userImages?.first ?? "",
+                    id: videoCallModel.toUserId.toString(),
                   ),
                 ));
               }
