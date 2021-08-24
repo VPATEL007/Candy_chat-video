@@ -10,6 +10,7 @@ import 'package:video_chat/components/Model/Match%20Profile/call_status.dart';
 import 'package:video_chat/components/Model/Match%20Profile/video_call.dart';
 import 'package:video_chat/components/Model/User/UserModel.dart';
 import 'package:video_chat/components/Screens/Home/MatchedProfile.dart';
+import 'package:video_chat/components/Screens/Splash/Splash.dart';
 import 'package:video_chat/components/Screens/VideoCall/VideoCall.dart';
 import 'package:video_chat/provider/followes_provider.dart';
 import 'package:video_chat/provider/matching_profile_provider.dart';
@@ -297,12 +298,13 @@ class AgoraService {
         InAppPurchase.instance.openCoinPurchasePopUp();
       }
     } else if (model.endCall == true) {
+      Future.delayed(Duration(seconds: 1), () {
+        NavigationUtilities.pop();
+      });
       print("endCall");
       View.showMessage(NavigationUtilities.key.currentContext, "Call Ended");
-      // Future.delayed(Duration(seconds: 1), () {
-      NavigationUtilities.pop();
-      // });
-      //End Call
+      VideoCallState().endCall();
+      leaveChannel();
     }
   }
 }
