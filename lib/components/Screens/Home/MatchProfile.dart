@@ -383,14 +383,17 @@ class _MathProfileState extends State<MathProfile> {
                         style: appTheme.black16Medium,
                       ),
                       SizedBox(
-                        height: getSize(12),
+                        height: getSize(20),
                       ),
-                      Text(
-                        matchedProfile?.userName ?? "",
-                        maxLines: 1,
-                        overflow: TextOverflow.ellipsis,
-                        style: appTheme.black16Bold
-                            .copyWith(fontSize: getFontSize(25)),
+                      FittedBox(
+                        fit: BoxFit.scaleDown,
+                        child: Text(
+                          matchedProfile?.userName ?? "",
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                          style: appTheme.black16Bold
+                              .copyWith(fontSize: getFontSize(25)),
+                        ),
                       ),
                     ],
                   ),

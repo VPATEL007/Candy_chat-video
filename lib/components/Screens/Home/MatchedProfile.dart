@@ -118,8 +118,8 @@ class _MatchedProfileState extends State<MatchedProfile> {
         InkWell(
           onTap: () {
             Navigator.pop(context);
-            // Provider.of<MatchingProfileProvider>(context, listen: false)
-            //     .receiveVideoCall(context, widget.token, widget.channelName);
+            Provider.of<MatchingProfileProvider>(context, listen: false)
+                .receiveVideoCall(context, widget.token, widget.channelName);
             Navigator.of(context).push(MaterialPageRoute(
               builder: (context) => VideoCall(
                   channelName: widget.channelName,

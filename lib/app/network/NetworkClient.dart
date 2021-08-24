@@ -141,7 +141,12 @@ class NetworkClient {
               successCallback: successCallback,
               failureCallback: failureCallback);
         } on DioError catch (e) {
-          failureCallback("", e.message.toString());
+          if (e.message.toString().toLowerCase() ==
+              "Connecting timed out [1ms]".toLowerCase()) {
+            failureCallback("", "Connection timeout, Please try again. ");
+          } else {
+            failureCallback("", e.message.toString());
+          }
         } catch (e) {
           failureCallback("", e.toString());
         }
@@ -156,7 +161,12 @@ class NetworkClient {
               successCallback: successCallback,
               failureCallback: failureCallback);
         } on DioError catch (e) {
-          failureCallback("", e.message.toString());
+          if (e.message.toString().toLowerCase() ==
+              "Connecting timed out [1ms]".toLowerCase()) {
+            failureCallback("", "Connection timeout, Please try again. ");
+          } else {
+            failureCallback("", e.message.toString());
+          }
         } catch (e) {
           failureCallback("", e.toString());
         }
@@ -170,7 +180,12 @@ class NetworkClient {
               successCallback: successCallback,
               failureCallback: failureCallback);
         } on DioError catch (e) {
-          failureCallback("", e.message.toString());
+          if (e.message.toString().toLowerCase() ==
+              "Connecting timed out [1ms]".toLowerCase()) {
+            failureCallback("", "Connection timeout, Please try again. ");
+          } else {
+            failureCallback("", e.message.toString());
+          }
         } catch (e) {
           failureCallback("", e.toString());
         }
@@ -184,7 +199,12 @@ class NetworkClient {
               successCallback: successCallback,
               failureCallback: failureCallback);
         } on DioError catch (e) {
-          failureCallback("", e.message.toString());
+          if (e.message.toString().toLowerCase() ==
+              "Connecting timed out [1ms]".toLowerCase()) {
+            failureCallback("", "Connection timeout, Please try again. ");
+          } else {
+            failureCallback("", e.message.toString());
+          }
         } catch (e) {
           failureCallback("", e.toString());
         }
