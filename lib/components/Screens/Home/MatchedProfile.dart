@@ -145,7 +145,8 @@ class _MatchedProfileState extends State<MatchedProfile> {
                           channelName: widget.channelName,
                           token: widget.token,
                           userId: widget.fromId,
-                          toUserId: widget.id),
+                          toUserId: widget.id,
+                          isApiCall: true),
                     ));
                   } else {
                     InAppPurchase.instance.openCoinPurchasePopUp();

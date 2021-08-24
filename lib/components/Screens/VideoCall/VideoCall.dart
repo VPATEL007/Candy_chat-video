@@ -23,12 +23,14 @@ class VideoCall extends StatefulWidget {
   final String channelName;
   final String userId;
   final String toUserId;
+  final bool isApiCall;
   VideoCall(
       {Key key,
       @required this.channelName,
       @required this.token,
       @required this.userId,
-      @required this.toUserId})
+      @required this.toUserId,
+      this.isApiCall = false})
       : super(key: key);
 
   @override
@@ -52,14 +54,19 @@ class VideoCallState extends State<VideoCall> {
     WidgetsBinding.instance.addPostFrameCallback((_) {
       initPlatformState();
     });
-    timer = Timer.periodic(
-        Duration(seconds: 60), (Timer t) => callReceiveApiCall());
+
+    if (widget.isApiCall) {
+      timer = Timer.periodic(
+          Duration(seconds: 60), (Timer t) => callReceiveApiCall());
+    }
+
     // init();
   }
 
   @override
   void dispose() {
     // destroy sdk
+    timer?.cancel();
     endCall();
     agoraService?.leaveChannel();
     super.dispose();
@@ -261,6 +268,7 @@ class VideoCallState extends State<VideoCall> {
 
   void endCall() {
     try {
+      timer?.cancel();
       engine.leaveChannel();
       engine.destroy();
     } catch (e) {

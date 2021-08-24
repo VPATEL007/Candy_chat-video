@@ -10,6 +10,7 @@ import 'package:video_chat/app/extensions/view.dart';
 import 'package:video_chat/app/network/NetworkClient.dart';
 import 'package:video_chat/app/utils/CommonWidgets.dart';
 import 'package:video_chat/app/utils/math_utils.dart';
+import 'package:video_chat/app/utils/navigator.dart';
 import 'package:video_chat/app/utils/pref_utils.dart';
 
 import '../../main.dart';
@@ -38,7 +39,8 @@ class InAppPurchase {
 
     List<ProductDetails> products = [];
 
-    NetworkClient.getInstance.showLoader(navigationKey.currentContext);
+    NetworkClient.getInstance
+        .showLoader(NavigationUtilities.key.currentContext);
     ProductDetailsResponse productDetailResponse =
         await _connection.queryProductDetails(_kProductIds.toSet());
 
@@ -75,7 +77,8 @@ class InAppPurchase {
     purchaseDetailsList.forEach((PurchaseDetails purchaseDetails) async {
       if (purchaseDetails.status == PurchaseStatus.purchased) {
         InAppPurchaseConnection.instance.completePurchase(purchaseDetails);
-        await verifyPurchase(purchaseDetails, navigationKey.currentContext);
+        await verifyPurchase(
+            purchaseDetails, NavigationUtilities.key.currentContext);
         completeTransaction();
       }
     });
@@ -143,9 +146,10 @@ class InAppPurchase {
     print(DateTime.fromMillisecondsSinceEpoch(
         purchaseDetails.skPaymentTransaction.transactionTimeStamp.toInt()));
 
-    NetworkClient.getInstance.showLoader(navigationKey.currentContext);
+    NetworkClient.getInstance
+        .showLoader(NavigationUtilities.key.currentContext);
     await NetworkClient.getInstance.callApi(
-      context: navigationKey.currentContext,
+      context: NavigationUtilities.key.currentContext,
       baseUrl: ApiConstants.apiUrl,
       command: ApiConstants.buyPackage,
       headers: NetworkClient.getInstance.getAuthHeaders(),
@@ -154,13 +158,13 @@ class InAppPurchase {
       successCallback: (response, message) async {
         NetworkClient.getInstance.hideProgressDialog();
 
-        View.showMessage(
-            navigationKey.currentContext, "Your coin credited in your account.",
+        View.showMessage(NavigationUtilities.key.currentContext,
+            "Your coin credited in your account.",
             mode: DisplayMode.SUCCESS);
       },
       failureCallback: (code, message) {
         NetworkClient.getInstance.hideProgressDialog();
-        View.showMessage(navigationKey.currentContext, message);
+        View.showMessage(NavigationUtilities.key.currentContext, message);
       },
     );
   }
@@ -173,7 +177,7 @@ class InAppPurchase {
           borderRadius: BorderRadius.only(
               topLeft: Radius.circular(20.0), topRight: Radius.circular(20.0)),
         ),
-        context: navigationKey.currentContext,
+        context: NavigationUtilities.key.currentContext,
         builder: (builder) {
           return StatefulBuilder(
             builder: (BuildContext context, setState) {

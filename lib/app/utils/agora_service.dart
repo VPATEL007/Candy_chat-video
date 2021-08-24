@@ -143,16 +143,16 @@ class AgoraService {
   }
 
   Future<void> logOut() async {
-    try {
-      await _client?.logout();
-      debugPrint('logout success: ');
-    } on AgoraRtmClientException catch (e) {
-      throw e.reason.toString();
-    } on AgoraRtmChannelException catch (e) {
-      throw e.reason.toString();
-    } catch (e) {
-      throw e.toString();
-    }
+    // try {
+    //   await _client?.logout();
+    //   debugPrint('logout success: ');
+    // } on AgoraRtmClientException catch (e) {
+    //   throw e.reason.toString();
+    // } on AgoraRtmChannelException catch (e) {
+    //   throw e.reason.toString();
+    // } catch (e) {
+    //   throw e.toString();
+    // }
   }
 
   Future<void> sendMessage(String message) async {
@@ -260,7 +260,7 @@ class AgoraService {
         toImageUrl: model?.image?.photoUrl ?? "",
         fromImageUrl: (userModel?.userImages?.isEmpty ?? true)
             ? ""
-            : userModel?.userImages?.first ?? "",
+            : userModel?.userImages?.first?.photoUrl ?? "",
         channelName: model.channelName,
         token: model.sessionId,
         fromId: app.resolve<PrefUtils>().getUserDetails()?.id?.toString(),
