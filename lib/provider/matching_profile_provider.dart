@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:video_chat/app/Helper/CommonApiHelper.dart';
 import 'package:video_chat/app/app.export.dart';
 import 'package:video_chat/app/extensions/view.dart';
+import 'package:video_chat/components/Model/Match%20Profile/call_status.dart';
 import 'package:video_chat/components/Model/Match%20Profile/match_profile.dart';
 import 'package:video_chat/components/Model/Match%20Profile/video_call.dart';
 
@@ -71,6 +72,7 @@ class MatchingProfileProvider with ChangeNotifier {
     }
   }
 
+  CallStatusModel coinStatus;
   Future<void> receiveVideoCall(
       BuildContext context, String sessionId, String channelName) async {
     try {
@@ -86,7 +88,11 @@ class MatchingProfileProvider with ChangeNotifier {
         headers: NetworkClient.getInstance.getAuthHeaders(),
         method: MethodType.Post,
         params: _parms,
-        successCallback: (response, message) {},
+        successCallback: (response, message) {
+          if (response["call_status"] != null) {
+            coinStatus = CallStatusModel.fromJson(response["call_status"]);
+          }
+        },
         failureCallback: (code, message) {
           View.showMessage(context, message);
         },

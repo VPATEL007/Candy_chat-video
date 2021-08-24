@@ -1,16 +1,22 @@
+import 'dart:async';
+
 import 'package:agora_rtc_engine/rtc_engine.dart';
 import 'package:agora_rtm/agora_rtm.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:permission_handler/permission_handler.dart';
+import 'package:provider/provider.dart';
+import 'package:video_chat/app/Helper/inAppPurchase_service.dart';
 import 'package:video_chat/app/app.export.dart';
 import 'package:video_chat/app/constant/ColorConstant.dart';
 import 'package:video_chat/app/constant/KeyConsant.dart';
 import 'package:agora_rtc_engine/rtc_remote_view.dart' as RtcRemoteView;
 import 'package:agora_rtc_engine/rtc_local_view.dart' as RtcLocalView;
 import 'package:video_chat/app/utils/CommonTextfield.dart';
+import 'package:video_chat/components/Model/Match%20Profile/call_status.dart';
 import 'package:video_chat/components/Screens/Chat/Chat.dart';
+import 'package:video_chat/provider/matching_profile_provider.dart';
 
 class VideoCall extends StatefulWidget {
   final String token;
@@ -39,12 +45,15 @@ class VideoCallState extends State<VideoCall> {
   int _remoteUid = 0;
   AgoraService agoraService = AgoraService.instance;
   List<MessageObj> _chatsList = [];
+  Timer timer;
   @override
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) {
       initPlatformState();
     });
+    timer = Timer.periodic(
+        Duration(seconds: 60), (Timer t) => callReceiveApiCall());
     // init();
   }
 
@@ -322,5 +331,22 @@ class VideoCallState extends State<VideoCall> {
     });
 
     return tempArray;
+  }
+
+//Receive Video Call
+  callReceiveApiCall() async {
+    await Provider.of<MatchingProfileProvider>(navigationKey.currentContext,
+            listen: false)
+        .receiveVideoCall(
+            navigationKey.currentContext, widget.token, widget.channelName);
+    CallStatusModel callStatus = Provider.of<MatchingProfileProvider>(
+            navigationKey.currentContext,
+            listen: false)
+        .coinStatus;
+    if (callStatus == null || callStatus?.continueCall == false) {
+      endCall();
+      Navigator.pop(context);
+      InAppPurchase.instance.openCoinPurchasePopUp();
+    }
   }
 }

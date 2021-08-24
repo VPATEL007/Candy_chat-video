@@ -8,6 +8,7 @@ import 'package:video_chat/app/Helper/inAppPurchase_service.dart';
 import 'package:video_chat/app/app.export.dart';
 import 'package:video_chat/app/constant/ColorConstant.dart';
 import 'package:video_chat/app/utils/CommonWidgets.dart';
+import 'package:video_chat/components/Model/Match%20Profile/call_status.dart';
 import 'package:video_chat/components/Screens/VideoCall/VideoCall.dart';
 import 'package:video_chat/provider/matching_profile_provider.dart';
 import 'package:video_chat/provider/video_call_status_provider.dart';
@@ -125,19 +126,30 @@ class _MatchedProfileState extends State<MatchedProfile> {
         callStatus == CallStatus.Start || callStatus == CallStatus.Reject
             ? Container()
             : InkWell(
-                onTap: () {
+                onTap: () async {
                   AgoraService.instance.sendReceiveCallMessage(widget.id);
                   Navigator.pop(context);
-                  Provider.of<MatchingProfileProvider>(context, listen: false)
+                  await Provider.of<MatchingProfileProvider>(context,
+                          listen: false)
                       .receiveVideoCall(
                           context, widget.token, widget.channelName);
-                  Navigator.of(context).push(MaterialPageRoute(
-                    builder: (context) => VideoCall(
-                        channelName: widget.channelName,
-                        token: widget.token,
-                        userId: widget.fromId,
-                        toUserId: widget.id),
-                  ));
+                  CallStatusModel coinStatus =
+                      Provider.of<MatchingProfileProvider>(
+                              navigationKey.currentContext,
+                              listen: false)
+                          .coinStatus;
+
+                  if (coinStatus?.continueCall == true) {
+                    Navigator.of(context).push(MaterialPageRoute(
+                      builder: (context) => VideoCall(
+                          channelName: widget.channelName,
+                          token: widget.token,
+                          userId: widget.fromId,
+                          toUserId: widget.id),
+                    ));
+                  } else {
+                    InAppPurchase.instance.openCoinPurchasePopUp();
+                  }
                 },
                 child: Image.asset(
                   icCallAccept,
@@ -229,106 +241,5 @@ class _MatchedProfileState extends State<MatchedProfile> {
         ),
       ),
     );
-  }
-
-  openCoinPurchasePopUp() async {
-    _products = await InAppPurchase.instance.getProducts(context);
-    showModalBottomSheet(
-        isScrollControlled: true,
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.only(
-              topLeft: Radius.circular(20.0), topRight: Radius.circular(20.0)),
-        ),
-        context: context,
-        builder: (builder) {
-          return StatefulBuilder(
-            builder: (BuildContext context, setState) {
-              return SafeArea(
-                  child: Padding(
-                padding: EdgeInsets.only(
-                    top: getSize(23), left: getSize(26), right: getSize(26)),
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Row(
-                      children: [
-                        Text(
-                          "Insufficient Coins",
-                          style: appTheme.black16Bold
-                              .copyWith(fontSize: getFontSize(25)),
-                        ),
-                        Spacer(),
-                        InkWell(
-                          onTap: () {
-                            Navigator.pop(context);
-                          },
-                          child: Text(
-                            "Close",
-                            style: appTheme.black14SemiBold.copyWith(
-                                fontSize: getFontSize(18),
-                                color: ColorConstants.red),
-                          ),
-                        )
-                      ],
-                    ),
-                    SizedBox(
-                      height: getSize(19),
-                    ),
-                    Row(
-                      children: [
-                        Image.asset(
-                          icCoin,
-                          height: getSize(20),
-                        ),
-                        SizedBox(
-                          width: getSize(8),
-                        ),
-                        Text(
-                          "30/min",
-                          style: appTheme.black12Normal.copyWith(
-                              fontSize: getFontSize(18),
-                              color: ColorConstants.red),
-                        )
-                      ],
-                    ),
-                    SizedBox(
-                      height: getSize(13),
-                    ),
-                    Text(
-                      "Recharge to enable 1 to 1 Video chat.",
-                      style: appTheme.black14Normal
-                          .copyWith(fontWeight: FontWeight.w500),
-                    ),
-                    SizedBox(
-                      height: getSize(26),
-                    ),
-                    GridView.builder(
-                        gridDelegate:
-                            new SliverGridDelegateWithFixedCrossAxisCount(
-                                crossAxisCount: 2),
-                        shrinkWrap: true,
-                        physics: NeverScrollableScrollPhysics(),
-                        itemCount: _products.length,
-                        itemBuilder: (BuildContext context, int index) {
-                          return InkWell(
-                              onTap: () {
-                                InAppPurchase.instance
-                                    .purchaseProduct(_products[index]);
-                              },
-                              child: getCoinItem(
-                                  _products[index], false, context));
-                          // return getCoinItem(index == 0, context);
-                        }),
-                    SizedBox(
-                      height: getSize(22),
-                    ),
-                    getPopBottomButton(context, "Apply", () {})
-                  ],
-                ),
-              ));
-            },
-          );
-        });
   }
 }
