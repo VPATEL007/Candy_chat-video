@@ -21,6 +21,7 @@ class InAppPurchase {
     "com.randomvideochat.videochat.30",
     "com.randomvideochat.videochat.203"
   ];
+  List<ProductDetails> listProducts = [];
 
 //Get Product
   Future<List<ProductDetails>> getProducts(BuildContext context1) async {
@@ -42,6 +43,7 @@ class InAppPurchase {
       products.sort((a, b) {
         return a.rawPrice.compareTo(b.rawPrice);
       });
+      listProducts = products;
     } else {
       products = [];
     }
@@ -110,14 +112,50 @@ class InAppPurchase {
       method: MethodType.Post,
       successCallback: (response, message) async {
         NetworkClient.getInstance.hideProgressDialog();
-        View.showMessage(context, "Your coin credited in your account.",
-            mode: DisplayMode.SUCCESS);
+        creditCoin(purchaseDetails);
+
         return Future<bool>.value(true);
       },
       failureCallback: (code, message) {
         NetworkClient.getInstance.hideProgressDialog();
         View.showMessage(context, message);
         return Future<bool>.value(true);
+      },
+    );
+  }
+
+//Credit Coin
+  creditCoin(PurchaseDetails purchaseDetails) async {
+    var product = listProducts
+        .firstWhere((element) => element.id == purchaseDetails.productID);
+
+    Map<String, dynamic> req = {};
+    req["gateway"] = "apple";
+    req["package_id"] = purchaseDetails.productID;
+    req["transaction_id"] = purchaseDetails.purchaseID;
+    req["package_name"] = product?.title;
+    req["paid_amount"] = product?.rawPrice;
+    req["currency"] = product?.currencyCode;
+    print(DateTime.fromMillisecondsSinceEpoch(
+        purchaseDetails.skPaymentTransaction.transactionTimeStamp.toInt()));
+
+    NetworkClient.getInstance.showLoader(context);
+    await NetworkClient.getInstance.callApi(
+      context: context,
+      baseUrl: ApiConstants.apiUrl,
+      command: ApiConstants.buyPackage,
+      headers: NetworkClient.getInstance.getAuthHeaders(),
+      method: MethodType.Post,
+      params: req,
+      successCallback: (response, message) async {
+        NetworkClient.getInstance.hideProgressDialog();
+
+        View.showMessage(context, "Your coin credited in your account.",
+            mode: DisplayMode.SUCCESS);
+      },
+      failureCallback: (code, message) {
+        NetworkClient.getInstance.hideProgressDialog();
+        View.showMessage(context, message);
       },
     );
   }
