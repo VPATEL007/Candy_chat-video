@@ -95,7 +95,7 @@ class AgoraService {
     Map<String, dynamic> req = {};
     req["VideoCall"] = true;
     var user = Provider.of<FollowesProvider>(context, listen: false).userModel;
-    req["name"] = user.providerDisplayName;
+    req["name"] = user?.providerDisplayName ?? "";
     req["session_id"] = sessionId;
     req["channel_name"] = channelName;
 

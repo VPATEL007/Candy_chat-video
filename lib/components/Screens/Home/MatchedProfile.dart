@@ -87,7 +87,7 @@ class _MatchedProfileState extends State<MatchedProfile> {
                   ),
                   Center(
                     child: Text(
-                      "${widget.name} invites you to a video call",
+                      "You invites to a ${widget.name} for video call",
                       style: appTheme.black14Normal.copyWith(
                           fontWeight: FontWeight.w500,
                           fontSize: getFontSize(16)),

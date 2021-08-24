@@ -20,6 +20,7 @@ import 'package:video_chat/components/widgets/TabBar/Tabbar.dart';
 import 'package:video_chat/provider/followes_provider.dart';
 import 'package:video_chat/provider/matching_profile_provider.dart';
 import 'package:video_chat/provider/report_and_block_provider.dart';
+import 'package:video_chat/provider/video_call_status_provider.dart';
 
 import 'Card/draggable_card.dart';
 import 'Card/swipe_cards.dart';
@@ -79,6 +80,8 @@ class _MathProfileState extends State<MathProfile> {
                       videoCallModel.sessionId,
                       videoCallModel.channelName,
                       context);
+                Provider.of<VideoCallStatusProvider>(context, listen: false)
+                    .setCallStatus = CallStatus.Start;
                 Navigator.of(context).push(MaterialPageRoute(
                   builder: (context) => MatchedProfile(
                     channelName: videoCallModel.channelName,
@@ -92,7 +95,7 @@ class _MathProfileState extends State<MathProfile> {
                     toImageUrl: e?.photoUrl ?? "",
                     fromImageUrl: (userModel?.userImages?.isEmpty ?? true)
                         ? ""
-                        : userModel?.userImages?.first ?? "",
+                        : userModel?.userImages?.first?.photoUrl ?? "",
                     id: videoCallModel.toUserId.toString(),
                   ),
                 ));
