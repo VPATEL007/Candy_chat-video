@@ -26,7 +26,7 @@ class _CoinsState extends State<Coins> {
   }
 
   getList() async {
-    _products = await purchase.getProducts(context);
+    _products = await purchase.getProducts();
     setState(() {});
   }
 

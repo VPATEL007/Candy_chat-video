@@ -4,18 +4,22 @@ import 'package:flutter/material.dart';
 import 'package:in_app_purchase/in_app_purchase.dart';
 import 'package:in_app_purchase/store_kit_wrappers.dart';
 import 'package:video_chat/app/constant/ApiConstants.dart';
+import 'package:video_chat/app/constant/ColorConstant.dart';
+import 'package:video_chat/app/constant/ImageConstant.dart';
 import 'package:video_chat/app/extensions/view.dart';
 import 'package:video_chat/app/network/NetworkClient.dart';
+import 'package:video_chat/app/utils/CommonWidgets.dart';
+import 'package:video_chat/app/utils/math_utils.dart';
 import 'package:video_chat/app/utils/pref_utils.dart';
 
 import '../../main.dart';
+import 'Themehelper.dart';
 
 class InAppPurchase {
   InAppPurchase._();
 
   static InAppPurchase instance = InAppPurchase._();
   final InAppPurchaseConnection _connection = InAppPurchaseConnection.instance;
-  BuildContext context;
   StreamSubscription<List<PurchaseDetails>> subscription;
   List<String> _kProductIds = <String>[
     "com.randomvideochat.videochat.30",
@@ -24,9 +28,9 @@ class InAppPurchase {
   List<ProductDetails> listProducts = [];
 
 //Get Product
-  Future<List<ProductDetails>> getProducts(BuildContext context1) async {
+  Future<List<ProductDetails>> getProducts() async {
     intialConfig();
-    context = context1;
+
     final bool isAvailable = await _connection.isAvailable();
     if (!isAvailable) {
       return [];
@@ -34,7 +38,7 @@ class InAppPurchase {
 
     List<ProductDetails> products = [];
 
-    NetworkClient.getInstance.showLoader(context);
+    NetworkClient.getInstance.showLoader(navigationKey.currentContext);
     ProductDetailsResponse productDetailResponse =
         await _connection.queryProductDetails(_kProductIds.toSet());
 
@@ -71,7 +75,7 @@ class InAppPurchase {
     purchaseDetailsList.forEach((PurchaseDetails purchaseDetails) async {
       if (purchaseDetails.status == PurchaseStatus.purchased) {
         InAppPurchaseConnection.instance.completePurchase(purchaseDetails);
-        await verifyPurchase(purchaseDetails, context);
+        await verifyPurchase(purchaseDetails, navigationKey.currentContext);
         completeTransaction();
       }
     });
@@ -139,9 +143,9 @@ class InAppPurchase {
     print(DateTime.fromMillisecondsSinceEpoch(
         purchaseDetails.skPaymentTransaction.transactionTimeStamp.toInt()));
 
-    NetworkClient.getInstance.showLoader(context);
+    NetworkClient.getInstance.showLoader(navigationKey.currentContext);
     await NetworkClient.getInstance.callApi(
-      context: context,
+      context: navigationKey.currentContext,
       baseUrl: ApiConstants.apiUrl,
       command: ApiConstants.buyPackage,
       headers: NetworkClient.getInstance.getAuthHeaders(),
@@ -150,13 +154,115 @@ class InAppPurchase {
       successCallback: (response, message) async {
         NetworkClient.getInstance.hideProgressDialog();
 
-        View.showMessage(context, "Your coin credited in your account.",
+        View.showMessage(
+            navigationKey.currentContext, "Your coin credited in your account.",
             mode: DisplayMode.SUCCESS);
       },
       failureCallback: (code, message) {
         NetworkClient.getInstance.hideProgressDialog();
-        View.showMessage(context, message);
+        View.showMessage(navigationKey.currentContext, message);
       },
     );
+  }
+
+  openCoinPurchasePopUp() async {
+    var _products = await InAppPurchase.instance.getProducts();
+    showModalBottomSheet(
+        isScrollControlled: true,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.only(
+              topLeft: Radius.circular(20.0), topRight: Radius.circular(20.0)),
+        ),
+        context: navigationKey.currentContext,
+        builder: (builder) {
+          return StatefulBuilder(
+            builder: (BuildContext context, setState) {
+              return SafeArea(
+                  child: Padding(
+                padding: EdgeInsets.only(
+                    top: getSize(23), left: getSize(26), right: getSize(26)),
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Row(
+                      children: [
+                        Text(
+                          "Insufficient Coins",
+                          style: appTheme.black16Bold
+                              .copyWith(fontSize: getFontSize(25)),
+                        ),
+                        Spacer(),
+                        InkWell(
+                          onTap: () {
+                            Navigator.pop(context);
+                          },
+                          child: Text(
+                            "Close",
+                            style: appTheme.black14SemiBold.copyWith(
+                                fontSize: getFontSize(18),
+                                color: ColorConstants.red),
+                          ),
+                        )
+                      ],
+                    ),
+                    SizedBox(
+                      height: getSize(19),
+                    ),
+                    Row(
+                      children: [
+                        Image.asset(
+                          icCoin,
+                          height: getSize(20),
+                        ),
+                        SizedBox(
+                          width: getSize(8),
+                        ),
+                        Text(
+                          "30/min",
+                          style: appTheme.black12Normal.copyWith(
+                              fontSize: getFontSize(18),
+                              color: ColorConstants.red),
+                        )
+                      ],
+                    ),
+                    SizedBox(
+                      height: getSize(13),
+                    ),
+                    Text(
+                      "Recharge to enable 1 to 1 Video chat.",
+                      style: appTheme.black14Normal
+                          .copyWith(fontWeight: FontWeight.w500),
+                    ),
+                    SizedBox(
+                      height: getSize(26),
+                    ),
+                    GridView.builder(
+                        gridDelegate:
+                            new SliverGridDelegateWithFixedCrossAxisCount(
+                                crossAxisCount: 2),
+                        shrinkWrap: true,
+                        physics: NeverScrollableScrollPhysics(),
+                        itemCount: _products.length,
+                        itemBuilder: (BuildContext context, int index) {
+                          return InkWell(
+                              onTap: () {
+                                InAppPurchase.instance
+                                    .purchaseProduct(_products[index]);
+                              },
+                              child: getCoinItem(
+                                  _products[index], false, context));
+                          // return getCoinItem(index == 0, context);
+                        }),
+                    SizedBox(
+                      height: getSize(22),
+                    ),
+                    getPopBottomButton(context, "Apply", () {})
+                  ],
+                ),
+              ));
+            },
+          );
+        });
   }
 }

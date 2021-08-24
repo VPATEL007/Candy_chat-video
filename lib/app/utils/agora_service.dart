@@ -4,7 +4,9 @@ import 'dart:convert';
 import 'package:agora_rtm/agora_rtm.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:video_chat/app/Helper/inAppPurchase_service.dart';
 import 'package:video_chat/app/app.export.dart';
+import 'package:video_chat/components/Model/Match%20Profile/call_status.dart';
 import 'package:video_chat/components/Model/Match%20Profile/video_call.dart';
 import 'package:video_chat/components/Model/User/UserModel.dart';
 import 'package:video_chat/components/Screens/Home/MatchedProfile.dart';
@@ -242,7 +244,8 @@ class AgoraService {
     }
   }
 
-  void handleVideoCallEvent(StartVideoCallModel model, String peerId) {
+  Future<void> handleVideoCallEvent(
+      StartVideoCallModel model, String peerId) async {
     UserModel userModel = Provider.of<FollowesProvider>(
             navigationKey.currentContext,
             listen: false)
@@ -274,17 +277,25 @@ class AgoraService {
               listen: false)
           .videoCallModel;
       NavigationUtilities.pop();
-      Provider.of<MatchingProfileProvider>(navigationKey.currentContext,
+      await Provider.of<MatchingProfileProvider>(navigationKey.currentContext,
               listen: false)
           .receiveVideoCall(navigationKey.currentContext,
               videoCallModel.sessionId, videoCallModel.channelName);
-      NavigationUtilities.push(
-        VideoCall(
-            channelName: videoCallModel.channelName,
-            token: videoCallModel.sessionId,
-            userId: app.resolve<PrefUtils>().getUserDetails()?.id?.toString(),
-            toUserId: peerId),
-      );
+      CallStatusModel callStatus = Provider.of<MatchingProfileProvider>(
+              navigationKey.currentContext,
+              listen: false)
+          .coinStatus;
+      if (callStatus?.continueCall == true) {
+        NavigationUtilities.push(
+          VideoCall(
+              channelName: videoCallModel.channelName,
+              token: videoCallModel.sessionId,
+              userId: app.resolve<PrefUtils>().getUserDetails()?.id?.toString(),
+              toUserId: peerId),
+        );
+      } else {
+        InAppPurchase.instance.openCoinPurchasePopUp();
+      }
     } else if (model.endCall == true) {
       print("endCall");
       View.showMessage(NavigationUtilities.key.currentContext, "Call Ended");
