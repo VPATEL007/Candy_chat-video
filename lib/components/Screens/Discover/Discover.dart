@@ -285,7 +285,8 @@ class _DiscoverState extends State<Discover> {
                                     fromImageUrl:
                                         (userModel?.userImages?.isEmpty ?? true)
                                             ? ""
-                                            : userModel?.userImages?.first ??
+                                            : userModel?.userImages?.first
+                                                    ?.photoUrl ??
                                                 "",
                                     name: discover?.userName,
                                     toImageUrl: discover?.photoUrl ?? "",

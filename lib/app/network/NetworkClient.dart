@@ -14,6 +14,7 @@ class MethodType {
   static const String Get = "GET";
   static const String Put = "PUT";
   static const String Delete = "DELETE";
+  static const String Patch = "PATCH";
 }
 
 class NetworkClient {
@@ -195,6 +196,24 @@ class NetworkClient {
       case MethodType.Delete:
         try {
           Response response = await dio.delete(baseUrl + command, data: params);
+          parseResponse(context, response,
+              successCallback: successCallback,
+              failureCallback: failureCallback);
+        } on DioError catch (e) {
+          if (e.message.toString().toLowerCase() ==
+              "Connecting timed out [1ms]".toLowerCase()) {
+            failureCallback("", "Connection timeout, Please try again. ");
+          } else {
+            failureCallback("", e.message.toString());
+          }
+        } catch (e) {
+          failureCallback("", e.toString());
+        }
+
+        break;
+      case MethodType.Patch:
+        try {
+          Response response = await dio.patch(baseUrl + command, data: params);
           parseResponse(context, response,
               successCallback: successCallback,
               failureCallback: failureCallback);

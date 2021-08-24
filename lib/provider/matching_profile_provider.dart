@@ -86,7 +86,7 @@ class MatchingProfileProvider with ChangeNotifier {
         baseUrl: ApiConstants.apiUrl,
         command: ApiConstants.receiveVideoCall,
         headers: NetworkClient.getInstance.getAuthHeaders(),
-        method: MethodType.Post,
+        method: MethodType.Patch,
         params: _parms,
         successCallback: (response, message) {
           if (response["call_status"] != null) {
