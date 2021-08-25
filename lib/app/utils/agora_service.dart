@@ -78,7 +78,7 @@ class AgoraService {
   Future<void> login({@required String token, @required String userId}) async {
     try {
       // await _client.logout();
-      print(token+","+userId);
+      print(token + "," + userId);
       await _client?.login(token, userId);
       debugPrint('Login success: ' + userId);
     } on AgoraRtmClientException catch (e) {

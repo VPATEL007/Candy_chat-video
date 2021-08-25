@@ -85,12 +85,16 @@ class _MatchedProfileState extends State<MatchedProfile> {
                   SizedBox(
                     height: getSize(12),
                   ),
-                  Center(
-                    child: Text(
-                      "Your are invited to a video call with ${widget.name}.",
-                      style: appTheme.black14Normal.copyWith(
-                          fontWeight: FontWeight.w500,
-                          fontSize: getFontSize(16)),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 10),
+                    child: Center(
+                      child: Text(
+                        "Your are invited to a video call with ${widget.name}.",
+                        style: appTheme.black14Normal.copyWith(
+                            fontWeight: FontWeight.w500,
+                            fontSize: getFontSize(16)),
+                            textAlign: TextAlign.center,
+                      ),
                     ),
                   ),
                   Spacer(),
