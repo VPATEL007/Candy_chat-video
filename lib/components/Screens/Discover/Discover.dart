@@ -269,51 +269,56 @@ class _DiscoverState extends State<Discover> {
                                         .coinBalance;
 
                                 if (coins?.lowBalance == false) {
+                                  // discover.id = 4;
                                   await Provider.of<MatchingProfileProvider>(
                                           context,
                                           listen: false)
-                                      .startVideoCall(context, 4);
+                                      .startVideoCall(context, discover.id);
                                   VideoCallModel videoCallModel =
                                       Provider.of<MatchingProfileProvider>(
                                               context,
                                               listen: false)
                                           .videoCallModel;
 
-                                  if (videoCallModel != null)
-                                    videoCallModel.toUserId = 4;
-                                  AgoraService.instance.sendVideoCallMessage(
-                                      videoCallModel.toUserId.toString(),
-                                      videoCallModel.sessionId,
-                                      videoCallModel.channelName,
-                                      context);
-                                  Provider.of<VideoCallStatusProvider>(context,
-                                          listen: false)
-                                      .setCallStatus = CallStatus.Start;
-                                  UserModel userModel =
-                                      Provider.of<FollowesProvider>(context,
-                                              listen: false)
-                                          .userModel;
-                                  Navigator.of(context).push(MaterialPageRoute(
-                                    builder: (context) => MatchedProfile(
-                                      channelName: videoCallModel.channelName,
-                                      token: videoCallModel.sessionId,
-                                      fromId:
-                                          videoCallModel.fromUserId.toString(),
-                                      fromImageUrl:
-                                          (userModel?.userImages?.isEmpty ??
-                                                  true)
-                                              ? ""
-                                              : userModel?.userImages?.first
-                                                      ?.photoUrl ??
-                                                  "",
-                                      name: discover?.userName,
-                                      toImageUrl:
-                                          (discover?.imageUrl?.isEmpty ?? true)
-                                              ? ""
-                                              : discover?.imageUrl?.first ?? "",
-                                      id: videoCallModel.toUserId.toString(),
-                                    ),
-                                  ));
+                                  if (videoCallModel != null) {
+                                    // videoCallModel.toUserId = 4;
+                                    AgoraService.instance.sendVideoCallMessage(
+                                        videoCallModel.toUserId.toString(),
+                                        videoCallModel.sessionId,
+                                        videoCallModel.channelName,
+                                        context);
+                                    Provider.of<VideoCallStatusProvider>(
+                                            context,
+                                            listen: false)
+                                        .setCallStatus = CallStatus.Start;
+                                    UserModel userModel =
+                                        Provider.of<FollowesProvider>(context,
+                                                listen: false)
+                                            .userModel;
+                                    Navigator.of(context)
+                                        .push(MaterialPageRoute(
+                                      builder: (context) => MatchedProfile(
+                                        channelName: videoCallModel.channelName,
+                                        token: videoCallModel.sessionId,
+                                        fromId: videoCallModel.fromUserId
+                                            .toString(),
+                                        fromImageUrl:
+                                            (userModel?.userImages?.isEmpty ??
+                                                    true)
+                                                ? ""
+                                                : userModel?.userImages?.first
+                                                        ?.photoUrl ??
+                                                    "",
+                                        name: discover?.userName,
+                                        toImageUrl: (discover
+                                                    ?.imageUrl?.isEmpty ??
+                                                true)
+                                            ? ""
+                                            : discover?.imageUrl?.first ?? "",
+                                        id: videoCallModel.toUserId.toString(),
+                                      ),
+                                    ));
+                                  }
                                 } else if (coins?.lowBalance == true) {
                                   InAppPurchase.instance
                                       .openCoinPurchasePopUp();

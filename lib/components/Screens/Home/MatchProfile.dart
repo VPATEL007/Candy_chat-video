@@ -192,18 +192,18 @@ class _MathProfileState extends State<MathProfile> {
     return Scaffold(
       body: Consumer<MatchingProfileProvider>(
           builder: (ctx, matchProfileProvider, child) {
-        return (matchProfileProvider.matchProfileList?.isEmpty ?? true) ||
-                (isLoadAll == true)
-            ? Center(
-                child: Text(
-                  "You have viewed all the profiles. Go to home to restart match.",
-                  textAlign: TextAlign.center,
-                ),
-              )
-            : Container(
-                child: Stack(
-                  children: [
-                    SwipeCards(
+        return Container(
+          child: Stack(
+            children: [
+              (matchProfileProvider.matchProfileList?.isEmpty ?? true) ||
+                      (isLoadAll == true)
+                  ? Center(
+                      child: Text(
+                        "You have viewed all the profiles. Go to home to restart match.",
+                        textAlign: TextAlign.center,
+                      ),
+                    )
+                  : SwipeCards(
                       matchEngine: _matchEngine,
                       itemBuilder: (BuildContext ctx, int index) {
                         MatchProfileModel _matchProfile =
@@ -327,28 +327,28 @@ class _MathProfileState extends State<MathProfile> {
                         print("All Catch Up!");
                       },
                     ),
-                    SafeArea(
-                      child: Align(
-                        alignment: Alignment.topLeft,
-                        child: Padding(
-                            padding: EdgeInsets.only(
-                                left: getSize(29),
-                                top: getSize(16),
-                                right: getFontSize(29)),
-                            child: getTopButton(icDrawer, () {
-                              openFilter();
-                            })),
-                      ),
-                    ),
-                    Align(
-                      alignment: Alignment.bottomCenter,
-                      child: TabBarWidget(
-                        screen: TabType.Home,
-                      ),
-                    ),
-                  ],
+              SafeArea(
+                child: Align(
+                  alignment: Alignment.topLeft,
+                  child: Padding(
+                      padding: EdgeInsets.only(
+                          left: getSize(29),
+                          top: getSize(16),
+                          right: getFontSize(29)),
+                      child: getTopButton(icDrawer, () {
+                        openFilter();
+                      })),
                 ),
-              );
+              ),
+              Align(
+                alignment: Alignment.bottomCenter,
+                child: TabBarWidget(
+                  screen: TabType.Home,
+                ),
+              ),
+            ],
+          ),
+        );
       }),
     );
   }

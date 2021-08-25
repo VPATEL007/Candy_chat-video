@@ -70,6 +70,7 @@ class MatchingProfileProvider with ChangeNotifier {
           View.showMessage(context, message);
         },
       );
+      notifyListeners();
     } catch (e) {
       View.showMessage(context, e.toString());
     }
