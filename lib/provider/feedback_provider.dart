@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'dart:io' as io;
+import 'dart:io';
 import 'dart:typed_data';
 
 import 'package:flutter/material.dart';
@@ -9,8 +10,10 @@ import 'package:flutter_absolute_path/flutter_absolute_path.dart';
 import 'package:flutter_image_compress/flutter_image_compress.dart';
 import 'package:http_parser/http_parser.dart';
 import 'package:multi_image_picker2/multi_image_picker2.dart';
+import 'package:package_info/package_info.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:video_chat/app/app.export.dart';
+import 'package:video_chat/app/utils/device_info.dart';
 import 'package:video_chat/components/Model/settings/feedback.dart';
 
 class FeedBackProvider with ChangeNotifier {
@@ -69,11 +72,21 @@ class FeedBackProvider with ChangeNotifier {
           );
         }
       }
+      String osInfo = await fetchDeviceOsInfo();
+      final PackageInfo info = await PackageInfo.fromPlatform();
       Map<String, dynamic> block = {
         "category_id": categoryId,
         "images": feedBackUrl,
-        "text": comment
+        "text": comment,
+        "app_os": io.Platform.isAndroid
+            ? "Android"
+            : io.Platform.isIOS
+                ? "Ios"
+                : "Unknown",
+        "app_os_version": osInfo,
+        "app_version": (info?.version) + info?.buildNumber
       };
+
       print(block);
       await NetworkClient.getInstance.callApi(
         context: context,

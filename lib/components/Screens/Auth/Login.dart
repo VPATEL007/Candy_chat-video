@@ -7,6 +7,7 @@ import 'package:video_chat/app/AppConfiguration/AppNavigation.dart';
 import 'package:video_chat/app/Helper/CommonApiHelper.dart';
 import 'package:video_chat/app/Helper/apple_login_helper.dart';
 import 'package:video_chat/app/Helper/facebook_login_helper.dart';
+import 'package:video_chat/app/Helper/google_signin_helper.dart';
 import 'package:video_chat/app/app.export.dart';
 import 'package:video_chat/app/constant/ColorConstant.dart';
 import 'package:video_chat/app/utils/CommonWidgets.dart';
@@ -119,6 +120,7 @@ class _LoginState extends State<Login> {
                   "device_id": deviceId,
                   "language_id": langId
                 };
+                GoogleSignInHelper.instance.handleSignIn(context,req);
               }),
               SizedBox(
                 height: getSize(12),

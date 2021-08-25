@@ -18,7 +18,7 @@ class CommonApiHelper {
   static var shared = CommonApiHelper();
 
 //Login
-  callLoginApi(Map<String, dynamic> req, BuildContext context, Function success,
+  void callLoginApi(Map<String, dynamic> req, BuildContext context, Function success,
       Function failure) {
     NetworkClient.getInstance.showLoader(context);
     NetworkClient.getInstance.callApi(

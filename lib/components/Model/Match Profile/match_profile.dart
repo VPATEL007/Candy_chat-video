@@ -36,6 +36,8 @@ class MatchProfileModel {
       this.favourites,
       this.totalPoint,
       this.visitorCount,
+      this.isFollowing,
+      this.isFavourite,
       this.followings});
 
   int id, age, visitorCount;
@@ -53,7 +55,7 @@ class MatchProfileModel {
   String languageName;
   String languageFlagUrl;
   String preferedGender;
-  int isInfluencer;
+  int isInfluencer, isFollowing, isFavourite;
   int callRate;
   String fcmId;
   String onlineStatus;
@@ -65,6 +67,8 @@ class MatchProfileModel {
       MatchProfileModel(
           id: json["id"],
           age: json["age"],
+          isFollowing: json["is_following"],
+          isFavourite: json["is_favourite"],
           visitorCount: json["visitor_count"],
           providerDisplayName: json["provider_display_name"],
           imageUrl: List<String>.from(json["image_url"].map((x) => x)),
@@ -91,6 +95,8 @@ class MatchProfileModel {
   Map<String, dynamic> toJson() => {
         "id": id,
         "age": age,
+        "is_following": isFollowing,
+        "is_favourite": isFavourite,
         "visitor_count": visitorCount,
         "followings": followings,
         "provider_display_name": providerDisplayName,

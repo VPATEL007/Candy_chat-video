@@ -101,8 +101,8 @@ class FollowesProvider with ChangeNotifier {
       params: {"userId": userId},
       successCallback: (response, message) {
         if (!fetchInBackground) NetworkClient.getInstance.hideProgressDialog();
-         if(userModel.byUserUserFollowers?.isNotEmpty??false){
-          userModel.byUserUserFollowers.first.followersCount--;
+         if(userModel.byUserUserFollowers!=null){
+          userModel.byUserUserFollowers--;
         }
         View.showMessage(context, message, mode: DisplayMode.SUCCESS);
       },
@@ -127,9 +127,8 @@ class FollowesProvider with ChangeNotifier {
       method: MethodType.Post,
       params: {"userId": userId},
       successCallback: (response, message) {
-        if(userModel.byUserUserFollowers?.isNotEmpty??false){
-          print(userModel.byUserUserFollowers.first.followersCount);
-          userModel.byUserUserFollowers.first.followersCount++;
+        if(userModel.byUserUserFollowers!=null){
+          userModel.byUserUserFollowers++;
         }
         View.showMessage(context, message, mode: DisplayMode.SUCCESS);
       },

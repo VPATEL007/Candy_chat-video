@@ -2,6 +2,9 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:video_chat/app/Helper/apple_login_helper.dart';
+import 'package:video_chat/app/Helper/facebook_login_helper.dart';
+import 'package:video_chat/app/Helper/google_signin_helper.dart';
 import 'package:video_chat/app/app.export.dart';
 import 'package:video_chat/app/utils/CommonWidgets.dart';
 import 'package:video_chat/components/Model/User/UserModel.dart';
@@ -163,6 +166,9 @@ class _ProfileState extends State<Profile> {
     return Row(children: [
       InkWell(
         onTap: () {
+          GoogleSignInHelper.instance.handleSignOut();
+          FacebookLoginHelper.shared.logout();
+
           app.resolve<PrefUtils>().clearPreferenceAndDB();
           Navigator.of(context).pushAndRemoveUntil(
               MaterialPageRoute(
@@ -210,22 +216,15 @@ class _ProfileState extends State<Profile> {
       children: [
         Expanded(
           child: getCountItem(
-              (userModel?.userFollowers?.isEmpty ?? true)
-                  ? "0"
-                  : (userModel?.userFollowers?.first?.followersCount ?? 0)
-                      ?.toString(),
-              "Followers", () {
+              (userModel?.userFollowers ?? 0)?.toString(), "Followers", () {
             NavigationUtilities.push(FollowUp());
           }),
         ),
         SizedBox(width: 15),
         Expanded(
           child: getCountItem(
-              (userModel?.byUserUserFollowers?.isEmpty ?? true)
-                  ? "0"
-                  : userModel?.byUserUserFollowers?.first?.followersCount
-                      ?.toString(),
-              "Following", () {
+              (userModel?.byUserUserFollowers ?? 0)?.toString(), "Following",
+              () {
             NavigationUtilities.push(FollowUp(
               isFromFollowing: true,
             ));
@@ -234,10 +233,7 @@ class _ProfileState extends State<Profile> {
         SizedBox(width: 15),
         Expanded(
             child: getCountItem(
-                (userModel?.userVisiteds?.isEmpty ?? true)
-                    ? "0"
-                    : userModel?.userVisiteds?.first?.visitorsCount?.toString(),
-                "Visitor", () {
+                (userModel?.userVisiteds ?? 0).toString(), "Visitor", () {
           NavigationUtilities.push(Visitor());
         })),
       ],

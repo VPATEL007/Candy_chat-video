@@ -135,20 +135,12 @@ class _MathProfileState extends State<MathProfile> {
                           ?.map((e) => UserImage(photoUrl: e))
                           ?.toList() ??
                       [],
-                  userVisiteds: [
-                    UserVisited(
-                        visitorsCount: matchProfileModel?.visitorCount ?? 0)
-                  ],
-                  byUserUserFollowers: [
-                    ByUserUserFollower(
-                        followersCount: matchProfileModel.followings)
-                  ],
+                  byUserUserFollowers: matchProfileModel.followings,
+                  userVisiteds: matchProfileModel?.visitorCount ?? 0,
+                  userFollowers: matchProfileModel.followers,
+                  isFollowing: matchProfileModel?.isFollowing == 1,
                   providerDisplayName: matchProfileModel.providerDisplayName,
                   id: matchProfileModel.id,
-                  userFollowers: [
-                    ByUserUserFollower(
-                        followersCount: matchProfileModel.followers)
-                  ],
                   totalPoint: matchProfileModel.totalPoint,
                   onlineStatus: matchProfileModel.onlineStatus,
                 );

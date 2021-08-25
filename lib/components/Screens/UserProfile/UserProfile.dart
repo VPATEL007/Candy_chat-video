@@ -272,7 +272,7 @@ class _UserProfileState extends State<UserProfile> {
         Row(
           children: [
             Text(
-              "ID : ${widget.userModel?.id??0}",
+              "ID : ${widget.userModel?.id ?? 0}",
               style: appTheme.black16Medium.copyWith(color: fromHex("#696968")),
             ),
             SizedBox(
@@ -362,37 +362,28 @@ class _UserProfileState extends State<UserProfile> {
 
   //Count
   Widget getCounts() {
-    return Center(
-      child: Container(
-        child: Row(
-          children: [
-            getCountItem(
-                (widget.userModel?.userFollowers?.isEmpty ?? true)
-                    ? "0"
-                    : widget.userModel?.userFollowers?.first?.followersCount
-                        ?.toString(),
-                "Followers",
-                () {}),
-            Spacer(),
-            getCountItem(
-                (widget.userModel?.byUserUserFollowers?.isEmpty ?? true)
-                    ? "0"
-                    : widget
-                        .userModel?.byUserUserFollowers?.first?.followersCount
-                        ?.toString(),
-                "Following",
-                () {}),
-            Spacer(),
-            getCountItem(
-                (widget.userModel?.userVisiteds?.isEmpty ?? true)
-                    ? "0"
-                    : widget.userModel?.userVisiteds?.first?.visitorsCount
-                        ?.toString(),
-                "Visitor",
-                () {}),
-          ],
+    return Row(
+      children: [
+        Expanded(
+          child: getCountItem(
+              (widget.userModel?.userFollowers ?? 0)?.toString(),
+              "Followers",
+              () {}),
         ),
-      ),
+        SizedBox(width: 15),
+        Expanded(
+          child: getCountItem(
+              (widget.userModel?.byUserUserFollowers ?? 0)?.toString(),
+              "Following",
+              () {}),
+        ),
+        SizedBox(width: 15),
+        Expanded(
+            child: getCountItem(
+                (widget.userModel?.userVisiteds ?? 0).toString(),
+                "Visitor",
+                () {})),
+      ],
     );
   }
 
@@ -477,23 +468,16 @@ class _UserProfileState extends State<UserProfile> {
                   InkWell(
                       onTap: () {
                         if (widget.userModel.id != null) {
-                          if (((widget.userModel?.userFollowers?.isNotEmpty ??
-                                  false) &&
-                              (widget.userModel.userFollowers.first
-                                      .isFollowByMe ==
-                                  false))) {
+                          if (((widget.userModel?.userFollowers != null) &&
+                              (widget.userModel.isFollowing == false))) {
                             Provider.of<FollowesProvider>(context,
                                     listen: false)
                                 .followUser(context, widget.userModel.id);
                             if (mounted) {
                               setState(() {
-                                if (widget
-                                        .userModel?.userFollowers?.isNotEmpty ??
-                                    false) {
-                                  widget.userModel.userFollowers.first
-                                      .isFollowByMe = true;
-                                  widget.userModel.userFollowers.first
-                                      .followersCount++;
+                                if (widget.userModel?.userFollowers != null) {
+                                  widget.userModel.isFollowing = true;
+                                  widget.userModel.userFollowers++;
                                 }
                               });
                             }
@@ -503,13 +487,9 @@ class _UserProfileState extends State<UserProfile> {
                                 .unfollowUser(context, widget.userModel.id);
                             if (mounted) {
                               setState(() {
-                                if (widget
-                                        .userModel?.userFollowers?.isNotEmpty ??
-                                    false) {
-                                  widget.userModel.userFollowers.first
-                                      .isFollowByMe = false;
-                                  widget.userModel.userFollowers.first
-                                      .followersCount--;
+                                if (widget.userModel?.userFollowers != null) {
+                                  widget.userModel.isFollowing = false;
+                                  widget.userModel.userFollowers--;
                                 }
                               });
                             }
@@ -517,11 +497,8 @@ class _UserProfileState extends State<UserProfile> {
                         }
                       },
                       child: getProfileButton(
-                          ((widget.userModel?.userFollowers?.isNotEmpty ??
-                                      false) &&
-                                  (widget.userModel.userFollowers.first
-                                          .isFollowByMe ==
-                                      true))
+                          ((widget.userModel?.userFollowers != null) &&
+                                  (widget.userModel.isFollowing == true))
                               ? "assets/Profile/remove_user.png"
                               : icFollow)),
                   Spacer(),

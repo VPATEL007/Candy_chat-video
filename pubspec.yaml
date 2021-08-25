@@ -51,6 +51,8 @@ dependencies:
   flutter_image_compress: ^1.1.0
   country_picker: ^2.0.7
   rate_my_app: any
+  package_info: ^2.0.2
+  google_sign_in: ^4.5.9
 
 
 dev_dependencies:

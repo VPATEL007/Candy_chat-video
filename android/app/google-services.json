@@ -1,0 +1,46 @@
+{
+  "project_info": {
+    "project_number": "154586257070",
+    "project_id": "video-chat-1628247730520",
+    "storage_bucket": "video-chat-1628247730520.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:154586257070:android:da5fd31f5fc5b3e08e3f3f",
+        "android_client_info": {
+          "package_name": "com.randomvideochat.videochat"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "154586257070-elf4n30hcovc87em5490ifae4rng6qjd.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCV6Q4yjpGziBwt2IiatQamrTDoj4DEe7Q"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "154586257070-elf4n30hcovc87em5490ifae4rng6qjd.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "154586257070-20tj6mdnhkl02mra7dkbs8mbsth746q1.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.randomvideochat.videochat"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

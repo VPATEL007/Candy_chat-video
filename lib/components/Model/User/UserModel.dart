@@ -27,6 +27,7 @@ class UserModel {
       this.language,
       this.onlineStatus,
       this.userVisiteds,
+      this.isFollowing,
       this.totalPoint});
 
   String userName;
@@ -41,14 +42,15 @@ class UserModel {
   dynamic dob;
   String preferedGender;
   String about;
-  List<ByUserUserFollower> byUserUserFollowers;
-  List<ByUserUserFollower> userFollowers;
-  List<UserVisited> userVisiteds;
+  int byUserUserFollowers;
+  int userFollowers;
+  int userVisiteds;
   Region region;
   List<UserImage> userImages;
   Language language;
   String totalPoint;
   String onlineStatus;
+  bool isFollowing=false;
 
   factory UserModel.fromJson(Map<String, dynamic> json) => UserModel(
         userName: json["user_name"],
@@ -63,14 +65,8 @@ class UserModel {
         dob: json["dob"],
         preferedGender: json["prefered_gender"],
         about: json["about"],
-        byUserUserFollowers: json["by_user_user_followers"] == null
-            ? []
-            : List<ByUserUserFollower>.from(json["by_user_user_followers"]
-                .map((x) => ByUserUserFollower.fromJson(x))),
-        userFollowers: json["user_followers"] == null
-            ? []
-            : List<ByUserUserFollower>.from(json["user_followers"]
-                .map((x) => ByUserUserFollower.fromJson(x))),
+        byUserUserFollowers: json["followingCount"],
+        userFollowers: json["followersCount"],
         region: json["region"] == null ? null : Region.fromJson(json["region"]),
         userImages: json["user_images"] == null
             ? []
@@ -81,10 +77,7 @@ class UserModel {
             : Language.fromJson(json["language"]),
         totalPoint: json["total_point"],
         onlineStatus: json["online_status"],
-        userVisiteds: json["user_visiteds"] == null
-            ? []
-            : List<UserVisited>.from(
-                json["user_visiteds"].map((x) => UserVisited.fromJson(x))),
+        userVisiteds: json["visitorCount"],
       );
 
   Map<String, dynamic> toJson() => {
@@ -105,24 +98,6 @@ class UserModel {
         "total_point": totalPoint,
         "online_status": onlineStatus,
         "user_images": List<dynamic>.from(userImages.map((x) => x.toJson())),
-      };
-}
-
-class ByUserUserFollower {
-  ByUserUserFollower({
-    this.followersCount,
-  });
-
-  int followersCount;
-  bool isFollowByMe = false;
-
-  factory ByUserUserFollower.fromJson(Map<String, dynamic> json) =>
-      ByUserUserFollower(
-        followersCount: json["followersCount"],
-      );
-
-  Map<String, dynamic> toJson() => {
-        "followersCount": followersCount,
       };
 }
 
@@ -170,21 +145,5 @@ class UserImage {
 
   Map<String, dynamic> toJson() => {
         "photo_url": photoUrl,
-      };
-}
-
-class UserVisited {
-  UserVisited({
-    this.visitorsCount,
-  });
-
-  int visitorsCount;
-
-  factory UserVisited.fromJson(Map<String, dynamic> json) => UserVisited(
-        visitorsCount: json["visitorsCount"],
-      );
-
-  Map<String, dynamic> toJson() => {
-        "visitorsCount": visitorsCount,
       };
 }

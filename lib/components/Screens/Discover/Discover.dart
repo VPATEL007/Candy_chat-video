@@ -130,21 +130,13 @@ class _DiscoverState extends State<Discover> {
                               ?.map((e) => UserImage(photoUrl: e))
                               ?.toList() ??
                           [],
-                      byUserUserFollowers: [
-                        ByUserUserFollower(
-                            followersCount: matchProfileModel.followings)
-                      ],
-                      userVisiteds: [
-                        UserVisited(
-                            visitorsCount: matchProfileModel?.visitorCount ?? 0)
-                      ],
+                      byUserUserFollowers: matchProfileModel.followings,
+                      userVisiteds: matchProfileModel?.visitorCount ?? 0,
+                      userFollowers: matchProfileModel.followers,
+                      isFollowing: matchProfileModel?.isFollowing == 1,
                       providerDisplayName:
                           matchProfileModel.providerDisplayName,
                       id: matchProfileModel.id,
-                      userFollowers: [
-                        ByUserUserFollower(
-                            followersCount: matchProfileModel.followers)
-                      ],
                       totalPoint: matchProfileModel.totalPoint,
                       onlineStatus: matchProfileModel.onlineStatus,
                     );
