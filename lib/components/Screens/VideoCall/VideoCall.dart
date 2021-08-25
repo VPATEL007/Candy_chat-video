@@ -357,10 +357,13 @@ class VideoCallState extends State<VideoCall> {
 
     if (callStatus?.lowBalance == true) {
       View.showMessage(context, "your balance is low.");
-    } else if (callStatus?.continueCall == false) {
-      endCall();
+    }
+
+    if (callStatus?.continueCall == false) {
       Navigator.pop(context);
-      InAppPurchase.instance.openCoinPurchasePopUp();
+      endCall();
+
+      // InAppPurchase.instance.openCoinPurchasePopUp();
     }
   }
 }
