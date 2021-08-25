@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -20,6 +22,13 @@ class Home extends StatefulWidget {
 }
 
 class _HomeState extends State<Home> {
+  String get getRandomNumberString {
+    Random rnd = new Random();
+    int number = rnd.nextInt(9999);
+
+    return number.toString();
+  }
+
   @override
   void initState() {
     super.initState();
@@ -85,7 +94,7 @@ class _HomeState extends State<Home> {
                   ),
                   child: Center(
                     child: Text(
-                      "2654",
+                      getRandomNumberString,
                       style: appTheme.white14Bold
                           .copyWith(fontSize: getFontSize(25)),
                     ),

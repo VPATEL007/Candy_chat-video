@@ -103,7 +103,8 @@ class _DiscoverState extends State<Discover> {
                 print(
                     "--------========================= Lazy Loading ==========================---------");
                 page++;
-                discoverProvider.fetchDiscoverProfileList(context, tab[selectedIndex],
+                discoverProvider.fetchDiscoverProfileList(
+                    context, tab[selectedIndex],
                     pageNumber: page, isbackgroundCall: true);
               },
               child: InkWell(
@@ -116,7 +117,9 @@ class _DiscoverState extends State<Discover> {
                       callRate: matchProfileModel.callRate,
                       gender: matchProfileModel.gender,
                       preferedGender: matchProfileModel.preferedGender,
-                      photoUrl: matchProfileModel.photoUrl,
+                      photoUrl: (matchProfileModel?.imageUrl?.isEmpty ?? true)
+                          ? ""
+                          : matchProfileModel?.imageUrl?.first ?? "",
                       userName: matchProfileModel.userName,
                       region: Region(
                           regionName: matchProfileModel.regionName,
@@ -291,7 +294,10 @@ class _DiscoverState extends State<Discover> {
                                                     ?.photoUrl ??
                                                 "",
                                     name: discover?.userName,
-                                    toImageUrl: discover?.photoUrl ?? "",
+                                    toImageUrl:
+                                        (discover?.imageUrl?.isEmpty ?? true)
+                                            ? ""
+                                            : discover?.imageUrl?.first ?? "",
                                     id: videoCallModel.toUserId.toString(),
                                   ),
                                 ));

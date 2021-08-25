@@ -272,7 +272,7 @@ class _UserProfileState extends State<UserProfile> {
         Row(
           children: [
             Text(
-              "ID : ${widget.userModel?.id}",
+              "ID : ${widget.userModel?.id??0}",
               style: appTheme.black16Medium.copyWith(color: fromHex("#696968")),
             ),
             SizedBox(
@@ -367,8 +367,10 @@ class _UserProfileState extends State<UserProfile> {
         child: Row(
           children: [
             getCountItem(
-                widget.userModel?.userFollowers?.first?.followersCount
-                    ?.toString(),
+                (widget.userModel?.userFollowers?.isEmpty ?? true)
+                    ? "0"
+                    : widget.userModel?.userFollowers?.first?.followersCount
+                        ?.toString(),
                 "Followers",
                 () {}),
             Spacer(),
@@ -381,11 +383,13 @@ class _UserProfileState extends State<UserProfile> {
                 "Following",
                 () {}),
             Spacer(),
-            getCountItem((widget
-                        .userModel?.userVisiteds?.isEmpty ?? true)
+            getCountItem(
+                (widget.userModel?.userVisiteds?.isEmpty ?? true)
                     ? "0"
-                    : widget
-                        .userModel?.userVisiteds?.first?.visitorsCount?.toString(), "Visitor", () {}),
+                    : widget.userModel?.userVisiteds?.first?.visitorsCount
+                        ?.toString(),
+                "Visitor",
+                () {}),
           ],
         ),
       ),
@@ -410,7 +414,7 @@ class _UserProfileState extends State<UserProfile> {
           child: Column(
             children: [
               Text(
-                count,
+                count ?? 0,
                 style: appTheme.black16Bold.copyWith(
                     fontSize: getFontSize(16),
                     fontWeight: FontWeight.w700,
@@ -459,7 +463,7 @@ class _UserProfileState extends State<UserProfile> {
             bottom: getSize(140),
             child: Column(
               children: List.generate(
-                  widget.userModel?.userImages?.length,
+                  widget.userModel?.userImages?.length ?? 0,
                   (index) =>
                       pageIndexIndicator(currentIndex == index ? true : false)),
             )),

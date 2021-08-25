@@ -5,6 +5,7 @@ import 'package:provider/provider.dart';
 import 'package:video_chat/app/app.export.dart';
 import 'package:video_chat/app/utils/CommonWidgets.dart';
 import 'package:video_chat/components/Model/User/UserModel.dart';
+import 'package:video_chat/components/Screens/Auth/Login.dart';
 import 'package:video_chat/components/Screens/Language%20Selection/Language.dart';
 import 'package:video_chat/components/Screens/Profile/Coins.dart';
 import 'package:video_chat/components/Screens/Profile/FollowUp.dart';
@@ -160,13 +161,23 @@ class _ProfileState extends State<Profile> {
 
   Widget getNavigation() {
     return Row(children: [
-      Align(
-          alignment: Alignment.topLeft,
-          child: Image.asset(
-            icLogout,
-            height: getSize(26),
-            width: getSize(26),
-          )),
+      InkWell(
+        onTap: () {
+          app.resolve<PrefUtils>().clearPreferenceAndDB();
+          Navigator.of(context).pushAndRemoveUntil(
+              MaterialPageRoute(
+                builder: (context) => Login(),
+              ),
+              (route) => false);
+        },
+        child: Align(
+            alignment: Alignment.topLeft,
+            child: Image.asset(
+              icLogout,
+              height: getSize(26),
+              width: getSize(26),
+            )),
+      ),
       Spacer(),
       Row(
         crossAxisAlignment: CrossAxisAlignment.center,

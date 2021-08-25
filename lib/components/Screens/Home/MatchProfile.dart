@@ -94,7 +94,9 @@ class _MathProfileState extends State<MathProfile> {
                         .id
                         ?.toString(),
                     name: e?.providerDisplayName ?? "",
-                    toImageUrl: e?.photoUrl ?? "",
+                    toImageUrl: (e?.imageUrl?.isEmpty ?? true)
+                        ? ""
+                        : e?.imageUrl?.first ?? "",
                     fromImageUrl: (userModel?.userImages?.isEmpty ?? true)
                         ? ""
                         : userModel?.userImages?.first?.photoUrl ?? "",
@@ -120,7 +122,9 @@ class _MathProfileState extends State<MathProfile> {
                   callRate: matchProfileModel.callRate,
                   gender: matchProfileModel.gender,
                   preferedGender: matchProfileModel.preferedGender,
-                  photoUrl: matchProfileModel.photoUrl,
+                  photoUrl: (matchProfileModel?.imageUrl?.isEmpty ?? true)
+                      ? ""
+                      : matchProfileModel?.imageUrl?.first ?? "",
                   userName: matchProfileModel.userName,
                   region: Region(
                       regionName: matchProfileModel.regionName,
@@ -287,8 +291,13 @@ class _MathProfileState extends State<MathProfile> {
                                       child: getTopButton(icVector, () {
                                         NavigationUtilities.push(ReportBlock(
                                           userId: _matchProfile.id,
-                                          reportImageURl:
-                                              _matchProfile.photoUrl,
+                                          reportImageURl: (_matchProfile
+                                                      ?.imageUrl?.isEmpty ??
+                                                  true)
+                                              ? ""
+                                              : _matchProfile
+                                                      ?.imageUrl?.first ??
+                                                  "",
                                         ));
                                       })),
                                 ),
