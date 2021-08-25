@@ -27,7 +27,8 @@ class UserModel {
       this.language,
       this.onlineStatus,
       this.userVisiteds,
-      this.totalPoint});
+      this.totalPoint,
+      this.isInfluencer});
 
   String userName;
   String email;
@@ -49,6 +50,7 @@ class UserModel {
   Language language;
   String totalPoint;
   String onlineStatus;
+  bool isInfluencer;
 
   factory UserModel.fromJson(Map<String, dynamic> json) => UserModel(
         userName: json["user_name"],
@@ -63,6 +65,7 @@ class UserModel {
         dob: json["dob"],
         preferedGender: json["prefered_gender"],
         about: json["about"],
+        isInfluencer: json["is_influencer"],
         byUserUserFollowers: json["by_user_user_followers"] == null
             ? []
             : List<ByUserUserFollower>.from(json["by_user_user_followers"]
@@ -104,6 +107,7 @@ class UserModel {
         "language": language?.toJson(),
         "total_point": totalPoint,
         "online_status": onlineStatus,
+        "is_influencer": isInfluencer,
         "user_images": List<dynamic>.from(userImages.map((x) => x.toJson())),
       };
 }

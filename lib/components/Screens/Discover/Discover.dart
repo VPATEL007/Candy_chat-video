@@ -4,7 +4,9 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:lazy_loading_list/lazy_loading_list.dart';
 import 'package:provider/provider.dart';
+import 'package:video_chat/app/Helper/inAppPurchase_service.dart';
 import 'package:video_chat/app/app.export.dart';
+import 'package:video_chat/components/Model/Match%20Profile/call_status.dart';
 import 'package:video_chat/components/Model/Match%20Profile/match_profile.dart';
 import 'package:video_chat/components/Model/Match%20Profile/video_call.dart';
 import 'package:video_chat/components/Model/User/UserModel.dart';
@@ -103,7 +105,8 @@ class _DiscoverState extends State<Discover> {
                 print(
                     "--------========================= Lazy Loading ==========================---------");
                 page++;
-                discoverProvider.fetchDiscoverProfileList(context, tab[selectedIndex],
+                discoverProvider.fetchDiscoverProfileList(
+                    context, tab[selectedIndex],
                     pageNumber: page, isbackgroundCall: true);
               },
               child: InkWell(
@@ -259,42 +262,61 @@ class _DiscoverState extends State<Discover> {
                                 await Provider.of<MatchingProfileProvider>(
                                         context,
                                         listen: false)
-                                    .startVideoCall(context, discover.id);
-                                VideoCallModel videoCallModel =
+                                    .checkCoinBalance(context, discover.id);
+
+                                CoinModel coins =
                                     Provider.of<MatchingProfileProvider>(
                                             context,
                                             listen: false)
-                                        .videoCallModel;
-                                if (videoCallModel != null)
-                                  AgoraService.instance.sendVideoCallMessage(
-                                      videoCallModel.toUserId.toString(),
-                                      videoCallModel.sessionId,
-                                      videoCallModel.channelName,
-                                      context);
-                                Provider.of<VideoCallStatusProvider>(context,
-                                        listen: false)
-                                    .setCallStatus = CallStatus.Start;
-                                UserModel userModel =
-                                    Provider.of<FollowesProvider>(context,
-                                            listen: false)
-                                        .userModel;
-                                Navigator.of(context).push(MaterialPageRoute(
-                                  builder: (context) => MatchedProfile(
-                                    channelName: videoCallModel.channelName,
-                                    token: videoCallModel.sessionId,
-                                    fromId:
-                                        videoCallModel.fromUserId.toString(),
-                                    fromImageUrl:
-                                        (userModel?.userImages?.isEmpty ?? true)
-                                            ? ""
-                                            : userModel?.userImages?.first
-                                                    ?.photoUrl ??
-                                                "",
-                                    name: discover?.userName,
-                                    toImageUrl: discover?.photoUrl ?? "",
-                                    id: videoCallModel.toUserId.toString(),
-                                  ),
-                                ));
+                                        .coinBalance;
+
+                                if (coins?.lowBalance == false) {
+                                  await Provider.of<MatchingProfileProvider>(
+                                          context,
+                                          listen: false)
+                                      .startVideoCall(context, discover.id);
+                                  VideoCallModel videoCallModel =
+                                      Provider.of<MatchingProfileProvider>(
+                                              context,
+                                              listen: false)
+                                          .videoCallModel;
+                                  if (videoCallModel != null)
+                                    AgoraService.instance.sendVideoCallMessage(
+                                        videoCallModel.toUserId.toString(),
+                                        videoCallModel.sessionId,
+                                        videoCallModel.channelName,
+                                        context);
+                                  Provider.of<VideoCallStatusProvider>(context,
+                                          listen: false)
+                                      .setCallStatus = CallStatus.Start;
+                                  UserModel userModel =
+                                      Provider.of<FollowesProvider>(context,
+                                              listen: false)
+                                          .userModel;
+                                  Navigator.of(context).push(MaterialPageRoute(
+                                    builder: (context) => MatchedProfile(
+                                      channelName: videoCallModel.channelName,
+                                      token: videoCallModel.sessionId,
+                                      fromId:
+                                          videoCallModel.fromUserId.toString(),
+                                      fromImageUrl:
+                                          (userModel?.userImages?.isEmpty ??
+                                                  true)
+                                              ? ""
+                                              : userModel?.userImages?.first
+                                                      ?.photoUrl ??
+                                                  "",
+                                      name: discover?.userName,
+                                      toImageUrl: discover?.photoUrl ?? "",
+                                      id: videoCallModel.toUserId.toString(),
+                                    ),
+                                  ));
+
+                                  return;
+                                } else if (coins?.lowBalance == true) {
+                                  InAppPurchase.instance
+                                      .openCoinPurchasePopUp();
+                                }
                               },
                               child: Container(
                                 color: fromHex("#00DE9B"),

@@ -140,14 +140,10 @@ class _MatchedProfileState extends State<MatchedProfile> {
                           .coinStatus;
 
                   if (coinStatus?.continueCall == true) {
-                    Navigator.of(context).push(MaterialPageRoute(
-                      builder: (context) => VideoCall(
-                          channelName: widget.channelName,
-                          token: widget.token,
-                          userId: widget.fromId,
-                          toUserId: widget.id,
-                          isApiCall: true),
-                    ));
+                    AgoraService.instance.openVideoCall(
+                        channelName: widget.channelName,
+                        sessionId: widget.token,
+                        toUserId: widget.id);
                   } else {
                     InAppPurchase.instance.openCoinPurchasePopUp();
                   }

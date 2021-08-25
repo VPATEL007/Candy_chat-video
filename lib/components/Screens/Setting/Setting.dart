@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:rate_my_app/rate_my_app.dart';
@@ -46,6 +48,7 @@ class _SettingState extends State<Setting> {
                     message:
                         'You like this app ? Then take a little bit of your time to leave a rating :', // The dialog message.
                     // contentBuilder: (context, defaultContent) => content, // This one allows you to change the default dialog content.
+                    ignoreNativeDialog: Platform.isAndroid,
                     actionsBuilder: (context, stars) {
                       // Triggered when the user updates the star rating.
                       return [
@@ -53,22 +56,27 @@ class _SettingState extends State<Setting> {
                         FlatButton(
                           child: Text('OK'),
                           onPressed: () async {
-                            print('Thanks for the ' +
-                                (stars == null
-                                    ? '0'
-                                    : stars.round().toString()) +
-                                ' star(s) !');
-                            // You can handle the result as you want (for instance if the user puts 1 star then open your contact page, if he puts more then open the store page, etc...).
-                            // This allows to mimic the behavior of the default "Rate" button. See "Advanced > Broadcasting events" for more information :
-                            await rateMyApp.callEvent(
-                                RateMyAppEventType.rateButtonPressed);
-                            Navigator.pop<RateMyAppDialogButton>(
-                                context, RateMyAppDialogButton.rate);
+                            try {
+                              print('Thanks for the ' +
+                                  (stars == null
+                                      ? '0'
+                                      : stars.round().toString()) +
+                                  ' star(s) !');
+                              // You can handle the result as you want (for instance if the user puts 1 star then open your contact page, if he puts more then open the store page, etc...).
+                              // This allows to mimic the behavior of the default "Rate" button. See "Advanced > Broadcasting events" for more information :
+                              await rateMyApp.callEvent(
+                                  RateMyAppEventType.rateButtonPressed);
+                              Navigator.pop<RateMyAppDialogButton>(
+                                  context, RateMyAppDialogButton.rate);
+                            } catch (e) {
+                              Navigator.pop<RateMyAppDialogButton>(
+                                  context, RateMyAppDialogButton.rate);
+                            }
                           },
                         ),
                       ];
                     },
-                    ignoreNativeDialog: false,
+
                     dialogStyle: const DialogStyle(
                       // Custom dialog styles.
                       titleAlign: TextAlign.center,

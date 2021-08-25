@@ -278,25 +278,10 @@ class AgoraService {
               listen: false)
           .videoCallModel;
       NavigationUtilities.pop();
-      await Provider.of<MatchingProfileProvider>(navigationKey.currentContext,
-              listen: false)
-          .receiveVideoCall(navigationKey.currentContext,
-              videoCallModel.sessionId, videoCallModel.channelName);
-      CallStatusModel callStatus = Provider.of<MatchingProfileProvider>(
-              navigationKey.currentContext,
-              listen: false)
-          .coinStatus;
-      if (callStatus?.continueCall == true) {
-        NavigationUtilities.push(
-          VideoCall(
-              channelName: videoCallModel.channelName,
-              token: videoCallModel.sessionId,
-              userId: app.resolve<PrefUtils>().getUserDetails()?.id?.toString(),
-              toUserId: peerId),
-        );
-      } else {
-        InAppPurchase.instance.openCoinPurchasePopUp();
-      }
+      openVideoCall(
+          channelName: videoCallModel.channelName,
+          sessionId: videoCallModel.sessionId,
+          toUserId: videoCallModel.toUserId.toString());
     } else if (model.endCall == true) {
       Future.delayed(Duration(seconds: 1), () {
         NavigationUtilities.pop();
@@ -306,5 +291,23 @@ class AgoraService {
       VideoCallState().endCall();
       leaveChannel();
     }
+  }
+
+//Open Video Call
+  openVideoCall(
+      {@required String channelName,
+      @required String sessionId,
+      @required String toUserId}) {
+    UserModel user = Provider.of<FollowesProvider>(navigationKey.currentContext,
+            listen: false)
+        .userModel;
+
+    NavigationUtilities.push(
+      VideoCall(
+          channelName: channelName,
+          token: sessionId,
+          userId: app.resolve<PrefUtils>().getUserDetails()?.id?.toString(),
+          toUserId: toUserId),
+    );
   }
 }
