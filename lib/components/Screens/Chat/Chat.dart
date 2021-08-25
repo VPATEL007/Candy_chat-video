@@ -3,19 +3,20 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:sticky_headers/sticky_headers.dart';
+import 'package:video_chat/components/Model/User/UserModel.dart';
+import 'package:video_chat/components/Screens/UserProfile/UserProfile.dart';
 
 import '../../../app/app.export.dart';
 
 class Chat extends StatefulWidget {
   final String channelId;
   final String userId;
-  final String token;
-  Chat(
-      {Key key,
-      @required this.channelId,
-      @required this.userId,
-      @required this.token})
-      : super(key: key);
+
+  Chat({
+    Key key,
+    @required this.channelId,
+    @required this.userId,
+  }) : super(key: key);
 
   @override
   _ChatState createState() => _ChatState();
@@ -34,7 +35,7 @@ class _ChatState extends State<Chat> {
 
   Future<void> init() async {
     // await agoraService.initialize(AGORA_APPID);
-    await agoraService.login(token: widget.token, userId: widget?.userId);
+    // await agoraService.login(token: widget.token, userId: widget?.userId);
     agoraService.joinChannel((widget?.channelId ?? ""),
         onMemberJoined: (AgoraRtmMember member) {
       print(
@@ -57,8 +58,9 @@ class _ChatState extends State<Chat> {
 
   @override
   void dispose() {
+    super.dispose();
     agoraService?.leaveChannel();
-    agoraService?.logOut();
+    // agoraService?.logOut();
     messageListScrollController?.dispose();
   }
 
@@ -88,15 +90,22 @@ class _ChatState extends State<Chat> {
                         .copyWith(color: fromHex("#00DE9B"))),
               ),
               getBarButton(context, icCall, () {}),
-              Padding(
-                padding: EdgeInsets.all(getSize(14)),
-                child: ClipRRect(
-                  borderRadius: BorderRadius.circular(36),
-                  child: Image.asset(
-                    loginBg,
-                    width: getSize(36),
-                    height: getSize(26),
-                    fit: BoxFit.cover,
+              InkWell(
+                onTap: () {
+                  Navigator.of(context).push(MaterialPageRoute(
+                    builder: (context) => UserProfile(userModel: UserModel()),
+                  ));
+                },
+                child: Padding(
+                  padding: EdgeInsets.all(getSize(14)),
+                  child: ClipRRect(
+                    borderRadius: BorderRadius.circular(36),
+                    child: Image.asset(
+                      loginBg,
+                      width: getSize(36),
+                      height: getSize(26),
+                      fit: BoxFit.cover,
+                    ),
                   ),
                 ),
               )
@@ -287,6 +296,7 @@ class _ChatState extends State<Chat> {
                     }),
               )
             : SizedBox(),
+        SizedBox(height: 15),
         Container(
           color: fromHex("#F7F7F7"),
           child: Row(
@@ -307,6 +317,7 @@ class _ChatState extends State<Chat> {
                               top: getSize(16), right: getSize(16)),
                           child: InkWell(
                             onTap: () async {
+                              if (_chatController.text?.isEmpty ?? true) return;
                               MessageObj _chat = MessageObj(
                                   chatDate: DateTime.now(),
                                   message: _chatController.text,

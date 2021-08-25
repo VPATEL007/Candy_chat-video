@@ -85,10 +85,11 @@ class _LoginState extends State<Login> {
                       context.read<LanguageProvider>().selctedLanguage?.id;
                   String deviceId = app.resolve<PrefUtils>().deviceId ?? "";
                   Map<String, dynamic> req = {
+                    "device_id": deviceId,
                     "language_id": langId
                   };
                   print(req);
-                  AppleLoginHealper.shared.login(context,req, () {});
+                  AppleLoginHealper.shared.login(context, req, () {});
                 }),
               SizedBox(
                 height: getSize(12),
@@ -100,6 +101,7 @@ class _LoginState extends State<Login> {
                     context.read<LanguageProvider>().selctedLanguage?.id;
                 String deviceId = app.resolve<PrefUtils>().deviceId ?? "";
                 Map<String, dynamic> req = {
+                  "device_id": deviceId,
                   "language_id": langId
                 };
                 print(req);
@@ -109,7 +111,15 @@ class _LoginState extends State<Login> {
               SizedBox(
                 height: getSize(12),
               ),
-              getButton(icGoogle, "Continue with Google", Colors.white, () {}),
+              getButton(icGoogle, "Continue with Google", Colors.white, () {
+                int langId =
+                    context.read<LanguageProvider>().selctedLanguage?.id;
+                String deviceId = app.resolve<PrefUtils>().deviceId ?? "";
+                Map<String, dynamic> req = {
+                  "device_id": deviceId,
+                  "language_id": langId
+                };
+              }),
               SizedBox(
                 height: getSize(12),
               ),

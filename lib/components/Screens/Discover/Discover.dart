@@ -119,7 +119,9 @@ class _DiscoverState extends State<Discover> {
                       callRate: matchProfileModel.callRate,
                       gender: matchProfileModel.gender,
                       preferedGender: matchProfileModel.preferedGender,
-                      photoUrl: matchProfileModel.photoUrl,
+                      photoUrl: (matchProfileModel?.imageUrl?.isEmpty ?? true)
+                          ? ""
+                          : matchProfileModel?.imageUrl?.first ?? "",
                       userName: matchProfileModel.userName,
                       region: Region(
                           regionName: matchProfileModel.regionName,
@@ -271,10 +273,6 @@ class _DiscoverState extends State<Discover> {
                                         .coinBalance;
 
                                 if (coins?.lowBalance == false) {
-                                  await Provider.of<MatchingProfileProvider>(
-                                          context,
-                                          listen: false)
-                                      .startVideoCall(context, discover.id);
                                   VideoCallModel videoCallModel =
                                       Provider.of<MatchingProfileProvider>(
                                               context,
@@ -307,12 +305,13 @@ class _DiscoverState extends State<Discover> {
                                                       ?.photoUrl ??
                                                   "",
                                       name: discover?.userName,
-                                      toImageUrl: discover?.photoUrl ?? "",
+                                      toImageUrl:
+                                          (discover?.imageUrl?.isEmpty ?? true)
+                                              ? ""
+                                              : discover?.imageUrl?.first ?? "",
                                       id: videoCallModel.toUserId.toString(),
                                     ),
                                   ));
-
-                                  return;
                                 } else if (coins?.lowBalance == true) {
                                   InAppPurchase.instance
                                       .openCoinPurchasePopUp();

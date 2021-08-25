@@ -8,95 +8,92 @@ List<MatchProfileModel> matchProfileModelFromJson(String str) =>
     List<MatchProfileModel>.from(
         jsonDecode(str).map((e) => MatchProfileModel.fromJson(e)));
 
-String matchProfileModelToJson(MatchProfileModel data) => json.encode(data.toJson());
+String matchProfileModelToJson(MatchProfileModel data) =>
+    json.encode(data.toJson());
 
 class MatchProfileModel {
-    MatchProfileModel({
-        this.id,
-        this.age,
-        this.providerDisplayName,
-        this.photoUrl,
-        this.imageUrl,
-        this.userName,
-        this.gender,
-        this.about,
-        this.dob,
-        this.regionId,
-        this.regionName,
-        this.regionFlagUrl,
-        this.languageId,
-        this.languageName,
-        this.languageFlagUrl,
-        this.preferedGender,
-        this.isInfluencer,
-        this.callRate,
-        this.fcmId,
-        this.onlineStatus,
-        this.followers,
-        this.favourites,
-        this.totalPoint,
-        this.visitorCount,
-        this.followings
-    });
+  MatchProfileModel(
+      {this.id,
+      this.age,
+      this.providerDisplayName,
+      this.imageUrl,
+      this.userName,
+      this.gender,
+      this.about,
+      this.dob,
+      this.regionId,
+      this.regionName,
+      this.regionFlagUrl,
+      this.languageId,
+      this.languageName,
+      this.languageFlagUrl,
+      this.preferedGender,
+      this.isInfluencer,
+      this.callRate,
+      this.fcmId,
+      this.onlineStatus,
+      this.followers,
+      this.favourites,
+      this.totalPoint,
+      this.visitorCount,
+      this.followings});
 
-    int id,age,visitorCount;
-    String providerDisplayName;
-    String photoUrl;
-    List<String> imageUrl;
-    String userName;
-    String gender;
-    String about;
-    dynamic dob;
-    int regionId;
-    String regionName;
-    String regionFlagUrl;
-    int languageId;
-    String languageName;
-    String languageFlagUrl;
-    String preferedGender;
-    int isInfluencer;
-    int callRate;
-    String fcmId;
-    String onlineStatus;
-    int followers,followings;
-    int favourites;
-    String totalPoint;
+  int id, age, visitorCount;
+  String providerDisplayName;
 
-    factory MatchProfileModel.fromJson(Map<String, dynamic> json) => MatchProfileModel(
-        id: json["id"],
-        age: json["age"],
-        visitorCount: json["visitor_count"],
-        providerDisplayName: json["provider_display_name"],
-        photoUrl: json["photo_url"],
-        imageUrl: List<String>.from(json["image_url"].map((x) => x)),
-        userName: json["user_name"],
-        gender: json["gender"],
-        about: json["about"],
-        dob: json["dob"],
-        regionId: json["region_id"],
-        regionName: json["region_name"],
-        regionFlagUrl: json["region_flag_url"],
-        languageId: json["language_id"],
-        languageName: json["language_name"],
-        languageFlagUrl: json["language_flag_url"],
-        preferedGender: json["prefered_gender"],
-        isInfluencer: json["is_influencer"],
-        callRate: json["call_rate"],
-        fcmId: json["fcm_id"],
-        onlineStatus: json["online_status"],
-        followers: json["followers"],
-        favourites: json["favourites"],
-        totalPoint: json["total_point"],
-        followings: json["followings"]
-    );
+  List<String> imageUrl;
+  String userName;
+  String gender;
+  String about;
+  dynamic dob;
+  int regionId;
+  String regionName;
+  String regionFlagUrl;
+  int languageId;
+  String languageName;
+  String languageFlagUrl;
+  String preferedGender;
+  int isInfluencer;
+  int callRate;
+  String fcmId;
+  String onlineStatus;
+  int followers, followings;
+  int favourites;
+  String totalPoint;
 
-    Map<String, dynamic> toJson() => {
+  factory MatchProfileModel.fromJson(Map<String, dynamic> json) =>
+      MatchProfileModel(
+          id: json["id"],
+          age: json["age"],
+          visitorCount: json["visitor_count"],
+          providerDisplayName: json["provider_display_name"],
+          imageUrl: List<String>.from(json["image_url"].map((x) => x)),
+          userName: json["user_name"],
+          gender: json["gender"],
+          about: json["about"],
+          dob: json["dob"],
+          regionId: json["region_id"],
+          regionName: json["region_name"],
+          regionFlagUrl: json["region_flag_url"],
+          languageId: json["language_id"],
+          languageName: json["language_name"],
+          languageFlagUrl: json["language_flag_url"],
+          preferedGender: json["prefered_gender"],
+          isInfluencer: json["is_influencer"],
+          callRate: json["call_rate"],
+          fcmId: json["fcm_id"],
+          onlineStatus: json["online_status"],
+          followers: json["followers"],
+          favourites: json["favourites"],
+          totalPoint: json["total_point"],
+          followings: json["followings"]);
+
+  Map<String, dynamic> toJson() => {
         "id": id,
-        "age":age,
-        "visitor_count":visitorCount,
-        "followings":followings,
+        "age": age,
+        "visitor_count": visitorCount,
+        "followings": followings,
         "provider_display_name": providerDisplayName,
-        "photo_url": photoUrl,
         "image_url": List<dynamic>.from(imageUrl.map((x) => x)),
         "user_name": userName,
         "gender": gender,
@@ -116,5 +113,5 @@ class MatchProfileModel {
         "followers": followers,
         "favourites": favourites,
         "total_point": totalPoint,
-    };
+      };
 }
