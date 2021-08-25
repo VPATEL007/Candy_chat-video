@@ -125,9 +125,14 @@ class MatchingProfileProvider with ChangeNotifier {
         params: _parms,
         successCallback: (response, message) {
           if (response != null) {
-            coinBalance = CoinModel.fromJson(response);
-            if (coinBalance?.lowBalance == true) {
-              View.showMessage(context, "your balance is low.");
+            if (user.isInfluencer) {
+              coinBalance = CoinModel();
+              coinBalance.lowBalance = false;
+            } else {
+              coinBalance = CoinModel.fromJson(response);
+              if (coinBalance?.lowBalance == true) {
+                View.showMessage(context, "your balance is low.");
+              }
             }
           } else {
             coinBalance = null;

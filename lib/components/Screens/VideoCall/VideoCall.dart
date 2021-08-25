@@ -58,11 +58,23 @@ class VideoCallState extends State<VideoCall> {
     });
 
     UserModel user =
-        Provider.of<FollowesProvider>(context, listen: false).userModel;
-
-    if (user.isInfluencer == false) {
-      timer = Timer.periodic(
-          Duration(seconds: 60), (Timer t) => callReceiveApiCall());
+        Provider.of<FollowesProvider>(context, listen: false)?.userModel;
+    if (user == null) {
+      Provider.of<FollowesProvider>(context, listen: false)
+          .fetchMyProfile(context)
+          .then((_) {
+        UserModel user =
+            Provider.of<FollowesProvider>(context, listen: false)?.userModel;
+        if (user?.isInfluencer == false) {
+          timer = Timer.periodic(
+              Duration(seconds: 60), (Timer t) => callReceiveApiCall());
+        }
+      });
+    } else {
+      if (user?.isInfluencer == false) {
+        timer = Timer.periodic(
+            Duration(seconds: 60), (Timer t) => callReceiveApiCall());
+      }
     }
   }
 
