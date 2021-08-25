@@ -166,7 +166,11 @@ class NetworkClient {
               "Connecting timed out [1ms]".toLowerCase()) {
             failureCallback("", "Connection timeout, Please try again. ");
           } else {
-            failureCallback("", e.message.toString());
+            if (e.response != null) {
+              failureCallback("", e.response.data["message"].toString());
+            } else {
+              failureCallback("", e.message.toString());
+            }
           }
         } catch (e) {
           failureCallback("", e.toString());

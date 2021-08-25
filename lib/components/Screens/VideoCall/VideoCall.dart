@@ -15,7 +15,9 @@ import 'package:agora_rtc_engine/rtc_remote_view.dart' as RtcRemoteView;
 import 'package:agora_rtc_engine/rtc_local_view.dart' as RtcLocalView;
 import 'package:video_chat/app/utils/CommonTextfield.dart';
 import 'package:video_chat/components/Model/Match%20Profile/call_status.dart';
+import 'package:video_chat/components/Model/User/UserModel.dart';
 import 'package:video_chat/components/Screens/Chat/Chat.dart';
+import 'package:video_chat/provider/followes_provider.dart';
 import 'package:video_chat/provider/matching_profile_provider.dart';
 
 class VideoCall extends StatefulWidget {
@@ -55,12 +57,13 @@ class VideoCallState extends State<VideoCall> {
       initPlatformState();
     });
 
-    if (widget.isApiCall) {
+    UserModel user =
+        Provider.of<FollowesProvider>(context, listen: false).userModel;
+
+    if (user.isInfluencer == false) {
       timer = Timer.periodic(
           Duration(seconds: 60), (Timer t) => callReceiveApiCall());
     }
-
-    // init();
   }
 
   @override
@@ -351,7 +354,10 @@ class VideoCallState extends State<VideoCall> {
             navigationKey.currentContext,
             listen: false)
         .coinStatus;
-    if (callStatus == null || callStatus?.continueCall == false) {
+
+    if (callStatus?.lowBalance == true) {
+      View.showMessage(context, "your balance is low.");
+    } else if (callStatus?.continueCall == false) {
       endCall();
       Navigator.pop(context);
       InAppPurchase.instance.openCoinPurchasePopUp();
