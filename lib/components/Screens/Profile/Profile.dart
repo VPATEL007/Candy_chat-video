@@ -17,6 +17,7 @@ import 'package:video_chat/components/Screens/Profile/VipStore.dart';
 import 'package:video_chat/components/Screens/Profile/Visitor.dart';
 import 'package:video_chat/components/Screens/Profile/edit_profile.dart';
 import 'package:video_chat/components/Screens/Setting/Setting.dart';
+import 'package:video_chat/components/Screens/Splash/Splash.dart';
 import 'package:video_chat/components/widgets/ProfileSlider.dart';
 import 'package:video_chat/components/widgets/TabBar/Tabbar.dart';
 import 'package:video_chat/provider/feedback_provider.dart';
@@ -172,7 +173,7 @@ class _ProfileState extends State<Profile> {
           app.resolve<PrefUtils>().clearPreferenceAndDB();
           Navigator.of(context).pushAndRemoveUntil(
               MaterialPageRoute(
-                builder: (context) => Login(),
+                builder: (context) => Splash(),
               ),
               (route) => false);
         },

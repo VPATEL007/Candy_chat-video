@@ -10,7 +10,7 @@ class VideoCallStatusProvider with ChangeNotifier {
   }
 
   String get statusText => getCallStatus == CallStatus.Start
-      ? "Rigging..."
+      ? "Ringing…"
       : getCallStatus == CallStatus.Reject
           ? "Call Decline"
           : getCallStatus == CallStatus.End

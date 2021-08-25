@@ -111,44 +111,48 @@ class _DiscoverState extends State<Discover> {
               },
               child: InkWell(
                   onTap: () {
-                    MatchProfileModel matchProfileModel = discoverList[index];
-                    if (matchProfileModel == null) return;
-                    UserModel userModel = UserModel(
-                      about: matchProfileModel.about,
-                      dob: matchProfileModel.dob,
-                      callRate: matchProfileModel.callRate,
-                      gender: matchProfileModel.gender,
-                      preferedGender: matchProfileModel.preferedGender,
-                      photoUrl: (matchProfileModel?.imageUrl?.isEmpty ?? true)
-                          ? ""
-                          : matchProfileModel?.imageUrl?.first ?? "",
-                      userName: matchProfileModel.userName,
-                      region: Region(
-                          regionName: matchProfileModel.regionName,
-                          regionFlagUrl: matchProfileModel.regionFlagUrl),
-                      language: Language(
-                          languageName: matchProfileModel.languageName),
-                      userImages: matchProfileModel?.imageUrl
-                              ?.map((e) => UserImage(photoUrl: e))
-                              ?.toList() ??
-                          [],
-                      byUserUserFollowers: matchProfileModel.followings,
-                      userVisiteds: matchProfileModel?.visitorCount ?? 0,
-                      userFollowers: matchProfileModel.followers,
-                      isFollowing: matchProfileModel?.isFollowing == 1,
-                      providerDisplayName:
-                          matchProfileModel.providerDisplayName,
-                      id: matchProfileModel.id,
-                      totalPoint: matchProfileModel.totalPoint,
-                      onlineStatus: matchProfileModel.onlineStatus,
-                    );
-                    if (userModel.photoUrl.isNotEmpty) {
-                      userModel.userImages
-                          .insert(0, UserImage(photoUrl: userModel.photoUrl));
+                    try {
+                      MatchProfileModel matchProfileModel = discoverList[index];
+                      if (matchProfileModel == null) return;
+                      UserModel userModel = UserModel(
+                        about: matchProfileModel.about,
+                        dob: matchProfileModel.dob,
+                        callRate: matchProfileModel.callRate,
+                        gender: matchProfileModel.gender,
+                        preferedGender: matchProfileModel.preferedGender,
+                        photoUrl: (matchProfileModel?.imageUrl?.isEmpty ?? true)
+                            ? ""
+                            : matchProfileModel?.imageUrl?.first ?? "",
+                        userName: matchProfileModel.userName,
+                        region: Region(
+                            regionName: matchProfileModel.regionName,
+                            regionFlagUrl: matchProfileModel.regionFlagUrl),
+                        language: Language(
+                            languageName: matchProfileModel.languageName),
+                        userImages: matchProfileModel?.imageUrl
+                                ?.map((e) => UserImage(photoUrl: e))
+                                ?.toList() ??
+                            [],
+                        byUserUserFollowers: matchProfileModel.followings,
+                        userVisiteds: matchProfileModel?.visitorCount ?? 0,
+                        userFollowers: matchProfileModel.followers,
+                        isFollowing: matchProfileModel?.isFollowing == 1,
+                        providerDisplayName:
+                            matchProfileModel.providerDisplayName,
+                        id: matchProfileModel.id,
+                        totalPoint: matchProfileModel.totalPoint,
+                        onlineStatus: matchProfileModel.onlineStatus,
+                      );
+                      if (userModel.photoUrl.isNotEmpty) {
+                        userModel.userImages
+                            .insert(0, UserImage(photoUrl: userModel.photoUrl));
+                      }
+                      NavigationUtilities.push(UserProfile(
+                        userModel: userModel,
+                      ));
+                    } catch (e) {
+                      print(e);
                     }
-                    NavigationUtilities.push(UserProfile(
-                      userModel: userModel,
-                    ));
                   },
                   child: getUserItem(discoverList[index])),
             );
@@ -265,17 +269,23 @@ class _DiscoverState extends State<Discover> {
                                         .coinBalance;
 
                                 if (coins?.lowBalance == false) {
+                                  await Provider.of<MatchingProfileProvider>(
+                                          context,
+                                          listen: false)
+                                      .startVideoCall(context, 4);
                                   VideoCallModel videoCallModel =
                                       Provider.of<MatchingProfileProvider>(
                                               context,
                                               listen: false)
                                           .videoCallModel;
+
                                   if (videoCallModel != null)
-                                    AgoraService.instance.sendVideoCallMessage(
-                                        videoCallModel.toUserId.toString(),
-                                        videoCallModel.sessionId,
-                                        videoCallModel.channelName,
-                                        context);
+                                    videoCallModel.toUserId = 4;
+                                  AgoraService.instance.sendVideoCallMessage(
+                                      videoCallModel.toUserId.toString(),
+                                      videoCallModel.sessionId,
+                                      videoCallModel.channelName,
+                                      context);
                                   Provider.of<VideoCallStatusProvider>(context,
                                           listen: false)
                                       .setCallStatus = CallStatus.Start;

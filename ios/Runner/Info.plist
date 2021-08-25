@@ -22,13 +22,20 @@
 	<string>$(FLUTTER_BUILD_NAME)</string>
 	<key>CFBundleSignature</key>
 	<string>????</string>
+	<key>CFBundleTypeRole</key>
+		<string>Editor</string>
 	<key>CFBundleURLTypes</key>
 	<array>
 		<dict>
 			<key>CFBundleURLSchemes</key>
 			<array>
 				<string>fb234543204337461</string>
+				<string>com.googleusercontent.apps.154586257070-20tj6mdnhkl02mra7dkbs8mbsth746q1</string>
 			</array>
+
+		
+	
+
 		</dict>
 	</array>
 	<key>CFBundleVersion</key>
@@ -84,16 +91,6 @@
 	</array>
 	<key>UIViewControllerBasedStatusBarAppearance</key>
 	<false/>
-	<key>CFBundleURLTypes</key>
-<array>
-	<dict>
-		<key>CFBundleTypeRole</key>
-		<string>Editor</string>
-		<key>CFBundleURLSchemes</key>
-		<array>
-			<string>com.googleusercontent.apps.154586257070-20tj6mdnhkl02mra7dkbs8mbsth746q1</string>
-		</array>
-	</dict>
-</array>
+	
 </dict>
 </plist>

@@ -87,7 +87,7 @@ class _MatchedProfileState extends State<MatchedProfile> {
                   ),
                   Center(
                     child: Text(
-                      "You invites to a ${widget.name} for video call",
+                      "Your are invited to a video call with ${widget.name}.",
                       style: appTheme.black14Normal.copyWith(
                           fontWeight: FontWeight.w500,
                           fontSize: getFontSize(16)),
@@ -120,9 +120,11 @@ class _MatchedProfileState extends State<MatchedProfile> {
             width: getSize(120),
           ),
         ),
-        SizedBox(
-          width: getSize(36),
-        ),
+        callStatus == CallStatus.Start || callStatus == CallStatus.Reject
+            ? Container()
+            : SizedBox(
+                width: getSize(36),
+              ),
         callStatus == CallStatus.Start || callStatus == CallStatus.Reject
             ? Container()
             : InkWell(

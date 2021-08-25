@@ -167,7 +167,7 @@ class NetworkClient {
             failureCallback("", "Connection timeout, Please try again. ");
           } else {
             if (e.response != null) {
-              failureCallback("", e.response.data["message"].toString());
+              failureCallback("", e?.response?.data["message"].toString());
             } else {
               failureCallback("", e.message.toString());
             }

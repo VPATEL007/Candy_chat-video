@@ -29,19 +29,22 @@ class CallStatusModel {
 
 class CoinModel {
   bool lowBalance;
-  int maxCallMinutes;
+  // double maxCallMinutes;
 
-  CoinModel({this.lowBalance, this.maxCallMinutes});
+  CoinModel({
+    this.lowBalance,
+    // this.maxCallMinutes
+  });
 
   CoinModel.fromJson(Map<String, dynamic> json) {
     lowBalance = json['low_balance'];
-    maxCallMinutes = json['max_call_minutes'];
+    // maxCallMinutes = json['max_call_minutes'];
   }
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     data['low_balance'] = this.lowBalance;
-    data['max_call_minutes'] = this.maxCallMinutes;
+    // data['max_call_minutes'] = this.maxCallMinutes;
     return data;
   }
 }

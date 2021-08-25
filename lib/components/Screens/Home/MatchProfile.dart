@@ -78,6 +78,14 @@ class _MathProfileState extends State<MathProfile> {
                         .coinBalance;
 
                 if (coins?.lowBalance == false) {
+                  await Provider.of<MatchingProfileProvider>(context,
+                          listen: false)
+                      .startVideoCall(
+                          context,
+                          Provider.of<MatchingProfileProvider>(context,
+                                  listen: false)
+                              .matchProfileList[index]
+                              .id);
                   VideoCallModel videoCallModel =
                       Provider.of<MatchingProfileProvider>(context,
                               listen: false)
