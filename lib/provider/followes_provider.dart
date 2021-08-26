@@ -124,7 +124,7 @@ class FollowesProvider with ChangeNotifier {
       command: "favourite/${describeEnum(favouriteStatus)}",
       headers: NetworkClient.getInstance.getAuthHeaders(),
       method: MethodType.Post,
-      params: {"userId": userId},
+      params: {"user_id": userId},
       successCallback: (response, message) {
         View.showMessage(context, message, mode: DisplayMode.SUCCESS);
       },
