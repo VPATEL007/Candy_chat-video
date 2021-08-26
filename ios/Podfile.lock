@@ -58,6 +58,9 @@ PODS:
     - Flutter
   - in_app_purchase (0.0.1):
     - Flutter
+  - keyboard_visibility (0.5.0):
+    - Flutter
+    - Reachability
   - libwebp (1.2.0):
     - libwebp/demux (= 1.2.0)
     - libwebp/mux (= 1.2.0)
@@ -108,6 +111,7 @@ DEPENDENCIES:
   - google_sign_in (from `.symlinks/plugins/google_sign_in/ios`)
   - http_proxy (from `.symlinks/plugins/http_proxy/ios`)
   - in_app_purchase (from `.symlinks/plugins/in_app_purchase/ios`)
+  - keyboard_visibility (from `.symlinks/plugins/keyboard_visibility/ios`)
   - multi_image_picker2 (from `.symlinks/plugins/multi_image_picker2/ios`)
   - package_info (from `.symlinks/plugins/package_info/ios`)
   - path_provider (from `.symlinks/plugins/path_provider/ios`)
@@ -158,6 +162,8 @@ EXTERNAL SOURCES:
     :path: ".symlinks/plugins/http_proxy/ios"
   in_app_purchase:
     :path: ".symlinks/plugins/in_app_purchase/ios"
+  keyboard_visibility:
+    :path: ".symlinks/plugins/keyboard_visibility/ios"
   multi_image_picker2:
     :path: ".symlinks/plugins/multi_image_picker2/ios"
   package_info:
@@ -197,6 +203,7 @@ SPEC CHECKSUMS:
   GTMSessionFetcher: 36689134877faeb055b27dfa4ccc9ceaa42e029e
   http_proxy: 20f129d3e1c70cfdef92530b374c619832027729
   in_app_purchase: 3e2155afa9d03d4fa32d9e62d567885080ce97d6
+  keyboard_visibility: 96a24de806fe6823c3ad956c01ba2ec6d056616f
   libwebp: e90b9c01d99205d03b6bb8f2c8c415e5a4ef66f0
   Mantle: 4c0ed6ce47c96eccc4dc3bb071deb3def0e2c3be
   multi_image_picker2: f81a13124e7a2bc48e7d15ee539a5f8b9ff4d407

@@ -37,6 +37,11 @@ class DiscoverProvider with ChangeNotifier {
       View.showMessage(context, e.toString());
     }
   }
+
+  removeUser(int id) {
+    discoverProfileList.removeWhere((element) => element.id == id);
+    notifyListeners();
+  }
 }
 
 enum SortBy { General, New, Trending, HighRated }

@@ -38,4 +38,5 @@ class ApiConstants {
   static const String getRTMToken = "call-history/rtm-token";
   static const String buyPackage = "transaction/buy-coin-package";
   static const String coinBalance = "call-history/balance-status";
+  static const String blockUser = "profile/block-unblock-profile";
 }

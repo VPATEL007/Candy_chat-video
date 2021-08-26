@@ -10,7 +10,9 @@ import 'package:video_chat/app/utils/math_utils.dart';
 import 'package:video_chat/components/Model/User/UserModel.dart';
 import 'package:video_chat/components/Screens/Home/Reportblock.dart';
 import 'package:video_chat/components/widgets/ProfileSlider.dart';
+import 'package:video_chat/provider/discover_provider.dart';
 import 'package:video_chat/provider/followes_provider.dart';
+import 'package:video_chat/provider/matching_profile_provider.dart';
 import 'package:video_chat/provider/tags_provider.dart';
 
 class UserProfile extends StatefulWidget {
@@ -648,6 +650,7 @@ class _UserProfileState extends State<UserProfile> {
                     InkWell(
                       onTap: () {
                         Navigator.pop(context);
+                        callApiForBlockUser();
                       },
                       child: Container(
                         height: getSize(52),
@@ -675,5 +678,30 @@ class _UserProfileState extends State<UserProfile> {
             },
           );
         });
+  }
+
+  callApiForBlockUser() {
+    Map<String, dynamic> req = {};
+    req["id"] = widget.userModel.id;
+
+    NetworkClient.getInstance.showLoader(context);
+    NetworkClient.getInstance.callApi(
+      context: context,
+      baseUrl: ApiConstants.apiUrl,
+      command: ApiConstants.blockUser,
+      params: req,
+      headers: NetworkClient.getInstance.getAuthHeaders(),
+      method: MethodType.Post,
+      successCallback: (response, message) async {
+        NetworkClient.getInstance.hideProgressDialog();
+        await Provider.of<DiscoverProvider>(context, listen: false)
+            .removeUser(widget.userModel.id);
+        Navigator.pop(context);
+      },
+      failureCallback: (code, message) {
+        NetworkClient.getInstance.hideProgressDialog();
+        View.showMessage(context, message);
+      },
+    );
   }
 }

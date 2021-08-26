@@ -5,8 +5,10 @@ import 'package:agora_rtm/agora_rtm.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:keyboard_visibility/keyboard_visibility.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:provider/provider.dart';
+import 'package:sticky_headers/sticky_headers/widget.dart';
 import 'package:video_chat/app/Helper/inAppPurchase_service.dart';
 import 'package:video_chat/app/app.export.dart';
 import 'package:video_chat/app/constant/ColorConstant.dart';
@@ -25,15 +27,14 @@ class VideoCall extends StatefulWidget {
   final String channelName;
   final String userId;
   final String toUserId;
-  final bool isApiCall;
-  VideoCall(
-      {Key key,
-      @required this.channelName,
-      @required this.token,
-      @required this.userId,
-      @required this.toUserId,
-      this.isApiCall = false})
-      : super(key: key);
+
+  VideoCall({
+    Key key,
+    @required this.channelName,
+    @required this.token,
+    @required this.userId,
+    @required this.toUserId,
+  }) : super(key: key);
 
   @override
   VideoCallState createState() => VideoCallState();
@@ -41,6 +42,7 @@ class VideoCall extends StatefulWidget {
 
 class VideoCallState extends State<VideoCall> {
   final TextEditingController _chatController = TextEditingController();
+  ScrollController messageListScrollController = ScrollController();
   RtcEngine engine;
   bool _joined = false;
   bool _switch = false;
@@ -50,11 +52,13 @@ class VideoCallState extends State<VideoCall> {
   AgoraService agoraService = AgoraService.instance;
   List<MessageObj> _chatsList = [];
   Timer timer;
+  bool isKeyboardOpen = false;
   @override
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) {
       initPlatformState();
+      init();
     });
 
     UserModel user =
@@ -76,6 +80,14 @@ class VideoCallState extends State<VideoCall> {
             Duration(seconds: 60), (Timer t) => callReceiveApiCall());
       }
     }
+
+    KeyboardVisibilityNotification().addNewListener(
+      onChange: (bool visible) {
+        setState(() {
+          isKeyboardOpen = visible;
+        });
+      },
+    );
   }
 
   @override
@@ -102,7 +114,8 @@ class VideoCallState extends State<VideoCall> {
               widget.userId.toLowerCase().toLowerCase(),
           sendBy: member.userId);
 
-      _chatsList.add(_chat);
+      _chatsList.insert(0, _chat);
+      // _chatsList.add(_chat);
       if (mounted) setState(() {});
       print("Channel msg: " + member.userId + ", msg: " + (message.text ?? ""));
     });
@@ -149,6 +162,7 @@ class VideoCallState extends State<VideoCall> {
           Container(
             child: _renderRemoteVideo(),
           ),
+          Positioned(bottom: getSize(120), child: chatList()),
           Positioned(
               left: getSize(30),
               top: getSize(30),
@@ -182,39 +196,82 @@ class VideoCallState extends State<VideoCall> {
                             hintText: "Type text....",
                             maxLine: 1,
                             fillColor: fromHex("#F1F1F1"),
-                            inputController: _chatController),
+                            inputController: _chatController,
+                            postfixWid: isKeyboardOpen
+                                ? Padding(
+                                    padding: EdgeInsets.only(
+                                        top: getSize(16), right: getSize(16)),
+                                    child: InkWell(
+                                      onTap: () async {
+                                        if (_chatController.text?.isEmpty ??
+                                            true) return;
+                                        MessageObj _chat = MessageObj(
+                                            chatDate: DateTime.now(),
+                                            message: _chatController.text,
+                                            isSendByMe: true,
+                                            sendBy: widget.userId);
+
+                                        _chatsList.insert(0, _chat);
+
+                                        if (mounted) setState(() {});
+
+                                        await agoraService
+                                            .sendMessage(_chatController.text);
+
+                                        _chatController.clear();
+                                        if (_chatsList?.isNotEmpty ?? false)
+                                          messageListScrollController
+                                              ?.jumpTo(0.0);
+                                        if (mounted) setState(() {});
+                                      },
+                                      child: Text(
+                                        "Send",
+                                        style: appTheme.black14Normal.copyWith(
+                                            fontWeight: FontWeight.w700,
+                                            color: ColorConstants.red),
+                                      ),
+                                    ),
+                                  )
+                                : SizedBox()),
                         textCallback: (text) {},
                       )),
-                      SizedBox(
-                        width: getSize(12),
+                      Visibility(
+                        visible: !isKeyboardOpen,
+                        child: Row(
+                          children: [
+                            SizedBox(
+                              width: getSize(12),
+                            ),
+                            InkWell(
+                                onTap: () {
+                                  _onMicMute();
+                                },
+                                child: getMicVideoButton(
+                                    _micMute ? muteMic : unMuteMic)),
+                            SizedBox(
+                              width: getSize(12),
+                            ),
+                            InkWell(
+                                onTap: () {
+                                  _onVideoMute();
+                                },
+                                child: getMicVideoButton(
+                                    _videoMute ? muteVideo : unMuteVideo)),
+                            SizedBox(
+                              width: getSize(12),
+                            ),
+                            giftButton(),
+                            SizedBox(
+                              width: getSize(12),
+                            ),
+                            callEndButton()
+                          ],
+                        ),
                       ),
-                      InkWell(
-                          onTap: () {
-                            _onMicMute();
-                          },
-                          child: getMicVideoButton(
-                              _micMute ? muteMic : unMuteMic)),
-                      SizedBox(
-                        width: getSize(12),
-                      ),
-                      InkWell(
-                          onTap: () {
-                            _onVideoMute();
-                          },
-                          child: getMicVideoButton(
-                              _videoMute ? muteVideo : unMuteVideo)),
-                      SizedBox(
-                        width: getSize(12),
-                      ),
-                      giftButton(),
-                      SizedBox(
-                        width: getSize(12),
-                      ),
-                      callEndButton()
                     ],
                   ),
                 ),
-              ))
+              )),
         ],
       ),
     );
@@ -281,6 +338,56 @@ class VideoCallState extends State<VideoCall> {
     );
   }
 
+  Widget chatList() {
+    return StreamBuilder<List<MessageObj>>(
+        stream: Stream.value(_chatsList),
+        builder: (context, snapshot) {
+          if (snapshot.data?.isEmpty ?? true) {
+            return Container();
+          }
+          return _buildChats(_chatsList);
+        });
+  }
+
+  // Chat date and chats...
+  Widget _buildChats(List<MessageObj> messageList) {
+    return Container(
+      height: getSize(200),
+      width: MathUtilities.screenWidth(context),
+      child: ListView.builder(
+        reverse: true,
+        shrinkWrap: true,
+        padding: EdgeInsets.only(left: getSize(25), right: getSize(25)),
+        itemCount: messageList.length,
+        controller: messageListScrollController,
+        itemBuilder: (context, contentIndex) {
+          return Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Container(
+                decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(20),
+                    color: fromHex("#F1F1F1")),
+                child: Padding(
+                  padding: EdgeInsets.all(getSize(10)),
+                  child: Text(
+                    messageList[contentIndex].message,
+                    style:
+                        appTheme.black16Medium.copyWith(fontSize: getSize(16)),
+                  ),
+                ),
+              ),
+              SizedBox(
+                height: 10,
+              )
+            ],
+          );
+        },
+      ),
+    );
+  }
+
   void endCall() {
     try {
       timer?.cancel();
@@ -328,32 +435,6 @@ class VideoCallState extends State<VideoCall> {
     } else {
       return Container();
     }
-  }
-
-  // Get Sorted List By Chat dates...
-  List<ChatObj> sortChatByDate(List<MessageObj> chatList) {
-    List<ChatObj> tempArray = [];
-    chatList.forEach((chats) {
-      //Get list Index...
-      int transIndex = tempArray.indexWhere((item) {
-        return DateFormat('dd MMMM yyyy').format(item.chatDate) ==
-            DateFormat('dd MMMM yyyy')
-                .format(chats.chatDate); //Sort by List Category...
-      });
-      //Check If Project Already Added, if added then add category and list in same project...
-      if (transIndex >= 0) {
-        tempArray[transIndex].messageObjList.insert(0, chats);
-      } else {
-        //New Temp List...
-        ChatObj tempList = ChatObj();
-        tempList.chatDate = chats.chatDate; // List Name...
-        tempList.messageObjList = [chats];
-
-        tempArray.add(tempList);
-      }
-    });
-
-    return tempArray;
   }
 
 //Receive Video Call
