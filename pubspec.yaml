@@ -53,6 +53,7 @@ dependencies:
   rate_my_app: any
   package_info: ^2.0.2
   google_sign_in: ^4.5.9
+  device_info: ^2.0.2
 
 
 dev_dependencies:

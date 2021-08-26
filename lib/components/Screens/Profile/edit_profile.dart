@@ -3,7 +3,10 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:multi_image_picker2/multi_image_picker2.dart';
+import 'package:provider/provider.dart';
 import 'package:video_chat/app/app.export.dart';
+import 'package:video_chat/components/Model/User/UserModel.dart';
+import 'package:video_chat/provider/followes_provider.dart';
 
 class EditProfileScreen extends StatefulWidget {
   const EditProfileScreen({Key key}) : super(key: key);
@@ -20,6 +23,34 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
   TextEditingController _dobController = TextEditingController();
   TextEditingController _nationController = TextEditingController();
   Gender _gender = Gender.Male;
+
+  UserModel _userInfo;
+
+  @override
+  void initState() {
+    super.initState();
+    init();
+  }
+
+  Future<void> init() async {
+    _userInfo = Provider.of<FollowesProvider>(context, listen: false).userModel;
+    if (_userInfo == null) {
+      await Provider.of<FollowesProvider>(context, listen: false)
+          .fetchMyProfile(context);
+      _userInfo =
+          Provider.of<FollowesProvider>(context, listen: false).userModel;
+      if (mounted) setState(() {});
+    }
+    userNameController.text = _userInfo?.providerDisplayName ?? "";
+    genderController.text = _userInfo?.gender ?? "";
+    _gender = _userInfo?.gender == describeEnum(Gender.Female).toLowerCase()
+        ? Gender.Female
+        : _userInfo?.gender == describeEnum(Gender.Male).toLowerCase()
+            ? Gender.Male
+            : Gender.Other;
+    _dobController.text = _userInfo?.dob ?? "";
+    _nationController.text = _userInfo?.region?.regionName ?? "";
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -44,6 +75,12 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
       bottomSheet: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 15),
         child: getBottomButton(context, "Save Profile", () {
+          _userInfo?.providerDisplayName = userNameController.text;
+          _userInfo?.gender = genderController.text;
+          _userInfo?.dob = _dobController.text;
+          _userInfo?.region?.regionName = _nationController.text;
+          Provider.of<FollowesProvider>(context, listen: false)
+              .saveMyProfile(context, _userInfo);
           Navigator.of(context).pop();
         }),
       ),

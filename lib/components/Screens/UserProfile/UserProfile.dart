@@ -525,7 +525,44 @@ class _UserProfileState extends State<UserProfile> {
                     ),
                   ),
                   Spacer(),
-                  getProfileButton(icFavourite),
+                  InkWell(
+                      onTap: () {
+                        if (widget.userModel.id != null) {
+                          if (((widget.userModel?.isFavourite != null) &&
+                              (widget.userModel.isFavourite == false))) {
+                            Provider.of<FollowesProvider>(context,
+                                    listen: false)
+                                .favouriteUnfavouriteUser(context,
+                                    widget.userModel.id, FavouriteStatus.add);
+                            if (mounted) {
+                              setState(() {
+                                if (widget.userModel?.userFollowers != null) {
+                                  widget.userModel.isFavourite = true;
+                                }
+                              });
+                            }
+                          } else {
+                            Provider.of<FollowesProvider>(context,
+                                    listen: false)
+                                .favouriteUnfavouriteUser(
+                                    context,
+                                    widget.userModel.id,
+                                    FavouriteStatus.delete);
+                            if (mounted) {
+                              setState(() {
+                                if (widget.userModel?.isFavourite != null) {
+                                  widget.userModel.isFavourite = false;
+                                }
+                              });
+                            }
+                          }
+                        }
+                      },
+                      child: getProfileButton(
+                          ((widget.userModel?.isFavourite != null) &&
+                                  (widget.userModel.isFavourite == true))
+                              ? "assets/Profile/unfavourite.png"
+                              : icFavourite)),
                 ],
               ),
             ))
@@ -538,7 +575,8 @@ class _UserProfileState extends State<UserProfile> {
         height: getSize(46),
         width: getSize(46),
         decoration: BoxDecoration(
-            boxShadow: image == "assets/Profile/remove_user.png"
+            boxShadow: image == "assets/Profile/remove_user.png" ||
+                    image == "assets/Profile/unfavourite.png"
                 ? []
                 : [
                     BoxShadow(
@@ -548,13 +586,16 @@ class _UserProfileState extends State<UserProfile> {
                         offset: Offset(0, 3)),
                   ],
             borderRadius: BorderRadius.circular(getSize(14)),
-            color: image == "assets/Profile/remove_user.png"
+            color: image == "assets/Profile/remove_user.png" ||
+                    image == "assets/Profile/unfavourite.png"
                 ? ColorConstants.red
                 : Colors.white),
         child: Padding(
           padding: EdgeInsets.all(getSize(11)),
           child: Image.asset(
-            image,
+            image == "assets/Profile/unfavourite.png" ? icFavourite : image,
+            color:
+                image == "assets/Profile/unfavourite.png" ? Colors.white : null,
             width: getSize(24),
             height: getSize(24),
           ),

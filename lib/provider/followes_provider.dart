@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:video_chat/app/app.export.dart';
 import 'package:video_chat/components/Model/Follwers/follow_model.dart';
@@ -101,13 +102,33 @@ class FollowesProvider with ChangeNotifier {
       params: {"userId": userId},
       successCallback: (response, message) {
         if (!fetchInBackground) NetworkClient.getInstance.hideProgressDialog();
-         if(userModel.byUserUserFollowers!=null){
+        if (userModel.byUserUserFollowers != null) {
           userModel.byUserUserFollowers--;
         }
         View.showMessage(context, message, mode: DisplayMode.SUCCESS);
       },
       failureCallback: (code, message) {
         if (!fetchInBackground) NetworkClient.getInstance.hideProgressDialog();
+        View.showMessage(context, message);
+      },
+    );
+    notifyListeners();
+  }
+
+  // favourite user
+  Future<void> favouriteUnfavouriteUser(
+      BuildContext context, int userId, FavouriteStatus favouriteStatus) async {
+    await NetworkClient.getInstance.callApi(
+      context: context,
+      baseUrl: ApiConstants.apiUrl,
+      command: "favourite/${describeEnum(favouriteStatus)}",
+      headers: NetworkClient.getInstance.getAuthHeaders(),
+      method: MethodType.Post,
+      params: {"userId": userId},
+      successCallback: (response, message) {
+        View.showMessage(context, message, mode: DisplayMode.SUCCESS);
+      },
+      failureCallback: (code, message) {
         View.showMessage(context, message);
       },
     );
@@ -127,7 +148,7 @@ class FollowesProvider with ChangeNotifier {
       method: MethodType.Post,
       params: {"userId": userId},
       successCallback: (response, message) {
-        if(userModel.byUserUserFollowers!=null){
+        if (userModel.byUserUserFollowers != null) {
           userModel.byUserUserFollowers++;
         }
         View.showMessage(context, message, mode: DisplayMode.SUCCESS);
@@ -158,4 +179,26 @@ class FollowesProvider with ChangeNotifier {
     );
     notifyListeners();
   }
+
+  // SAve my profile...
+  Future<void> saveMyProfile(BuildContext context, UserModel userInfo) async {
+    await NetworkClient.getInstance.callApi(
+      context: context,
+      baseUrl: ApiConstants.apiUrl,
+      command: ApiConstants.updateProfile,
+      headers: NetworkClient.getInstance.getAuthHeaders(),
+      method: MethodType.Post,
+      params: userInfo.toUpdateJson(),
+      successCallback: (response, message) {
+        userModel = userModelFromJson(jsonEncode(response));
+        View.showMessage(context, message, mode: DisplayMode.SUCCESS);
+      },
+      failureCallback: (code, message) {
+        View.showMessage(context, message);
+      },
+    );
+    notifyListeners();
+  }
 }
+
+enum FavouriteStatus { add, delete, none }

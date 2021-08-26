@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:video_chat/app/AppConfiguration/AppNavigation.dart';
 import 'package:video_chat/app/app.export.dart';
 import 'package:video_chat/app/utils/CommonWidgets.dart';
+import 'package:video_chat/components/Model/User/UserModel.dart';
 
 class Gender extends StatefulWidget {
   final bool isFromPreGender;
@@ -122,7 +123,7 @@ class _GenderState extends State<Gender> {
                       headers: NetworkClient.getInstance.getAuthHeaders(),
                       method: MethodType.Post,
                       params: {
-                        "prefgender": describeEnum(_genders).toLowerCase(),
+                        "gender": describeEnum(_genders).toLowerCase(),
                       },
                       successCallback: (response, message) {
                         NetworkClient.getInstance.hideProgressDialog();
@@ -146,7 +147,9 @@ class _GenderState extends State<Gender> {
                       command: ApiConstants.selectGender,
                       headers: NetworkClient.getInstance.getAuthHeaders(),
                       method: MethodType.Post,
-                      params: {"gender": describeEnum(_genders).toLowerCase()},
+                      params: {
+                        "prefgender": describeEnum(_genders).toLowerCase()
+                      },
                       successCallback: (response, message) {
                         NetworkClient.getInstance.hideProgressDialog();
                         View.showMessage(context, message);
