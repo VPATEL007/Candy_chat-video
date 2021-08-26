@@ -159,6 +159,7 @@ class _MathProfileState extends State<MathProfile> {
                   userVisiteds: matchProfileModel?.visitorCount ?? 0,
                   userFollowers: matchProfileModel.followers,
                   isFollowing: matchProfileModel?.isFollowing == 1,
+                   isFavourite: matchProfileModel?.isFavourite == 1,
                   providerDisplayName: matchProfileModel.providerDisplayName,
                   id: matchProfileModel.id,
                   totalPoint: matchProfileModel.totalPoint,

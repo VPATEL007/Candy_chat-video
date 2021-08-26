@@ -137,6 +137,7 @@ class _DiscoverState extends State<Discover> {
                         userVisiteds: matchProfileModel?.visitorCount ?? 0,
                         userFollowers: matchProfileModel.followers,
                         isFollowing: matchProfileModel?.isFollowing == 1,
+                        isFavourite: matchProfileModel?.isFavourite == 1,
                         providerDisplayName:
                             matchProfileModel.providerDisplayName,
                         id: matchProfileModel.id,

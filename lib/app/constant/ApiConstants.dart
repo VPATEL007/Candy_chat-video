@@ -29,7 +29,9 @@ class ApiConstants {
   static const String setFeedback = "feedback/set";
   static const String reportBlock = "report/block";
   static const String selectGender = "profile/set-prefered-gender";
+  static const String updateProfile = "profile/update";
   static const String getFollowing = "follow/get-following";
+  static const String paymentHistory = "transaction/app-transaction-history";
   static const String unFollowUser = "follow/remove";
   static const String followUser = "follow/set";
   static const String getFollowes = "follow/get-follower";

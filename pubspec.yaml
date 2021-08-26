@@ -54,6 +54,7 @@ dependencies:
   package_info: ^2.0.2
   google_sign_in: ^4.5.9
   keyboard_visibility: 0.5.6
+  device_info: ^2.0.2
 
 
 dev_dependencies:

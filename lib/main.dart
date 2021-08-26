@@ -12,6 +12,7 @@ import 'package:video_chat/provider/feedback_provider.dart';
 import 'package:video_chat/provider/followes_provider.dart';
 import 'package:video_chat/provider/language_provider.dart';
 import 'package:video_chat/provider/matching_profile_provider.dart';
+import 'package:video_chat/provider/payment_history.dart';
 import 'package:video_chat/provider/report_and_block_provider.dart';
 import 'package:video_chat/provider/tags_provider.dart';
 import 'package:video_chat/provider/video_call_status_provider.dart';
@@ -115,6 +116,9 @@ class _BaseState extends State<Base> {
         ),
         ChangeNotifierProvider.value(
           value: VideoCallStatusProvider(),
+        ),
+        ChangeNotifierProvider.value(
+          value: PaymentHistoryProvider(),
         ),
       ],
       child: MaterialApp(

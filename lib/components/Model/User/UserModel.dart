@@ -28,6 +28,7 @@ class UserModel {
       this.onlineStatus,
       this.userVisiteds,
       this.isFollowing,
+      this.isFavourite,
       this.isInfluencer,
       this.totalPoint});
 
@@ -40,7 +41,7 @@ class UserModel {
   String photoUrl;
   String gender;
   int callRate;
-  dynamic dob;
+  String dob;
   String preferedGender;
   String about;
   int byUserUserFollowers;
@@ -51,7 +52,7 @@ class UserModel {
   Language language;
   String totalPoint;
   String onlineStatus;
-  bool isFollowing=false;
+  bool isFollowing = false,isFavourite=false;
   bool isInfluencer;
 
   factory UserModel.fromJson(Map<String, dynamic> json) => UserModel(
@@ -103,7 +104,19 @@ class UserModel {
         "is_influencer": isInfluencer,
         "user_images": List<dynamic>.from(userImages.map((x) => x.toJson())),
       };
+
+      UserModel get toCloneInfo => UserModel.fromJson(this.toJson());
+
+  Map<String, dynamic> toUpdateJson() => {
+        "user_name": userName,
+        "id": id,
+        "photo_url": List<dynamic>.from(userImages.map((x) => x.toJson())),
+        "gender": gender,
+        "dob": dob,
+        "region": region?.toJson(),
+      };
 }
+
 
 class Language {
   Language({
@@ -137,17 +150,23 @@ class Region {
 }
 
 class UserImage {
-  UserImage({
-    this.photoUrl,
-  });
+    UserImage({
+        this.id,
+        this.photoUrl="",
+        this.assetPath=""
+    });
 
-  String photoUrl;
+    int id;
+    String photoUrl,assetPath;
 
-  factory UserImage.fromJson(Map<String, dynamic> json) => UserImage(
+    factory UserImage.fromJson(Map<String, dynamic> json) => UserImage(
+        id: json["id"],
         photoUrl: json["photo_url"],
-      );
+    );
 
-  Map<String, dynamic> toJson() => {
+    Map<String, dynamic> toJson() => {
+        "id": id,
         "photo_url": photoUrl,
-      };
+    };
 }
+

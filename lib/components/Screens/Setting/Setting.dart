@@ -93,7 +93,7 @@ class _SettingState extends State<Setting> {
                 getListItem("Feedback", () {
                   NavigationUtilities.push(FeedbackScreen());
                 }),
-                getListItem("About Us", () {})
+                getListItem("About Us", () {}),
               ],
             ),
           ),

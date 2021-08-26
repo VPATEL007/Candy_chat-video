@@ -95,6 +95,42 @@ class _ProfileState extends State<Profile> {
                       }),
                       getListItem(icSetting, "Settings", false, () {
                         NavigationUtilities.push(Setting());
+                      }),
+                      getListItem(icLogout, "Logout", false, () {
+                        showDialog(
+                          context: context,
+                          builder: (context) => AlertDialog(
+                            title: Center(child: Text("Logout")),
+                            content: Text(
+                              "Are you sure you want to Logout?",
+                              textAlign: TextAlign.center,
+                            ),
+                            actions: [
+                              TextButton(
+                                onPressed: () {
+                                  Navigator.of(context).pop();
+                                },
+                                child: Text("Cancel"),
+                              ),
+                              TextButton(
+                                onPressed: () {
+                                  Navigator.of(context).pop();
+                                  GoogleSignInHelper.instance.handleSignOut();
+                                  FacebookLoginHelper.shared.logout();
+                                  app
+                                      .resolve<PrefUtils>()
+                                      .clearPreferenceAndDB();
+                                  Navigator.of(context).pushAndRemoveUntil(
+                                      MaterialPageRoute(
+                                        builder: (context) => Splash(),
+                                      ),
+                                      (route) => false);
+                                },
+                                child: Text("Logout"),
+                              )
+                            ],
+                          ),
+                        );
                       })
                     ],
                   ),
@@ -151,10 +187,12 @@ class _ProfileState extends State<Profile> {
                       color: isColor ? Colors.white : Colors.black),
                 ),
                 Spacer(),
-                Image.asset(
-                  icDetail,
-                  color: isColor ? Colors.white : Colors.black,
-                )
+                title == "Logout"
+                    ? Container()
+                    : Image.asset(
+                        icDetail,
+                        color: isColor ? Colors.white : Colors.black,
+                      )
               ],
             ),
           ),
@@ -165,26 +203,26 @@ class _ProfileState extends State<Profile> {
 
   Widget getNavigation() {
     return Row(children: [
-      InkWell(
-        onTap: () {
-          GoogleSignInHelper.instance.handleSignOut();
-          FacebookLoginHelper.shared.logout();
+      // InkWell(
+      //   onTap: () {
+      //     GoogleSignInHelper.instance.handleSignOut();
+      //     FacebookLoginHelper.shared.logout();
 
-          app.resolve<PrefUtils>().clearPreferenceAndDB();
-          Navigator.of(context).pushAndRemoveUntil(
-              MaterialPageRoute(
-                builder: (context) => Splash(),
-              ),
-              (route) => false);
-        },
-        child: Align(
-            alignment: Alignment.topLeft,
-            child: Image.asset(
-              icLogout,
-              height: getSize(26),
-              width: getSize(26),
-            )),
-      ),
+      //     app.resolve<PrefUtils>().clearPreferenceAndDB();
+      //     Navigator.of(context).pushAndRemoveUntil(
+      //         MaterialPageRoute(
+      //           builder: (context) => Splash(),
+      //         ),
+      //         (route) => false);
+      //   },
+      //   child: Align(
+      //       alignment: Alignment.topLeft,
+      //       child: Image.asset(
+      //         icLogout,
+      //         height: getSize(26),
+      //         width: getSize(26),
+      //       )),
+      // ),
       Spacer(),
       Row(
         crossAxisAlignment: CrossAxisAlignment.center,
