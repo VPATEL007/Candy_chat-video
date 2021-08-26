@@ -105,6 +105,8 @@ class UserModel {
         "user_images": List<dynamic>.from(userImages.map((x) => x.toJson())),
       };
 
+      UserModel get toCloneInfo => UserModel.fromJson(this.toJson());
+
   Map<String, dynamic> toUpdateJson() => {
         "user_name": userName,
         "id": id,
@@ -114,6 +116,7 @@ class UserModel {
         "region": region?.toJson(),
       };
 }
+
 
 class Language {
   Language({
@@ -149,11 +152,12 @@ class Region {
 class UserImage {
     UserImage({
         this.id,
-        this.photoUrl,
+        this.photoUrl="",
+        this.assetPath=""
     });
 
     int id;
-    String photoUrl;
+    String photoUrl,assetPath;
 
     factory UserImage.fromJson(Map<String, dynamic> json) => UserImage(
         id: json["id"],
