@@ -1,22 +1,22 @@
 import 'package:agora_rtm/agora_rtm.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:provider/provider.dart';
 import 'package:sticky_headers/sticky_headers.dart';
 import 'package:video_chat/components/Model/User/UserModel.dart';
 import 'package:video_chat/components/Screens/UserProfile/UserProfile.dart';
+import 'package:video_chat/provider/chat_provider.dart';
 
 import '../../../app/app.export.dart';
 
 class Chat extends StatefulWidget {
   final String channelId;
-  final String userId;
+  final int toUserId;
 
-  Chat({
-    Key key,
-    @required this.channelId,
-    @required this.userId,
-  }) : super(key: key);
+  Chat({Key key, @required this.channelId, @required this.toUserId})
+      : super(key: key);
 
   @override
   _ChatState createState() => _ChatState();
@@ -27,15 +27,25 @@ class _ChatState extends State<Chat> {
   AgoraService agoraService = AgoraService.instance;
   List<MessageObj> _chatsList = [];
   ScrollController messageListScrollController = ScrollController();
+  String userId = app.resolve<PrefUtils>().getUserDetails()?.id.toString();
+  UserModel toUser;
+
   @override
   void initState() {
     super.initState();
     init();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      getToUserDetail();
+    });
+  }
+
+  getToUserDetail() async {
+    toUser = await Provider.of<ChatProvider>(context, listen: false)
+        .getUserProfile(widget.toUserId, context);
+    setState(() {});
   }
 
   Future<void> init() async {
-    // await agoraService.initialize(AGORA_APPID);
-    // await agoraService.login(token: widget.token, userId: widget?.userId);
     agoraService.joinChannel((widget?.channelId ?? ""),
         onMemberJoined: (AgoraRtmMember member) {
       print(
@@ -47,7 +57,7 @@ class _ChatState extends State<Chat> {
           chatDate: DateTime.now(),
           message: message.text,
           isSendByMe: member.userId.toString().toLowerCase() ==
-              widget.userId.toLowerCase().toLowerCase(),
+              userId.toLowerCase().toLowerCase(),
           sendBy: member.userId);
 
       _chatsList.add(_chat);
@@ -78,7 +88,7 @@ class _ChatState extends State<Chat> {
       },
       child: Scaffold(
         backgroundColor: Colors.white,
-        appBar: getAppBar(context, "Helmi Lutvyandi",
+        appBar: getAppBar(context, toUser?.userName ?? "",
             isWhite: true,
             centerTitle: false,
             leadingButton: getBackButton(context),
@@ -91,22 +101,25 @@ class _ChatState extends State<Chat> {
               ),
               getBarButton(context, icCall, () {}),
               InkWell(
-                onTap: () {
-                  Navigator.of(context).push(MaterialPageRoute(
-                    builder: (context) => UserProfile(userModel: UserModel()),
-                  ));
+                onTap: () async {
+                  if (toUser != null) {
+                    NavigationUtilities.push(UserProfile(userModel: toUser));
+                  }
                 },
                 child: Padding(
                   padding: EdgeInsets.all(getSize(14)),
                   child: ClipRRect(
-                    borderRadius: BorderRadius.circular(36),
-                    child: Image.asset(
-                      loginBg,
-                      width: getSize(36),
-                      height: getSize(26),
-                      fit: BoxFit.cover,
-                    ),
-                  ),
+                      borderRadius: BorderRadius.circular(26),
+                      child: CachedNetworkImage(
+                        imageUrl: toUser?.photoUrl ?? "",
+                        width: getSize(28),
+                        height: getSize(26),
+                        fit: BoxFit.cover,
+                        color: Colors.black.withOpacity(0.4),
+                        colorBlendMode: BlendMode.overlay,
+                        errorWidget: (context, url, error) =>
+                            Image.asset("assets/Profile/no_image.png"),
+                      )),
                 ),
               )
             ]),
@@ -237,7 +250,7 @@ class _ChatState extends State<Chat> {
               padding: EdgeInsets.only(left: 8, right: 8),
               child: Text(
                 messageList.getChatDate,
-                textAlign: messageList.sendBy != widget.userId
+                textAlign: messageList.sendBy != userId
                     ? TextAlign.left
                     : TextAlign.right,
                 style: appTheme.black12Normal.copyWith(
@@ -322,7 +335,7 @@ class _ChatState extends State<Chat> {
                                   chatDate: DateTime.now(),
                                   message: _chatController.text,
                                   isSendByMe: true,
-                                  sendBy: widget.userId);
+                                  sendBy: userId);
 
                               _chatsList.add(_chat);
                               if (mounted) setState(() {});

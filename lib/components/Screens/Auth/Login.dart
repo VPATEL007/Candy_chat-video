@@ -27,6 +27,14 @@ class Login extends StatefulWidget {
 
 class _LoginState extends State<Login> {
   @override
+  void initState() {
+    super.initState();
+    app
+        .resolve<PrefUtils>()
+        .saveBoolean(app.resolve<PrefUtils>().keyIsShowIntro, true);
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: ColorConstants.colorPrimary,
@@ -75,7 +83,7 @@ class _LoginState extends State<Login> {
               Padding(
                 padding: EdgeInsets.only(left: getSize(16), right: getSize(16)),
                 child: Text(
-                    "Lorem Ipsum is simply dummy text of the printing and typesetting industry. ",
+                    "Welcome to the new world of socializing via video call and chat",
                     textAlign: TextAlign.center,
                     style: appTheme.white14Normal),
               ),
@@ -120,7 +128,7 @@ class _LoginState extends State<Login> {
                   "device_id": deviceId,
                   "language_id": langId
                 };
-                GoogleSignInHelper.instance.handleSignIn(context,req);
+                GoogleSignInHelper.instance.handleSignIn(context, req);
               }),
               SizedBox(
                 height: getSize(12),

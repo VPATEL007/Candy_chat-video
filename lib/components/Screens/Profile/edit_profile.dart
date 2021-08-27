@@ -53,12 +53,13 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
       if (mounted) setState(() {});
     }
     userNameController.text = _userInfo?.userName ?? "";
-    genderController.text = _userInfo?.gender ?? "";
+
     _gender = _userInfo?.gender == describeEnum(Gender.Female).toLowerCase()
         ? Gender.Female
         : _userInfo?.gender == describeEnum(Gender.Male).toLowerCase()
             ? Gender.Male
             : Gender.Other;
+    genderController.text = describeEnum(_gender);
     _dobController.text = _userInfo?.dob ?? "";
     _nationController.text = _userInfo?.region?.regionName ?? "";
     if (_userInfo.dob != null) {
@@ -72,9 +73,11 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
       UserImage(),
       UserImage(),
     ];
-    for (var i = 0; i < _userInfo.userImages.length; i++) {
-      userImages[i] = _userInfo.userImages[i];
-    }
+
+    if (_userInfo.userImages != null)
+      for (var i = 0; i < _userInfo.userImages.length; i++) {
+        userImages[i] = _userInfo.userImages[i];
+      }
     _userInfo.userImages = userImages;
   }
 
@@ -227,7 +230,9 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                 CommonTextfield(
                   focusNode: AlwaysDisabledFocusNode(),
                   textOption: TextFieldOption(
-                      hintText: "Gender", inputController: genderController),
+                      textCapitalization: TextCapitalization.words,
+                      hintText: "Gender",
+                      inputController: genderController),
                   tapCallback: () async {
                     String gender = await showDialog(
                         context: context,

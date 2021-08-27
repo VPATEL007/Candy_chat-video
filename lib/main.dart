@@ -7,6 +7,7 @@ import 'package:kiwi/kiwi.dart';
 import 'package:provider/provider.dart';
 import 'package:video_chat/components/Screens/Splash/Splash.dart';
 import 'package:video_chat/components/Screens/VideoCall/VideoCall.dart';
+import 'package:video_chat/provider/chat_provider.dart';
 import 'package:video_chat/provider/discover_provider.dart';
 import 'package:video_chat/provider/feedback_provider.dart';
 import 'package:video_chat/provider/followes_provider.dart';
@@ -119,6 +120,9 @@ class _BaseState extends State<Base> {
         ),
         ChangeNotifierProvider.value(
           value: PaymentHistoryProvider(),
+        ),
+        ChangeNotifierProvider.value(
+          value: ChatProvider(),
         ),
       ],
       child: MaterialApp(

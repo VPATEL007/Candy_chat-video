@@ -55,13 +55,14 @@ class MatchProfileModel {
   String languageName;
   String languageFlagUrl;
   String preferedGender;
-  int isInfluencer, isFollowing, isFavourite;
+  int isFollowing, isFavourite;
   int callRate;
   String fcmId;
   String onlineStatus;
   int followers, followings;
   int favourites;
   String totalPoint;
+  bool isInfluencer;
 
   factory MatchProfileModel.fromJson(Map<String, dynamic> json) =>
       MatchProfileModel(

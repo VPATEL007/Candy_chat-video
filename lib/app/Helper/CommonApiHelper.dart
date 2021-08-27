@@ -18,8 +18,8 @@ class CommonApiHelper {
   static var shared = CommonApiHelper();
 
 //Login
-  void callLoginApi(Map<String, dynamic> req, BuildContext context, Function success,
-      Function failure) {
+  void callLoginApi(Map<String, dynamic> req, BuildContext context,
+      Function success, Function failure) {
     NetworkClient.getInstance.showLoader(context);
     NetworkClient.getInstance.callApi(
       context: context,
@@ -30,10 +30,10 @@ class CommonApiHelper {
       method: MethodType.Post,
       successCallback: (response, message) async {
         NetworkClient.getInstance.hideProgressDialog();
-        if (response["userData"] != null) {
-          UserModel model = UserModel.fromJson(response["userData"]);
-          app.resolve<PrefUtils>().saveUser(model, isLoggedIn: true);
-        }
+
+        app
+            .resolve<PrefUtils>()
+            .saveBoolean(app.resolve<PrefUtils>().keyIsUserLogin, true);
         if (response["tokenData"] != null) {
           app
               .resolve<PrefUtils>()

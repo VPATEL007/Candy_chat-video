@@ -10,6 +10,7 @@ import 'package:video_chat/app/utils/math_utils.dart';
 import 'package:video_chat/components/Model/User/UserModel.dart';
 import 'package:video_chat/components/Screens/Home/Reportblock.dart';
 import 'package:video_chat/components/widgets/ProfileSlider.dart';
+import 'package:video_chat/provider/chat_provider.dart';
 import 'package:video_chat/provider/discover_provider.dart';
 import 'package:video_chat/provider/followes_provider.dart';
 import 'package:video_chat/provider/matching_profile_provider.dart';
@@ -100,21 +101,27 @@ class _UserProfileState extends State<UserProfile> {
       child: Container(
         child: Row(
           children: [
-            Container(
-              decoration: BoxDecoration(
-                color: ColorConstants.button,
-                borderRadius: BorderRadius.circular(16),
-              ),
-              child: Padding(
-                padding: EdgeInsets.only(
-                    left: getSize(27),
-                    right: getSize(27),
-                    top: getSize(17),
-                    bottom: getSize(17)),
-                child: Image.asset(
-                  icChatWhite,
-                  width: getSize(18),
-                  height: getSize(18),
+            InkWell(
+              onTap: () {
+                Provider.of<ChatProvider>(context, listen: false)
+                    .startChat(widget.userModel.id, context);
+              },
+              child: Container(
+                decoration: BoxDecoration(
+                  color: ColorConstants.button,
+                  borderRadius: BorderRadius.circular(16),
+                ),
+                child: Padding(
+                  padding: EdgeInsets.only(
+                      left: getSize(27),
+                      right: getSize(27),
+                      top: getSize(17),
+                      bottom: getSize(17)),
+                  child: Image.asset(
+                    icChatWhite,
+                    width: getSize(18),
+                    height: getSize(18),
+                  ),
                 ),
               ),
             ),
@@ -246,7 +253,7 @@ class _UserProfileState extends State<UserProfile> {
         Row(
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            getHeaderTitle(widget.userModel?.userName ?? ""),
+            Expanded(child: getHeaderTitle(widget.userModel?.userName ?? "")),
             SizedBox(
               width: getSize(10),
             ),

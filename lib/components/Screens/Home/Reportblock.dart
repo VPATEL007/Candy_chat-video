@@ -85,10 +85,10 @@ class _ReportBlockState extends State<ReportBlock> {
                     ),
                   ),
                 ),
-                getReportButton(),
-                SizedBox(
-                  height: getSize(16),
-                ),
+                // getReportButton(),
+                // SizedBox(
+                //   height: getSize(16),
+                // ),
                 getPopBottomButton(context, "Report & Block", () {
                   int reasonId = reportProvider?.reportReasonList?.firstWhere(
                       (element) => element.isSelected == true, orElse: () {

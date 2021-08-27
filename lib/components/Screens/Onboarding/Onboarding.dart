@@ -47,7 +47,6 @@ class _OnBoardingState extends State<OnBoarding> {
           currentIndex == (widget.list.length - 1) ? "Get Started" : "Next",
           () {
         if (currentIndex == (widget.list.length - 1)) {
-          app.resolve<PrefUtils>().saveBoolean(app.resolve<PrefUtils>().keyIsShowIntro, true);
           NavigationUtilities.pushReplacementNamed(Login.route,
               type: RouteType.fade);
         } else {

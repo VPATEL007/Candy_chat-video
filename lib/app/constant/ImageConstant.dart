@@ -78,3 +78,4 @@ const String muteMic = "assets/Video/icmuteMic.png";
 const String muteVideo = "assets/Video/icmuteVideo.png";
 const String icEndVideoCall = "assets/Video/icEndCall.png";
 const String icSwitchCamera = "assets/Video/icSwitchCamera.png";
+const String icEmptyChatList = "assets/Chat/emptyChatList.png";

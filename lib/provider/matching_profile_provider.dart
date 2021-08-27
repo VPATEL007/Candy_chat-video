@@ -80,6 +80,7 @@ class MatchingProfileProvider with ChangeNotifier {
   Future<void> receiveVideoCall(
       BuildContext context, String sessionId, String channelName) async {
     try {
+      coinStatus = null;
       Map<String, dynamic> _parms = {
         "session_id": sessionId,
         "channel_name": channelName,
@@ -95,6 +96,7 @@ class MatchingProfileProvider with ChangeNotifier {
         successCallback: (response, message) {
           if (response["call_status"] != null) {
             coinStatus = CallStatusModel.fromJson(response["call_status"]);
+            notifyListeners();
           }
         },
         failureCallback: (code, message) {

@@ -1,9 +1,15 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:lazy_loading_list/lazy_loading_list.dart';
+import 'package:provider/provider.dart';
 import 'package:video_chat/app/app.export.dart';
 import 'package:video_chat/app/utils/CommonWidgets.dart';
+import 'package:video_chat/app/utils/date_utils.dart';
+import 'package:video_chat/components/Model/Chat/ChatList.dart';
 import 'package:video_chat/components/Screens/Chat/Chat.dart';
 import 'package:video_chat/components/widgets/TabBar/Tabbar.dart';
+import 'package:video_chat/provider/chat_provider.dart';
 
 class ChatList extends StatefulWidget {
   static const route = "ChatList";
@@ -14,6 +20,16 @@ class ChatList extends StatefulWidget {
 }
 
 class _ChatListState extends State<ChatList> {
+  int page = 1;
+
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      Provider.of<ChatProvider>(context, listen: false).getChatList(1, context);
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -31,7 +47,7 @@ class _ChatListState extends State<ChatList> {
             height: getSize(10),
           ),
           getColorText("Messages", ColorConstants.red),
-          chatList(),
+          Expanded(child: getList())
           // emptyChat()
         ],
       )),
@@ -42,39 +58,111 @@ class _ChatListState extends State<ChatList> {
   Widget emptyChat() {
     return Center(
       child: Column(
-        children: [],
-      ),
-    );
-  }
-
-//Chat List
-  Widget chatList() {
-    return Expanded(
-      child: ListView.separated(
-        padding: EdgeInsets.only(
-            top: getSize(28), left: getSize(25), right: getSize(25)),
-        itemCount: 10,
-        itemBuilder: (BuildContext context, int index) {
-          return InkWell(
-              onTap: () {
-                NavigationUtilities.push(Chat(channelId: "", userId: "",));
-              },
-              child: getChatItem(index));
-        },
-        separatorBuilder: (BuildContext context, int index) {
-          return Padding(
-            padding: EdgeInsets.only(top: getSize(14), bottom: getSize(14)),
-            child: Container(
-              height: 1,
-              color: ColorConstants.borderColor,
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Image.asset(
+            icEmptyChatList,
+            width: MathUtilities.screenWidth(context) - 150,
+          ),
+          SizedBox(
+            height: 10,
+          ),
+          Text(
+            "No Message, yet",
+            style: appTheme.black14Normal.copyWith(
+                fontWeight: FontWeight.w600, fontSize: getFontSize(18)),
+          ),
+          SizedBox(
+            height: 12,
+          ),
+          Padding(
+            padding: EdgeInsets.only(left: getSize(30), right: getSize(30)),
+            child: Text(
+              "No message in your inbox yet! Start chatting with your Randome video chat.",
+              textAlign: TextAlign.center,
+              style:
+                  appTheme.black14Normal.copyWith(fontWeight: FontWeight.w500),
             ),
-          );
-        },
+          )
+        ],
       ),
     );
   }
 
-  Widget getChatItem(int index) {
+  getList() {
+    return Consumer<ChatProvider>(
+      builder: (context, chatHistory, child) =>
+          (chatHistory?.chatList?.isEmpty ?? true)
+              ? emptyChat()
+              : ListView.separated(
+                  padding: EdgeInsets.only(
+                      top: getSize(28), left: getSize(25), right: getSize(25)),
+                  itemCount: chatHistory.chatList.length,
+                  itemBuilder: (BuildContext context, int index) {
+                    return LazyLoadingList(
+                        initialSizeOfItems: 20,
+                        index: index,
+                        hasMore: true,
+                        loadMore: () {
+                          page++;
+                          print(
+                              "--------========================= Lazy Loading $page ==========================---------");
+
+                          Provider.of<ChatProvider>(context, listen: false)
+                              .getChatList(page, context);
+                        },
+                        child: InkWell(
+                            onTap: () {
+                              NavigationUtilities.push(Chat(
+                                  channelId:
+                                      chatHistory.chatList[index].channelName,
+                                  toUserId: chatHistory.chatList[index]
+                                      .getToUserId()));
+                            },
+                            child: getChatItem(chatHistory.chatList[index])));
+                  },
+                  separatorBuilder: (BuildContext context, int index) {
+                    return Padding(
+                      padding: EdgeInsets.only(
+                          top: getSize(14), bottom: getSize(14)),
+                      child: Container(
+                        height: 1,
+                        color: ColorConstants.borderColor,
+                      ),
+                    );
+                  },
+                ),
+    );
+  }
+
+// //Chat List
+//   Widget chatList() {
+//     return Expanded(
+//       child: ListView.separated(
+//         padding: EdgeInsets.only(
+//             top: getSize(28), left: getSize(25), right: getSize(25)),
+//         itemCount: 10,
+//         itemBuilder: (BuildContext context, int index) {
+//           return InkWell(
+//               onTap: () {
+//                 // NavigationUtilities.push(Chat(channelId: "", userId: "",));
+//               },
+//               child: getChatItem(index));
+//         },
+//         separatorBuilder: (BuildContext context, int index) {
+//           return Padding(
+//             padding: EdgeInsets.only(top: getSize(14), bottom: getSize(14)),
+//             child: Container(
+//               height: 1,
+//               color: ColorConstants.borderColor,
+//             ),
+//           );
+//         },
+//       ),
+//     );
+//   }
+
+  Widget getChatItem(ChatListModel model) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.start,
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -82,14 +170,17 @@ class _ChatListState extends State<ChatList> {
         Stack(
           children: [
             ClipRRect(
-              borderRadius: BorderRadius.circular(52),
-              child: Image.asset(
-                icTemp,
-                height: getSize(52),
-                width: getSize(52),
-                fit: BoxFit.cover,
-              ),
-            ),
+                borderRadius: BorderRadius.circular(52),
+                child: CachedNetworkImage(
+                  imageUrl: model.withUser?.userImages?.first?.photoUrl ?? "",
+                  width: getSize(52),
+                  height: getSize(52),
+                  fit: BoxFit.cover,
+                  color: Colors.black.withOpacity(0.4),
+                  colorBlendMode: BlendMode.overlay,
+                  errorWidget: (context, url, error) =>
+                      Image.asset("assets/Profile/no_image.png"),
+                )),
             Positioned(
               right: getSize(0),
               bottom: getSize(4),
@@ -97,8 +188,9 @@ class _ChatListState extends State<ChatList> {
                 height: getSize(10),
                 width: getSize(10),
                 decoration: BoxDecoration(
-                  color:
-                      index % 2 == 0 ? fromHex("#50F5C3") : ColorConstants.red,
+                  // color:
+                  //     index % 2 == 0 ? fromHex("#50F5C3") : ColorConstants.red,
+                  color: fromHex("#50F5C3"),
                   border: Border.all(color: Colors.white, width: 1),
                   borderRadius: BorderRadius.circular(
                     getSize(10),
@@ -118,15 +210,15 @@ class _ChatListState extends State<ChatList> {
             children: [
               SizedBox(height: getSize(2)),
               Text(
-                index == 0 ? "Empty Chat" : "Helmi Lutvyandi",
+                model.withUser?.userName ?? "",
                 style: appTheme.black16Bold.copyWith(fontSize: getFontSize(14)),
               ),
-              SizedBox(height: getSize(6)),
-              Text(
-                "Hi, how are you ? May i get",
-                style: appTheme.black14Normal,
-                overflow: TextOverflow.ellipsis,
-              )
+              // SizedBox(height: getSize(6)),
+              // Text(
+              //   "Hi, how are you ? May i get",
+              //   style: appTheme.black14Normal,
+              //   overflow: TextOverflow.ellipsis,
+              // )
             ],
           ),
         ),
@@ -134,7 +226,9 @@ class _ChatListState extends State<ChatList> {
           children: [
             SizedBox(height: getSize(2)),
             Text(
-              "10:33 PM",
+              DateUtilities().convertServerDateToFormatterString(
+                  model.updatedOn,
+                  formatter: DateUtilities.h_mm_a),
               style: appTheme.black12Normal,
             ),
             SizedBox(
@@ -154,7 +248,7 @@ class _ChatListState extends State<ChatList> {
                     top: getSize(2),
                     bottom: getSize(2)),
                 child: Text(
-                  "10",
+                  "0",
                   style: appTheme.white12Normal,
                 ),
               ),

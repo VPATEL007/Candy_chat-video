@@ -1,5 +1,5 @@
 class ApiConstants {
-  static const String PROXY_URL = "PROXY 103.206.138.230:8888"; // Brijesh
+  static const String PROXY_URL = "PROXY 103.206.138.230:8888";
 
   static const String baseURL =
       "http://video-chat-dev-1463852847.ap-south-1.elb.amazonaws.com";
@@ -41,4 +41,7 @@ class ApiConstants {
   static const String buyPackage = "transaction/buy-coin-package";
   static const String coinBalance = "call-history/balance-status";
   static const String blockUser = "profile/block-unblock-profile";
+  static const String createChat = "chat-history";
+  static const String getProfile = "profile/";
+  static const String chatList = "chat-history";
 }
