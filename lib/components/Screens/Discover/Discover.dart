@@ -178,7 +178,7 @@ class _DiscoverState extends State<Discover> {
                   width: (MathUtilities.screenWidth(context) / 2) - getSize(28),
                   fit: BoxFit.cover,
                   errorWidget: (context, url, error) => Image.asset(
-                    "assets/Profile/no_image.png",
+                    getUserPlaceHolder(discover?.gender ?? ""),
                     fit: BoxFit.cover,
                   ),
                 ),

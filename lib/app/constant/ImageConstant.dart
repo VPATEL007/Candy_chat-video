@@ -79,3 +79,13 @@ const String muteVideo = "assets/Video/icmuteVideo.png";
 const String icEndVideoCall = "assets/Video/icEndCall.png";
 const String icSwitchCamera = "assets/Video/icSwitchCamera.png";
 const String icEmptyChatList = "assets/Chat/emptyChatList.png";
+
+const String icPlaceWoman = "assets/Common/woman.png";
+const String icPlaceMan = "assets/Common/man.png";
+
+String getUserPlaceHolder(String gender) {
+  if (gender.toLowerCase() == "female") {
+    return icPlaceWoman;
+  }
+  return icPlaceMan;
+}

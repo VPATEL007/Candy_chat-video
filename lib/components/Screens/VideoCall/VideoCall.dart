@@ -166,14 +166,17 @@ class VideoCallState extends State<VideoCall> {
           Positioned(
               left: getSize(30),
               top: getSize(30),
-              child: SafeArea(
-                child: ClipRRect(
-                  borderRadius: BorderRadius.circular(8),
-                  child: Container(
-                    width: getSize(120),
-                    height: getSize(160),
-                    color: Colors.black,
-                    child: _renderLocalPreview(),
+              child: Visibility(
+                visible: !_videoMute,
+                child: SafeArea(
+                  child: ClipRRect(
+                    borderRadius: BorderRadius.circular(8),
+                    child: Container(
+                      width: getSize(120),
+                      height: getSize(160),
+                      color: Colors.black,
+                      child: _renderLocalPreview(),
+                    ),
                   ),
                 ),
               )),

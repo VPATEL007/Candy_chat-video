@@ -88,4 +88,11 @@ class WithUser {
     }
     return data;
   }
+
+  String getUserImage() {
+    if (userImages.length > 0) {
+      return userImages?.first?.photoUrl ?? "";
+    }
+    return "";
+  }
 }

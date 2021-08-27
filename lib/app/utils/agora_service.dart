@@ -284,11 +284,9 @@ class AgoraService {
           sessionId: videoCallModel.sessionId,
           toUserId: videoCallModel.toUserId.toString());
     } else if (model.endCall == true) {
-      Future.delayed(Duration(seconds: 1), () {
-        NavigationUtilities.pop();
-      });
+      NavigationUtilities.pop();
       print("endCall");
-      View.showMessage(NavigationUtilities.key.currentContext, "Call Ended");
+
       VideoCallState().endCall();
       leaveChannel();
     }

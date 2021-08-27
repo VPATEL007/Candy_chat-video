@@ -135,33 +135,6 @@ class _ChatListState extends State<ChatList> {
     );
   }
 
-// //Chat List
-//   Widget chatList() {
-//     return Expanded(
-//       child: ListView.separated(
-//         padding: EdgeInsets.only(
-//             top: getSize(28), left: getSize(25), right: getSize(25)),
-//         itemCount: 10,
-//         itemBuilder: (BuildContext context, int index) {
-//           return InkWell(
-//               onTap: () {
-//                 // NavigationUtilities.push(Chat(channelId: "", userId: "",));
-//               },
-//               child: getChatItem(index));
-//         },
-//         separatorBuilder: (BuildContext context, int index) {
-//           return Padding(
-//             padding: EdgeInsets.only(top: getSize(14), bottom: getSize(14)),
-//             child: Container(
-//               height: 1,
-//               color: ColorConstants.borderColor,
-//             ),
-//           );
-//         },
-//       ),
-//     );
-//   }
-
   Widget getChatItem(ChatListModel model) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.start,
@@ -172,14 +145,15 @@ class _ChatListState extends State<ChatList> {
             ClipRRect(
                 borderRadius: BorderRadius.circular(52),
                 child: CachedNetworkImage(
-                  imageUrl: model.withUser?.userImages?.first?.photoUrl ?? "",
-                  width: getSize(52),
+                  imageUrl: model.withUser?.getUserImage() ?? "",
                   height: getSize(52),
+                  width: getSize(52),
                   fit: BoxFit.cover,
-                  color: Colors.black.withOpacity(0.4),
-                  colorBlendMode: BlendMode.overlay,
-                  errorWidget: (context, url, error) =>
-                      Image.asset("assets/Profile/no_image.png"),
+                  errorWidget: (context, url, error) => Image.asset(
+                    "assets/Profile/no_image.png",
+                    height: getSize(48),
+                    width: getSize(51),
+                  ),
                 )),
             Positioned(
               right: getSize(0),
@@ -203,31 +177,32 @@ class _ChatListState extends State<ChatList> {
         SizedBox(
           width: getSize(11),
         ),
-        Expanded(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.start,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              SizedBox(height: getSize(2)),
-              Text(
-                model.withUser?.userName ?? "",
-                style: appTheme.black16Bold.copyWith(fontSize: getFontSize(14)),
-              ),
-              // SizedBox(height: getSize(6)),
-              // Text(
-              //   "Hi, how are you ? May i get",
-              //   style: appTheme.black14Normal,
-              //   overflow: TextOverflow.ellipsis,
-              // )
-            ],
-          ),
+        Column(
+          mainAxisAlignment: MainAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            SizedBox(height: getSize(2)),
+            Text(
+              model.withUser?.userName ?? "",
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
+              style: appTheme.black16Bold.copyWith(fontSize: getFontSize(14)),
+            ),
+            // SizedBox(height: getSize(6)),
+            // Text(
+            //   "Hi, how are you ? May i get",
+            //   style: appTheme.black14Normal,
+            //   overflow: TextOverflow.ellipsis,
+            // )
+          ],
         ),
+        Spacer(),
         Column(
           children: [
             SizedBox(height: getSize(2)),
             Text(
               DateUtilities().convertServerDateToFormatterString(
-                  model.updatedOn,
+                  model.updatedOn ?? "",
                   formatter: DateUtilities.h_mm_a),
               style: appTheme.black12Normal,
             ),

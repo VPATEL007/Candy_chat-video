@@ -20,6 +20,16 @@ class ReportBlock extends StatefulWidget {
 
 class _ReportBlockState extends State<ReportBlock> {
   final TextEditingController _reasonController = TextEditingController();
+
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      Provider.of<ReportAndBlockProvider>(context, listen: false)
+          .fetchReportReason(context);
+    });
+  }
+
   @override
   void deactivate() {
     super.deactivate();

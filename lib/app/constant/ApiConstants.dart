@@ -44,4 +44,6 @@ class ApiConstants {
   static const String createChat = "chat-history";
   static const String getProfile = "profile/";
   static const String chatList = "chat-history";
+  static const String blockList = "report/app/block-list";
+  static const String unBlockUser = "report/remove-block";
 }

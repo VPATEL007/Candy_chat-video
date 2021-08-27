@@ -729,27 +729,27 @@ class _UserProfileState extends State<UserProfile> {
   }
 
   callApiForBlockUser() {
-    Map<String, dynamic> req = {};
-    req["id"] = widget.userModel.id;
+    // Map<String, dynamic> req = {};
+    // req["id"] = widget.userModel.id;
 
-    NetworkClient.getInstance.showLoader(context);
-    NetworkClient.getInstance.callApi(
-      context: context,
-      baseUrl: ApiConstants.apiUrl,
-      command: ApiConstants.blockUser,
-      params: req,
-      headers: NetworkClient.getInstance.getAuthHeaders(),
-      method: MethodType.Post,
-      successCallback: (response, message) async {
-        NetworkClient.getInstance.hideProgressDialog();
-        await Provider.of<DiscoverProvider>(context, listen: false)
-            .removeUser(widget.userModel.id);
-        Navigator.pop(context);
-      },
-      failureCallback: (code, message) {
-        NetworkClient.getInstance.hideProgressDialog();
-        View.showMessage(context, message);
-      },
-    );
+    // NetworkClient.getInstance.showLoader(context);
+    // NetworkClient.getInstance.callApi(
+    //   context: context,
+    //   baseUrl: ApiConstants.apiUrl,
+    //   command: ApiConstants.blockUser,
+    //   params: req,
+    //   headers: NetworkClient.getInstance.getAuthHeaders(),
+    //   method: MethodType.Post,
+    //   successCallback: (response, message) async {
+    //     NetworkClient.getInstance.hideProgressDialog();
+    //     await Provider.of<DiscoverProvider>(context, listen: false)
+    //         .removeUser(widget.userModel.id);
+    //     Navigator.pop(context);
+    //   },
+    //   failureCallback: (code, message) {
+    //     NetworkClient.getInstance.hideProgressDialog();
+    //     View.showMessage(context, message);
+    //   },
+    // );
   }
 }

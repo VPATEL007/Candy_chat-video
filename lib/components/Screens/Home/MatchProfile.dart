@@ -159,7 +159,7 @@ class _MathProfileState extends State<MathProfile> {
                   userVisiteds: matchProfileModel?.visitorCount ?? 0,
                   userFollowers: matchProfileModel.followers,
                   isFollowing: matchProfileModel?.isFollowing == 1,
-                   isFavourite: matchProfileModel?.isFavourite == 1,
+                  isFavourite: matchProfileModel?.isFavourite == 1,
                   providerDisplayName: matchProfileModel.providerDisplayName,
                   id: matchProfileModel.id,
                   totalPoint: matchProfileModel.totalPoint,
@@ -245,7 +245,8 @@ class _MathProfileState extends State<MathProfile> {
                                     ),
                                     onError: (exception, stackTrace) =>
                                         Image.asset(
-                                      "assets/Profile/no_image.png",
+                                      getUserPlaceHolder(
+                                          _matchProfile?.gender ?? ""),
                                     ),
                                     fit: BoxFit.cover,
                                   ),
