@@ -161,6 +161,7 @@ class AgoraService {
       if (message?.isEmpty ?? true) {
         throw 'Please input text to send.';
       }
+
       await _channel?.sendMessage(AgoraRtmMessage.fromText(message));
       print("Message Sent");
     } on AgoraRtmClientException catch (e) {

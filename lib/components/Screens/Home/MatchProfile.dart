@@ -1,5 +1,3 @@
-import 'dart:math';
-
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -17,11 +15,9 @@ import 'package:video_chat/components/Model/User/UserModel.dart';
 import 'package:video_chat/components/Screens/Home/MatchedProfile.dart';
 import 'package:video_chat/components/Screens/Home/Reportblock.dart';
 import 'package:video_chat/components/Screens/UserProfile/UserProfile.dart';
-import 'package:video_chat/components/Screens/VideoCall/VideoCall.dart';
 import 'package:video_chat/components/widgets/TabBar/Tabbar.dart';
 import 'package:video_chat/provider/followes_provider.dart';
 import 'package:video_chat/provider/matching_profile_provider.dart';
-import 'package:video_chat/provider/report_and_block_provider.dart';
 import 'package:video_chat/provider/video_call_status_provider.dart';
 
 import 'Card/draggable_card.dart';
@@ -49,10 +45,10 @@ class _MathProfileState extends State<MathProfile> {
   @override
   void initState() {
     super.initState();
-    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-      Provider.of<ReportAndBlockProvider>(context, listen: false)
-          .fetchReportReason(context);
-    });
+    // WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+    //   Provider.of<ReportAndBlockProvider>(context, listen: false)
+    //       .fetchReportReason(context);
+    // });
     _swipeItems = Provider.of<MatchingProfileProvider>(context, listen: false)
         .matchProfileList
         .map((e) => SwipeItem(
