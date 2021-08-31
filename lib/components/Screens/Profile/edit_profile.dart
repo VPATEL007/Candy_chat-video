@@ -23,6 +23,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
   DateTime _selectedDate = DateTime.now();
   TextEditingController _dobController = TextEditingController();
   TextEditingController _nationController = TextEditingController();
+  TextEditingController _aboutController = TextEditingController();
   Gender _gender = Gender.Male;
 
   UserModel _userInfo;
@@ -53,6 +54,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
       if (mounted) setState(() {});
     }
     userNameController.text = _userInfo?.userName ?? "";
+    _aboutController.text = _userInfo?.about ?? "";
 
     _gender = _userInfo?.gender == describeEnum(Gender.Female).toLowerCase()
         ? Gender.Female
@@ -108,6 +110,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
           _userInfo?.gender = genderController.text;
           _userInfo?.dob = _dobController.text;
           _userInfo?.region?.regionName = _nationController.text;
+          _userInfo?.about = _aboutController.text;
           Provider.of<FollowesProvider>(context, listen: false)
               .saveMyProfile(context, _userInfo, removeImage);
           Navigator.of(context).pop();
@@ -287,6 +290,19 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                     _selectDate(context);
                   },
                   textCallback: (String text) {},
+                ),
+                SizedBox(height: 10),
+                Text(
+                  "About me",
+                  style: appTheme.black16Medium.copyWith(),
+                ),
+                SizedBox(height: 5),
+                CommonTextfield(
+                  textOption: TextFieldOption(
+                      hintText: "About me",
+                      maxLine: 5,
+                      inputController: _aboutController),
+                  textCallback: (text) {},
                 ),
                 // SizedBox(height: 10),
                 // Text(

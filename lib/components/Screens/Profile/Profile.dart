@@ -338,6 +338,13 @@ class _ProfileState extends State<Profile> {
             ),
           ),
         ),
+        // ClipRRect(
+        //   borderRadius: BorderRadius.circular(getSize(15)),
+        //   child: Container(
+        //     height: getSize(300),
+        //     color: Colors.black38,
+        //   ),
+        // ),
         Positioned(
           bottom: getSize(16),
           child: Container(

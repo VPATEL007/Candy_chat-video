@@ -72,7 +72,47 @@ class _CoinsState extends State<Coins> {
         ),
         getColorText("Coins", ColorConstants.red),
         Spacer(),
+        InkWell(
+            onTap: () {
+              creditCoin();
+            },
+            child: Text("Add Coins")),
+        SizedBox(
+          width: 20,
+        )
       ],
+    );
+  }
+
+  creditCoin() {
+    Map<String, dynamic> req = {};
+    req["gateway"] = "apple";
+    req["package_id"] = "com.randomvideochat.videochat.30";
+    req["transaction_id"] = "12346579";
+    req["package_name"] = "30 Coins ";
+    req["paid_amount"] = 89.0;
+    req["currency"] = "INR";
+
+    NetworkClient.getInstance
+        .showLoader(NavigationUtilities.key.currentContext);
+    NetworkClient.getInstance.callApi(
+      context: NavigationUtilities.key.currentContext,
+      baseUrl: ApiConstants.apiUrl,
+      command: ApiConstants.buyPackage,
+      headers: NetworkClient.getInstance.getAuthHeaders(),
+      method: MethodType.Post,
+      params: req,
+      successCallback: (response, message) async {
+        NetworkClient.getInstance.hideProgressDialog();
+
+        View.showMessage(NavigationUtilities.key.currentContext,
+            "Your coin credited in your account.",
+            mode: DisplayMode.SUCCESS);
+      },
+      failureCallback: (code, message) {
+        NetworkClient.getInstance.hideProgressDialog();
+        View.showMessage(NavigationUtilities.key.currentContext, message);
+      },
     );
   }
 }

@@ -84,7 +84,8 @@ class _TabBarWidgetState extends State<TabBarWidget> {
                           ? ""
                           : (mutedProvider
                                   .userModel?.userImages?.first?.photoUrl ??
-                              ""))),
+                              ""),
+                      mutedProvider?.userModel?.gender ?? "")),
             ),
           ],
         ),
@@ -92,7 +93,7 @@ class _TabBarWidgetState extends State<TabBarWidget> {
     );
   }
 
-  Widget getTabProfileItem(bool isSelected, String image) {
+  Widget getTabProfileItem(bool isSelected, String image, String gender) {
     return Column(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
@@ -111,7 +112,7 @@ class _TabBarWidgetState extends State<TabBarWidget> {
                 borderRadius: BorderRadius.circular(18),
                 child: (image?.isEmpty ?? true)
                     ? Image.asset(
-                        icTemp,
+                        getUserPlaceHolder(gender),
                         height: 18,
                         width: 18,
                         fit: BoxFit.cover,

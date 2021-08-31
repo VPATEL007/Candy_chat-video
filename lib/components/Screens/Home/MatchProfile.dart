@@ -166,10 +166,10 @@ class _MathProfileState extends State<MathProfile> {
                   onlineStatus: matchProfileModel.onlineStatus,
                 );
 
-                if (userModel.photoUrl.isNotEmpty) {
-                  userModel.userImages
-                      .insert(0, UserImage(photoUrl: userModel.photoUrl));
-                }
+                // if (userModel.photoUrl.isNotEmpty) {
+                //   userModel.userImages
+                //       .insert(0, UserImage(photoUrl: userModel.photoUrl));
+                // }
 
                 openUserProfile(userModel);
                 // NavigationUtilities.push(UserProfile());

@@ -27,7 +27,7 @@ class _FollowUpState extends State<FollowUp> {
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: getAppBar(
-          context, widget.isFromFollowing ? "Following" : "Followes",
+          context, widget.isFromFollowing ? "Following" : "Followers",
           isWhite: true, leadingButton: getBackButton(context)),
       body: SafeArea(
         child: list(),

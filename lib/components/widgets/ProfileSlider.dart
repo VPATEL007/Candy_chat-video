@@ -28,11 +28,27 @@ class _ProfileSliderState extends State<ProfileSlider> {
         child: PageView(
           scrollDirection: Axis.vertical,
           controller: pageController,
-          children: (widget.images?.isEmpty??true)?[Image.asset(
-                    "assets/Profile/no_image.png",
-                    fit: BoxFit.cover,
-                  )]: List.generate(widget.images.length,
-              (index) => getPageViewItem(widget.images[index])),
+          children: (widget.images?.isEmpty ?? true)
+              ? [
+                  Stack(
+                    children: [
+                      Image.asset(
+                        "assets/Profile/no_image.png",
+                        fit: BoxFit.cover,
+                        width: MathUtilities.screenWidth(context),
+                      ),
+                      ClipRRect(
+                        borderRadius: BorderRadius.circular(getSize(15)),
+                        child: Container(
+                          // height: getSize(300),
+                          color: Colors.black38,
+                        ),
+                      ),
+                    ],
+                  )
+                ]
+              : List.generate(widget.images.length,
+                  (index) => getPageViewItem(widget.images[index])),
           onPageChanged: (val) {
             currentIndex = val;
             pageController.animateToPage(currentIndex,
@@ -53,8 +69,9 @@ class _ProfileSliderState extends State<ProfileSlider> {
       fit: BoxFit.cover,
       color: Colors.black.withOpacity(0.4),
       colorBlendMode: BlendMode.overlay,
-      errorWidget: (context, url, error) =>
-          Image.asset("assets/Profile/no_image.png"),
+      errorWidget: (context, url, error) => Image.asset(
+        "assets/Profile/no_image.png",
+      ),
     );
   }
 }

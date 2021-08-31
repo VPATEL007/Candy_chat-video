@@ -144,10 +144,10 @@ class _DiscoverState extends State<Discover> {
                         totalPoint: matchProfileModel.totalPoint,
                         onlineStatus: matchProfileModel.onlineStatus,
                       );
-                      if (userModel.photoUrl.isNotEmpty) {
-                        userModel.userImages
-                            .insert(0, UserImage(photoUrl: userModel.photoUrl));
-                      }
+                      // if (userModel.photoUrl.isNotEmpty) {
+                      //   userModel.userImages
+                      //       .insert(0, UserImage(photoUrl: userModel.photoUrl));
+                      // }
                       NavigationUtilities.push(UserProfile(
                         userModel: userModel,
                       ));
@@ -181,6 +181,9 @@ class _DiscoverState extends State<Discover> {
                     getUserPlaceHolder(discover?.gender ?? ""),
                     fit: BoxFit.cover,
                   ),
+                ),
+                Container(
+                  color: Colors.black38,
                 ),
                 (discover?.regionFlagUrl?.isEmpty ?? true)
                     ? Container()
@@ -246,7 +249,7 @@ class _DiscoverState extends State<Discover> {
                             child: Text(
                               discover?.userName,
                               overflow: TextOverflow.ellipsis,
-                              maxLines: 1,
+                              maxLines: 2,
                               style: appTheme.white14Bold
                                   .copyWith(fontWeight: FontWeight.w600),
                             ),

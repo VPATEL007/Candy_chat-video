@@ -3,11 +3,15 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_tags/flutter_tags.dart';
 import 'package:provider/provider.dart';
+import 'package:video_chat/app/Helper/inAppPurchase_service.dart';
 import 'package:video_chat/app/app.export.dart';
 import 'package:video_chat/app/constant/ColorConstant.dart';
 import 'package:video_chat/app/utils/CommonWidgets.dart';
 import 'package:video_chat/app/utils/math_utils.dart';
+import 'package:video_chat/components/Model/Match%20Profile/call_status.dart';
+import 'package:video_chat/components/Model/Match%20Profile/video_call.dart';
 import 'package:video_chat/components/Model/User/UserModel.dart';
+import 'package:video_chat/components/Screens/Home/MatchedProfile.dart';
 import 'package:video_chat/components/Screens/Home/Reportblock.dart';
 import 'package:video_chat/components/widgets/ProfileSlider.dart';
 import 'package:video_chat/provider/chat_provider.dart';
@@ -15,6 +19,7 @@ import 'package:video_chat/provider/discover_provider.dart';
 import 'package:video_chat/provider/followes_provider.dart';
 import 'package:video_chat/provider/matching_profile_provider.dart';
 import 'package:video_chat/provider/tags_provider.dart';
+import 'package:video_chat/provider/video_call_status_provider.dart';
 
 class UserProfile extends StatefulWidget {
   final bool isPopUp;
@@ -128,34 +133,89 @@ class _UserProfileState extends State<UserProfile> {
             SizedBox(
               width: getSize(8),
             ),
-            Container(
-              decoration: BoxDecoration(
-                color: ColorConstants.button,
-                borderRadius: BorderRadius.circular(16),
-              ),
-              child: Padding(
-                padding: EdgeInsets.only(
-                    left: getSize(27),
-                    right: getSize(27),
-                    top: getSize(17),
-                    bottom: getSize(17)),
-                child: Row(
-                  children: [
-                    Image.asset(
-                      icCall,
-                      color: Colors.white,
-                      width: getSize(18),
-                      height: getSize(18),
-                    ),
-                    SizedBox(
-                      width: getSize(16),
-                    ),
-                    Text(
-                      "${widget.userModel?.callRate ?? 0} Token/minute",
-                      style: appTheme.white16Normal
-                          .copyWith(fontWeight: FontWeight.w600),
-                    ),
-                  ],
+            InkWell(
+              onTap: () async {
+                await Provider.of<MatchingProfileProvider>(context,
+                        listen: false)
+                    .checkCoinBalance(context, widget.userModel.id);
+
+                CoinModel coins =
+                    Provider.of<MatchingProfileProvider>(context, listen: false)
+                        .coinBalance;
+
+                if (coins?.lowBalance == false) {
+                  // discover.id = 41;
+                  await Provider.of<MatchingProfileProvider>(context,
+                          listen: false)
+                      .startVideoCall(context, widget.userModel.id);
+                  VideoCallModel videoCallModel =
+                      Provider.of<MatchingProfileProvider>(context,
+                              listen: false)
+                          .videoCallModel;
+
+                  if (videoCallModel != null) {
+                    // videoCallModel.toUserId = 41;
+                    AgoraService.instance.sendVideoCallMessage(
+                        videoCallModel.toUserId.toString(),
+                        videoCallModel.sessionId,
+                        videoCallModel.channelName,
+                        context);
+                    Provider.of<VideoCallStatusProvider>(context, listen: false)
+                        .setCallStatus = CallStatus.Start;
+                    UserModel userModel =
+                        Provider.of<FollowesProvider>(context, listen: false)
+                            .userModel;
+                    Navigator.of(context).push(MaterialPageRoute(
+                      builder: (context) => MatchedProfile(
+                        channelName: videoCallModel.channelName,
+                        token: videoCallModel.sessionId,
+                        fromId: videoCallModel.fromUserId.toString(),
+                        fromImageUrl: (userModel?.userImages?.isEmpty ?? true)
+                            ? ""
+                            : userModel?.userImages?.first?.photoUrl ?? "",
+                        name: widget.userModel?.userName,
+                        toImageUrl: (widget.userModel?.userImages?.isEmpty ??
+                                true)
+                            ? ""
+                            : widget.userModel?.userImages?.first?.photoUrl ??
+                                "",
+                        id: videoCallModel.toUserId.toString(),
+                      ),
+                    ));
+                  }
+                } else if (coins?.lowBalance == true) {
+                  InAppPurchase.instance.openCoinPurchasePopUp();
+                }
+              },
+              child: Container(
+                decoration: BoxDecoration(
+                  color: ColorConstants.button,
+                  borderRadius: BorderRadius.circular(16),
+                ),
+                child: Padding(
+                  padding: EdgeInsets.only(
+                      left: getSize(27),
+                      right: getSize(27),
+                      top: getSize(17),
+                      bottom: getSize(17)),
+                  child: Row(
+                    children: [
+                      Image.asset(
+                        icCall,
+                        color: Colors.white,
+                        width: getSize(18),
+                        height: getSize(18),
+                      ),
+                      SizedBox(
+                        width: getSize(16),
+                      ),
+                      Text(
+                        "${widget.userModel?.callRate ?? 0} Token/minute",
+                        style: appTheme.white16Normal
+                            .copyWith(fontWeight: FontWeight.w600),
+                      ),
+                    ],
+                  ),
                 ),
               ),
             )

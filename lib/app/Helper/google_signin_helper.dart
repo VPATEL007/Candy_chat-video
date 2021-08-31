@@ -13,10 +13,11 @@ class GoogleSignInHelper with ChangeNotifier {
       'https://www.googleapis.com/auth/contacts.readonly',
     ],
   );
-  Future<void> handleSignIn(BuildContext context,Map<String, dynamic> req) async {
+  Future<void> handleSignIn(
+      BuildContext context, Map<String, dynamic> req) async {
     try {
       GoogleSignInAccount signInAccount = await _googleSignIn.signIn();
-      if(signInAccount==null)return;
+      if (signInAccount == null) return;
       GoogleSignInAuthentication googleSignInAuthentication =
           await signInAccount?.authentication;
 
@@ -26,10 +27,10 @@ class GoogleSignInHelper with ChangeNotifier {
       CommonApiHelper.shared.callLoginApi(req, context, () {}, () {});
     } on PlatformException catch (error) {
       print(error);
-      View.showMessage(context, error.message.toString());
-    }catch (error) {
+      // View.showMessage(context, error.message.toString());
+    } catch (error) {
       print(error);
-      View.showMessage(context, error.toString());
+      // View.showMessage(context, error.toString());
     }
   }
 

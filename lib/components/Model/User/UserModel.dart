@@ -116,6 +116,14 @@ class UserModel {
         "dob": dob,
         "region": region?.toJson(),
       };
+
+  String getUserImage() {
+    if (userImages.length > 0) {
+      return userImages.first?.photoUrl ?? "";
+    }
+
+    return photoUrl ?? "";
+  }
 }
 
 class Language {

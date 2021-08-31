@@ -111,7 +111,7 @@ class _ChatState extends State<Chat> {
                   child: ClipRRect(
                       borderRadius: BorderRadius.circular(26),
                       child: CachedNetworkImage(
-                        imageUrl: toUser?.photoUrl ?? "",
+                        imageUrl: toUser?.getUserImage() ?? "",
                         width: getSize(28),
                         height: getSize(26),
                         fit: BoxFit.cover,

@@ -9,6 +9,7 @@ import 'package:video_chat/components/Screens/Splash/Splash.dart';
 import 'package:video_chat/components/Screens/VideoCall/VideoCall.dart';
 import 'package:video_chat/provider/chat_provider.dart';
 import 'package:video_chat/provider/discover_provider.dart';
+import 'package:video_chat/provider/favourite_provider.dart';
 import 'package:video_chat/provider/feedback_provider.dart';
 import 'package:video_chat/provider/followes_provider.dart';
 import 'package:video_chat/provider/language_provider.dart';
@@ -17,6 +18,7 @@ import 'package:video_chat/provider/payment_history.dart';
 import 'package:video_chat/provider/report_and_block_provider.dart';
 import 'package:video_chat/provider/tags_provider.dart';
 import 'package:video_chat/provider/video_call_status_provider.dart';
+import 'package:video_chat/provider/visitor_provider.dart';
 
 import 'app/Helper/Themehelper.dart';
 import 'app/constant/constants.dart';
@@ -123,6 +125,12 @@ class _BaseState extends State<Base> {
         ),
         ChangeNotifierProvider.value(
           value: ChatProvider(),
+        ),
+        ChangeNotifierProvider.value(
+          value: VisitorProvider(),
+        ),
+        ChangeNotifierProvider.value(
+          value: FavouriteProvider(),
         ),
       ],
       child: MaterialApp(

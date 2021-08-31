@@ -4,12 +4,10 @@ import 'package:agora_rtc_engine/rtc_engine.dart';
 import 'package:agora_rtm/agora_rtm.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
+import 'package:flutter/rendering.dart';
 import 'package:keyboard_visibility/keyboard_visibility.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:provider/provider.dart';
-import 'package:sticky_headers/sticky_headers/widget.dart';
-import 'package:video_chat/app/Helper/inAppPurchase_service.dart';
 import 'package:video_chat/app/app.export.dart';
 import 'package:video_chat/app/constant/ColorConstant.dart';
 import 'package:video_chat/app/constant/KeyConsant.dart';
@@ -18,7 +16,7 @@ import 'package:agora_rtc_engine/rtc_local_view.dart' as RtcLocalView;
 import 'package:video_chat/app/utils/CommonTextfield.dart';
 import 'package:video_chat/components/Model/Match%20Profile/call_status.dart';
 import 'package:video_chat/components/Model/User/UserModel.dart';
-import 'package:video_chat/components/Screens/Chat/Chat.dart';
+import 'package:video_chat/provider/chat_provider.dart';
 import 'package:video_chat/provider/followes_provider.dart';
 import 'package:video_chat/provider/matching_profile_provider.dart';
 
@@ -53,17 +51,19 @@ class VideoCallState extends State<VideoCall> {
   List<MessageObj> _chatsList = [];
   Timer timer;
   bool isKeyboardOpen = false;
+  UserModel toUser;
+  UserModel fromUser;
   @override
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) {
       initPlatformState();
       init();
+      getToUserDetail();
     });
 
-    UserModel user =
-        Provider.of<FollowesProvider>(context, listen: false)?.userModel;
-    if (user == null) {
+    fromUser = Provider.of<FollowesProvider>(context, listen: false)?.userModel;
+    if (fromUser == null) {
       Provider.of<FollowesProvider>(context, listen: false)
           .fetchMyProfile(context)
           .then((_) {
@@ -75,7 +75,7 @@ class VideoCallState extends State<VideoCall> {
         }
       });
     } else {
-      if (user?.isInfluencer == false) {
+      if (fromUser?.isInfluencer == false) {
         timer = Timer.periodic(
             Duration(seconds: 60), (Timer t) => callReceiveApiCall());
       }
@@ -97,6 +97,12 @@ class VideoCallState extends State<VideoCall> {
     endCall();
     agoraService?.leaveChannel();
     super.dispose();
+  }
+
+  getToUserDetail() async {
+    toUser = await Provider.of<ChatProvider>(context, listen: false)
+        .getUserProfile(int.parse(widget.toUserId), context);
+    setState(() {});
   }
 
   Future<void> init() async {
@@ -318,9 +324,7 @@ class VideoCallState extends State<VideoCall> {
   Widget callEndButton() {
     return InkWell(
         onTap: () {
-          Navigator.pop(context);
-          agoraService.endCallMessage(widget.toUserId);
-          endCall();
+          openEndCallConfirmation();
         },
         child: Image.asset(icEndVideoCall,
             height: getSize(46), width: getSize(46)));
@@ -374,10 +378,27 @@ class VideoCallState extends State<VideoCall> {
                     color: fromHex("#F1F1F1")),
                 child: Padding(
                   padding: EdgeInsets.all(getSize(10)),
-                  child: Text(
-                    messageList[contentIndex].message,
-                    style:
-                        appTheme.black16Medium.copyWith(fontSize: getSize(16)),
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        messageList[contentIndex].isSendByMe == true
+                            ? (fromUser?.userName ?? "")
+                            : (toUser.userName ?? ""),
+                        textAlign: TextAlign.left,
+                        style:
+                            appTheme.black14Normal.copyWith(color: Colors.red),
+                      ),
+                      SizedBox(
+                        height: 6,
+                      ),
+                      Text(
+                        messageList[contentIndex].message,
+                        style: appTheme.black16Medium
+                            .copyWith(fontSize: getSize(16)),
+                      )
+                    ],
                   ),
                 ),
               ),
@@ -440,6 +461,69 @@ class VideoCallState extends State<VideoCall> {
     }
   }
 
+  openEndCallConfirmation() {
+    showModalBottomSheet(
+        isScrollControlled: true,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.only(
+              topLeft: Radius.circular(20.0), topRight: Radius.circular(20.0)),
+        ),
+        context: context,
+        builder: (builder) {
+          return StatefulBuilder(
+            builder: (BuildContext context, setState) {
+              return SafeArea(
+                  child: Padding(
+                padding: EdgeInsets.only(
+                    left: getSize(35), right: getSize(35), top: getSize(35)),
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      "Are you sure you want to end your Video Call?",
+                      textAlign: TextAlign.center,
+                      style: appTheme.black14SemiBold
+                          .copyWith(fontSize: getFontSize(18)),
+                    ),
+                    SizedBox(
+                      height: getSize(28),
+                    ),
+                    InkWell(
+                      onTap: () {
+                        Navigator.pop(context);
+                      },
+                      child: Container(
+                        height: getSize(52),
+                        decoration: BoxDecoration(
+                            border:
+                                Border.all(color: ColorConstants.red, width: 1),
+                            color: fromHex("#FFDFDF"),
+                            borderRadius: BorderRadius.circular(16)),
+                        child: Center(
+                            child: Text("Cancel",
+                                style: appTheme.whiteBold32.copyWith(
+                                    fontSize: getFontSize(18),
+                                    color: ColorConstants.red))),
+                      ),
+                    ),
+                    SizedBox(
+                      height: getSize(24),
+                    ),
+                    getPopBottomButton(context, "End Video", () {
+                      Navigator.pop(context);
+                      Navigator.pop(context);
+                      agoraService.endCallMessage(widget.toUserId);
+                      endCall();
+                    })
+                  ],
+                ),
+              ));
+            },
+          );
+        });
+  }
+
 //Receive Video Call
   callReceiveApiCall() async {
     await Provider.of<MatchingProfileProvider>(navigationKey.currentContext,
@@ -457,6 +541,7 @@ class VideoCallState extends State<VideoCall> {
 
     if (callStatus?.continueCall == false) {
       Navigator.pop(context);
+      agoraService.endCallMessage(widget.toUserId);
       endCall();
 
       // InAppPurchase.instance.openCoinPurchasePopUp();

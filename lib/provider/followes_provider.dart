@@ -7,9 +7,12 @@ import 'package:flutter_absolute_path/flutter_absolute_path.dart';
 import 'package:flutter_image_compress/flutter_image_compress.dart';
 import 'package:multi_image_picker2/multi_image_picker2.dart';
 import 'package:path_provider/path_provider.dart';
+import 'package:provider/provider.dart';
 import 'package:video_chat/app/app.export.dart';
 import 'package:video_chat/components/Model/Follwers/follow_model.dart';
 import 'package:video_chat/components/Model/User/UserModel.dart';
+
+import 'discover_provider.dart';
 
 class FollowesProvider with ChangeNotifier {
   List<FollowesModel> _followersList = [];
@@ -111,6 +114,8 @@ class FollowesProvider with ChangeNotifier {
           userModel.byUserUserFollowers--;
         }
         View.showMessage(context, message, mode: DisplayMode.SUCCESS);
+        Provider.of<DiscoverProvider>(context, listen: false)
+            .fetchDiscoverProfileList(context, SortBy.General);
       },
       failureCallback: (code, message) {
         if (!fetchInBackground) NetworkClient.getInstance.hideProgressDialog();
@@ -132,6 +137,8 @@ class FollowesProvider with ChangeNotifier {
       params: {"user_id": userId},
       successCallback: (response, message) {
         View.showMessage(context, message, mode: DisplayMode.SUCCESS);
+        Provider.of<DiscoverProvider>(context, listen: false)
+            .fetchDiscoverProfileList(context, SortBy.General);
       },
       failureCallback: (code, message) {
         View.showMessage(context, message);
@@ -155,6 +162,8 @@ class FollowesProvider with ChangeNotifier {
       successCallback: (response, message) {
         if (userModel.byUserUserFollowers != null) {
           userModel.byUserUserFollowers++;
+          Provider.of<DiscoverProvider>(context, listen: false)
+              .fetchDiscoverProfileList(context, SortBy.General);
         }
         View.showMessage(context, message, mode: DisplayMode.SUCCESS);
       },
@@ -227,6 +236,7 @@ class FollowesProvider with ChangeNotifier {
         "gender": userInfo.gender.toLowerCase(),
         "image_add": profileImages,
         "image_remove": removeImage ?? [],
+        "about": userInfo.about ?? ""
       },
       successCallback: (response, message) {
         // userModel = userModelFromJson(jsonEncode(response));
