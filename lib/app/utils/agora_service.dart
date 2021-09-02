@@ -3,17 +3,16 @@ import 'dart:convert';
 
 import 'package:agora_rtm/agora_rtm.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_tags/flutter_tags.dart';
 import 'package:provider/provider.dart';
-import 'package:video_chat/app/Helper/inAppPurchase_service.dart';
 import 'package:video_chat/app/app.export.dart';
-import 'package:video_chat/components/Model/Match%20Profile/call_status.dart';
 import 'package:video_chat/components/Model/Match%20Profile/video_call.dart';
 import 'package:video_chat/components/Model/User/UserModel.dart';
 import 'package:video_chat/components/Screens/Home/MatchedProfile.dart';
-import 'package:video_chat/components/Screens/Splash/Splash.dart';
 import 'package:video_chat/components/Screens/VideoCall/VideoCall.dart';
 import 'package:video_chat/provider/followes_provider.dart';
 import 'package:video_chat/provider/matching_profile_provider.dart';
+import 'package:video_chat/provider/tags_provider.dart';
 import 'package:video_chat/provider/video_call_status_provider.dart';
 
 class AgoraService {
@@ -25,6 +24,7 @@ class AgoraService {
   AgoraRtmClient get client => this._client;
 
   AgoraRtmChannel _channel;
+  bool isOngoingCall = false;
 
   Future<void> initialize(String appId) async {
     try {
@@ -78,6 +78,7 @@ class AgoraService {
   Future<void> login({@required String token, @required String userId}) async {
     try {
       // await _client.logout();
+
       print(token + "," + userId);
       await _client?.login(token, userId);
       debugPrint('Login success: ' + userId);
@@ -92,13 +93,14 @@ class AgoraService {
 
 //Start Call
   sendVideoCallMessage(String toUserId, String sessionId, String channelName,
-      BuildContext context) async {
+      String toGender, BuildContext context) async {
     Map<String, dynamic> req = {};
     req["VideoCall"] = true;
     var user = Provider.of<FollowesProvider>(context, listen: false).userModel;
     req["name"] = user?.providerDisplayName ?? "";
     req["session_id"] = sessionId;
     req["channel_name"] = channelName;
+    req["to_gender"] = toGender;
 
     var image = user.userImages;
     if (image != null && image.length > 0) {
@@ -113,8 +115,17 @@ class AgoraService {
 
 //Reject Call
   sendRejectCallMessage(String toUserId) async {
+    isOngoingCall = false;
     Map<String, dynamic> req = {};
     req["RejectCall"] = true;
+    await _client.sendMessageToPeer(
+        toUserId, AgoraRtmMessage.fromText(jsonEncode(req)));
+  }
+
+  //Busy Call
+  sendBusyCallMessage(String toUserId) async {
+    Map<String, dynamic> req = {};
+    req["BusyCall"] = true;
     await _client.sendMessageToPeer(
         toUserId, AgoraRtmMessage.fromText(jsonEncode(req)));
   }
@@ -139,6 +150,14 @@ class AgoraService {
   dropCallMessage(String toUserId) async {
     Map<String, dynamic> req = {};
     req["DropCall"] = true;
+    await _client.sendMessageToPeer(
+        toUserId, AgoraRtmMessage.fromText(jsonEncode(req)));
+  }
+
+  //inSufficientCoin Call
+  inSufficientCoinMessage(String toUserId) async {
+    Map<String, dynamic> req = {};
+    req["InSufficientCoin"] = true;
     await _client.sendMessageToPeer(
         toUserId, AgoraRtmMessage.fromText(jsonEncode(req)));
   }
@@ -244,6 +263,8 @@ class AgoraService {
       mutedProvider.setCallStatus = CallStatus.Receive;
     } else if (model.endCall == true) {
       mutedProvider.setCallStatus = CallStatus.End;
+    } else if (model.inSufficientCoin == true) {
+      mutedProvider.setCallStatus = CallStatus.InSufficientCoin;
     }
   }
 
@@ -256,6 +277,11 @@ class AgoraService {
     setCallStatus(model);
 
     if (model.videoCall == true) {
+      if (isOngoingCall == true) {
+        sendBusyCallMessage(peerId);
+        return;
+      }
+
       NavigationUtilities.push(MatchedProfile(
         id: peerId,
         name: model.name ?? "",
@@ -266,11 +292,18 @@ class AgoraService {
         channelName: model.channelName,
         token: model.sessionId,
         fromId: app.resolve<PrefUtils>().getUserDetails()?.id?.toString(),
+        toGender: model.toGender ?? "",
       ));
     } else if (model.rejectCall == true) {
+      if (isOngoingCall == true) {
+        return;
+      }
+
       Future.delayed(Duration(seconds: 1), () {
         NavigationUtilities.pop();
       });
+
+      isOngoingCall = false;
       //Reject Call
 
     } else if (model.receiveCall == true) {
@@ -285,11 +318,20 @@ class AgoraService {
           sessionId: videoCallModel.sessionId,
           toUserId: videoCallModel.toUserId.toString());
     } else if (model.endCall == true) {
+      isOngoingCall = false;
       NavigationUtilities.pop();
       print("endCall");
 
       VideoCallState().endCall();
       leaveChannel();
+    } else if (model.busyCall == true) {
+      Future.delayed(Duration(seconds: 1), () {
+        NavigationUtilities.pop();
+      });
+    } else if (model.inSufficientCoin == true) {
+      Future.delayed(Duration(seconds: 1), () {
+        NavigationUtilities.pop();
+      });
     }
   }
 
@@ -298,6 +340,7 @@ class AgoraService {
       {@required String channelName,
       @required String sessionId,
       @required String toUserId}) {
+    isOngoingCall = true;
     UserModel user = Provider.of<FollowesProvider>(navigationKey.currentContext,
             listen: false)
         .userModel;
@@ -309,5 +352,137 @@ class AgoraService {
           userId: app.resolve<PrefUtils>().getUserDetails()?.id?.toString(),
           toUserId: toUserId),
     );
+  }
+
+  updateCallStatus(
+      {@required String channelName,
+      @required String sessionId,
+      @required String status}) {
+    Map<String, dynamic> req = {};
+    req["channel_name"] = channelName;
+    req["call_status"] = status;
+    req["session_id"] = sessionId;
+    NetworkClient.getInstance.callApi(
+      context: navigationKey.currentContext,
+      params: req,
+      baseUrl: ApiConstants.apiUrl,
+      command: ApiConstants.updateCallStatus,
+      headers: NetworkClient.getInstance.getAuthHeaders(),
+      method: MethodType.Patch,
+      successCallback: (response, message) async {},
+      failureCallback: (code, message) {},
+    );
+  }
+
+//Opne UserFeedBack After Call
+  openUserFeedBackPopUp(int userId) async {
+    UserModel userModel = Provider.of<FollowesProvider>(
+            navigationKey.currentContext,
+            listen: false)
+        .userModel;
+    if (userModel.isInfluencer == true) return;
+
+    var provider = Provider.of<TagsProvider>(
+        NavigationUtilities.key.currentState.overlay.context,
+        listen: false);
+    await provider.fetchTags(
+        NavigationUtilities.key.currentState.overlay.context, 0);
+    List<String> selectedTags = [];
+    showModalBottomSheet(
+        isScrollControlled: false,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.only(
+              topLeft: Radius.circular(20.0), topRight: Radius.circular(20.0)),
+        ),
+        context: NavigationUtilities.key.currentState.overlay.context,
+        builder: (builder) {
+          return StatefulBuilder(
+            builder: (BuildContext context, setState) {
+              return SafeArea(
+                child: Padding(
+                  padding: EdgeInsets.only(
+                      top: getSize(23), left: getSize(26), right: getSize(26)),
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Row(
+                        children: [
+                          Text(
+                            "Feedback",
+                            style: appTheme.black16Bold
+                                .copyWith(fontSize: getFontSize(25)),
+                          ),
+                          Spacer(),
+                          InkWell(
+                            onTap: () {
+                              Navigator.pop(context);
+                            },
+                            child: Text(
+                              "Close",
+                              style: appTheme.black14SemiBold.copyWith(
+                                  fontSize: getFontSize(18),
+                                  color: ColorConstants.red),
+                            ),
+                          )
+                        ],
+                      ),
+                      SizedBox(
+                        height: getSize(18),
+                      ),
+                      Container(
+                        child: Tags(
+                            itemCount: provider.tagsList.length,
+                            spacing: getSize(8),
+                            runSpacing: getSize(20),
+                            alignment: WrapAlignment.center,
+                            itemBuilder: (int index) {
+                              return ItemTags(
+                                active: false,
+                                pressEnabled: true,
+                                activeColor: fromHex("#FFDFDF"),
+                                title: provider.tagsList[index]?.tag ?? "",
+                                index: index,
+                                textStyle: appTheme.black12Normal
+                                    .copyWith(fontWeight: FontWeight.w500),
+                                textColor: Colors.black,
+                                textActiveColor: ColorConstants.red,
+                                color: fromHex("#F1F1F1"),
+                                elevation: 0,
+                                padding: EdgeInsets.only(
+                                    left: getSize(16),
+                                    right: getSize(16),
+                                    top: getSize(7),
+                                    bottom: getSize(7)),
+                                onPressed: (item) {
+                                  if (selectedTags.contains(provider
+                                      .tagsList[item.index].id
+                                      .toString())) {
+                                    selectedTags.remove(provider
+                                        .tagsList[item.index].id
+                                        .toString());
+                                  } else {
+                                    selectedTags.add(provider
+                                        .tagsList[item.index].id
+                                        .toString());
+                                  }
+                                },
+                              );
+                            }),
+                      ),
+                      SizedBox(
+                        height: getSize(35),
+                      ),
+                      getPopBottomButton(context, "Submit", () {
+                        provider.submitTags(context, selectedTags, userId);
+                        Navigator.pop(context);
+                      })
+                    ],
+                  ),
+                ),
+              );
+            },
+          );
+        });
   }
 }

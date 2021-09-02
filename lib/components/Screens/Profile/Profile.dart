@@ -44,6 +44,8 @@ class _ProfileState extends State<Profile> {
         .fetchFollowing(context);
     Provider.of<FeedBackProvider>(context, listen: false)
         .fetchFeedBacks(context);
+    Provider.of<FollowesProvider>(context, listen: false)
+        .fetchMyProfile(context);
   }
 
   @override
@@ -331,6 +333,7 @@ class _ProfileState extends State<Profile> {
             child: ProfileSlider(
               images:
                   userModel?.userImages?.map((e) => e.photoUrl)?.toList() ?? [],
+              gender: userModel?.gender ?? "",
               scroll: (index) {
                 currentIndex = index;
                 setState(() {});
@@ -383,7 +386,7 @@ class _ProfileState extends State<Profile> {
                               width: getSize(6),
                             ),
                       Text(
-                        userModel?.region?.regionName ?? "",
+                        userModel?.countryIp ?? "",
                         style: appTheme.white14Normal
                             .copyWith(fontWeight: FontWeight.w500),
                       ),

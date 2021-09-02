@@ -10,13 +10,14 @@ import 'package:video_chat/app/constant/ColorConstant.dart';
 import 'package:video_chat/app/utils/CommonWidgets.dart';
 import 'package:video_chat/components/Model/Match%20Profile/call_status.dart';
 import 'package:video_chat/components/Screens/VideoCall/VideoCall.dart';
+import 'package:video_chat/provider/followes_provider.dart';
 import 'package:video_chat/provider/matching_profile_provider.dart';
 import 'package:video_chat/provider/video_call_status_provider.dart';
 
 class MatchedProfile extends StatefulWidget {
   final String name;
   final String id, fromId;
-  final String toImageUrl, fromImageUrl, channelName, token;
+  final String toImageUrl, fromImageUrl, channelName, token, toGender;
   MatchedProfile(
       {Key key,
       @required this.id,
@@ -25,7 +26,8 @@ class MatchedProfile extends StatefulWidget {
       @required this.fromImageUrl,
       @required this.name,
       @required this.channelName,
-      @required this.token})
+      @required this.token,
+      @required this.toGender})
       : super(key: key);
 
   @override
@@ -65,11 +67,11 @@ class _MatchedProfileState extends State<MatchedProfile> {
                     ),
                   ),
                   SizedBox(
-                    height: getSize(37),
+                    height: getSize(26),
                   ),
                   getProfileWidget(),
                   SizedBox(
-                    height: getSize(60),
+                    height: getSize(56),
                   ),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
@@ -89,11 +91,11 @@ class _MatchedProfileState extends State<MatchedProfile> {
                     padding: const EdgeInsets.symmetric(horizontal: 10),
                     child: Center(
                       child: Text(
-                        "Your are invited to a video call with ${widget.name}.",
+                        "You are invited to a video call with ${widget.name}.",
                         style: appTheme.black14Normal.copyWith(
                             fontWeight: FontWeight.w500,
                             fontSize: getFontSize(16)),
-                            textAlign: TextAlign.center,
+                        textAlign: TextAlign.center,
                       ),
                     ),
                   ),
@@ -117,6 +119,10 @@ class _MatchedProfileState extends State<MatchedProfile> {
           onTap: () {
             Navigator.pop(context);
             AgoraService.instance.sendRejectCallMessage(widget.id);
+            AgoraService.instance.updateCallStatus(
+                channelName: widget.channelName,
+                sessionId: widget.token,
+                status: "reject");
           },
           child: Image.asset(
             icCallEnd,
@@ -133,7 +139,6 @@ class _MatchedProfileState extends State<MatchedProfile> {
             ? Container()
             : InkWell(
                 onTap: () async {
-                  AgoraService.instance.sendReceiveCallMessage(widget.id);
                   Navigator.pop(context);
                   await Provider.of<MatchingProfileProvider>(context,
                           listen: false)
@@ -146,12 +151,14 @@ class _MatchedProfileState extends State<MatchedProfile> {
                           .coinStatus;
 
                   if (coinStatus?.continueCall == true) {
+                    AgoraService.instance.sendReceiveCallMessage(widget.id);
                     AgoraService.instance.openVideoCall(
                         channelName: widget.channelName,
                         sessionId: widget.token,
                         toUserId: widget.id);
                   } else {
                     InAppPurchase.instance.openCoinPurchasePopUp();
+                    AgoraService.instance.inSufficientCoinMessage(widget.id);
                   }
                 },
                 child: Image.asset(
@@ -190,13 +197,28 @@ class _MatchedProfileState extends State<MatchedProfile> {
                     borderRadius: BorderRadius.circular(
                       getSize(20),
                     ),
-                    image: DecorationImage(
-                      image: CachedNetworkImageProvider(widget.toImageUrl),
-                      onError: (exception, stackTrace) => Image.asset(
-                        "assets/Profile/no_image.png",
+                    // image: DecorationImage(
+                    //   image: CachedNetworkImageProvider(widget.toImageUrl),
+                    //   onError: (exception, stackTrace) => Image.asset(
+                    //     "assets/Profile/no_image.png",
+                    //     fit: BoxFit.cover,
+                    //   ),
+                    //   fit: BoxFit.cover,
+                    // ),
+                  ),
+                  child: ClipRRect(
+                    borderRadius: BorderRadius.circular(
+                      getSize(20),
+                    ),
+                    child: CachedNetworkImage(
+                      imageUrl: widget.toImageUrl,
+                      width: getSize(156),
+                      height: getSize(210),
+                      fit: BoxFit.cover,
+                      errorWidget: (context, url, error) => Image.asset(
+                        getUserPlaceHolder(widget.toGender ?? ""),
                         fit: BoxFit.cover,
                       ),
-                      fit: BoxFit.cover,
                     ),
                   ),
                 ),
@@ -221,13 +243,25 @@ class _MatchedProfileState extends State<MatchedProfile> {
                     borderRadius: BorderRadius.circular(
                       getSize(20),
                     ),
-                    image: DecorationImage(
-                      image: CachedNetworkImageProvider(widget.fromImageUrl),
-                      onError: (exception, stackTrace) => Image.asset(
-                        "assets/Profile/no_image.png",
+                  ),
+                  child: ClipRRect(
+                    borderRadius: BorderRadius.circular(
+                      getSize(20),
+                    ),
+                    child: CachedNetworkImage(
+                      imageUrl: widget.fromImageUrl,
+                      width: getSize(156),
+                      height: getSize(210),
+                      fit: BoxFit.cover,
+                      errorWidget: (context, url, error) => Image.asset(
+                        getUserPlaceHolder(Provider.of<FollowesProvider>(
+                                    context,
+                                    listen: false)
+                                .userModel
+                                ?.gender ??
+                            ""),
                         fit: BoxFit.cover,
                       ),
-                      fit: BoxFit.cover,
                     ),
                   ),
                 ),

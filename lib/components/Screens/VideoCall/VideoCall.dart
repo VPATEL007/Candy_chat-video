@@ -18,7 +18,9 @@ import 'package:video_chat/components/Model/Match%20Profile/call_status.dart';
 import 'package:video_chat/components/Model/User/UserModel.dart';
 import 'package:video_chat/provider/chat_provider.dart';
 import 'package:video_chat/provider/followes_provider.dart';
+import 'package:video_chat/provider/gift_provider.dart';
 import 'package:video_chat/provider/matching_profile_provider.dart';
+import 'package:screen/screen.dart';
 
 class VideoCall extends StatefulWidget {
   final String token;
@@ -56,9 +58,12 @@ class VideoCallState extends State<VideoCall> {
   @override
   void initState() {
     super.initState();
+    Screen.keepOn(true);
+    agoraService.isOngoingCall = true;
     WidgetsBinding.instance.addPostFrameCallback((_) {
       initPlatformState();
       init();
+
       getToUserDetail();
     });
 
@@ -93,6 +98,9 @@ class VideoCallState extends State<VideoCall> {
   @override
   void dispose() {
     // destroy sdk
+    agoraService.openUserFeedBackPopUp(toUser?.id ?? 0);
+    agoraService.isOngoingCall = false;
+    Screen.keepOn(false);
     timer?.cancel();
     endCall();
     agoraService?.leaveChannel();
@@ -161,127 +169,133 @@ class VideoCallState extends State<VideoCall> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: ColorConstants.colorPrimary,
-      body: Stack(
-        children: [
-          Container(
-            child: _renderRemoteVideo(),
-          ),
-          Positioned(bottom: getSize(120), child: chatList()),
-          Positioned(
-              left: getSize(30),
-              top: getSize(30),
-              child: Visibility(
-                visible: !_videoMute,
-                child: SafeArea(
-                  child: ClipRRect(
-                    borderRadius: BorderRadius.circular(8),
-                    child: Container(
-                      width: getSize(120),
-                      height: getSize(160),
-                      color: Colors.black,
-                      child: _renderLocalPreview(),
+    return WillPopScope(
+      onWillPop: () async {
+        return false;
+      },
+      child: Scaffold(
+        backgroundColor: ColorConstants.colorPrimary,
+        body: Stack(
+          children: [
+            Container(
+              child: _renderRemoteVideo(),
+            ),
+            Positioned(bottom: getSize(120), child: chatList()),
+            Positioned(
+                left: getSize(30),
+                top: getSize(30),
+                child: Visibility(
+                  visible: !_videoMute,
+                  child: SafeArea(
+                    child: ClipRRect(
+                      borderRadius: BorderRadius.circular(8),
+                      child: Container(
+                        width: getSize(120),
+                        height: getSize(160),
+                        color: Colors.black,
+                        child: _renderLocalPreview(),
+                      ),
                     ),
                   ),
-                ),
-              )),
-          switchCameraButton(),
-          Positioned(
-              bottom: getSize(40),
-              child: Container(
-                width: MathUtilities.screenWidth(context),
-                child: Padding(
-                  padding:
-                      EdgeInsets.only(left: getSize(25), right: getSize(25)),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      Expanded(
-                          child: CommonTextfield(
-                        textOption: TextFieldOption(
-                            radious: getSize(26),
-                            hintText: "Type text....",
-                            maxLine: 1,
-                            fillColor: fromHex("#F1F1F1"),
-                            inputController: _chatController,
-                            postfixWid: isKeyboardOpen
-                                ? Padding(
-                                    padding: EdgeInsets.only(
-                                        top: getSize(16), right: getSize(16)),
-                                    child: InkWell(
-                                      onTap: () async {
-                                        if (_chatController.text?.isEmpty ??
-                                            true) return;
-                                        MessageObj _chat = MessageObj(
-                                            chatDate: DateTime.now(),
-                                            message: _chatController.text,
-                                            isSendByMe: true,
-                                            sendBy: widget.userId);
+                )),
+            switchCameraButton(),
+            Positioned(
+                bottom: getSize(40),
+                child: Container(
+                  width: MathUtilities.screenWidth(context),
+                  child: Padding(
+                    padding:
+                        EdgeInsets.only(left: getSize(25), right: getSize(25)),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        Expanded(
+                            child: CommonTextfield(
+                          textOption: TextFieldOption(
+                              radious: getSize(26),
+                              hintText: "Type text....",
+                              maxLine: 1,
+                              fillColor: fromHex("#F1F1F1"),
+                              inputController: _chatController,
+                              postfixWid: isKeyboardOpen
+                                  ? Padding(
+                                      padding: EdgeInsets.only(
+                                          top: getSize(16), right: getSize(16)),
+                                      child: InkWell(
+                                        onTap: () async {
+                                          if (_chatController.text?.isEmpty ??
+                                              true) return;
+                                          MessageObj _chat = MessageObj(
+                                              chatDate: DateTime.now(),
+                                              message: _chatController.text,
+                                              isSendByMe: true,
+                                              sendBy: widget.userId);
 
-                                        _chatsList.insert(0, _chat);
+                                          _chatsList.insert(0, _chat);
 
-                                        if (mounted) setState(() {});
+                                          if (mounted) setState(() {});
 
-                                        await agoraService
-                                            .sendMessage(_chatController.text);
+                                          await agoraService.sendMessage(
+                                              _chatController.text);
 
-                                        _chatController.clear();
-                                        if (_chatsList?.isNotEmpty ?? false)
-                                          messageListScrollController
-                                              ?.jumpTo(0.0);
-                                        if (mounted) setState(() {});
-                                      },
-                                      child: Text(
-                                        "Send",
-                                        style: appTheme.black14Normal.copyWith(
-                                            fontWeight: FontWeight.w700,
-                                            color: ColorConstants.red),
+                                          _chatController.clear();
+                                          if (_chatsList?.isNotEmpty ?? false)
+                                            messageListScrollController
+                                                ?.jumpTo(0.0);
+                                          if (mounted) setState(() {});
+                                        },
+                                        child: Text(
+                                          "Send",
+                                          style: appTheme.black14Normal
+                                              .copyWith(
+                                                  fontWeight: FontWeight.w700,
+                                                  color: ColorConstants.red),
+                                        ),
                                       ),
-                                    ),
-                                  )
-                                : SizedBox()),
-                        textCallback: (text) {},
-                      )),
-                      Visibility(
-                        visible: !isKeyboardOpen,
-                        child: Row(
-                          children: [
-                            SizedBox(
-                              width: getSize(12),
-                            ),
-                            InkWell(
-                                onTap: () {
-                                  _onMicMute();
-                                },
-                                child: getMicVideoButton(
-                                    _micMute ? muteMic : unMuteMic)),
-                            SizedBox(
-                              width: getSize(12),
-                            ),
-                            InkWell(
-                                onTap: () {
-                                  _onVideoMute();
-                                },
-                                child: getMicVideoButton(
-                                    _videoMute ? muteVideo : unMuteVideo)),
-                            SizedBox(
-                              width: getSize(12),
-                            ),
-                            giftButton(),
-                            SizedBox(
-                              width: getSize(12),
-                            ),
-                            callEndButton()
-                          ],
+                                    )
+                                  : SizedBox()),
+                          textCallback: (text) {},
+                        )),
+                        Visibility(
+                          visible: !isKeyboardOpen,
+                          child: Row(
+                            children: [
+                              SizedBox(
+                                width: getSize(12),
+                              ),
+                              InkWell(
+                                  onTap: () {
+                                    _onMicMute();
+                                  },
+                                  child: getMicVideoButton(
+                                      _micMute ? muteMic : unMuteMic)),
+                              SizedBox(
+                                width: getSize(12),
+                              ),
+                              InkWell(
+                                  onTap: () {
+                                    _onVideoMute();
+                                  },
+                                  child: getMicVideoButton(
+                                      _videoMute ? muteVideo : unMuteVideo)),
+                              SizedBox(
+                                width: getSize(12),
+                              ),
+                              giftButton(),
+                              SizedBox(
+                                width: getSize(12),
+                              ),
+                              callEndButton()
+                            ],
+                          ),
                         ),
-                      ),
-                    ],
+                      ],
+                    ),
                   ),
-                ),
-              )),
-        ],
+                )),
+          ],
+        ),
       ),
     );
   }
@@ -307,15 +321,21 @@ class VideoCallState extends State<VideoCall> {
   }
 
   Widget giftButton() {
-    return Container(
-      decoration: BoxDecoration(
-          color: Colors.white, borderRadius: BorderRadius.circular(50)),
-      child: Padding(
-        padding: EdgeInsets.all(getSize(10)),
-        child: Image.asset(
-          icGift,
-          height: getSize(36),
-          width: getSize(36),
+    return InkWell(
+      onTap: () {
+        Provider.of<GiftProvider>(context, listen: false)
+            .openGiftPopUp(int.parse(widget.toUserId));
+      },
+      child: Container(
+        decoration: BoxDecoration(
+            color: Colors.white, borderRadius: BorderRadius.circular(50)),
+        child: Padding(
+          padding: EdgeInsets.all(getSize(10)),
+          child: Image.asset(
+            icGift,
+            height: getSize(36),
+            width: getSize(36),
+          ),
         ),
       ),
     );
@@ -511,9 +531,14 @@ class VideoCallState extends State<VideoCall> {
                       height: getSize(24),
                     ),
                     getPopBottomButton(context, "End Video", () {
+                      agoraService.updateCallStatus(
+                          channelName: widget.channelName,
+                          sessionId: widget.token,
+                          status: "ended");
                       Navigator.pop(context);
                       Navigator.pop(context);
                       agoraService.endCallMessage(widget.toUserId);
+
                       endCall();
                     })
                   ],

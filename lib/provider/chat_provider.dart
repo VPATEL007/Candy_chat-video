@@ -11,7 +11,8 @@ import 'package:video_chat/components/Screens/Chat/Chat.dart';
 
 class ChatProvider with ChangeNotifier {
   // Create Chat...
-  Future<void> startChat(int toUserId, BuildContext context) async {
+  Future<void> startChat(
+      int toUserId, BuildContext context, bool isFromProfile) async {
     try {
       int userId = app.resolve<PrefUtils>().getUserDetails()?.id;
       Map<String, dynamic> _parms = {
@@ -31,8 +32,10 @@ class ChatProvider with ChangeNotifier {
           NetworkClient.getInstance.hideProgressDialog();
           if (response["channel_name"] != null) {
             NavigationUtilities.push(Chat(
-                channelId: response["channel_name"].toString(),
-                toUserId: toUserId));
+              channelId: response["channel_name"].toString(),
+              toUserId: toUserId,
+              isFromProfile: isFromProfile,
+            ));
           }
         },
         failureCallback: (code, message) {

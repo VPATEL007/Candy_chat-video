@@ -17,6 +17,7 @@ import 'package:video_chat/components/Screens/Home/Reportblock.dart';
 import 'package:video_chat/components/Screens/UserProfile/UserProfile.dart';
 import 'package:video_chat/components/widgets/TabBar/Tabbar.dart';
 import 'package:video_chat/provider/followes_provider.dart';
+import 'package:video_chat/provider/language_provider.dart';
 import 'package:video_chat/provider/matching_profile_provider.dart';
 import 'package:video_chat/provider/video_call_status_provider.dart';
 
@@ -36,6 +37,7 @@ class _MathProfileState extends State<MathProfile> {
   GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey();
 
   RangeValues _currentRangeValues = const RangeValues(18, 24);
+  int selectedLanguage;
   SlideRegion region = SlideRegion.inSuperLikeRegion;
   int currentIndex = 0;
   int page = 1;
@@ -45,141 +47,151 @@ class _MathProfileState extends State<MathProfile> {
   @override
   void initState() {
     super.initState();
-    // WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-    //   Provider.of<ReportAndBlockProvider>(context, listen: false)
-    //       .fetchReportReason(context);
-    // });
-    _swipeItems = Provider.of<MatchingProfileProvider>(context, listen: false)
-        .matchProfileList
-        .map((e) => SwipeItem(
-            content: Content(text: e.id.toString()),
-            likeAction: (index) async {
-              print("like $index");
-              bool startCall = await Provider.of<MatchingProfileProvider>(
+
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+      Provider.of<LanguageProvider>(context, listen: false)
+          .fetchLanguageList(context, true);
+    });
+    prepareSwipeItems();
+  }
+
+  prepareSwipeItems() {
+    if (page == 1) _swipeItems.clear();
+
+    for (var e in Provider.of<MatchingProfileProvider>(context, listen: false)
+        .matchProfileList) {
+      var item = SwipeItem(
+          content: e,
+          likeAction: (index) async {
+            print("like $index");
+            bool startCall = await Provider.of<MatchingProfileProvider>(context,
+                    listen: false)
+                .leftAndRightSwipe(context, SwipeType.Right);
+            if (startCall == true) {
+              await Provider.of<MatchingProfileProvider>(context, listen: false)
+                  .checkCoinBalance(
                       context,
-                      listen: false)
-                  .leftAndRightSwipe(context, SwipeType.Right);
-              if (startCall == true) {
+                      Provider.of<MatchingProfileProvider>(context,
+                              listen: false)
+                          .matchProfileList[index]
+                          .id,
+                      Provider.of<MatchingProfileProvider>(context,
+                                  listen: false)
+                              .matchProfileList[index]
+                              .userName ??
+                          "");
+
+              CoinModel coins =
+                  Provider.of<MatchingProfileProvider>(context, listen: false)
+                      .coinBalance;
+
+              if (coins?.lowBalance == false) {
                 await Provider.of<MatchingProfileProvider>(context,
                         listen: false)
-                    .checkCoinBalance(
+                    .startVideoCall(
                         context,
                         Provider.of<MatchingProfileProvider>(context,
                                 listen: false)
                             .matchProfileList[index]
                             .id);
-
-                CoinModel coins =
+                VideoCallModel videoCallModel =
                     Provider.of<MatchingProfileProvider>(context, listen: false)
-                        .coinBalance;
-
-                if (coins?.lowBalance == false) {
-                  await Provider.of<MatchingProfileProvider>(context,
-                          listen: false)
-                      .startVideoCall(
-                          context,
-                          Provider.of<MatchingProfileProvider>(context,
+                        .videoCallModel;
+                UserModel userModel =
+                    Provider.of<FollowesProvider>(context, listen: false)
+                        .userModel;
+                if (videoCallModel != null)
+                  AgoraService.instance.sendVideoCallMessage(
+                      videoCallModel.toUserId.toString(),
+                      videoCallModel.sessionId,
+                      videoCallModel.channelName,
+                      Provider.of<MatchingProfileProvider>(context,
                                   listen: false)
                               .matchProfileList[index]
-                              .id);
-                  VideoCallModel videoCallModel =
-                      Provider.of<MatchingProfileProvider>(context,
-                              listen: false)
-                          .videoCallModel;
-                  UserModel userModel =
-                      Provider.of<FollowesProvider>(context, listen: false)
-                          .userModel;
-                  if (videoCallModel != null)
-                    AgoraService.instance.sendVideoCallMessage(
-                        videoCallModel.toUserId.toString(),
-                        videoCallModel.sessionId,
-                        videoCallModel.channelName,
-                        context);
-                  Provider.of<VideoCallStatusProvider>(context, listen: false)
-                      .setCallStatus = CallStatus.Start;
-                  Navigator.of(context).push(MaterialPageRoute(
-                    builder: (context) => MatchedProfile(
-                      channelName: videoCallModel.channelName,
-                      token: videoCallModel.sessionId,
-                      fromId: Provider.of<MatchingProfileProvider>(context,
-                              listen: false)
-                          .matchProfileList[index]
-                          .id
-                          ?.toString(),
-                      name: e?.providerDisplayName ?? "",
-                      toImageUrl: (e?.imageUrl?.isEmpty ?? true)
-                          ? ""
-                          : e?.imageUrl?.first ?? "",
-                      fromImageUrl: (userModel?.userImages?.isEmpty ?? true)
-                          ? ""
-                          : userModel?.userImages?.first?.photoUrl ?? "",
-                      id: videoCallModel.toUserId.toString(),
-                    ),
-                  ));
-                } else if (coins?.lowBalance == true) {
-                  InAppPurchase.instance.openCoinPurchasePopUp();
-                }
+                              .gender ??
+                          "",
+                      context);
+                Provider.of<VideoCallStatusProvider>(context, listen: false)
+                    .setCallStatus = CallStatus.Start;
+                Navigator.of(context).push(MaterialPageRoute(
+                  builder: (context) => MatchedProfile(
+                    channelName: videoCallModel.channelName,
+                    token: videoCallModel.sessionId,
+                    fromId: Provider.of<MatchingProfileProvider>(context,
+                            listen: false)
+                        .matchProfileList[index]
+                        .id
+                        ?.toString(),
+                    name: e?.providerDisplayName ?? "",
+                    toImageUrl: (e?.imageUrl?.isEmpty ?? true)
+                        ? ""
+                        : e?.imageUrl?.first ?? "",
+                    fromImageUrl: (userModel?.userImages?.isEmpty ?? true)
+                        ? ""
+                        : userModel?.userImages?.first?.photoUrl ?? "",
+                    id: videoCallModel.toUserId.toString(),
+                    toGender: e?.gender ?? "",
+                  ),
+                ));
+              } else if (coins?.lowBalance == true) {
+                InAppPurchase.instance.openCoinPurchasePopUp();
               }
-            },
-            nopeAction: (index) {
-              Provider.of<MatchingProfileProvider>(context, listen: false)
-                  .leftAndRightSwipe(context, SwipeType.Left);
-              print("nope");
-            },
-            superlikeAction: (index) {
-              try {
-                MatchProfileModel matchProfileModel =
-                    Provider.of<MatchingProfileProvider>(context, listen: false)
-                        .matchProfileList[index];
-                if (matchProfileModel == null) return;
-                UserModel userModel = UserModel(
-                  about: matchProfileModel.about,
-                  dob: matchProfileModel.dob,
-                  callRate: matchProfileModel.callRate,
-                  gender: matchProfileModel.gender,
-                  preferedGender: matchProfileModel.preferedGender,
-                  photoUrl: (matchProfileModel?.imageUrl?.isEmpty ?? true)
-                      ? ""
-                      : matchProfileModel?.imageUrl?.first ?? "",
-                  userName: matchProfileModel.userName,
-                  region: Region(
-                      regionName: matchProfileModel.regionName,
-                      regionFlagUrl: matchProfileModel.regionFlagUrl),
-                  language:
-                      Language(languageName: matchProfileModel.languageName),
-                  userImages: matchProfileModel?.imageUrl
-                          ?.map((e) => UserImage(photoUrl: e))
-                          ?.toList() ??
-                      [],
-                  byUserUserFollowers: matchProfileModel.followings,
-                  userVisiteds: matchProfileModel?.visitorCount ?? 0,
-                  userFollowers: matchProfileModel.followers,
-                  isFollowing: matchProfileModel?.isFollowing == 1,
-                  isFavourite: matchProfileModel?.isFavourite == 1,
-                  providerDisplayName: matchProfileModel.providerDisplayName,
-                  id: matchProfileModel.id,
-                  totalPoint: matchProfileModel.totalPoint,
-                  onlineStatus: matchProfileModel.onlineStatus,
-                );
+            }
+          },
+          nopeAction: (index) {
+            Provider.of<MatchingProfileProvider>(context, listen: false)
+                .leftAndRightSwipe(context, SwipeType.Left);
+            print("nope");
+          },
+          superlikeAction: (index) {
+            try {
+              MatchProfileModel matchProfileModel =
+                  Provider.of<MatchingProfileProvider>(context, listen: false)
+                      .matchProfileList[index];
+              if (matchProfileModel == null) return;
+              UserModel userModel = UserModel(
+                about: matchProfileModel.about,
+                dob: matchProfileModel.dob,
+                callRate: matchProfileModel.callRate,
+                gender: matchProfileModel.gender,
+                preferedGender: matchProfileModel.preferedGender,
+                photoUrl: (matchProfileModel?.imageUrl?.isEmpty ?? true)
+                    ? ""
+                    : matchProfileModel?.imageUrl?.first ?? "",
+                userName: matchProfileModel.userName,
+                region: Region(
+                    regionName: matchProfileModel.regionName,
+                    regionFlagUrl: matchProfileModel.regionFlagUrl),
+                language:
+                    Language(languageName: matchProfileModel.languageName),
+                userImages: matchProfileModel?.imageUrl
+                        ?.map((e) => UserImage(photoUrl: e))
+                        ?.toList() ??
+                    [],
+                byUserUserFollowers: matchProfileModel.followings,
+                userVisiteds: matchProfileModel?.visitorCount ?? 0,
+                userFollowers: matchProfileModel.followers,
+                isFollowing: matchProfileModel?.isFollowing == 1,
+                isFavourite: matchProfileModel?.isFavourite == 1,
+                providerDisplayName: matchProfileModel.providerDisplayName,
+                id: matchProfileModel.id,
+                totalPoint: matchProfileModel.totalPoint,
+                onlineStatus: matchProfileModel.onlineStatus,
+              );
 
-                // if (userModel.photoUrl.isNotEmpty) {
-                //   userModel.userImages
-                //       .insert(0, UserImage(photoUrl: userModel.photoUrl));
-                // }
-
-                openUserProfile(userModel);
-                // NavigationUtilities.push(UserProfile());
-              } catch (e) {
-                print(e);
-              }
-            },
-            onSlideUpdateAction: (tRegion, index) {
-              setState(() {
-                currentIndex = index;
-                region = tRegion;
-              });
-            }))
-        .toList();
+              openUserProfile(userModel);
+            } catch (e) {
+              print(e);
+            }
+          },
+          onSlideUpdateAction: (tRegion, index) {
+            setState(() {
+              currentIndex = index;
+              region = tRegion;
+            });
+          });
+      _swipeItems.add(item);
+    }
 
     _matchEngine = MatchEngine(swipeItems: _swipeItems);
   }
@@ -205,18 +217,26 @@ class _MathProfileState extends State<MathProfile> {
                       itemBuilder: (BuildContext ctx, int index) {
                         MatchProfileModel _matchProfile =
                             matchProfileProvider.matchProfileList[index];
+                        // MatchProfileModel _matchProfile =
+                        //     _swipeItems[index].content;
                         return LazyLoadingList(
                           initialSizeOfItems: 20,
                           index: index,
                           hasMore: true,
-                          loadMore: () {
+                          loadMore: () async {
                             print(
                                 "--------========================= Lazy Loading ==========================---------");
                             page++;
-                            Provider.of<MatchingProfileProvider>(context,
+                            await Provider.of<MatchingProfileProvider>(context,
                                     listen: false)
                                 .fetchMatchProfileList(context,
-                                    isbackgroundCall: true, pageNumber: page);
+                                    isbackgroundCall: true,
+                                    pageNumber: page,
+                                    language: selectedLanguage,
+                                    fromAge: _currentRangeValues.start.round(),
+                                    toAge: _currentRangeValues.end.round(),
+                                    isNotAppend: true);
+                            prepareSwipeItems();
                           },
                           child: Stack(
                             fit: StackFit.expand,
@@ -232,20 +252,29 @@ class _MathProfileState extends State<MathProfile> {
                                         ? getSize(16)
                                         : getSize(0)),
                                   ),
-                                  image: DecorationImage(
-                                    image: CachedNetworkImageProvider(
-                                      (_matchProfile?.imageUrl?.isEmpty ?? true)
-                                          ? ""
-                                          : _matchProfile?.imageUrl?.first ??
-                                              "",
-                                    ),
-                                    onError: (exception, stackTrace) =>
-                                        Image.asset(
-                                      getUserPlaceHolder(
-                                          _matchProfile?.gender ?? ""),
-                                    ),
-                                    fit: BoxFit.cover,
-                                  ),
+                                  image: _matchProfile?.imageUrl?.isEmpty ==
+                                          true
+                                      ? DecorationImage(
+                                          image: AssetImage(getUserPlaceHolder(
+                                              _matchProfile?.gender ?? "")),
+                                          fit: BoxFit.cover,
+                                        )
+                                      : DecorationImage(
+                                          image: CachedNetworkImageProvider(
+                                            (_matchProfile?.imageUrl?.isEmpty ??
+                                                    true)
+                                                ? ""
+                                                : _matchProfile
+                                                        ?.imageUrl?.first ??
+                                                    "",
+                                          ),
+                                          onError: (exception, stackTrace) =>
+                                              Image.asset(
+                                            getUserPlaceHolder(
+                                                _matchProfile?.gender ?? ""),
+                                          ),
+                                          fit: BoxFit.cover,
+                                        ),
                                 ),
                                 child: SafeArea(
                                   child: Column(
@@ -253,22 +282,63 @@ class _MathProfileState extends State<MathProfile> {
                                         CrossAxisAlignment.start,
                                     children: [
                                       Padding(
-                                        padding: EdgeInsets.only(
-                                            left: getSize(29),
-                                            top: getSize(100)),
-                                        child: Container(
-                                          height: getSize(120),
-                                          width: getSize(90),
-                                          decoration: BoxDecoration(
-                                            border: Border.all(
-                                                color: Colors.white, width: 1),
-                                            borderRadius: BorderRadius.circular(
-                                              getSize(7),
+                                          padding: EdgeInsets.only(
+                                              left: getSize(29),
+                                              top: getSize(100)),
+                                          child: Container(
+                                            decoration: BoxDecoration(
+                                              border: Border.all(
+                                                  color: Colors.white,
+                                                  width: 1),
+                                              borderRadius:
+                                                  BorderRadius.circular(
+                                                getSize(7),
+                                              ),
                                             ),
+                                            height: getSize(120),
+                                            width: getSize(90),
+                                            child: ClipRRect(
+                                              borderRadius:
+                                                  BorderRadius.circular(
+                                                getSize(7),
+                                              ),
+                                              child: CachedNetworkImage(
+                                                imageUrl: (_matchProfile
+                                                            ?.imageUrl
+                                                            ?.isEmpty ??
+                                                        true)
+                                                    ? ""
+                                                    : _matchProfile
+                                                            ?.imageUrl?.first ??
+                                                        "",
+                                                width: getSize(90),
+                                                height: getSize(120),
+                                                fit: BoxFit.cover,
+                                                errorWidget:
+                                                    (context, url, error) =>
+                                                        Image.asset(
+                                                  getUserPlaceHolder(
+                                                      _matchProfile?.gender ??
+                                                          ""),
+                                                  fit: BoxFit.cover,
+                                                ),
+                                              ),
+                                            ),
+                                          )
+
+                                          // Container(
+                                          //   height: getSize(120),
+                                          //   width: getSize(90),
+                                          //   decoration: BoxDecoration(
+                                          //     border: Border.all(
+                                          //         color: Colors.white, width: 1),
+                                          //     borderRadius: BorderRadius.circular(
+                                          //       getSize(7),
+                                          //     ),
+                                          //   ),
+                                          //   child: Image.asset(icTemp),
+                                          // ),
                                           ),
-                                          child: Image.asset(icTemp),
-                                        ),
-                                      ),
                                       SizedBox(
                                         height: getSize(80),
                                       ),
@@ -523,7 +593,9 @@ class _MathProfileState extends State<MathProfile> {
   }
 
 //Open Filter
-  openFilter() {
+  openFilter() async {
+    var provider = Provider.of<LanguageProvider>(context, listen: false);
+
     showModalBottomSheet(
         isScrollControlled: false,
         shape: RoundedRectangleBorder(
@@ -576,16 +648,17 @@ class _MathProfileState extends State<MathProfile> {
                       ),
                       Container(
                         child: Tags(
-                            itemCount: 8,
+                            itemCount: provider.arrList.length,
                             spacing: getSize(8),
                             runSpacing: getSize(20),
                             alignment: WrapAlignment.center,
                             itemBuilder: (int index) {
                               return ItemTags(
-                                active: index == 0 ? true : false,
+                                active: false,
                                 pressEnabled: true,
                                 activeColor: fromHex("#FFDFDF"),
-                                title: "English",
+                                title:
+                                    provider.arrList[index]?.languageName ?? "",
                                 index: index,
                                 textStyle: appTheme.black12Normal
                                     .copyWith(fontWeight: FontWeight.w500),
@@ -598,6 +671,16 @@ class _MathProfileState extends State<MathProfile> {
                                     right: getSize(16),
                                     top: getSize(7),
                                     bottom: getSize(7)),
+                                onPressed: (item) {
+                                  // if (selectedLanguage ==
+                                  //     provider.arrList[item.index].id) {
+                                  //   selectedLanguage = null;
+                                  // } else {
+                                  selectedLanguage =
+                                      provider.arrList[item.index].id;
+                                  setState(() {});
+                                  // }
+                                },
                               );
                             }),
                       ),
@@ -613,7 +696,9 @@ class _MathProfileState extends State<MathProfile> {
                           ),
                           Spacer(),
                           Text(
-                            "18 - 25",
+                            _currentRangeValues.start.round().toString() +
+                                ' - ' +
+                                _currentRangeValues.end.round().toString(),
                             style: appTheme.black14Normal
                                 .copyWith(fontWeight: FontWeight.w600),
                           ),
@@ -639,7 +724,20 @@ class _MathProfileState extends State<MathProfile> {
                       SizedBox(
                         height: getSize(33),
                       ),
-                      getPopBottomButton(context, "Apply", () {})
+                      getPopBottomButton(context, "Apply", () async {
+                        Navigator.pop(context);
+                        page = 1;
+                        await Provider.of<MatchingProfileProvider>(context,
+                                listen: false)
+                            .fetchMatchProfileList(context,
+                                isbackgroundCall: true,
+                                pageNumber: page,
+                                language: selectedLanguage,
+                                fromAge: _currentRangeValues.start.round(),
+                                toAge: _currentRangeValues.end.round(),
+                                isNotAppend: true);
+                        prepareSwipeItems();
+                      })
                     ],
                   ),
                 ),

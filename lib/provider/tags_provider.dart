@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:video_chat/app/app.export.dart';
+import 'package:video_chat/components/Model/Feedback/UserFeedbackModel.dart';
 import 'package:video_chat/components/Model/User/tags_model.dart';
 
 class TagsProvider with ChangeNotifier {
@@ -11,7 +12,10 @@ class TagsProvider with ChangeNotifier {
   set tagsList(List<TagsModel> value) => this._tagsList = value;
 
   // Fetch tags...
-  Future<void> fetchTags(BuildContext context) async {
+  Future<void> fetchTags(BuildContext context, int userId) async {
+    tagsList = [];
+    if (userId != 0) await fetchUserFeedBacks(userId);
+
     try {
       await NetworkClient.getInstance.callApi(
         context: context,
@@ -20,7 +24,10 @@ class TagsProvider with ChangeNotifier {
         headers: NetworkClient.getInstance.getAuthHeaders(),
         method: MethodType.Get,
         successCallback: (response, message) {
-          tagsList = tagsModelFromJson(jsonEncode(response));
+          if (response["rows"] != null) {
+            tagsList = tagsModelFromJson(jsonEncode(response["rows"]));
+          }
+
           notifyListeners();
         },
         failureCallback: (code, message) {
@@ -33,9 +40,9 @@ class TagsProvider with ChangeNotifier {
   }
 
   // Submit tags...
-  Future<void> submitTags(BuildContext context, List<String> tags) async {
+  Future<void> submitTags(
+      BuildContext context, List<String> tags, int userId) async {
     try {
-      int userId = app.resolve<PrefUtils>().getUserDetails()?.id;
       await NetworkClient.getInstance.callApi(
         context: context,
         baseUrl: ApiConstants.apiUrl,
@@ -53,5 +60,47 @@ class TagsProvider with ChangeNotifier {
     } catch (e) {
       View.showMessage(context, e.toString());
     }
+  }
+
+  List<UserFeedbackModel> _userFeedBack = [];
+
+  List<UserFeedbackModel> get userFeedBack => this._userFeedBack;
+
+  set userFeedBack(List<UserFeedbackModel> value) => this._userFeedBack = value;
+
+  // Fetch Gived feedbacks...
+  Future<void> fetchUserFeedBacks(int userId) async {
+    try {
+      List<UserFeedbackModel> _userFeedBack = [];
+      Map<String, dynamic> req = {
+        "user_id": userId,
+      };
+      await NetworkClient.getInstance.callApi(
+        context: navigationKey.currentContext,
+        params: req,
+        baseUrl: ApiConstants.apiUrl,
+        command: ApiConstants.userFeedBack,
+        headers: NetworkClient.getInstance.getAuthHeaders(),
+        method: MethodType.Get,
+        successCallback: (response, message) {
+          if (response != null) {
+            userFeedBack = userFeedBackModelFromJson(jsonEncode(response));
+          }
+        },
+        failureCallback: (code, message) {},
+      );
+    } catch (e) {}
+  }
+
+  bool checkFeedBackTagExist(int tagId) {
+    if (userFeedBack == null) return false;
+
+    for (var item in userFeedBack) {
+      if (item.tagId == tagId) {
+        return true;
+      }
+    }
+
+    return false;
   }
 }

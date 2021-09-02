@@ -14,6 +14,7 @@ import 'package:package_info/package_info.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:video_chat/app/app.export.dart';
 import 'package:video_chat/app/utils/device_info.dart';
+import 'package:video_chat/components/Model/Feedback/UserFeedbackModel.dart';
 import 'package:video_chat/components/Model/settings/feedback.dart';
 
 class FeedBackProvider with ChangeNotifier {

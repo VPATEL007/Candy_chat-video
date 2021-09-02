@@ -8,6 +8,7 @@ import 'package:video_chat/app/app.export.dart';
 import 'package:video_chat/app/constant/ColorConstant.dart';
 import 'package:video_chat/app/utils/CommonWidgets.dart';
 import 'package:video_chat/app/utils/math_utils.dart';
+import 'package:video_chat/components/Model/Feedback/UserFeedbackModel.dart';
 import 'package:video_chat/components/Model/Match%20Profile/call_status.dart';
 import 'package:video_chat/components/Model/Match%20Profile/video_call.dart';
 import 'package:video_chat/components/Model/User/UserModel.dart';
@@ -16,6 +17,7 @@ import 'package:video_chat/components/Screens/Home/Reportblock.dart';
 import 'package:video_chat/components/widgets/ProfileSlider.dart';
 import 'package:video_chat/provider/chat_provider.dart';
 import 'package:video_chat/provider/discover_provider.dart';
+import 'package:video_chat/provider/feedback_provider.dart';
 import 'package:video_chat/provider/followes_provider.dart';
 import 'package:video_chat/provider/matching_profile_provider.dart';
 import 'package:video_chat/provider/tags_provider.dart';
@@ -34,6 +36,32 @@ class UserProfile extends StatefulWidget {
 class _UserProfileState extends State<UserProfile> {
   int currentIndex = 0;
   List<String> selectedTags = [];
+
+  @override
+  void initState() {
+    super.initState();
+    getTags();
+    getToUserDetail();
+  }
+
+  getToUserDetail() {
+    Provider.of<ChatProvider>(context, listen: false)
+        .getUserProfile(widget.userModel.id, context);
+  }
+
+  getTags() async {
+    var provider = Provider.of<TagsProvider>(context, listen: false);
+
+    await provider.fetchTags(context, widget.userModel?.id ?? 0);
+
+    for (var item in provider.tagsList) {
+      if (provider.checkFeedBackTagExist(item.id)) {
+        selectedTags.add(item.id.toString());
+      }
+    }
+    setState(() {});
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -109,7 +137,7 @@ class _UserProfileState extends State<UserProfile> {
             InkWell(
               onTap: () {
                 Provider.of<ChatProvider>(context, listen: false)
-                    .startChat(widget.userModel.id, context);
+                    .startChat(widget.userModel.id, context,true);
               },
               child: Container(
                 decoration: BoxDecoration(
@@ -137,7 +165,8 @@ class _UserProfileState extends State<UserProfile> {
               onTap: () async {
                 await Provider.of<MatchingProfileProvider>(context,
                         listen: false)
-                    .checkCoinBalance(context, widget.userModel.id);
+                    .checkCoinBalance(context, widget.userModel.id,
+                        widget.userModel?.userName ?? "");
 
                 CoinModel coins =
                     Provider.of<MatchingProfileProvider>(context, listen: false)
@@ -159,6 +188,7 @@ class _UserProfileState extends State<UserProfile> {
                         videoCallModel.toUserId.toString(),
                         videoCallModel.sessionId,
                         videoCallModel.channelName,
+                        widget.userModel.gender ?? "",
                         context);
                     Provider.of<VideoCallStatusProvider>(context, listen: false)
                         .setCallStatus = CallStatus.Start;
@@ -180,6 +210,7 @@ class _UserProfileState extends State<UserProfile> {
                             : widget.userModel?.userImages?.first?.photoUrl ??
                                 "",
                         id: videoCallModel.toUserId.toString(),
+                        toGender: widget.userModel?.gender ?? "",
                       ),
                     ));
                   }
@@ -239,7 +270,8 @@ class _UserProfileState extends State<UserProfile> {
               alignment: WrapAlignment.center,
               itemBuilder: (int index) {
                 return ItemTags(
-                  active: false,
+                  active: tagsProvider.checkFeedBackTagExist(
+                      tagsProvider.tagsList[index]?.id ?? 0),
                   pressEnabled: true,
                   activeColor: fromHex("#FFDFDF"),
                   title: tagsProvider.tagsList[index]?.tag ?? "",
@@ -247,8 +279,16 @@ class _UserProfileState extends State<UserProfile> {
                   onPressed: (item) {
                     if (mounted) {
                       setState(() {
-                        selectedTags.add(
-                            tagsProvider.tagsList[item.index].id.toString());
+                        bool isExist = tagsProvider.checkFeedBackTagExist(
+                            tagsProvider.tagsList[item.index].id);
+
+                        if (isExist) {
+                          selectedTags.remove(
+                              tagsProvider.tagsList[item.index].id.toString());
+                        } else {
+                          selectedTags.add(
+                              tagsProvider.tagsList[item.index].id.toString());
+                        }
                       });
                     }
                   },
@@ -268,7 +308,8 @@ class _UserProfileState extends State<UserProfile> {
               }),
           SizedBox(height: 20),
           getPopBottomButton(context, "Submit FeedBack", () {
-            tagsProvider.submitTags(context, selectedTags);
+            tagsProvider.submitTags(
+                context, selectedTags, widget.userModel?.id ?? 0);
           })
         ],
       ),
@@ -510,6 +551,7 @@ class _UserProfileState extends State<UserProfile> {
                         ?.map((e) => e.photoUrl)
                         ?.toList() ??
                     [],
+                gender: widget.userModel?.gender ?? "",
                 scroll: (index) {
                   currentIndex = index;
                   setState(() {});
@@ -695,16 +737,16 @@ class _UserProfileState extends State<UserProfile> {
             color: Colors.white,
           ),
           onChanged: (String newValue) {
-            if (newValue == "Report") {
-              NavigationUtilities.push(ReportBlock(
-                userId: widget.userModel?.id,
-                reportImageURl: widget.userModel?.photoUrl ?? "",
-              ));
-            } else {
-              openBlockConfirmation();
-            }
+            // if (newValue == "Report") {
+            NavigationUtilities.push(ReportBlock(
+              userId: widget.userModel?.id,
+              reportImageURl: widget.userModel?.photoUrl ?? "",
+            ));
+            // } else {
+            //   openBlockConfirmation();
+            // }
           },
-          items: <String>['Report', 'Add to blocklist']
+          items: <String>['Add to blocklist']
               .map<DropdownMenuItem<String>>((String value) {
             return DropdownMenuItem<String>(
               value: value,

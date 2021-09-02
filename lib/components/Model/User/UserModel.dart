@@ -30,7 +30,8 @@ class UserModel {
       this.isFollowing,
       this.isFavourite,
       this.isInfluencer,
-      this.totalPoint});
+      this.totalPoint,
+      this.countryIp});
 
   String userName;
   String email;
@@ -54,6 +55,7 @@ class UserModel {
   String onlineStatus;
   bool isFollowing = false, isFavourite = false;
   bool isInfluencer;
+  String countryIp;
 
   factory UserModel.fromJson(Map<String, dynamic> json) => UserModel(
         userName: json["user_name"],
@@ -69,8 +71,12 @@ class UserModel {
         dob: json["dob"],
         preferedGender: json["prefered_gender"],
         about: json["about"],
-        byUserUserFollowers: json["followingCount"],
-        userFollowers: json["followersCount"],
+        byUserUserFollowers: json["followingCount"] == null
+            ? json["followings"]
+            : json["followingCount"],
+        userFollowers: json["followersCount"] == null
+            ? json["followers"]
+            : json["followersCount"],
         region: json["region"] == null ? null : Region.fromJson(json["region"]),
         userImages: json["user_images"] == null
             ? []
@@ -81,7 +87,10 @@ class UserModel {
             : Language.fromJson(json["language"]),
         totalPoint: json["total_point"],
         onlineStatus: json["online_status"],
-        userVisiteds: json["visitorCount"],
+        userVisiteds: json["visitorCount"] == null
+            ? json["visitor_count"]
+            : json["visitorCount"],
+        countryIp: json["country_ip"],
       );
 
   Map<String, dynamic> toJson() => {
@@ -102,6 +111,7 @@ class UserModel {
         "total_point": totalPoint,
         "online_status": onlineStatus,
         "is_influencer": isInfluencer,
+        "country_ip": countryIp,
         "user_images": List<dynamic>.from(userImages.map((x) => x.toJson())),
       };
 

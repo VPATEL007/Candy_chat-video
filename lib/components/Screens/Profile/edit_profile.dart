@@ -19,6 +19,7 @@ class EditProfileScreen extends StatefulWidget {
 
 class _EditProfileScreenState extends State<EditProfileScreen> {
   TextEditingController userNameController = TextEditingController();
+  TextEditingController contactController = TextEditingController();
   TextEditingController genderController = TextEditingController();
   DateTime _selectedDate = DateTime.now();
   TextEditingController _dobController = TextEditingController();
@@ -55,6 +56,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
     }
     userNameController.text = _userInfo?.userName ?? "";
     _aboutController.text = _userInfo?.about ?? "";
+    contactController.text = _userInfo.phone ?? "";
 
     _gender = _userInfo?.gender == describeEnum(Gender.Female).toLowerCase()
         ? Gender.Female
@@ -111,6 +113,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
           _userInfo?.dob = _dobController.text;
           _userInfo?.region?.regionName = _nationController.text;
           _userInfo?.about = _aboutController.text;
+          _userInfo?.phone = contactController.text;
           Provider.of<FollowesProvider>(context, listen: false)
               .saveMyProfile(context, _userInfo, removeImage);
           Navigator.of(context).pop();
@@ -222,6 +225,19 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                   textOption: TextFieldOption(
                       hintText: "Username",
                       inputController: userNameController),
+                  textCallback: (text) {},
+                ),
+                SizedBox(height: 10),
+                Text(
+                  "Contact no",
+                  style: appTheme.black16Medium.copyWith(),
+                ),
+                SizedBox(height: 5),
+                CommonTextfield(
+                  textOption: TextFieldOption(
+                      keyboardType: TextInputType.phone,
+                      hintText: "Contact no",
+                      inputController: contactController),
                   textCallback: (text) {},
                 ),
                 SizedBox(height: 10),
@@ -358,7 +374,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
     DateTime newSelectedDate = await showDatePicker(
         context: context,
         initialDate: _selectedDate != null ? _selectedDate : DateTime.now(),
-        firstDate: DateTime(2000),
+        firstDate: DateTime(1900),
         lastDate: DateTime(2040),
         builder: (BuildContext context, Widget child) {
           return child;

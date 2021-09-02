@@ -264,7 +264,8 @@ class _DiscoverState extends State<Discover> {
                                 await Provider.of<MatchingProfileProvider>(
                                         context,
                                         listen: false)
-                                    .checkCoinBalance(context, discover.id);
+                                    .checkCoinBalance(context, discover.id,
+                                        discover.userName ?? "");
 
                                 CoinModel coins =
                                     Provider.of<MatchingProfileProvider>(
@@ -290,6 +291,7 @@ class _DiscoverState extends State<Discover> {
                                         videoCallModel.toUserId.toString(),
                                         videoCallModel.sessionId,
                                         videoCallModel.channelName,
+                                        discover.gender ?? "",
                                         context);
                                     Provider.of<VideoCallStatusProvider>(
                                             context,
@@ -320,6 +322,7 @@ class _DiscoverState extends State<Discover> {
                                             ? ""
                                             : discover?.imageUrl?.first ?? "",
                                         id: videoCallModel.toUserId.toString(),
+                                        toGender: discover.gender ?? "",
                                       ),
                                     ));
                                   }

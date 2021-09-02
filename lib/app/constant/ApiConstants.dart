@@ -25,7 +25,7 @@ class ApiConstants {
   static const String myProfile = "profile/me";
   static const String reportReason = "report/get-reasons";
   static const String feedbacks = "feedback/get-categories";
-  static const String fetchTags = "feedback/get-all";
+  static const String fetchTags = "feedback/tags";
   static const String setFeedback = "feedback/set";
   static const String reportBlock = "report/block";
   static const String selectGender = "profile/set-prefered-gender";
@@ -48,4 +48,8 @@ class ApiConstants {
   static const String unBlockUser = "report/remove-block";
   static const String visitorList = "profile/visitor-list";
   static const String favouriteList = "favourite/get";
+  static const String updateCallStatus = "call-history/video-call-end";
+  static const String userFeedBack = "feedback/user-feedback";
+  static const String fetchGift = "gift/all";
+  static const String buyGift = "gift/buy";
 }

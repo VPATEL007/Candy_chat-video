@@ -8,7 +8,9 @@ import 'package:video_chat/app/utils/math_utils.dart';
 class ProfileSlider extends StatefulWidget {
   Function(int) scroll;
   List<String> images;
-  ProfileSlider({Key key, this.scroll, @required this.images})
+  String gender;
+  ProfileSlider(
+      {Key key, this.scroll, @required this.images, @required this.gender})
       : super(key: key);
 
   @override
@@ -33,7 +35,7 @@ class _ProfileSliderState extends State<ProfileSlider> {
                   Stack(
                     children: [
                       Image.asset(
-                        "assets/Profile/no_image.png",
+                        getUserPlaceHolder(widget.gender),
                         fit: BoxFit.cover,
                         width: MathUtilities.screenWidth(context),
                       ),

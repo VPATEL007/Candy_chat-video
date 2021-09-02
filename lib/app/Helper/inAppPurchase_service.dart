@@ -109,7 +109,7 @@ class InAppPurchase {
 
     req["receipt-data"] =
         purchaseDetails.verificationData.serverVerificationData;
-    NetworkClient.getInstance.showLoader(context);
+    // NetworkClient.getInstance.showLoader(context);
     NetworkClient.getInstance.callApi(
       context: context,
       baseUrl: ApiConstants.inAppVerfiySandBoxURL,
@@ -118,13 +118,13 @@ class InAppPurchase {
       headers: NetworkClient.getInstance.getAuthHeaders(),
       method: MethodType.Post,
       successCallback: (response, message) async {
-        NetworkClient.getInstance.hideProgressDialog();
+        // NetworkClient.getInstance.hideProgressDialog();
         creditCoin(purchaseDetails);
 
         return Future<bool>.value(true);
       },
       failureCallback: (code, message) {
-        NetworkClient.getInstance.hideProgressDialog();
+        // NetworkClient.getInstance.hideProgressDialog();
         View.showMessage(context, message);
         return Future<bool>.value(true);
       },
@@ -146,8 +146,8 @@ class InAppPurchase {
     print(DateTime.fromMillisecondsSinceEpoch(
         purchaseDetails.skPaymentTransaction.transactionTimeStamp.toInt()));
 
-    NetworkClient.getInstance
-        .showLoader(NavigationUtilities.key.currentContext);
+    // NetworkClient.getInstance
+    //     .showLoader(NavigationUtilities.key.currentContext);
     await NetworkClient.getInstance.callApi(
       context: NavigationUtilities.key.currentContext,
       baseUrl: ApiConstants.apiUrl,
@@ -156,14 +156,14 @@ class InAppPurchase {
       method: MethodType.Post,
       params: req,
       successCallback: (response, message) async {
-        NetworkClient.getInstance.hideProgressDialog();
+        // NetworkClient.getInstance.hideProgressDialog();
 
         View.showMessage(NavigationUtilities.key.currentContext,
             "Your coin credited in your account.",
             mode: DisplayMode.SUCCESS);
       },
       failureCallback: (code, message) {
-        NetworkClient.getInstance.hideProgressDialog();
+        // NetworkClient.getInstance.hideProgressDialog();
         View.showMessage(NavigationUtilities.key.currentContext, message);
       },
     );

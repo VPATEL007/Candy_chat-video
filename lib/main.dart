@@ -12,6 +12,7 @@ import 'package:video_chat/provider/discover_provider.dart';
 import 'package:video_chat/provider/favourite_provider.dart';
 import 'package:video_chat/provider/feedback_provider.dart';
 import 'package:video_chat/provider/followes_provider.dart';
+import 'package:video_chat/provider/gift_provider.dart';
 import 'package:video_chat/provider/language_provider.dart';
 import 'package:video_chat/provider/matching_profile_provider.dart';
 import 'package:video_chat/provider/payment_history.dart';
@@ -131,6 +132,9 @@ class _BaseState extends State<Base> {
         ),
         ChangeNotifierProvider.value(
           value: FavouriteProvider(),
+        ),
+        ChangeNotifierProvider.value(
+          value: GiftProvider(),
         ),
       ],
       child: MaterialApp(

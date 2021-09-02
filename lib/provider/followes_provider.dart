@@ -99,7 +99,7 @@ class FollowesProvider with ChangeNotifier {
     int userId, {
     bool fetchInBackground = true,
   }) async {
-    _followingList.removeWhere((element) => element?.user?.id == userId);
+    _followingList.removeWhere((element) => element?.byUser?.id == userId);
     if (!fetchInBackground) NetworkClient.getInstance.showLoader(context);
     await NetworkClient.getInstance.callApi(
       context: context,
@@ -236,7 +236,8 @@ class FollowesProvider with ChangeNotifier {
         "gender": userInfo.gender.toLowerCase(),
         "image_add": profileImages,
         "image_remove": removeImage ?? [],
-        "about": userInfo.about ?? ""
+        "about": userInfo.about ?? "",
+        "phone": userInfo.phone ?? ""
       },
       successCallback: (response, message) {
         // userModel = userModelFromJson(jsonEncode(response));

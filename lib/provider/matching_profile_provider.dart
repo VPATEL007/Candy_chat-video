@@ -14,6 +14,7 @@ import 'followes_provider.dart';
 
 class MatchingProfileProvider with ChangeNotifier {
   List<MatchProfileModel> _matchProfileList = [];
+  List<MatchProfileModel> _tempProfileList = [];
 
   set matchProfileList(List<MatchProfileModel> matchProfileList) {
     _matchProfileList = matchProfileList;
@@ -21,24 +22,39 @@ class MatchingProfileProvider with ChangeNotifier {
   }
 
   List<MatchProfileModel> get matchProfileList => _matchProfileList;
+  List<MatchProfileModel> get tempMatchProfileList => _tempProfileList;
 
   // Fetch match profile list...
   Future<void> fetchMatchProfileList(BuildContext context,
-      {int pageNumber = 1, bool isbackgroundCall = false}) async {
+      {int pageNumber = 1,
+      bool isbackgroundCall = false,
+      int language,
+      int fromAge,
+      int toAge,
+      bool isNotAppend}) async {
     try {
       int userId = app.resolve<PrefUtils>().getUserDetails()?.id;
-      Map<String, dynamic> _parms = {
-        "page": pageNumber,
-        "size": 20,
-        "userid": userId
-      };
+      Map<String, dynamic> _parms = {};
+      _parms["page"] = pageNumber;
+      _parms["size"] = 20;
+      _parms["userid"] = userId;
+      if (language != null) _parms["langid"] = language;
+      if (fromAge != null) _parms["fromage"] = fromAge;
+      if (toAge != null) _parms["toage"] = toAge;
+
       await CommonApiHelper.shared.callMatchProfileListApi(context, _parms,
           (matchProfile) {
+        // if (isNotAppend != null && isNotAppend == true) {
+        //   matchProfileList = matchProfile;
+        // } else {
+        _tempProfileList = matchProfile;
         if (pageNumber == 1) {
           matchProfileList = matchProfile;
         } else {
           matchProfileList.addAll(matchProfile);
         }
+        // }
+
         notifyListeners();
       }, () {}, isbackgroundCall);
     } catch (e) {
@@ -109,7 +125,8 @@ class MatchingProfileProvider with ChangeNotifier {
   }
 
   CoinModel coinBalance;
-  Future<void> checkCoinBalance(BuildContext context, int toUserId) async {
+  Future<void> checkCoinBalance(
+      BuildContext context, int toUserId, String name) async {
     try {
       var user =
           Provider.of<FollowesProvider>(context, listen: false).userModel;
@@ -142,7 +159,7 @@ class MatchingProfileProvider with ChangeNotifier {
         },
         failureCallback: (code, message) {
           coinBalance = null;
-          View.showMessage(context, message);
+          View.showMessage(context, message + " $name");
         },
       );
     } catch (e) {

@@ -112,7 +112,7 @@ class _FollowUpState extends State<FollowUp> {
             ClipRRect(
               borderRadius: BorderRadius.circular(10),
               child: CachedNetworkImage(
-                imageUrl: followes?.user?.photoUrl ?? "",
+                imageUrl: followes?.byUser?.photoUrl ?? "",
                 height: getSize(48),
                 width: getSize(51),
                 fit: BoxFit.cover,
@@ -131,7 +131,7 @@ class _FollowUpState extends State<FollowUp> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  followes?.user?.providerDisplayName ?? "",
+                  followes?.byUser?.providerDisplayName ?? "",
                   style: appTheme.black14Normal.copyWith(
                       fontSize: getFontSize(16), fontWeight: FontWeight.w700),
                 ),
@@ -155,7 +155,7 @@ class _FollowUpState extends State<FollowUp> {
                       width: getSize(6),
                     ),
                     Text(
-                      followes?.user?.region?.regionName ?? "",
+                      followes?.byUser?.region?.regionName ?? "",
                       style: appTheme.black14Normal
                           .copyWith(fontWeight: FontWeight.w500),
                     ),
@@ -167,7 +167,8 @@ class _FollowUpState extends State<FollowUp> {
             widget.isFromFollowing
                 ? TextButton(
                     onPressed: () {
-                      followesProvider.unfollowUser(context, followes.user.id);
+                      followesProvider.unfollowUser(
+                          context, followes.byUser.id);
                     },
                     child: Text(
                       "Remove",

@@ -91,47 +91,48 @@ class _ChatListState extends State<ChatList> {
 
   getList() {
     return Consumer<ChatProvider>(
-      builder: (context, chatHistory, child) =>
-          (chatHistory?.chatList?.isEmpty ?? true)
-              ? emptyChat()
-              : ListView.separated(
-                  padding: EdgeInsets.only(
-                      top: getSize(28), left: getSize(25), right: getSize(25)),
-                  itemCount: chatHistory.chatList.length,
-                  itemBuilder: (BuildContext context, int index) {
-                    return LazyLoadingList(
-                        initialSizeOfItems: 20,
-                        index: index,
-                        hasMore: true,
-                        loadMore: () {
-                          page++;
-                          print(
-                              "--------========================= Lazy Loading $page ==========================---------");
+      builder: (context, chatHistory, child) => (chatHistory
+                  ?.chatList?.isEmpty ??
+              true)
+          ? emptyChat()
+          : ListView.separated(
+              padding: EdgeInsets.only(
+                  top: getSize(28), left: getSize(25), right: getSize(25)),
+              itemCount: chatHistory.chatList.length,
+              itemBuilder: (BuildContext context, int index) {
+                return LazyLoadingList(
+                    initialSizeOfItems: 20,
+                    index: index,
+                    hasMore: true,
+                    loadMore: () {
+                      page++;
+                      print(
+                          "--------========================= Lazy Loading $page ==========================---------");
 
-                          Provider.of<ChatProvider>(context, listen: false)
-                              .getChatList(page, context);
+                      Provider.of<ChatProvider>(context, listen: false)
+                          .getChatList(page, context);
+                    },
+                    child: InkWell(
+                        onTap: () {
+                          NavigationUtilities.push(Chat(
+                            channelId: chatHistory.chatList[index].channelName,
+                            toUserId: chatHistory.chatList[index].getToUserId(),
+                            isFromProfile: false,
+                          ));
                         },
-                        child: InkWell(
-                            onTap: () {
-                              NavigationUtilities.push(Chat(
-                                  channelId:
-                                      chatHistory.chatList[index].channelName,
-                                  toUserId: chatHistory.chatList[index]
-                                      .getToUserId()));
-                            },
-                            child: getChatItem(chatHistory.chatList[index])));
-                  },
-                  separatorBuilder: (BuildContext context, int index) {
-                    return Padding(
-                      padding: EdgeInsets.only(
-                          top: getSize(14), bottom: getSize(14)),
-                      child: Container(
-                        height: 1,
-                        color: ColorConstants.borderColor,
-                      ),
-                    );
-                  },
-                ),
+                        child: getChatItem(chatHistory.chatList[index])));
+              },
+              separatorBuilder: (BuildContext context, int index) {
+                return Padding(
+                  padding:
+                      EdgeInsets.only(top: getSize(14), bottom: getSize(14)),
+                  child: Container(
+                    height: 1,
+                    color: ColorConstants.borderColor,
+                  ),
+                );
+              },
+            ),
     );
   }
 

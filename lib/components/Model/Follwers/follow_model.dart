@@ -11,67 +11,104 @@ List<FollowesModel> followesModelFromJson(String str) =>
 String followesModelToJson(FollowesModel data) => json.encode(data.toJson());
 
 class FollowesModel {
-  FollowesModel({
-    this.id,
-    this.user,
+  String createdOn;
+  ByUser byUser;
 
-  });
+  FollowesModel({this.createdOn, this.byUser});
 
-  int id;
-  User user;
-  
+  FollowesModel.fromJson(Map<String, dynamic> json) {
+    createdOn = json['created_on'];
+    byUser = json['user'] != null ? new ByUser.fromJson(json['user']) : null;
+  }
 
-  factory FollowesModel.fromJson(Map<String, dynamic> json) => FollowesModel(
-        id: json["id"],
-        user: User.fromJson(json["user"]),
-      );
-
-  Map<String, dynamic> toJson() => {
-        "id": id,
-        "user": user.toJson(),
-      };
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+    data['created_on'] = this.createdOn;
+    if (this.byUser != null) {
+      data['user'] = this.byUser.toJson();
+    }
+    return data;
+  }
 }
 
-class User {
-  User({
-    this.providerDisplayName,
-    this.photoUrl,
-    this.id,
-    this.region,
-  });
-
+class ByUser {
   String providerDisplayName;
   String photoUrl;
   int id;
+  String gender;
   Region region;
+  List<UserImages> userImages;
 
-  factory User.fromJson(Map<String, dynamic> json) => User(
-        providerDisplayName: json["provider_display_name"],
-        photoUrl: json["photo_url"],
-        id: json["id"],
-        region: Region.fromJson(json["region"]),
-      );
+  ByUser(
+      {this.providerDisplayName,
+      this.photoUrl,
+      this.id,
+      this.gender,
+      this.region,
+      this.userImages});
 
-  Map<String, dynamic> toJson() => {
-        "provider_display_name": providerDisplayName,
-        "photo_url": photoUrl,
-        "id": id,
-        "region": region.toJson(),
-      };
+  ByUser.fromJson(Map<String, dynamic> json) {
+    providerDisplayName = json['provider_display_name'];
+    photoUrl = json['photo_url'];
+    id = json['id'];
+    gender = json['gender'];
+    region =
+        json['region'] != null ? new Region.fromJson(json['region']) : null;
+    if (json['user_images'] != null) {
+      userImages = new List<UserImages>();
+      json['user_images'].forEach((v) {
+        userImages.add(new UserImages.fromJson(v));
+      });
+    }
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+    data['provider_display_name'] = this.providerDisplayName;
+    data['photo_url'] = this.photoUrl;
+    data['id'] = this.id;
+    data['gender'] = this.gender;
+    if (this.region != null) {
+      data['region'] = this.region.toJson();
+    }
+    if (this.userImages != null) {
+      data['user_images'] = this.userImages.map((v) => v.toJson()).toList();
+    }
+    return data;
+  }
 }
 
 class Region {
-  Region({
-    this.regionName,
-  });
-
   String regionName;
 
-  factory Region.fromJson(Map<String, dynamic> json) => Region(
-        regionName: json["region_name"],
-      );
+  Region({this.regionName});
 
-  Map<String, dynamic> toJson() => {
-        "region_name": regionName,
-      };
+  Region.fromJson(Map<String, dynamic> json) {
+    regionName = json['region_name'];
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+    data['region_name'] = this.regionName;
+    return data;
+  }
+}
+
+class UserImages {
+  int id;
+  String photoUrl;
+
+  UserImages({this.id, this.photoUrl});
+
+  UserImages.fromJson(Map<String, dynamic> json) {
+    id = json['id'];
+    photoUrl = json['photo_url'];
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+    data['id'] = this.id;
+    data['photo_url'] = this.photoUrl;
+    return data;
+  }
 }

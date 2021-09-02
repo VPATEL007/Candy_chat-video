@@ -5,17 +5,30 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:sticky_headers/sticky_headers.dart';
+import 'package:video_chat/app/Helper/inAppPurchase_service.dart';
+import 'package:video_chat/components/Model/Match%20Profile/call_status.dart';
+import 'package:video_chat/components/Model/Match%20Profile/video_call.dart';
 import 'package:video_chat/components/Model/User/UserModel.dart';
+import 'package:video_chat/components/Screens/Home/MatchedProfile.dart';
 import 'package:video_chat/components/Screens/UserProfile/UserProfile.dart';
 import 'package:video_chat/provider/chat_provider.dart';
+import 'package:video_chat/provider/followes_provider.dart';
+import 'package:video_chat/provider/gift_provider.dart';
+import 'package:video_chat/provider/matching_profile_provider.dart';
+import 'package:video_chat/provider/video_call_status_provider.dart';
 
 import '../../../app/app.export.dart';
 
 class Chat extends StatefulWidget {
   final String channelId;
   final int toUserId;
+  final isFromProfile;
 
-  Chat({Key key, @required this.channelId, @required this.toUserId})
+  Chat(
+      {Key key,
+      @required this.channelId,
+      @required this.toUserId,
+      this.isFromProfile = false})
       : super(key: key);
 
   @override
@@ -99,11 +112,68 @@ class _ChatState extends State<Chat> {
                     style: appTheme.black_Medium_16Text
                         .copyWith(color: fromHex("#00DE9B"))),
               ),
-              getBarButton(context, icCall, () {}),
+              getBarButton(context, icCall, () async {
+                if (toUser == null) return;
+
+                await Provider.of<MatchingProfileProvider>(context,
+                        listen: false)
+                    .checkCoinBalance(
+                        context, toUser.id, toUser.userName ?? "");
+
+                CoinModel coins =
+                    Provider.of<MatchingProfileProvider>(context, listen: false)
+                        .coinBalance;
+
+                if (coins?.lowBalance == false) {
+                  // discover.id = 41;
+                  await Provider.of<MatchingProfileProvider>(context,
+                          listen: false)
+                      .startVideoCall(context, toUser.id);
+                  VideoCallModel videoCallModel =
+                      Provider.of<MatchingProfileProvider>(context,
+                              listen: false)
+                          .videoCallModel;
+
+                  if (videoCallModel != null) {
+                    // videoCallModel.toUserId = 41;
+                    AgoraService.instance.sendVideoCallMessage(
+                        videoCallModel.toUserId.toString(),
+                        videoCallModel.sessionId,
+                        videoCallModel.channelName,
+                        toUser?.gender ?? "",
+                        context);
+                    Provider.of<VideoCallStatusProvider>(context, listen: false)
+                        .setCallStatus = CallStatus.Start;
+                    UserModel userModel =
+                        Provider.of<FollowesProvider>(context, listen: false)
+                            .userModel;
+                    Navigator.of(context).push(MaterialPageRoute(
+                      builder: (context) => MatchedProfile(
+                          channelName: videoCallModel.channelName,
+                          token: videoCallModel.sessionId,
+                          fromId: videoCallModel.fromUserId.toString(),
+                          fromImageUrl: (userModel?.userImages?.isEmpty ?? true)
+                              ? ""
+                              : userModel?.userImages?.first?.photoUrl ?? "",
+                          name: toUser?.userName,
+                          toImageUrl: (toUser?.userImages?.isEmpty ?? true)
+                              ? ""
+                              : toUser?.userImages?.first?.photoUrl ?? "",
+                          id: videoCallModel.toUserId.toString(),
+                          toGender: toUser?.gender ?? ""),
+                    ));
+                  }
+                } else if (coins?.lowBalance == true) {
+                  InAppPurchase.instance.openCoinPurchasePopUp();
+                }
+              }),
               InkWell(
                 onTap: () async {
                   if (toUser != null) {
-                    NavigationUtilities.push(UserProfile(userModel: toUser));
+                    if (widget.isFromProfile)
+                      Navigator.pop(context);
+                    else
+                      NavigationUtilities.push(UserProfile(userModel: toUser));
                   }
                 },
                 child: Padding(
@@ -270,46 +340,46 @@ class _ChatState extends State<Chat> {
     return Column(
       mainAxisSize: MainAxisSize.min,
       children: [
-        _chatsList?.isEmpty
-            ? Container(
-                height: getSize(38),
-                child: ListView.separated(
-                    padding:
-                        EdgeInsets.only(left: getSize(25), right: getSize(25)),
-                    shrinkWrap: true,
-                    scrollDirection: Axis.horizontal,
-                    itemCount: 10,
-                    itemBuilder: (BuildContext context, int index) {
-                      return Container(
-                          decoration: BoxDecoration(
-                            color: fromHex("#F1F1F1"),
-                            border: Border.all(
-                                color: ColorConstants.borderColor, width: 1),
-                            borderRadius: BorderRadius.circular(
-                              getSize(19),
-                            ),
-                          ),
-                          child: Padding(
-                            padding: EdgeInsets.only(
-                                left: getSize(20),
-                                right: getSize(20),
-                                top: getSize(10),
-                                bottom: getSize(10)),
-                            child: Text(
-                              "Say hii",
-                              style: appTheme.black12Normal
-                                  .copyWith(fontWeight: FontWeight.w500),
-                            ),
-                          ));
-                    },
-                    separatorBuilder: (BuildContext context, int index) {
-                      return SizedBox(
-                        width: getSize(12),
-                      );
-                    }),
-              )
-            : SizedBox(),
-        SizedBox(height: 15),
+        // _chatsList?.isEmpty
+        //     ? Container(
+        //         height: getSize(38),
+        //         child: ListView.separated(
+        //             padding:
+        //                 EdgeInsets.only(left: getSize(25), right: getSize(25)),
+        //             shrinkWrap: true,
+        //             scrollDirection: Axis.horizontal,
+        //             itemCount: 10,
+        //             itemBuilder: (BuildContext context, int index) {
+        //               return Container(
+        //                   decoration: BoxDecoration(
+        //                     color: fromHex("#F1F1F1"),
+        //                     border: Border.all(
+        //                         color: ColorConstants.borderColor, width: 1),
+        //                     borderRadius: BorderRadius.circular(
+        //                       getSize(19),
+        //                     ),
+        //                   ),
+        //                   child: Padding(
+        //                     padding: EdgeInsets.only(
+        //                         left: getSize(20),
+        //                         right: getSize(20),
+        //                         top: getSize(10),
+        //                         bottom: getSize(10)),
+        //                     child: Text(
+        //                       "Say hii",
+        //                       style: appTheme.black12Normal
+        //                           .copyWith(fontWeight: FontWeight.w500),
+        //                     ),
+        //                   ));
+        //             },
+        //             separatorBuilder: (BuildContext context, int index) {
+        //               return SizedBox(
+        //                 width: getSize(12),
+        //               );
+        //             }),
+        //       )
+        //     : SizedBox(),
+        // SizedBox(height: 15),
         Container(
           color: fromHex("#F7F7F7"),
           child: Row(
@@ -363,9 +433,15 @@ class _ChatState extends State<Chat> {
               Padding(
                 padding: EdgeInsets.only(
                     bottom: getSize(26), left: getSize(20), right: getSize(20)),
-                child: Image.asset(
-                  icGift,
-                  height: getSize(32),
+                child: InkWell(
+                  onTap: () {
+                    Provider.of<GiftProvider>(context, listen: false)
+                        .openGiftPopUp(widget.toUserId);
+                  },
+                  child: Image.asset(
+                    icGift,
+                    height: getSize(32),
+                  ),
                 ),
               ),
             ],
@@ -406,34 +482,52 @@ class _ChatState extends State<Chat> {
                 width: getSize(287),
               ),
             ),
-            Container(
-              width: MathUtilities.screenWidth(context),
-              height: getSize(270),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  Image.asset(
-                    icWavingHand,
-                    height: getSize(54),
-                  ),
-                  SizedBox(
-                    height: getSize(10),
-                  ),
-                  Text(
-                    "Say hi to",
-                    style: appTheme.black14Normal.copyWith(
-                        fontSize: getSize(16), fontWeight: FontWeight.w500),
-                  ),
-                  SizedBox(
-                    height: getSize(4),
-                  ),
-                  Text(
-                    "Leon Hunt",
-                    style: appTheme.black14Normal.copyWith(
-                        fontSize: getSize(16), fontWeight: FontWeight.w700),
-                  )
-                ],
+            InkWell(
+              onTap: () async {
+                MessageObj _chat = MessageObj(
+                    chatDate: DateTime.now(),
+                    message: "hi",
+                    isSendByMe: true,
+                    sendBy: userId);
+
+                _chatsList.add(_chat);
+                if (mounted) setState(() {});
+                await agoraService.sendMessage(_chatController.text);
+
+                _chatController.clear();
+                if (_chatsList?.isNotEmpty ?? false)
+                  messageListScrollController?.jumpTo(0.0);
+                if (mounted) setState(() {});
+              },
+              child: Container(
+                width: MathUtilities.screenWidth(context),
+                height: getSize(270),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    Image.asset(
+                      icWavingHand,
+                      height: getSize(54),
+                    ),
+                    SizedBox(
+                      height: getSize(10),
+                    ),
+                    Text(
+                      "Say hi",
+                      style: appTheme.black14Normal.copyWith(
+                          fontSize: getSize(16), fontWeight: FontWeight.w500),
+                    ),
+                    // SizedBox(
+                    //   height: getSize(4),
+                    // ),
+                    // Text(
+                    //   toUser?.userName ?? "",
+                    //   style: appTheme.black14Normal.copyWith(
+                    //       fontSize: getSize(16), fontWeight: FontWeight.w700),
+                    // )
+                  ],
+                ),
               ),
             )
           ],

@@ -80,7 +80,10 @@ class StartVideoCallModel {
       this.image,
       this.rejectCall,
       this.receiveCall,
-      this.endCall});
+      this.endCall,
+      this.busyCall,
+      this.toGender,
+      this.inSufficientCoin});
 
   bool videoCall;
   String name;
@@ -90,17 +93,25 @@ class StartVideoCallModel {
   bool rejectCall;
   bool receiveCall;
   bool endCall;
+  bool busyCall;
+  bool inSufficientCoin;
+  String toGender;
 
   factory StartVideoCallModel.fromJson(Map<String, dynamic> json) =>
       StartVideoCallModel(
         videoCall: json["VideoCall"],
         rejectCall: json["RejectCall"],
         receiveCall: json["ReceiveCall"],
+        inSufficientCoin: json["InSufficientCoin"],
         endCall: json["EndCall"],
+        busyCall: json["BusyCall"],
         name: json["name"],
         sessionId: json["session_id"],
         channelName: json["channel_name"],
-        image: json["image"]==null ? ImageResponse(photoUrl: "") : ImageResponse.fromJson(json["image"]),
+        toGender: json["to_gender"],
+        image: json["image"] == null
+            ? ImageResponse(photoUrl: "")
+            : ImageResponse.fromJson(json["image"]),
       );
 
   Map<String, dynamic> toJson() => {
@@ -112,6 +123,8 @@ class StartVideoCallModel {
         "RejectCall": rejectCall,
         "ReceiveCall": receiveCall,
         "EndCall": endCall,
+        "BusyCall": busyCall,
+        "InSufficientCoin": inSufficientCoin
       };
 }
 

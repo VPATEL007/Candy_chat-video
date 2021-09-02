@@ -15,7 +15,11 @@ class VideoCallStatusProvider with ChangeNotifier {
           ? "Call Decline"
           : getCallStatus == CallStatus.End
               ? "Call Ended"
-              : "";
+              : getCallStatus == CallStatus.Busy
+                  ? "Busy"
+                  : getCallStatus == CallStatus.InSufficientCoin
+                      ? "Insufficient Coins"
+                      : "";
 }
 
-enum CallStatus { End, Start, Receive, Reject,None }
+enum CallStatus { End, Start, Receive, Reject, None, Busy, InSufficientCoin }

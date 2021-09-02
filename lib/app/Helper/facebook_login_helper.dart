@@ -14,7 +14,7 @@ class FacebookLoginHelper {
 
       req["provider"] = faceBook;
       req["token"] =
-          "EAADVUNhhBzUBAFGFB51ZBZC232aMW53fL0ufoixks1KTnMSEbkXslKPWSCX2wEdaHK3jUqNeJPt4OU7hP44ENPb9SegL1iMwsSjxkZAgrcy3ah7EZBLbHXTmVlmxZC2E19TyVoguF7k3BMUQRs6RHmDEyVEKgLZAV5OlBpirIGZAJ14YvdsRr83v7TZCskZBtg1ZBRpfj0zEwej2nylOHvsA01BLX9v09qOf4VyOCu2XxXvkqoz2MaVQp7";
+          "EAADVUNhhBzUBAD7RS8qCTSaCLQbBZCV2bkILSREAFZC6KpfYxQh6iDTvzojhxuZBJw3a5UXFNS4l4ARxOsW80ESr8NlsUyXlWTERTQYTBsGzrrUkFLcp36sjZAxQfgMK3wFVkhyIwJ4lfsK8TqiEzAhzt3QOpTtvRZAfdde0BRe8DiWZAFzfFbDeSDzgVGaJ9r75YFaW0vVSDZCjYCZBM3RihAf0KhRTEAysZAOARZAOg0A0e77fG0eccDTI78T3oZBv5YZD";
       CommonApiHelper.shared.callLoginApi(req, context, () {}, () {});
     } else {
       try {

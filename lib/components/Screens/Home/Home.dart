@@ -37,7 +37,7 @@ class _HomeState extends State<Home> {
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
       Provider.of<DiscoverProvider>(context, listen: false)
           .fetchDiscoverProfileList(context, SortBy.General);
-      Provider.of<TagsProvider>(context, listen: false).fetchTags(context);
+
       CommonApiHelper.shared.getRTMToken(context);
     });
   }
