@@ -58,40 +58,40 @@ class UserModel {
   String countryIp;
 
   factory UserModel.fromJson(Map<String, dynamic> json) => UserModel(
-        userName: json["user_name"],
-        email: json["email"],
-        phone: json["phone"],
-        id: json["id"],
-        isInfluencer: json["is_influencer"],
-        uid: int.tryParse(json["uid"].toString()),
-        providerDisplayName: json["provider_display_name"],
-        photoUrl: json["photo_url"],
-        gender: json["gender"],
-        callRate: json["call_rate"],
-        dob: json["dob"],
-        preferedGender: json["prefered_gender"],
-        about: json["about"],
-        byUserUserFollowers: json["followingCount"] == null
-            ? json["followings"]
-            : json["followingCount"],
-        userFollowers: json["followersCount"] == null
-            ? json["followers"]
-            : json["followersCount"],
-        region: json["region"] == null ? null : Region.fromJson(json["region"]),
-        userImages: json["user_images"] == null
-            ? []
-            : List<UserImage>.from(
-                json["user_images"].map((x) => UserImage.fromJson(x))),
-        language: json["language"] == null
-            ? null
-            : Language.fromJson(json["language"]),
-        totalPoint: json["total_point"],
-        onlineStatus: json["online_status"],
-        userVisiteds: json["visitorCount"] == null
-            ? json["visitor_count"]
-            : json["visitorCount"],
-        countryIp: json["country_ip"],
-      );
+      userName: json["user_name"],
+      email: json["email"],
+      phone: json["phone"],
+      id: json["id"],
+      isInfluencer: json["is_influencer"],
+      uid: int.tryParse(json["uid"].toString()),
+      providerDisplayName: json["provider_display_name"],
+      photoUrl: json["photo_url"],
+      gender: json["gender"],
+      callRate: json["call_rate"],
+      dob: json["dob"],
+      preferedGender: json["prefered_gender"],
+      about: json["about"],
+      byUserUserFollowers: json["followingCount"] == null
+          ? json["followings"]
+          : json["followingCount"],
+      userFollowers: json["followersCount"] == null
+          ? json["followers"]
+          : json["followersCount"],
+      region: json["region"] == null ? null : Region.fromJson(json["region"]),
+      userImages: json["user_images"] == null
+          ? []
+          : List<UserImage>.from(
+              json["user_images"].map((x) => UserImage.fromJson(x))),
+      language:
+          json["language"] == null ? null : Language.fromJson(json["language"]),
+      totalPoint: json["total_point"],
+      onlineStatus: json["online_status"],
+      userVisiteds: json["visitorCount"] == null
+          ? json["visitor_count"]
+          : json["visitorCount"],
+      countryIp: json["country_ip"],
+      isFollowing: json["is_following"] == 1 ? true : false,
+      isFavourite: json["is_favourite"] == 1 ? true : false);
 
   Map<String, dynamic> toJson() => {
         "user_name": userName,
