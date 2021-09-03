@@ -52,4 +52,5 @@ class ApiConstants {
   static const String userFeedBack = "feedback/user-feedback";
   static const String fetchGift = "gift/all";
   static const String buyGift = "gift/buy";
+  static const String receivedGift = "gift/received";
 }

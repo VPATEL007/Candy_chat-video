@@ -36,6 +36,7 @@ class ByUser {
   String photoUrl;
   int id;
   String gender;
+  String countryIp;
   Region region;
   List<UserImages> userImages;
 
@@ -45,13 +46,15 @@ class ByUser {
       this.id,
       this.gender,
       this.region,
-      this.userImages});
+      this.userImages,
+      this.countryIp});
 
   ByUser.fromJson(Map<String, dynamic> json) {
     providerDisplayName = json['provider_display_name'];
     photoUrl = json['photo_url'];
     id = json['id'];
     gender = json['gender'];
+    countryIp = json['country_ip'];
     region =
         json['region'] != null ? new Region.fromJson(json['region']) : null;
     if (json['user_images'] != null) {
@@ -68,6 +71,7 @@ class ByUser {
     data['photo_url'] = this.photoUrl;
     data['id'] = this.id;
     data['gender'] = this.gender;
+    data['country_ip'] = this.countryIp;
     if (this.region != null) {
       data['region'] = this.region.toJson();
     }

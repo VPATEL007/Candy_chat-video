@@ -38,7 +38,8 @@ class MatchProfileModel {
       this.visitorCount,
       this.isFollowing,
       this.isFavourite,
-      this.followings});
+      this.followings,
+      this.countryIp});
 
   int id, age, visitorCount;
   String providerDisplayName;
@@ -63,6 +64,7 @@ class MatchProfileModel {
   int favourites;
   String totalPoint;
   bool isInfluencer;
+  String countryIp;
 
   factory MatchProfileModel.fromJson(Map<String, dynamic> json) =>
       MatchProfileModel(
@@ -91,7 +93,8 @@ class MatchProfileModel {
           followers: json["followers"],
           favourites: json["favourites"],
           totalPoint: json["total_point"],
-          followings: json["followings"]);
+          followings: json["followings"],
+          countryIp: json["country_ip"]);
 
   Map<String, dynamic> toJson() => {
         "id": id,
@@ -120,5 +123,6 @@ class MatchProfileModel {
         "followers": followers,
         "favourites": favourites,
         "total_point": totalPoint,
+        "country_ip": countryIp,
       };
 }

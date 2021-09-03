@@ -115,35 +115,36 @@ class _DiscoverState extends State<Discover> {
                       MatchProfileModel matchProfileModel = discoverList[index];
                       if (matchProfileModel == null) return;
                       UserModel userModel = UserModel(
-                        about: matchProfileModel.about,
-                        dob: matchProfileModel.dob,
-                        callRate: matchProfileModel.callRate,
-                        gender: matchProfileModel.gender,
-                        preferedGender: matchProfileModel.preferedGender,
-                        photoUrl: (matchProfileModel?.imageUrl?.isEmpty ?? true)
-                            ? ""
-                            : matchProfileModel?.imageUrl?.first ?? "",
-                        userName: matchProfileModel.userName,
-                        region: Region(
-                            regionName: matchProfileModel.regionName,
-                            regionFlagUrl: matchProfileModel.regionFlagUrl),
-                        language: Language(
-                            languageName: matchProfileModel.languageName),
-                        userImages: matchProfileModel?.imageUrl
-                                ?.map((e) => UserImage(photoUrl: e))
-                                ?.toList() ??
-                            [],
-                        byUserUserFollowers: matchProfileModel.followings,
-                        userVisiteds: matchProfileModel?.visitorCount ?? 0,
-                        userFollowers: matchProfileModel.followers,
-                        isFollowing: matchProfileModel?.isFollowing == 1,
-                        isFavourite: matchProfileModel?.isFavourite == 1,
-                        providerDisplayName:
-                            matchProfileModel.providerDisplayName,
-                        id: matchProfileModel.id,
-                        totalPoint: matchProfileModel.totalPoint,
-                        onlineStatus: matchProfileModel.onlineStatus,
-                      );
+                          about: matchProfileModel.about,
+                          dob: matchProfileModel.dob,
+                          callRate: matchProfileModel.callRate,
+                          gender: matchProfileModel.gender,
+                          preferedGender: matchProfileModel.preferedGender,
+                          photoUrl:
+                              (matchProfileModel?.imageUrl?.isEmpty ?? true)
+                                  ? ""
+                                  : matchProfileModel?.imageUrl?.first ?? "",
+                          userName: matchProfileModel.userName,
+                          region: Region(
+                              regionName: matchProfileModel.regionName,
+                              regionFlagUrl: matchProfileModel.regionFlagUrl),
+                          language: Language(
+                              languageName: matchProfileModel.languageName),
+                          userImages: matchProfileModel?.imageUrl
+                                  ?.map((e) => UserImage(photoUrl: e))
+                                  ?.toList() ??
+                              [],
+                          byUserUserFollowers: matchProfileModel.followings,
+                          userVisiteds: matchProfileModel?.visitorCount ?? 0,
+                          userFollowers: matchProfileModel.followers,
+                          isFollowing: matchProfileModel?.isFollowing == 1,
+                          isFavourite: matchProfileModel?.isFavourite == 1,
+                          providerDisplayName:
+                              matchProfileModel.providerDisplayName,
+                          id: matchProfileModel.id,
+                          totalPoint: matchProfileModel.totalPoint,
+                          onlineStatus: matchProfileModel.onlineStatus,
+                          countryIp: matchProfileModel.countryIp);
                       // if (userModel.photoUrl.isNotEmpty) {
                       //   userModel.userImages
                       //       .insert(0, UserImage(photoUrl: userModel.photoUrl));
@@ -199,23 +200,6 @@ class _DiscoverState extends State<Discover> {
                             fit: BoxFit.cover,
                           ),
                         )),
-                Positioned(
-                    top: 8,
-                    right: 8,
-                    child: Container(
-                      decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(16),
-                          color: Colors.black.withOpacity(0.5)),
-                      child: Padding(
-                        padding: EdgeInsets.only(
-                            left: 4, right: 4, top: 2, bottom: 4),
-                        child: Text(
-                          "• ${discover?.onlineStatus ?? ""}",
-                          style: appTheme.black16Bold.copyWith(
-                              fontSize: getSize(10), color: fromHex("#00DE9B")),
-                        ),
-                      ),
-                    )),
                 Align(
                     alignment: Alignment.bottomCenter,
                     // left: 8,
@@ -233,12 +217,12 @@ class _DiscoverState extends State<Discover> {
                                       color: ColorConstants.button),
                                   child: Padding(
                                     padding: EdgeInsets.only(
-                                        left: 10, right: 10, top: 4, bottom: 4),
+                                        left: 6, right: 6, top: 4, bottom: 4),
                                     child: Text(
                                       discover?.age.toString() ?? "",
                                       style: appTheme.white14Bold.copyWith(
-                                          fontWeight: FontWeight.w600,
-                                          fontSize: getSize(10)),
+                                          fontWeight: FontWeight.w700,
+                                          fontSize: getSize(8)),
                                     ),
                                   ),
                                 ),
@@ -254,104 +238,109 @@ class _DiscoverState extends State<Discover> {
                                   .copyWith(fontWeight: FontWeight.w600),
                             ),
                           ),
-                          Spacer(
-                            flex: 1,
-                          ),
-                          ClipRRect(
-                            borderRadius: BorderRadius.circular(getSize(35)),
-                            child: InkWell(
-                              onTap: () async {
-                                await Provider.of<MatchingProfileProvider>(
-                                        context,
-                                        listen: false)
-                                    .checkCoinBalance(context, discover.id,
-                                        discover.userName ?? "");
-
-                                CoinModel coins =
-                                    Provider.of<MatchingProfileProvider>(
-                                            context,
-                                            listen: false)
-                                        .coinBalance;
-
-                                if (coins?.lowBalance == false) {
-                                  // discover.id = 41;
-                                  await Provider.of<MatchingProfileProvider>(
-                                          context,
-                                          listen: false)
-                                      .startVideoCall(context, discover.id);
-                                  VideoCallModel videoCallModel =
-                                      Provider.of<MatchingProfileProvider>(
-                                              context,
-                                              listen: false)
-                                          .videoCallModel;
-
-                                  if (videoCallModel != null) {
-                                    // videoCallModel.toUserId = 41;
-                                    AgoraService.instance.sendVideoCallMessage(
-                                        videoCallModel.toUserId.toString(),
-                                        videoCallModel.sessionId,
-                                        videoCallModel.channelName,
-                                        discover.gender ?? "",
-                                        context);
-                                    Provider.of<VideoCallStatusProvider>(
-                                            context,
-                                            listen: false)
-                                        .setCallStatus = CallStatus.Start;
-                                    UserModel userModel =
-                                        Provider.of<FollowesProvider>(context,
-                                                listen: false)
-                                            .userModel;
-                                    Navigator.of(context)
-                                        .push(MaterialPageRoute(
-                                      builder: (context) => MatchedProfile(
-                                        channelName: videoCallModel.channelName,
-                                        token: videoCallModel.sessionId,
-                                        fromId: videoCallModel.fromUserId
-                                            .toString(),
-                                        fromImageUrl:
-                                            (userModel?.userImages?.isEmpty ??
-                                                    true)
-                                                ? ""
-                                                : userModel?.userImages?.first
-                                                        ?.photoUrl ??
-                                                    "",
-                                        name: discover?.userName,
-                                        toImageUrl: (discover
-                                                    ?.imageUrl?.isEmpty ??
-                                                true)
-                                            ? ""
-                                            : discover?.imageUrl?.first ?? "",
-                                        id: videoCallModel.toUserId.toString(),
-                                        toGender: discover.gender ?? "",
-                                      ),
-                                    ));
-                                  }
-                                } else if (coins?.lowBalance == true) {
-                                  InAppPurchase.instance
-                                      .openCoinPurchasePopUp();
-                                }
-                              },
-                              child: Container(
-                                color: fromHex("#00DE9B"),
-                                child: Padding(
-                                  padding: EdgeInsets.all(getSize(12)),
-                                  child: Image.asset(
-                                    icCall,
-                                    color: Colors.white,
-                                    height: getSize(16),
-                                    width: getSize(16),
-                                  ),
-                                ),
-                              ),
-                            ),
-                          )
                         ],
                       ),
-                    ))
+                    )),
+                Align(
+                  alignment: Alignment.topLeft,
+                  child: Padding(
+                    padding: EdgeInsets.only(top: 8, left: 8),
+                    child: Container(
+                      decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(16),
+                          color: Colors.black.withOpacity(0.5)),
+                      child: Padding(
+                        padding: EdgeInsets.only(
+                            left: 4, right: 4, top: 2, bottom: 4),
+                        child: Text(
+                          "• ${discover?.onlineStatus ?? ""}",
+                          style: appTheme.black16Bold.copyWith(
+                              fontSize: getSize(10), color: fromHex("#00DE9B")),
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+                Align(
+                  alignment: Alignment.topRight,
+                  child: Padding(
+                    padding: EdgeInsets.only(top: 8, right: 8),
+                    child: InkWell(
+                      onTap: () {
+                        startCall(discover);
+                      },
+                      child: ClipRRect(
+                        borderRadius: BorderRadius.circular(getSize(35)),
+                        child: Container(
+                          color: fromHex("#00DE9B"),
+                          child: Padding(
+                            padding: EdgeInsets.all(getSize(12)),
+                            child: Image.asset(
+                              icCall,
+                              color: Colors.white,
+                              height: getSize(16),
+                              width: getSize(16),
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                )
               ],
             ),
           )),
     );
+  }
+
+  startCall(MatchProfileModel discover) async {
+    await Provider.of<MatchingProfileProvider>(context, listen: false)
+        .checkCoinBalance(context, discover.id, discover.userName ?? "");
+
+    CoinModel coins =
+        Provider.of<MatchingProfileProvider>(context, listen: false)
+            .coinBalance;
+
+    if (coins?.lowBalance == false) {
+      // discover.id = 41;
+      await Provider.of<MatchingProfileProvider>(context, listen: false)
+          .startVideoCall(context, discover.id);
+      VideoCallModel videoCallModel =
+          Provider.of<MatchingProfileProvider>(context, listen: false)
+              .videoCallModel;
+
+      if (videoCallModel != null) {
+        // videoCallModel.toUserId = 41;
+        AgoraService.instance.sendVideoCallMessage(
+            videoCallModel.toUserId.toString(),
+            videoCallModel.sessionId,
+            videoCallModel.channelName,
+            discover.gender ?? "",
+            context);
+        Provider.of<VideoCallStatusProvider>(context, listen: false)
+            .setCallStatus = CallStatus.Start;
+        UserModel userModel =
+            Provider.of<FollowesProvider>(context, listen: false).userModel;
+        Navigator.of(context).push(MaterialPageRoute(
+          builder: (context) => MatchedProfile(
+            channelName: videoCallModel.channelName,
+            token: videoCallModel.sessionId,
+            fromId: videoCallModel.fromUserId.toString(),
+            fromImageUrl: (userModel?.userImages?.isEmpty ?? true)
+                ? ""
+                : userModel?.userImages?.first?.photoUrl ?? "",
+            name: discover?.userName,
+            toImageUrl: (discover?.imageUrl?.isEmpty ?? true)
+                ? ""
+                : discover?.imageUrl?.first ?? "",
+            id: videoCallModel.toUserId.toString(),
+            toGender: discover.gender ?? "",
+          ),
+        ));
+      }
+    } else if (coins?.lowBalance == true) {
+      InAppPurchase.instance.openCoinPurchasePopUp();
+    }
   }
 
 //Tab

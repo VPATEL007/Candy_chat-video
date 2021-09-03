@@ -117,7 +117,7 @@ class _FollowUpState extends State<FollowUp> {
                 width: getSize(51),
                 fit: BoxFit.cover,
                 errorWidget: (context, url, error) => Image.asset(
-                  "assets/Profile/no_image.png",
+                  getUserPlaceHolder(followes.byUser.gender ?? ""),
                   height: getSize(48),
                   width: getSize(51),
                 ),
@@ -142,20 +142,20 @@ class _FollowUpState extends State<FollowUp> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   mainAxisAlignment: MainAxisAlignment.start,
                   children: [
-                    ClipRRect(
-                      borderRadius: BorderRadius.circular(getSize(12)),
-                      child: Image.asset(
-                        l2,
-                        height: getSize(16),
-                        width: getSize(16),
-                        fit: BoxFit.cover,
-                      ),
-                    ),
-                    SizedBox(
-                      width: getSize(6),
-                    ),
+                    // ClipRRect(
+                    //   borderRadius: BorderRadius.circular(getSize(12)),
+                    //   child: Image.asset(
+                    //     l2,
+                    //     height: getSize(16),
+                    //     width: getSize(16),
+                    //     fit: BoxFit.cover,
+                    //   ),
+                    // ),
+                    // SizedBox(
+                    //   width: getSize(6),
+                    // ),
                     Text(
-                      followes?.byUser?.region?.regionName ?? "",
+                      followes?.byUser?.countryIp ?? "",
                       style: appTheme.black14Normal
                           .copyWith(fontWeight: FontWeight.w500),
                     ),

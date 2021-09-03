@@ -53,6 +53,8 @@ class _ChatState extends State<Chat> {
   }
 
   getToUserDetail() async {
+    // Provider.of<ChatProvider>(context, listen: false)
+    //     .getChatMessageHistory(context);
     toUser = await Provider.of<ChatProvider>(context, listen: false)
         .getUserProfile(widget.toUserId, context);
     setState(() {});
@@ -101,100 +103,124 @@ class _ChatState extends State<Chat> {
       },
       child: Scaffold(
         backgroundColor: Colors.white,
-        appBar: getAppBar(context, toUser?.userName ?? "",
-            isWhite: true,
-            centerTitle: false,
-            leadingButton: getBackButton(context),
-            actionItems: [
-              Padding(
-                padding: EdgeInsets.only(top: getSize(20), right: getSize(6)),
-                child: Text("• Online",
-                    style: appTheme.black_Medium_16Text
-                        .copyWith(color: fromHex("#00DE9B"))),
-              ),
-              getBarButton(context, icCall, () async {
-                if (toUser == null) return;
-
-                await Provider.of<MatchingProfileProvider>(context,
-                        listen: false)
-                    .checkCoinBalance(
-                        context, toUser.id, toUser.userName ?? "");
-
-                CoinModel coins =
-                    Provider.of<MatchingProfileProvider>(context, listen: false)
-                        .coinBalance;
-
-                if (coins?.lowBalance == false) {
-                  // discover.id = 41;
-                  await Provider.of<MatchingProfileProvider>(context,
-                          listen: false)
-                      .startVideoCall(context, toUser.id);
-                  VideoCallModel videoCallModel =
-                      Provider.of<MatchingProfileProvider>(context,
-                              listen: false)
-                          .videoCallModel;
-
-                  if (videoCallModel != null) {
-                    // videoCallModel.toUserId = 41;
-                    AgoraService.instance.sendVideoCallMessage(
-                        videoCallModel.toUserId.toString(),
-                        videoCallModel.sessionId,
-                        videoCallModel.channelName,
-                        toUser?.gender ?? "",
-                        context);
-                    Provider.of<VideoCallStatusProvider>(context, listen: false)
-                        .setCallStatus = CallStatus.Start;
-                    UserModel userModel =
-                        Provider.of<FollowesProvider>(context, listen: false)
-                            .userModel;
-                    Navigator.of(context).push(MaterialPageRoute(
-                      builder: (context) => MatchedProfile(
-                          channelName: videoCallModel.channelName,
-                          token: videoCallModel.sessionId,
-                          fromId: videoCallModel.fromUserId.toString(),
-                          fromImageUrl: (userModel?.userImages?.isEmpty ?? true)
-                              ? ""
-                              : userModel?.userImages?.first?.photoUrl ?? "",
-                          name: toUser?.userName,
-                          toImageUrl: (toUser?.userImages?.isEmpty ?? true)
-                              ? ""
-                              : toUser?.userImages?.first?.photoUrl ?? "",
-                          id: videoCallModel.toUserId.toString(),
-                          toGender: toUser?.gender ?? ""),
-                    ));
-                  }
-                } else if (coins?.lowBalance == true) {
-                  InAppPurchase.instance.openCoinPurchasePopUp();
-                }
-              }),
-              InkWell(
-                onTap: () async {
-                  if (toUser != null) {
-                    if (widget.isFromProfile)
-                      Navigator.pop(context);
-                    else
-                      NavigationUtilities.push(UserProfile(userModel: toUser));
-                  }
-                },
-                child: Padding(
-                  padding: EdgeInsets.all(getSize(14)),
-                  child: ClipRRect(
-                      borderRadius: BorderRadius.circular(26),
-                      child: CachedNetworkImage(
-                        imageUrl: toUser?.getUserImage() ?? "",
-                        width: getSize(28),
-                        height: getSize(26),
-                        fit: BoxFit.cover,
-                        color: Colors.black.withOpacity(0.4),
-                        colorBlendMode: BlendMode.overlay,
-                        errorWidget: (context, url, error) =>
-                            Image.asset("assets/Profile/no_image.png"),
-                      )),
-                ),
-              )
-            ]),
         bottomSheet: chatTextFiled(),
-        body: chatList(),
+        body: SafeArea(
+          child: Column(
+            children: [
+              Container(
+                child: Row(
+                  children: [
+                    getBackButton(context),
+                    Text(toUser?.userName ?? "",
+                        style: appTheme.black_Medium_16Text
+                            .copyWith(fontWeight: FontWeight.bold)),
+                    SizedBox(
+                      width: 8,
+                    ),
+                    Text("• Online",
+                        style: appTheme.black_Medium_16Text
+                            .copyWith(color: fromHex("#00DE9B"))),
+                    Spacer(),
+                    getBarButton(context, icCall, () async {
+                      if (toUser == null) return;
+
+                      await Provider.of<MatchingProfileProvider>(context,
+                              listen: false)
+                          .checkCoinBalance(
+                              context, toUser.id, toUser.userName ?? "");
+
+                      CoinModel coins = Provider.of<MatchingProfileProvider>(
+                              context,
+                              listen: false)
+                          .coinBalance;
+
+                      if (coins?.lowBalance == false) {
+                        // discover.id = 41;
+                        await Provider.of<MatchingProfileProvider>(context,
+                                listen: false)
+                            .startVideoCall(context, toUser.id);
+                        VideoCallModel videoCallModel =
+                            Provider.of<MatchingProfileProvider>(context,
+                                    listen: false)
+                                .videoCallModel;
+
+                        if (videoCallModel != null) {
+                          // videoCallModel.toUserId = 41;
+                          AgoraService.instance.sendVideoCallMessage(
+                              videoCallModel.toUserId.toString(),
+                              videoCallModel.sessionId,
+                              videoCallModel.channelName,
+                              toUser?.gender ?? "",
+                              context);
+                          Provider.of<VideoCallStatusProvider>(context,
+                                  listen: false)
+                              .setCallStatus = CallStatus.Start;
+                          UserModel userModel = Provider.of<FollowesProvider>(
+                                  context,
+                                  listen: false)
+                              .userModel;
+                          Navigator.of(context).push(MaterialPageRoute(
+                            builder: (context) => MatchedProfile(
+                                channelName: videoCallModel.channelName,
+                                token: videoCallModel.sessionId,
+                                fromId: videoCallModel.fromUserId.toString(),
+                                fromImageUrl: (userModel?.userImages?.isEmpty ??
+                                        true)
+                                    ? ""
+                                    : userModel?.userImages?.first?.photoUrl ??
+                                        "",
+                                name: toUser?.userName,
+                                toImageUrl: (toUser?.userImages?.isEmpty ??
+                                        true)
+                                    ? ""
+                                    : toUser?.userImages?.first?.photoUrl ?? "",
+                                id: videoCallModel.toUserId.toString(),
+                                toGender: toUser?.gender ?? ""),
+                          ));
+                        }
+                      } else if (coins?.lowBalance == true) {
+                        InAppPurchase.instance.openCoinPurchasePopUp();
+                      }
+                    }),
+                    SizedBox(
+                      width: 6,
+                    ),
+                    InkWell(
+                      onTap: () {
+                        if (toUser != null) {
+                          if (widget.isFromProfile)
+                            Navigator.pop(context);
+                          else
+                            NavigationUtilities.push(
+                                UserProfile(userModel: toUser));
+                        }
+                      },
+                      child: ClipRRect(
+                          borderRadius: BorderRadius.circular(26),
+                          child: CachedNetworkImage(
+                            imageUrl: toUser?.getUserImage() ?? "",
+                            width: getSize(26),
+                            height: getSize(26),
+                            fit: BoxFit.cover,
+                            color: Colors.black.withOpacity(0.4),
+                            colorBlendMode: BlendMode.overlay,
+                            errorWidget: (context, url, error) => Image.asset(
+                              getUserPlaceHolder(toUser?.gender ?? ""),
+                              height: getSize(26),
+                              width: getSize(26),
+                            ),
+                          )),
+                    ),
+                    SizedBox(
+                      width: 12,
+                    ),
+                  ],
+                ),
+              ),
+              Expanded(child: chatList())
+            ],
+          ),
+        ),
       ),
     );
   }
@@ -453,86 +479,89 @@ class _ChatState extends State<Chat> {
 
 //Empty Chat
   Widget emptyChat() {
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.center,
-      crossAxisAlignment: CrossAxisAlignment.center,
-      children: [
-        Text(
-          "Start your conversation with",
-          style: appTheme.black14Normal
-              .copyWith(fontWeight: FontWeight.w700, fontSize: getFontSize(18)),
-        ),
-        SizedBox(
-          height: getSize(14),
-        ),
-        Text(
-          "a simple wave, maybe?",
-          style: appTheme.black14Normal
-              .copyWith(fontWeight: FontWeight.w500, fontSize: getFontSize(18)),
-        ),
-        SizedBox(
-          height: getSize(26),
-        ),
-        Stack(
-          children: [
-            Align(
-              child: Image.asset(
-                icEmptyChat,
-                height: getSize(270),
-                width: getSize(287),
-              ),
-            ),
-            InkWell(
-              onTap: () async {
-                MessageObj _chat = MessageObj(
-                    chatDate: DateTime.now(),
-                    message: "hi",
-                    isSendByMe: true,
-                    sendBy: userId);
-
-                _chatsList.add(_chat);
-                if (mounted) setState(() {});
-                await agoraService.sendMessage(_chatController.text);
-
-                _chatController.clear();
-                if (_chatsList?.isNotEmpty ?? false)
-                  messageListScrollController?.jumpTo(0.0);
-                if (mounted) setState(() {});
-              },
-              child: Container(
-                width: MathUtilities.screenWidth(context),
-                height: getSize(270),
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    Image.asset(
-                      icWavingHand,
-                      height: getSize(54),
-                    ),
-                    SizedBox(
-                      height: getSize(10),
-                    ),
-                    Text(
-                      "Say hi",
-                      style: appTheme.black14Normal.copyWith(
-                          fontSize: getSize(16), fontWeight: FontWeight.w500),
-                    ),
-                    // SizedBox(
-                    //   height: getSize(4),
-                    // ),
-                    // Text(
-                    //   toUser?.userName ?? "",
-                    //   style: appTheme.black14Normal.copyWith(
-                    //       fontSize: getSize(16), fontWeight: FontWeight.w700),
-                    // )
-                  ],
+    return Container(
+      height: MathUtilities.screenHeight(context) - getSize(180),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          Text(
+            "Start your conversation with",
+            style: appTheme.black14Normal.copyWith(
+                fontWeight: FontWeight.w700, fontSize: getFontSize(18)),
+          ),
+          SizedBox(
+            height: getSize(14),
+          ),
+          Text(
+            "a simple wave, maybe?",
+            style: appTheme.black14Normal.copyWith(
+                fontWeight: FontWeight.w500, fontSize: getFontSize(18)),
+          ),
+          SizedBox(
+            height: getSize(26),
+          ),
+          Stack(
+            children: [
+              Align(
+                child: Image.asset(
+                  icEmptyChat,
+                  height: getSize(270),
+                  width: getSize(287),
                 ),
               ),
-            )
-          ],
-        )
-      ],
+              InkWell(
+                onTap: () async {
+                  MessageObj _chat = MessageObj(
+                      chatDate: DateTime.now(),
+                      message: "hi",
+                      isSendByMe: true,
+                      sendBy: userId);
+
+                  _chatsList.add(_chat);
+                  if (mounted) setState(() {});
+                  await agoraService.sendMessage("hi");
+
+                  _chatController.clear();
+                  if (_chatsList?.isNotEmpty ?? false)
+                    messageListScrollController?.jumpTo(0.0);
+                  if (mounted) setState(() {});
+                },
+                child: Container(
+                  width: MathUtilities.screenWidth(context),
+                  height: getSize(270),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      Image.asset(
+                        icWavingHand,
+                        height: getSize(54),
+                      ),
+                      SizedBox(
+                        height: getSize(10),
+                      ),
+                      Text(
+                        "Say hi",
+                        style: appTheme.black14Normal.copyWith(
+                            fontSize: getSize(16), fontWeight: FontWeight.w500),
+                      ),
+                      // SizedBox(
+                      //   height: getSize(4),
+                      // ),
+                      // Text(
+                      //   toUser?.userName ?? "",
+                      //   style: appTheme.black14Normal.copyWith(
+                      //       fontSize: getSize(16), fontWeight: FontWeight.w700),
+                      // )
+                    ],
+                  ),
+                ),
+              )
+            ],
+          )
+        ],
+      ),
     );
   }
 

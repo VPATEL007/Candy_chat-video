@@ -181,7 +181,8 @@ class AgoraService {
         throw 'Please input text to send.';
       }
 
-      await _channel?.sendMessage(AgoraRtmMessage.fromText(message));
+      await _channel?.sendMessage(
+          AgoraRtmMessage.fromText(message), true, true);
       print("Message Sent");
     } on AgoraRtmClientException catch (e) {
       throw e.reason.toString();
@@ -263,6 +264,8 @@ class AgoraService {
       mutedProvider.setCallStatus = CallStatus.Receive;
     } else if (model.endCall == true) {
       mutedProvider.setCallStatus = CallStatus.End;
+    } else if (model.busyCall == true) {
+      mutedProvider.setCallStatus = CallStatus.Busy;
     } else if (model.inSufficientCoin == true) {
       mutedProvider.setCallStatus = CallStatus.InSufficientCoin;
     }
@@ -325,8 +328,10 @@ class AgoraService {
       VideoCallState().endCall();
       leaveChannel();
     } else if (model.busyCall == true) {
-      Future.delayed(Duration(seconds: 1), () {
+      Future.delayed(Duration(seconds: 2), () {
         NavigationUtilities.pop();
+        View.showMessage(NavigationUtilities.key.currentState.overlay.context,
+            "I am currently on another call.");
       });
     } else if (model.inSufficientCoin == true) {
       Future.delayed(Duration(seconds: 1), () {

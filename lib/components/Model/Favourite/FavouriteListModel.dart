@@ -8,16 +8,17 @@ class FavouriteListModel {
   String providerDisplayName;
   String photoUrl;
   int id;
-  String regionName;
+  String countryIp;
+  String gender;
 
   FavouriteListModel(
-      {this.providerDisplayName, this.photoUrl, this.id, this.regionName});
+      {this.providerDisplayName, this.photoUrl, this.id, this.countryIp});
 
   FavouriteListModel.fromJson(Map<String, dynamic> json) {
     providerDisplayName = json['provider_display_name'];
     photoUrl = json['photo_url'];
     id = json['id'];
-    regionName = json['region_name'];
+    countryIp = json['country_ip'];
   }
 
   Map<String, dynamic> toJson() {
@@ -25,7 +26,7 @@ class FavouriteListModel {
     data['provider_display_name'] = this.providerDisplayName;
     data['photo_url'] = this.photoUrl;
     data['id'] = this.id;
-    data['region_name'] = this.regionName;
+    data['region_name'] = this.countryIp;
     return data;
   }
 }

@@ -128,4 +128,57 @@ class ChatProvider with ChangeNotifier {
       View.showMessage(context, e.toString());
     }
   }
+
+  Future<void> getChatHistory(BuildContext context) async {
+    Map<String, dynamic> _parms = {"offset": 100, "limit": 10, "order": "asc"};
+    Map<String, dynamic> _filter = {
+      "destination": "81-91",
+      "start_time": "2021-04-03 10:29:32.300806Z",
+      "end_time": DateTime.now().toUtc().toString()
+    };
+    _parms["filter"] = _filter;
+
+    await NetworkClient.getInstance.callApi(
+      context: context,
+      params: _parms,
+      baseUrl:
+          "https://api.agora.io/dev/v2/project/a8a459f76c8e48dc85adb554bb94d8b8/rtm/message/history/query",
+      command: "",
+      headers: getAuthHeaders(),
+      method: MethodType.Post,
+      successCallback: (response, message) {},
+      failureCallback: (code, message) {
+        NetworkClient.getInstance.hideProgressDialog();
+        View.showMessage(context, message);
+      },
+    );
+  }
+
+  Future<void> getChatMessageHistory(BuildContext context) async {
+    await NetworkClient.getInstance.callApi(
+      context: context,
+      baseUrl:
+          "https://api.agora.io/dev/v2/project/a8a459f76c8e48dc85adb554bb94d8b8/rtm/message/history/query/MjIzMDA2OjY4MjI0NzAx",
+      command: "",
+      headers: getAuthHeaders(),
+      method: MethodType.Get,
+      successCallback: (response, message) {},
+      failureCallback: (code, message) {
+        NetworkClient.getInstance.hideProgressDialog();
+        View.showMessage(context, message);
+      },
+    );
+  }
+
+  Map<String, dynamic> getAuthHeaders() {
+    Map<String, dynamic> authHeaders = Map<String, dynamic>();
+
+    authHeaders["Accept"] = "application/json";
+    authHeaders["api_secret"] = "05c158b57a604bf2a694f83e0f93296e";
+    authHeaders["x-agora-uid"] = "91";
+    authHeaders["x-agora-token"] =
+        "006a8a459f76c8e48dc85adb554bb94d8b8IABdgnOUgx3w870drOXEzKQ9RoJ1asnWlgHhy4JTNJ7V53+fgx4AAAAAEAAURg0wy0gzYQEA6ANbBTJh";
+
+    return authHeaders;
+  }
 }

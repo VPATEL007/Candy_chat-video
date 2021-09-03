@@ -502,7 +502,7 @@ class _MathProfileState extends State<MathProfile> {
                         height: getSize(70),
                       ),
                       Text(
-                        matchedProfile?.regionName ?? "",
+                        matchedProfile?.countryIp ?? "",
                         style: appTheme.black16Medium,
                       ),
                       SizedBox(

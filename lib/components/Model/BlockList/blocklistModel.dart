@@ -35,16 +35,23 @@ class User {
   int id;
   String photoUrl;
   String countryIp;
+  String gender;
   List<UserImage> userImages;
 
   User(
-      {this.userName, this.id, this.photoUrl, this.countryIp, this.userImages});
+      {this.userName,
+      this.id,
+      this.photoUrl,
+      this.countryIp,
+      this.userImages,
+      this.gender});
 
   User.fromJson(Map<String, dynamic> json) {
     userName = json['user_name'];
     id = json['id'];
     photoUrl = json['photo_url'];
     countryIp = json['country_ip'];
+    gender = json['gender'];
     if (json['user_images'] != null) {
       userImages = [];
       json['user_images'].forEach((v) {
@@ -59,6 +66,7 @@ class User {
     data['id'] = this.id;
     data['photo_url'] = this.photoUrl;
     data['country_ip'] = this.countryIp;
+    data['gender'] = this.gender;
     if (this.userImages != null) {
       data['user_images'] = this.userImages.map((v) => v.toJson()).toList();
     }

@@ -12,6 +12,7 @@ class VisitorModel {
   List<String> imageUrl;
   String userName;
   String time;
+  String gender;
 
   VisitorModel(
       {this.id,
@@ -20,7 +21,8 @@ class VisitorModel {
       this.country,
       this.imageUrl,
       this.userName,
-      this.time});
+      this.time,
+      this.gender});
 
   VisitorModel.fromJson(Map<String, dynamic> json) {
     id = json['id'];
@@ -30,6 +32,7 @@ class VisitorModel {
     imageUrl = json['image_url'].cast<String>();
     userName = json['user_name'];
     time = json['time'];
+    gender = json['gender'];
   }
 
   Map<String, dynamic> toJson() {
@@ -41,6 +44,7 @@ class VisitorModel {
     data['image_url'] = this.imageUrl;
     data['user_name'] = this.userName;
     data['time'] = this.time;
+    data['gender'] = this.gender;
     return data;
   }
 

@@ -9,6 +9,7 @@ import 'package:video_chat/app/app.export.dart';
 import 'package:video_chat/app/constant/ColorConstant.dart';
 import 'package:video_chat/app/utils/CommonWidgets.dart';
 import 'package:video_chat/components/Model/Match%20Profile/call_status.dart';
+import 'package:video_chat/components/Model/User/UserModel.dart';
 import 'package:video_chat/components/Screens/VideoCall/VideoCall.dart';
 import 'package:video_chat/provider/followes_provider.dart';
 import 'package:video_chat/provider/matching_profile_provider.dart';
@@ -140,6 +141,28 @@ class _MatchedProfileState extends State<MatchedProfile> {
             : InkWell(
                 onTap: () async {
                   Navigator.pop(context);
+                  UserModel userModel = Provider.of<FollowesProvider>(
+                          navigationKey.currentContext,
+                          listen: false)
+                      .userModel;
+                  if (userModel.isInfluencer == false) {
+                    await Provider.of<MatchingProfileProvider>(context,
+                            listen: false)
+                        .checkCoinBalance(
+                            context, int.parse(widget.id), widget.name ?? "");
+
+                    CoinModel coins = Provider.of<MatchingProfileProvider>(
+                            context,
+                            listen: false)
+                        .coinBalance;
+
+                    if (coins?.lowBalance == true) {
+                      InAppPurchase.instance.openCoinPurchasePopUp();
+                      AgoraService.instance.inSufficientCoinMessage(widget.id);
+                      return;
+                    }
+                  }
+
                   await Provider.of<MatchingProfileProvider>(context,
                           listen: false)
                       .receiveVideoCall(

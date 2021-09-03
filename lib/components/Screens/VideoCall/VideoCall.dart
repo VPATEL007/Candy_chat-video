@@ -560,16 +560,21 @@ class VideoCallState extends State<VideoCall> {
             listen: false)
         .coinStatus;
 
-    if (callStatus?.lowBalance == true) {
-      View.showMessage(context, "your balance is low.");
-    }
-
     if (callStatus?.continueCall == false) {
       Navigator.pop(context);
+      agoraService.updateCallStatus(
+          channelName: widget.channelName,
+          sessionId: widget.token,
+          status: "ended");
       agoraService.endCallMessage(widget.toUserId);
       endCall();
+      View.showMessage(context, "your balance is low.");
 
       // InAppPurchase.instance.openCoinPurchasePopUp();
     }
+
+    // if (callStatus?.lowBalance == true) {
+    //
+    // }
   }
 }

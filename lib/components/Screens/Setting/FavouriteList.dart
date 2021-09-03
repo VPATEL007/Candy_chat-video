@@ -79,22 +79,6 @@ class _FavouriteListState extends State<FavouriteList> {
     );
   }
 
-  // getList() {
-  //   return ListView.separated(
-  //     padding: EdgeInsets.only(
-  //         top: getSize(20), left: getSize(25), right: getSize(25)),
-  //     itemCount: 10,
-  //     itemBuilder: (BuildContext context, int index) {
-  //       return cellItem();
-  //     },
-  //     separatorBuilder: (BuildContext context, int index) {
-  //       return SizedBox(
-  //         height: getSize(15),
-  //       );
-  //     },
-  //   );
-  // }
-
   Widget cellItem(FavouriteListModel model) {
     return Container(
       decoration: BoxDecoration(
@@ -125,7 +109,7 @@ class _FavouriteListState extends State<FavouriteList> {
                   width: getSize(51),
                   fit: BoxFit.cover,
                   errorWidget: (context, url, error) => Image.asset(
-                    "assets/Profile/no_image.png",
+                    getUserPlaceHolder(model.gender ?? ""),
                     height: getSize(48),
                     width: getSize(51),
                   ),
@@ -149,20 +133,20 @@ class _FavouriteListState extends State<FavouriteList> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   mainAxisAlignment: MainAxisAlignment.start,
                   children: [
-                    ClipRRect(
-                      borderRadius: BorderRadius.circular(getSize(12)),
-                      child: Image.asset(
-                        l2,
-                        height: getSize(16),
-                        width: getSize(16),
-                        fit: BoxFit.cover,
-                      ),
-                    ),
-                    SizedBox(
-                      width: getSize(6),
-                    ),
+                    // ClipRRect(
+                    //   borderRadius: BorderRadius.circular(getSize(12)),
+                    //   child: Image.asset(
+                    //     l2,
+                    //     height: getSize(16),
+                    //     width: getSize(16),
+                    //     fit: BoxFit.cover,
+                    //   ),
+                    // ),
+                    // SizedBox(
+                    //   width: getSize(6),
+                    // ),
                     Text(
-                      model?.regionName ?? "",
+                      model?.countryIp ?? "",
                       style: appTheme.black14Normal
                           .copyWith(fontWeight: FontWeight.w500),
                     ),

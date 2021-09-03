@@ -8,7 +8,7 @@ import 'package:video_chat/app/app.export.dart';
 import 'package:video_chat/app/constant/ColorConstant.dart';
 import 'package:video_chat/app/utils/CommonWidgets.dart';
 import 'package:video_chat/app/utils/math_utils.dart';
-import 'package:video_chat/components/Model/Feedback/UserFeedbackModel.dart';
+import 'package:video_chat/components/Model/Gift/ReceivedGiftModel.dart';
 import 'package:video_chat/components/Model/Match%20Profile/call_status.dart';
 import 'package:video_chat/components/Model/Match%20Profile/video_call.dart';
 import 'package:video_chat/components/Model/User/UserModel.dart';
@@ -16,9 +16,8 @@ import 'package:video_chat/components/Screens/Home/MatchedProfile.dart';
 import 'package:video_chat/components/Screens/Home/Reportblock.dart';
 import 'package:video_chat/components/widgets/ProfileSlider.dart';
 import 'package:video_chat/provider/chat_provider.dart';
-import 'package:video_chat/provider/discover_provider.dart';
-import 'package:video_chat/provider/feedback_provider.dart';
 import 'package:video_chat/provider/followes_provider.dart';
+import 'package:video_chat/provider/gift_provider.dart';
 import 'package:video_chat/provider/matching_profile_provider.dart';
 import 'package:video_chat/provider/tags_provider.dart';
 import 'package:video_chat/provider/video_call_status_provider.dart';
@@ -41,12 +40,14 @@ class _UserProfileState extends State<UserProfile> {
   void initState() {
     super.initState();
     getTags();
-    getToUserDetail();
+    getDataFromApi();
   }
 
-  getToUserDetail() {
+  getDataFromApi() {
     Provider.of<ChatProvider>(context, listen: false)
         .getUserProfile(widget.userModel.id, context);
+    Provider.of<GiftProvider>(context, listen: false)
+        .fetchReceivedGift(context, widget.userModel?.id ?? 0);
   }
 
   getTags() async {
@@ -69,6 +70,7 @@ class _UserProfileState extends State<UserProfile> {
       // bottomSheet: widget.isPopUp == true ? SizedBox() : getBottomButton(),
       body: SafeArea(
         child: Column(
+          mainAxisSize: MainAxisSize.max,
           children: [
             getNaviagtion(),
             SizedBox(
@@ -125,6 +127,10 @@ class _UserProfileState extends State<UserProfile> {
 
   //Bottom Sheet
   Widget getBottomButton() {
+    UserModel model = Provider.of<FollowesProvider>(
+            navigationKey.currentContext,
+            listen: false)
+        .userModel;
     return Padding(
       padding: EdgeInsets.only(
           left: getSize(widget.isPopUp == true ? 0 : 35),
@@ -133,11 +139,13 @@ class _UserProfileState extends State<UserProfile> {
           right: getSize(widget.isPopUp == true ? 0 : 35)),
       child: Container(
         child: Row(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          mainAxisAlignment: MainAxisAlignment.center,
           children: [
             InkWell(
               onTap: () {
                 Provider.of<ChatProvider>(context, listen: false)
-                    .startChat(widget.userModel.id, context,true);
+                    .startChat(widget.userModel.id, context, true);
               },
               child: Container(
                 decoration: BoxDecoration(
@@ -220,7 +228,7 @@ class _UserProfileState extends State<UserProfile> {
               },
               child: Container(
                 decoration: BoxDecoration(
-                  color: ColorConstants.button,
+                  color: fromHex("#00DE9B"),
                   borderRadius: BorderRadius.circular(16),
                 ),
                 child: Padding(
@@ -237,14 +245,18 @@ class _UserProfileState extends State<UserProfile> {
                         width: getSize(18),
                         height: getSize(18),
                       ),
-                      SizedBox(
-                        width: getSize(16),
-                      ),
-                      Text(
-                        "${widget.userModel?.callRate ?? 0} Token/minute",
-                        style: appTheme.white16Normal
-                            .copyWith(fontWeight: FontWeight.w600),
-                      ),
+                      (model?.isInfluencer ?? false) == false
+                          ? SizedBox(
+                              width: getSize(16),
+                            )
+                          : SizedBox(),
+                      (model?.isInfluencer ?? false) == false
+                          ? Text(
+                              "${widget.userModel?.callRate ?? 0} Token/minute",
+                              style: appTheme.white16Normal
+                                  .copyWith(fontWeight: FontWeight.w600),
+                            )
+                          : SizedBox(),
                     ],
                   ),
                 ),
@@ -263,54 +275,55 @@ class _UserProfileState extends State<UserProfile> {
         mainAxisAlignment: MainAxisAlignment.start,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Tags(
-              itemCount: tagsProvider.tagsList.length,
-              spacing: getSize(6),
-              runSpacing: getSize(20),
-              alignment: WrapAlignment.center,
-              itemBuilder: (int index) {
-                return ItemTags(
-                  active: tagsProvider.checkFeedBackTagExist(
-                      tagsProvider.tagsList[index]?.id ?? 0),
-                  pressEnabled: true,
-                  activeColor: fromHex("#FFDFDF"),
-                  title: tagsProvider.tagsList[index]?.tag ?? "",
-                  index: index,
-                  onPressed: (item) {
-                    if (mounted) {
-                      setState(() {
-                        bool isExist = tagsProvider.checkFeedBackTagExist(
-                            tagsProvider.tagsList[item.index].id);
+          tagsProvider.userFeedBack.length == 0
+              ? Text("Feedback not received")
+              : Tags(
+                  itemCount: tagsProvider.userFeedBack.length,
+                  spacing: getSize(6),
+                  runSpacing: getSize(20),
+                  alignment: WrapAlignment.center,
+                  itemBuilder: (int index) {
+                    return ItemTags(
+                      active: true,
+                      pressEnabled: false,
+                      activeColor: fromHex("#FFDFDF"),
+                      title: tagsProvider.userFeedBack[index]?.tag?.name ?? "",
+                      index: index,
+                      onPressed: (item) {
+                        // if (mounted) {
+                        //   setState(() {
+                        //     bool isExist = tagsProvider.checkFeedBackTagExist(
+                        //         tagsProvider.tagsList[item.index].id);
 
-                        if (isExist) {
-                          selectedTags.remove(
-                              tagsProvider.tagsList[item.index].id.toString());
-                        } else {
-                          selectedTags.add(
-                              tagsProvider.tagsList[item.index].id.toString());
-                        }
-                      });
-                    }
-                  },
-                  textStyle: appTheme.black12Normal
-                      .copyWith(fontWeight: FontWeight.w500),
-                  textColor: Colors.black,
-                  textActiveColor: ColorConstants.red,
-                  color: fromHex("#F1F1F1"),
-                  elevation: 0,
-                  borderRadius: BorderRadius.circular(6),
-                  padding: EdgeInsets.only(
-                      left: getSize(14),
-                      right: getSize(14),
-                      top: getSize(7),
-                      bottom: getSize(7)),
-                );
-              }),
-          SizedBox(height: 20),
-          getPopBottomButton(context, "Submit FeedBack", () {
-            tagsProvider.submitTags(
-                context, selectedTags, widget.userModel?.id ?? 0);
-          })
+                        //     if (isExist) {
+                        //       selectedTags.remove(
+                        //           tagsProvider.tagsList[item.index].id.toString());
+                        //     } else {
+                        //       selectedTags.add(
+                        //           tagsProvider.tagsList[item.index].id.toString());
+                        //     }
+                        //   });
+                        // }
+                      },
+                      textStyle: appTheme.black12Normal
+                          .copyWith(fontWeight: FontWeight.w500),
+                      textColor: Colors.black,
+                      textActiveColor: ColorConstants.red,
+                      color: fromHex("#F1F1F1"),
+                      elevation: 0,
+                      borderRadius: BorderRadius.circular(6),
+                      padding: EdgeInsets.only(
+                          left: getSize(14),
+                          right: getSize(14),
+                          top: getSize(7),
+                          bottom: getSize(7)),
+                    );
+                  }),
+          // SizedBox(height: 20),
+          // getPopBottomButton(context, "Submit FeedBack", () {
+          //   tagsProvider.submitTags(
+          //       context, selectedTags, widget.userModel?.id ?? 0);
+          // })
         ],
       ),
     );
@@ -318,26 +331,43 @@ class _UserProfileState extends State<UserProfile> {
 
 //Gift
   Widget getGift() {
-    return GridView.builder(
-        gridDelegate:
-            new SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 4),
-        shrinkWrap: true,
-        itemCount: 7,
-        primary: false,
-        itemBuilder: (BuildContext context, int index) {
-          return getGiftItem();
-        });
+    return Consumer<GiftProvider>(
+      builder: (context, giftProvider, child) {
+        return giftProvider.receivedList.length > 0
+            ? GridView.builder(
+                gridDelegate: new SliverGridDelegateWithFixedCrossAxisCount(
+                    crossAxisCount: 4),
+                shrinkWrap: true,
+                itemCount: giftProvider.receivedList.length,
+                primary: false,
+                itemBuilder: (BuildContext context, int index) {
+                  return getGiftItem(giftProvider.receivedList[index]);
+                })
+            : Text("Gift not received.");
+      },
+    );
   }
 
-  Widget getGiftItem() {
+  Widget getGiftItem(ReceivedGiftModel model) {
     return Column(
       children: [
-        Image.asset(
-          icGiftCoin,
-          height: getSize(50),
+        CachedNetworkImage(
+          imageUrl: model.gift.imageUrl ?? "",
+          width: getSize(45),
+          height: getSize(45),
+          fit: BoxFit.cover,
+          errorWidget: (context, url, error) => Image.asset(
+            noAttachment,
+            fit: BoxFit.cover,
+            height: getSize(45),
+            width: getSize(45),
+          ),
+        ),
+        SizedBox(
+          height: 6,
         ),
         Text(
-          "x15",
+          "X" + model.count?.toString() ?? "",
           style: appTheme.black_Medium_14Text,
         )
       ],
@@ -358,22 +388,25 @@ class _UserProfileState extends State<UserProfile> {
             SizedBox(
               width: getSize(10),
             ),
-            Container(
-              decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(10),
-                  color: ColorConstants.red),
-              child: Padding(
-                padding: EdgeInsets.only(
-                    left: getSize(10),
-                    right: getSize(10),
-                    top: getSize(2),
-                    bottom: getSize(2)),
-                child: Text(
-                  widget.userModel?.totalPoint ?? '0',
-                  style: appTheme.white12Normal,
-                ),
-              ),
-            )
+            (widget.userModel?.totalPoint != null &&
+                    double.parse(widget.userModel.totalPoint) > 0)
+                ? Container(
+                    decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(10),
+                        color: ColorConstants.red),
+                    child: Padding(
+                      padding: EdgeInsets.only(
+                          left: getSize(10),
+                          right: getSize(10),
+                          top: getSize(2),
+                          bottom: getSize(2)),
+                      child: Text(
+                        widget.userModel?.totalPoint ?? '0',
+                        style: appTheme.white12Normal,
+                      ),
+                    ),
+                  )
+                : SizedBox()
           ],
         ),
         SizedBox(
@@ -388,34 +421,37 @@ class _UserProfileState extends State<UserProfile> {
             SizedBox(
               width: getSize(8),
             ),
-            Container(
-              decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(10),
-                  color: fromHex("#FFC1C1")),
-              child: Padding(
-                padding: EdgeInsets.only(
-                    left: getSize(6),
-                    top: getSize(6),
-                    bottom: getSize(6),
-                    right: getSize(6)),
-                child: Row(
-                  children: [
-                    Image.asset(
-                      icCall,
-                      height: 16,
+            (widget.userModel?.callRate != null &&
+                    widget.userModel.callRate > 0)
+                ? Container(
+                    decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(10),
+                        color: fromHex("#FFC1C1")),
+                    child: Padding(
+                      padding: EdgeInsets.only(
+                          left: getSize(6),
+                          top: getSize(6),
+                          bottom: getSize(6),
+                          right: getSize(6)),
+                      child: Row(
+                        children: [
+                          Image.asset(
+                            icCall,
+                            height: 16,
+                          ),
+                          SizedBox(
+                            width: getSize(6),
+                          ),
+                          Text(
+                            widget.userModel?.callRate?.toString() ?? "",
+                            style: appTheme.black12Normal
+                                .copyWith(color: ColorConstants.redText),
+                          )
+                        ],
+                      ),
                     ),
-                    SizedBox(
-                      width: getSize(6),
-                    ),
-                    Text(
-                      "100%",
-                      style: appTheme.black12Normal
-                          .copyWith(color: ColorConstants.redText),
-                    )
-                  ],
-                ),
-              ),
-            )
+                  )
+                : SizedBox()
           ],
         ),
         SizedBox(
@@ -447,7 +483,7 @@ class _UserProfileState extends State<UserProfile> {
                     width: getSize(6),
                   ),
             Text(
-              widget.userModel?.region?.regionName ?? "",
+              widget.userModel?.countryIp ?? "",
               style: appTheme.black14Normal.copyWith(
                 fontSize: getSize(18),
                 fontWeight: FontWeight.w500,

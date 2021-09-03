@@ -8,6 +8,7 @@ import 'package:provider/provider.dart';
 import 'package:video_chat/app/app.export.dart';
 import 'package:video_chat/app/utils/navigator.dart';
 import 'package:video_chat/components/Model/Gift/GiftModel.dart';
+import 'package:video_chat/components/Model/Gift/ReceivedGiftModel.dart';
 
 class GiftProvider with ChangeNotifier {
   List<GiftModel> _giftList = [];
@@ -79,6 +80,38 @@ class GiftProvider with ChangeNotifier {
       );
     } catch (e) {
       NetworkClient.getInstance.hideProgressDialog();
+      View.showMessage(context, e.toString());
+    }
+  }
+
+  List<ReceivedGiftModel> _receivedList = [];
+  List<ReceivedGiftModel> get receivedList => this._receivedList;
+
+  set receivedList(List<ReceivedGiftModel> value) => this._receivedList = value;
+
+  //Get Received Gift
+  Future<void> fetchReceivedGift(BuildContext context, int userId) async {
+    try {
+      Map<String, dynamic> req = {};
+      req["user_id"] = userId;
+      await NetworkClient.getInstance.callApi(
+        context: context,
+        params: req,
+        baseUrl: ApiConstants.apiUrl,
+        command: ApiConstants.receivedGift,
+        headers: NetworkClient.getInstance.getAuthHeaders(),
+        method: MethodType.Get,
+        successCallback: (response, message) {
+          if (response != null) {
+            receivedList = receivedGiftModelFromJson(jsonEncode(response));
+          }
+          notifyListeners();
+        },
+        failureCallback: (code, message) {
+          View.showMessage(context, message);
+        },
+      );
+    } catch (e) {
       View.showMessage(context, e.toString());
     }
   }
