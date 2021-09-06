@@ -375,7 +375,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
         context: context,
         initialDate: _selectedDate != null ? _selectedDate : DateTime.now(),
         firstDate: DateTime(1900),
-        lastDate: DateTime(2040),
+        lastDate: DateTime.now(),
         builder: (BuildContext context, Widget child) {
           return child;
         });

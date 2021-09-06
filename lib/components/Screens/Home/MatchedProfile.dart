@@ -113,11 +113,20 @@ class _MatchedProfileState extends State<MatchedProfile> {
   }
 
   getCallButton(CallStatus callStatus) {
+    if (callStatus == CallStatus.Busy) {
+      AgoraService.instance.updateCallStatus(
+          channelName: widget.channelName,
+          sessionId: widget.token,
+          status: "busy");
+    }
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
         InkWell(
           onTap: () {
+            if (callStatus == CallStatus.Busy) {
+              return;
+            }
             Navigator.pop(context);
             AgoraService.instance.sendRejectCallMessage(widget.id);
             AgoraService.instance.updateCallStatus(

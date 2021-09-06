@@ -31,7 +31,8 @@ class UserModel {
       this.isFavourite,
       this.isInfluencer,
       this.totalPoint,
-      this.countryIp});
+      this.countryIp,
+      this.coinBalance});
 
   String userName;
   String email;
@@ -56,6 +57,7 @@ class UserModel {
   bool isFollowing = false, isFavourite = false;
   bool isInfluencer;
   String countryIp;
+  num coinBalance;
 
   factory UserModel.fromJson(Map<String, dynamic> json) => UserModel(
       userName: json["user_name"],
@@ -71,6 +73,7 @@ class UserModel {
       dob: json["dob"],
       preferedGender: json["prefered_gender"],
       about: json["about"],
+      coinBalance: json["coin_balance"],
       byUserUserFollowers: json["followingCount"] == null
           ? json["followings"]
           : json["followingCount"],
@@ -112,6 +115,7 @@ class UserModel {
         "online_status": onlineStatus,
         "is_influencer": isInfluencer,
         "country_ip": countryIp,
+        "coin_balance": coinBalance,
         "user_images": List<dynamic>.from(userImages.map((x) => x.toJson())),
       };
 

@@ -186,6 +186,7 @@ class FollowesProvider with ChangeNotifier {
       method: MethodType.Get,
       successCallback: (response, message) {
         userModel = userModelFromJson(jsonEncode(response));
+        notifyListeners();
       },
       failureCallback: (code, message) {
         View.showMessage(context, message);

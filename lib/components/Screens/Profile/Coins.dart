@@ -1,11 +1,13 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:in_app_purchase/in_app_purchase.dart';
+import 'package:provider/provider.dart';
 import 'package:video_chat/app/Helper/inAppPurchase_service.dart';
 import 'package:video_chat/app/app.export.dart';
 import 'package:video_chat/app/constant/ColorConstant.dart';
 import 'package:video_chat/app/utils/CommonWidgets.dart';
 import 'package:video_chat/app/utils/math_utils.dart';
+import 'package:video_chat/provider/followes_provider.dart';
 
 class Coins extends StatefulWidget {
   const Coins({Key key}) : super(key: key);
@@ -105,6 +107,11 @@ class _CoinsState extends State<Coins> {
       successCallback: (response, message) async {
         NetworkClient.getInstance.hideProgressDialog();
 
+        Provider.of<FollowesProvider>(
+                NavigationUtilities.key.currentState.overlay.context,
+                listen: false)
+            .fetchMyProfile(
+                NavigationUtilities.key.currentState.overlay.context);
         View.showMessage(NavigationUtilities.key.currentContext,
             "Your coin credited in your account.",
             mode: DisplayMode.SUCCESS);

@@ -80,25 +80,27 @@ class _ProfileState extends State<Profile> {
                       SizedBox(
                         height: getSize(16),
                       ),
-                      getListItem(icVipStore, "VIP Store", true, () {
+                      getListItem(icVipStore, "VIP Store", true, 0, () {
                         NavigationUtilities.push(VipStore());
                       }),
-                      getListItem(icCoinP, "Get Coins", false, () {
+                      getListItem(icWallet, "Coin Balance", false,
+                          profie.userModel?.coinBalance ?? 0, () {}),
+                      getListItem(icCoinP, "Get Coins", false, 0, () {
                         NavigationUtilities.push(Coins());
                       }),
-                      getListItem(icPaymentHistory, "Payment History ", false,
-                          () {
+                      getListItem(
+                          icPaymentHistory, "Payment History ", false, 0, () {
                         NavigationUtilities.push(PaymentHistory());
                       }),
-                      getListItem(icLanguage, "Language", false, () {
+                      getListItem(icLanguage, "Language", false, 0, () {
                         NavigationUtilities.push(LanguageSelection(
                           isChange: true,
                         ));
                       }),
-                      getListItem(icSetting, "Settings", false, () {
+                      getListItem(icSetting, "Settings", false, 0, () {
                         NavigationUtilities.push(Setting());
                       }),
-                      getListItem(icLogout, "Logout", false, () {
+                      getListItem(icLogout, "Logout", false, 0, () {
                         showDialog(
                           context: context,
                           builder: (context) => AlertDialog(
@@ -145,7 +147,8 @@ class _ProfileState extends State<Profile> {
     );
   }
 
-  Widget getListItem(String icon, String title, bool isColor, Function click) {
+  Widget getListItem(
+      String icon, String title, bool isColor, num balance, Function click) {
     return InkWell(
       onTap: () {
         click();
@@ -189,12 +192,19 @@ class _ProfileState extends State<Profile> {
                       color: isColor ? Colors.white : Colors.black),
                 ),
                 Spacer(),
-                title == "Logout"
+                title == "Logout" || title == "Coin Balance"
                     ? Container()
                     : Image.asset(
                         icDetail,
                         color: isColor ? Colors.white : Colors.black,
+                      ),
+                title == "Coin Balance"
+                    ? Text(
+                        balance.toStringAsFixed(0),
+                        style: appTheme.black16Bold
+                            .copyWith(color: ColorConstants.redText),
                       )
+                    : SizedBox()
               ],
             ),
           ),
