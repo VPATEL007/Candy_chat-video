@@ -1,7 +1,4 @@
 //Common
-import 'dart:io';
-
-import 'package:flutter/material.dart';
 
 const String splashBG = "assets/Splash/splashBG.png";
 const String noAttachment = "assets/Common/icNoAttachment.png";
@@ -16,10 +13,6 @@ const String icFemale = "assets/Common/feMale.png";
 const String splashLogo = "assets/Splash/splashLogo.png";
 const String splashBottom = "assets/Splash/splashBottom.png";
 
-const String l1 = "assets/Language/l1.png";
-const String l2 = "assets/Language/l2.png";
-const String l3 = "assets/Language/l3.png";
-
 const String loginBg = "assets/Login/LoginBg.png";
 const String loginLogo = "assets/Login/LoginLogo.png";
 const String icApple = "assets/Login/icApple.png";
@@ -33,9 +26,6 @@ const String icTabHomeSelected = "assets/Tab/tabHomeSelected.png";
 const String icTabLike = "assets/Tab/tablike.png";
 const String icTabChat = "assets/Tab/tabChat.png";
 const String icTabChatSelected = "assets/Tab/tabChatSelected.png";
-
-const String icTemp = "assets/Temp/tempP.png";
-const String icTempProfile = "assets/Temp/icTempProfile.png";
 
 const String icHomeCurve = "assets/Home/HomeCurve.png";
 const String icDrawer = "assets/Home/icDrawer.png";
