@@ -6,7 +6,6 @@ import 'package:flutter/services.dart';
 import 'package:kiwi/kiwi.dart';
 import 'package:provider/provider.dart';
 import 'package:video_chat/components/Screens/Splash/Splash.dart';
-import 'package:video_chat/components/Screens/VideoCall/VideoCall.dart';
 import 'package:video_chat/provider/chat_provider.dart';
 import 'package:video_chat/provider/discover_provider.dart';
 import 'package:video_chat/provider/favourite_provider.dart';
@@ -32,8 +31,6 @@ import 'app/utils/pref_utils.dart';
 import 'app/utils/route_observer.dart';
 import 'package:video_chat/modules/ThemeSetting.dart';
 import 'package:http_proxy/http_proxy.dart';
-
-import 'components/Screens/Profile/Coins.dart';
 
 KiwiContainer app;
 

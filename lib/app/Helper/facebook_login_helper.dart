@@ -21,7 +21,7 @@ class FacebookLoginHelper {
         AccessToken accessToken = await FacebookAuth.instance
             .login(); // by the fault we request the email and the public profile
 
-        final userData = await FacebookAuth.instance.getUserData();
+        // final userData = await FacebookAuth.instance.getUserData();
 
         req["provider"] = faceBook;
         req["token"] = accessToken.token;

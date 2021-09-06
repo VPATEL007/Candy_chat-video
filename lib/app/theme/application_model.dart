@@ -1,5 +1,4 @@
 import 'package:flutter/widgets.dart';
-import 'package:logging/logging.dart';
 import 'package:provider/provider.dart';
 
 import '../app.export.dart';
@@ -25,7 +24,7 @@ class ApplicationModel {
     return Provider.of<ApplicationModel>(context);
   }
 
-  static final Logger _log = Logger("ApplicationModel");
+  // static final Logger _log = Logger("ApplicationModel");
 
   /// Whether or not the [ApplicationModel] has been initialized.
   bool initialized = false;

@@ -45,7 +45,6 @@ class VideoCallState extends State<VideoCall> {
   ScrollController messageListScrollController = ScrollController();
   RtcEngine engine;
   bool _joined = false;
-  bool _switch = false;
   bool _micMute = false;
   bool _videoMute = false;
   int _remoteUid = 0;

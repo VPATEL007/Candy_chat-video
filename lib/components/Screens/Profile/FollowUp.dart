@@ -6,7 +6,6 @@ import 'package:provider/provider.dart';
 import 'package:video_chat/app/Helper/Themehelper.dart';
 import 'package:video_chat/app/constant/ColorConstant.dart';
 import 'package:video_chat/app/constant/ImageConstant.dart';
-import 'package:video_chat/app/theme/app_theme.dart';
 import 'package:video_chat/app/utils/CommonWidgets.dart';
 import 'package:video_chat/app/utils/math_utils.dart';
 import 'package:video_chat/components/Model/Follwers/follow_model.dart';

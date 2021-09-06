@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:video_chat/app/AppConfiguration/AppNavigation.dart';
 import 'package:video_chat/app/app.export.dart';
 import 'package:video_chat/app/utils/CommonWidgets.dart';
-import 'package:video_chat/components/Model/User/UserModel.dart';
 
 class Gender extends StatefulWidget {
   final bool isFromPreGender;

@@ -4,7 +4,6 @@ import 'package:intl/intl.dart';
 import 'package:lazy_loading_list/lazy_loading_list.dart';
 import 'package:provider/provider.dart';
 import 'package:video_chat/app/Helper/Themehelper.dart';
-import 'package:video_chat/app/constant/ColorConstant.dart';
 import 'package:video_chat/app/constant/ImageConstant.dart';
 import 'package:video_chat/app/utils/CommonWidgets.dart';
 import 'package:video_chat/app/utils/json_utils.dart';
@@ -63,7 +62,8 @@ class _PaymentHistoryState extends State<PaymentHistory> {
 
                           Provider.of<PaymentHistoryProvider>(context,
                                   listen: false)
-                              .fetchPaymentHistory(context, pageNumber: page,fetchInBackground: true);
+                              .fetchPaymentHistory(context,
+                                  pageNumber: page, fetchInBackground: true);
                         },
                         child: cellItem(payemntHistory.paymentHistory[index]));
                   },

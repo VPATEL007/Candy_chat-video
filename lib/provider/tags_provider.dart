@@ -71,7 +71,6 @@ class TagsProvider with ChangeNotifier {
   // Fetch Gived feedbacks...
   Future<void> fetchUserFeedBacks(int userId) async {
     try {
-      List<UserFeedbackModel> _userFeedBack = [];
       Map<String, dynamic> req = {
         "user_id": userId,
       };

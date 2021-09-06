@@ -346,9 +346,9 @@ class AgoraService {
       @required String sessionId,
       @required String toUserId}) {
     isOngoingCall = true;
-    UserModel user = Provider.of<FollowesProvider>(navigationKey.currentContext,
-            listen: false)
-        .userModel;
+    // UserModel user = Provider.of<FollowesProvider>(navigationKey.currentContext,
+    //         listen: false)
+    //     .userModel;
 
     NavigationUtilities.push(
       VideoCall(

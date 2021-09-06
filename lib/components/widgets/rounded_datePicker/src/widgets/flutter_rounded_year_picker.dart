@@ -1,7 +1,6 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:video_chat/components/widgets/rounded_datePicker/src/era_mode.dart';
-import 'package:video_chat/components/widgets/rounded_datePicker/src/material_rounded_date_picker_style.dart';
 import 'package:video_chat/components/widgets/rounded_datePicker/src/material_rounded_year_picker_style.dart';
 
 /// A scrollable list of years to allow picking a year.

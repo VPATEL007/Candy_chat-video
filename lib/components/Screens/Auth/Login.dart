@@ -1,9 +1,7 @@
-import 'package:apple_sign_in/apple_sign_in.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:video_chat/app/AppConfiguration/AppNavigation.dart';
 import 'package:video_chat/app/Helper/CommonApiHelper.dart';
 import 'package:video_chat/app/Helper/apple_login_helper.dart';
 import 'package:video_chat/app/Helper/facebook_login_helper.dart';

@@ -2,7 +2,6 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
-import 'package:video_chat/app/AppConfiguration/AppNavigation.dart';
 import 'package:video_chat/app/app.export.dart';
 import 'package:video_chat/app/localization/app_locales.dart';
 import 'package:video_chat/components/widgets/BaseStateFulWidget.dart';

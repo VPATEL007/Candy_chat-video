@@ -2,8 +2,6 @@ import 'dart:async';
 import 'dart:io';
 
 import 'package:device_info/device_info.dart';
-import 'package:flutter/services.dart';
-
 
 //Get Device Os Info...
 Future<String> fetchDeviceOsInfo() async {

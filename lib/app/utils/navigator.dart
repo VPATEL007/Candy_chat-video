@@ -1,14 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:video_chat/components/Screens/Auth/Gender.dart';
 import 'package:video_chat/components/Screens/Auth/Login.dart';
 import 'package:video_chat/components/Screens/Chat/ChatList.dart';
 import 'package:video_chat/components/Screens/Discover/Discover.dart';
 import 'package:video_chat/components/Screens/Home/Home.dart';
 import 'package:video_chat/components/Screens/Language%20Selection/Language.dart';
 import 'package:video_chat/components/Screens/Onboarding/Onboarding.dart';
-import 'package:video_chat/components/Screens/Profile/Profile.dart';
 
-import '../app.export.dart';
 import 'fade_route.dart';
 
 /// The [RouteType] determines what [PageRoute] is used for the new route.
@@ -62,9 +59,6 @@ class NavigationUtilities {
       arguments: args,
     );
   }
-
-
-
 
   /// Returns a [RoutePredicate] similar to [ModalRoute.withName] except it
   /// compares a list of route names.

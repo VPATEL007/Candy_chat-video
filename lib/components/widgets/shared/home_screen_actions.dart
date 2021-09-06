@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
 
-import '../../../app/app.export.dart';
-
 /// Builds a [PopupMenuButton] with actions for the [HomeScreen].
 class HomeScreenActions extends StatelessWidget {
   const HomeScreenActions();

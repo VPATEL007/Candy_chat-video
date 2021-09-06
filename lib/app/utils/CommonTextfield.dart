@@ -157,6 +157,7 @@ class _CommonTextfieldState extends State<CommonTextfield> {
                   )
                 : widget.textOption.type == TextFieldType.DropDown
                     ? IconButton(
+                        onPressed: () {},
                         icon: Icon(
                           Icons.arrow_drop_down,
                         ),

@@ -11,7 +11,6 @@ import 'package:video_chat/components/widgets/TabBar/Tabbar.dart';
 import 'package:video_chat/provider/discover_provider.dart';
 import 'package:video_chat/provider/followes_provider.dart';
 import 'package:video_chat/provider/matching_profile_provider.dart';
-import 'package:video_chat/provider/tags_provider.dart';
 
 class Home extends StatefulWidget {
   static const route = "Home";

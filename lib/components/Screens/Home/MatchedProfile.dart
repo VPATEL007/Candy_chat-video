@@ -2,7 +2,6 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
-import 'package:in_app_purchase/in_app_purchase.dart';
 import 'package:provider/provider.dart';
 import 'package:video_chat/app/Helper/inAppPurchase_service.dart';
 import 'package:video_chat/app/app.export.dart';
@@ -10,7 +9,6 @@ import 'package:video_chat/app/constant/ColorConstant.dart';
 import 'package:video_chat/app/utils/CommonWidgets.dart';
 import 'package:video_chat/components/Model/Match%20Profile/call_status.dart';
 import 'package:video_chat/components/Model/User/UserModel.dart';
-import 'package:video_chat/components/Screens/VideoCall/VideoCall.dart';
 import 'package:video_chat/provider/followes_provider.dart';
 import 'package:video_chat/provider/matching_profile_provider.dart';
 import 'package:video_chat/provider/video_call_status_provider.dart';
@@ -36,7 +34,7 @@ class MatchedProfile extends StatefulWidget {
 }
 
 class _MatchedProfileState extends State<MatchedProfile> {
-  List<ProductDetails> _products = [];
+  // List<ProductDetails> _products = [];
 
   @override
   Widget build(BuildContext context) {

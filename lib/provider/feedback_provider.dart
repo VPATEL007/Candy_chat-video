@@ -1,20 +1,15 @@
 import 'dart:convert';
 
 import 'dart:io' as io;
-import 'dart:io';
-import 'dart:typed_data';
 
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_absolute_path/flutter_absolute_path.dart';
 import 'package:flutter_image_compress/flutter_image_compress.dart';
-import 'package:http_parser/http_parser.dart';
 import 'package:multi_image_picker2/multi_image_picker2.dart';
 import 'package:package_info/package_info.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:video_chat/app/app.export.dart';
 import 'package:video_chat/app/utils/device_info.dart';
-import 'package:video_chat/components/Model/Feedback/UserFeedbackModel.dart';
 import 'package:video_chat/components/Model/settings/feedback.dart';
 
 class FeedBackProvider with ChangeNotifier {

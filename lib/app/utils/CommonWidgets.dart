@@ -1,5 +1,3 @@
-import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
@@ -9,7 +7,8 @@ import 'package:in_app_purchase/in_app_purchase.dart';
 import '../app.export.dart';
 import '../theme/app_theme.dart';
 
-Widget getBottomButton(BuildContext context, String text, VoidCallback onPressed) {
+Widget getBottomButton(
+    BuildContext context, String text, VoidCallback onPressed) {
   return InkWell(
     onTap: onPressed,
     child: Padding(
@@ -628,8 +627,4 @@ Widget getCoinItem(
       ],
     ),
   );
-
-
-
-
 }

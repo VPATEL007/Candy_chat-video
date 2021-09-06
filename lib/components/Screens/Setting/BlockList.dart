@@ -9,7 +9,6 @@ import 'package:video_chat/app/constant/ImageConstant.dart';
 import 'package:video_chat/app/utils/CommonWidgets.dart';
 import 'package:video_chat/app/utils/math_utils.dart';
 import 'package:video_chat/components/Model/BlockList/blocklistModel.dart';
-import 'package:video_chat/provider/chat_provider.dart';
 import 'package:video_chat/provider/report_and_block_provider.dart';
 
 class BlockList extends StatefulWidget {

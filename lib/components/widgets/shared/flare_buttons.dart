@@ -59,9 +59,9 @@ class _FavoriteButtonState extends State<FavoriteButton> {
   }
 
   Widget _iconBuilder(BuildContext context) {
-    final color = _color ?? Theme.of(context).iconTheme.color;
+    // final color = _color ?? Theme.of(context).iconTheme.color;
     return Container(
-      child: Text("sdf"),
+      child: Text(""),
     );
 //    return FlareIcon.favorite(animation: _animation, color: color);
   }

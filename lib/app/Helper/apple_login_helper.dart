@@ -2,7 +2,6 @@ import 'package:apple_sign_in/apple_sign_in.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:video_chat/app/app.export.dart';
 import 'package:video_chat/app/extensions/view.dart';
-import 'package:video_chat/provider/language_provider.dart';
 
 import 'CommonApiHelper.dart';
 

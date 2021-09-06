@@ -34,7 +34,7 @@ class MathProfile extends StatefulWidget {
 class _MathProfileState extends State<MathProfile> {
   List<SwipeItem> _swipeItems = <SwipeItem>[];
   MatchEngine _matchEngine;
-  GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey();
+  // GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey();
 
   RangeValues _currentRangeValues = const RangeValues(18, 24);
   int selectedLanguage;

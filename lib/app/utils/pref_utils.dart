@@ -1,8 +1,6 @@
 import 'dart:convert';
-import 'dart:math';
 
 import 'package:flutter/cupertino.dart';
-import 'package:logging/logging.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:video_chat/app/app.export.dart';
 
@@ -12,7 +10,7 @@ import 'package:video_chat/components/Model/User/UserModel.dart';
 
 /// Wraps the [SharedPreferences].
 class PrefUtils {
-  static final Logger _log = Logger("Prefs");
+  // static final Logger _log = Logger("Prefs");
 
   String deviceId;
 

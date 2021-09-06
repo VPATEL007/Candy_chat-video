@@ -1,6 +1,5 @@
 import 'dart:convert';
 
-import 'package:intl/intl.dart';
 import 'package:video_chat/app/utils/date_utils.dart';
 import 'package:video_chat/components/Model/message_obj.dart';
 
