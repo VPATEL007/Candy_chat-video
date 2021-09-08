@@ -56,6 +56,8 @@ dependencies:
   keyboard_visibility: 0.5.6
   device_info: ^2.0.2
   screen: ^0.0.5
+  socket_io_client: ^0.9.11
+
 
 
 dev_dependencies:

@@ -48,6 +48,8 @@ class VideoCallState extends State<VideoCall> {
   bool _micMute = false;
   bool _videoMute = false;
   int _remoteUid = 0;
+  bool isRemoteVideoMute = false;
+  bool isRemoteAudioMute = false;
   AgoraService agoraService = AgoraService.instance;
   List<MessageObj> _chatsList = [];
   Timer timer;
@@ -158,6 +160,12 @@ class VideoCallState extends State<VideoCall> {
       setState(() {
         _remoteUid = 0;
       });
+    }, remoteAudioStateChanged: (int uid, state, reason, int elapsed) {
+      isRemoteAudioMute = state == AudioRemoteState.Stopped ? true : false;
+      setState(() {});
+    }, remoteVideoStateChanged: (int uid, state, reason, int elapsed) {
+      isRemoteVideoMute = state == VideoRemoteState.Stopped ? true : false;
+      setState(() {});
     }, error: (e) {
       print(e);
     }));
@@ -177,7 +185,11 @@ class VideoCallState extends State<VideoCall> {
         body: Stack(
           children: [
             Container(
-              child: _renderRemoteVideo(),
+              child: isRemoteVideoMute == true
+                  ? Container(
+                      color: Colors.black,
+                    )
+                  : _renderRemoteVideo(),
             ),
             Positioned(bottom: getSize(120), child: chatList()),
             Positioned(
@@ -198,6 +210,21 @@ class VideoCallState extends State<VideoCall> {
                   ),
                 )),
             switchCameraButton(),
+            isRemoteAudioMute == true || isRemoteVideoMute
+                ? Center(
+                    child: Text(
+                    (toUser?.userName ?? "") +
+                        (isRemoteAudioMute == true && isRemoteVideoMute == true
+                            ? " camera and microphone off"
+                            : isRemoteAudioMute
+                                ? " muted this call"
+                                : isRemoteVideoMute
+                                    ? " camera off"
+                                    : ""),
+                    style:
+                        appTheme.black14SemiBold.copyWith(color: Colors.white),
+                  ))
+                : SizedBox(),
             Positioned(
                 bottom: getSize(40),
                 child: Container(
@@ -301,8 +328,8 @@ class VideoCallState extends State<VideoCall> {
 
   Widget switchCameraButton() {
     return Positioned(
-      right: getSize(30),
-      top: getSize(30),
+      right: getSize(40),
+      top: getSize(40),
       child: SafeArea(
         child: InkWell(
           onTap: () {
@@ -310,8 +337,8 @@ class VideoCallState extends State<VideoCall> {
           },
           child: Image.asset(
             icSwitchCamera,
-            width: getSize(26),
-            height: getSize(26),
+            width: getSize(34),
+            height: getSize(34),
             color: Colors.red,
           ),
         ),

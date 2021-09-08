@@ -242,4 +242,30 @@ class CommonApiHelper {
       failureCallback: (code, message) {},
     );
   }
+
+  //App Start
+  appStart() {
+    NetworkClient.getInstance.callApi(
+      context: NavigationUtilities.key.currentState.overlay.context,
+      baseUrl: ApiConstants.apiUrl,
+      command: ApiConstants.startApp,
+      headers: NetworkClient.getInstance.getAuthHeaders(),
+      method: MethodType.Post,
+      successCallback: (response, message) async {},
+      failureCallback: (code, message) {},
+    );
+  }
+
+  //Logout
+  logout() {
+    NetworkClient.getInstance.callApi(
+      context: NavigationUtilities.key.currentState.overlay.context,
+      baseUrl: ApiConstants.apiUrl,
+      command: ApiConstants.logout,
+      headers: NetworkClient.getInstance.getAuthHeaders(),
+      method: MethodType.Post,
+      successCallback: (response, message) async {},
+      failureCallback: (code, message) {},
+    );
+  }
 }

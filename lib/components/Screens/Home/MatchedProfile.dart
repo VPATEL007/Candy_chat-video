@@ -147,7 +147,6 @@ class _MatchedProfileState extends State<MatchedProfile> {
             ? Container()
             : InkWell(
                 onTap: () async {
-                  Navigator.pop(context);
                   UserModel userModel = Provider.of<FollowesProvider>(
                           navigationKey.currentContext,
                           listen: false)
@@ -164,6 +163,7 @@ class _MatchedProfileState extends State<MatchedProfile> {
                         .coinBalance;
 
                     if (coins?.lowBalance == true) {
+                      Navigator.pop(context);
                       InAppPurchase.instance.openCoinPurchasePopUp();
                       AgoraService.instance.inSufficientCoinMessage(widget.id);
                       return;
@@ -180,6 +180,7 @@ class _MatchedProfileState extends State<MatchedProfile> {
                               listen: false)
                           .coinStatus;
 
+                  Navigator.pop(context);
                   if (coinStatus?.continueCall == true) {
                     AgoraService.instance.sendReceiveCallMessage(widget.id);
                     AgoraService.instance.openVideoCall(

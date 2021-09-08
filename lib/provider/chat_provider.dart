@@ -133,8 +133,9 @@ class ChatProvider with ChangeNotifier {
     Map<String, dynamic> _parms = {"offset": 100, "limit": 10, "order": "asc"};
     Map<String, dynamic> _filter = {
       "destination": "81-91",
-      "start_time": "2021-04-03 10:29:32.300806Z",
-      "end_time": DateTime.now().toUtc().toString()
+      "start_time":
+          DateTime.now().subtract(Duration(days: 4)).toUtc().toIso8601String(),
+      "end_time": DateTime.now().toUtc().toIso8601String()
     };
     _parms["filter"] = _filter;
 
@@ -177,7 +178,7 @@ class ChatProvider with ChangeNotifier {
     authHeaders["api_secret"] = "05c158b57a604bf2a694f83e0f93296e";
     authHeaders["x-agora-uid"] = "91";
     authHeaders["x-agora-token"] =
-        "006a8a459f76c8e48dc85adb554bb94d8b8IABdgnOUgx3w870drOXEzKQ9RoJ1asnWlgHhy4JTNJ7V53+fgx4AAAAAEAAURg0wy0gzYQEA6ANbBTJh";
+        "006a8a459f76c8e48dc85adb554bb94d8b8IAApo5bWDvdfKEAx9tIBt/G/ipx2x41wlh/sPlSBTCYOAn+fgx4AAAAAEAAMgtbr7n84YQEA6AN+PDdh";
 
     return authHeaders;
   }

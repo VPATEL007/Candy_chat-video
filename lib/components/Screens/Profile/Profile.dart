@@ -2,6 +2,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:video_chat/app/Helper/CommonApiHelper.dart';
 import 'package:video_chat/app/Helper/facebook_login_helper.dart';
 import 'package:video_chat/app/Helper/google_signin_helper.dart';
 import 'package:video_chat/app/app.export.dart';
@@ -127,6 +128,7 @@ class _ProfileState extends State<Profile> {
                                         builder: (context) => Splash(),
                                       ),
                                       (route) => false);
+                                  CommonApiHelper.shared.logout();
                                 },
                                 child: Text("Logout"),
                               )

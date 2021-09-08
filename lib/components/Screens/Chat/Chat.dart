@@ -53,8 +53,7 @@ class _ChatState extends State<Chat> {
   }
 
   getToUserDetail() async {
-    // Provider.of<ChatProvider>(context, listen: false)
-    //     .getChatMessageHistory(context);
+    // Provider.of<ChatProvider>(context, listen: false).getChatHistory(context);
     toUser = await Provider.of<ChatProvider>(context, listen: false)
         .getUserProfile(widget.toUserId, context);
     setState(() {});

@@ -50,7 +50,7 @@ class ByUser {
       this.countryIp});
 
   ByUser.fromJson(Map<String, dynamic> json) {
-    providerDisplayName = json['provider_display_name'];
+    providerDisplayName = json['user_name'];
     photoUrl = json['photo_url'];
     id = json['id'];
     gender = json['gender'];
@@ -67,7 +67,7 @@ class ByUser {
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['provider_display_name'] = this.providerDisplayName;
+    data['user_name'] = this.providerDisplayName;
     data['photo_url'] = this.photoUrl;
     data['id'] = this.id;
     data['gender'] = this.gender;

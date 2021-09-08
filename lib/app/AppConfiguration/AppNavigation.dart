@@ -1,3 +1,5 @@
+import 'package:video_chat/app/Helper/CommonApiHelper.dart';
+import 'package:video_chat/app/Helper/socket_helper.dart';
 import 'package:video_chat/components/Screens/Auth/Login.dart';
 import 'package:video_chat/components/Screens/Home/Home.dart';
 import 'package:video_chat/components/Screens/Language%20Selection/Language.dart';
@@ -27,7 +29,9 @@ class AppNavigation {
   }
 
   void moveToHome() {
+    SocketHealper.shared.connect();
     NavigationUtilities.pushReplacementNamed(Home.route, type: RouteType.fade);
+    CommonApiHelper.shared.appStart();
   }
 
   void moveToLogin() {

@@ -111,7 +111,9 @@ class _FollowUpState extends State<FollowUp> {
             ClipRRect(
               borderRadius: BorderRadius.circular(10),
               child: CachedNetworkImage(
-                imageUrl: followes?.byUser?.photoUrl ?? "",
+                imageUrl: (followes?.byUser?.userImages?.isEmpty ?? true)
+                    ? ""
+                    : followes?.byUser?.userImages?.first?.photoUrl ?? "",
                 height: getSize(48),
                 width: getSize(51),
                 fit: BoxFit.cover,

@@ -5,6 +5,8 @@ class ApiConstants {
       "http://video-chat-dev-1463852847.ap-south-1.elb.amazonaws.com";
   static const String imageBaseURL =
       "http://video-chat-dev-1463852847.ap-south-1.elb.amazonaws.com";
+
+  static const String socketUrl = "https://vc-socket.exdevcloud.com";
   static const String documentUpload = apiUrl + "media/upload";
 
   static const String apiUrl = baseURL + "/dev/";
@@ -53,4 +55,6 @@ class ApiConstants {
   static const String fetchGift = "gift/all";
   static const String buyGift = "gift/buy";
   static const String receivedGift = "gift/received";
+  static const String startApp = "auth/app-open";
+  static const String logout = "auth/logout";
 }
