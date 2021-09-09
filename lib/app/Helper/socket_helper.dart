@@ -14,8 +14,8 @@ class SocketHealper {
     //     ApiConstants.socketUrl,
     //     OptionBuilder().setTransports(['websocket']) // for Flutter or Dart VM
 
-    //         .setExtraHeaders({
-    //       'authorization': "Bearer " + app.resolve<PrefUtils>().getUserToken()
+    //         .setQuery({
+    //       "authorization": "Bearer " + app.resolve<PrefUtils>().getUserToken()
     //     }) // optional
     //         .build());
 

@@ -256,6 +256,32 @@ class CommonApiHelper {
     );
   }
 
+  //FCM Token
+  updateFCMToken() {
+    var token = app
+        .resolve<PrefUtils>()
+        .getString(app.resolve<PrefUtils>().keyIsFCMToken);
+
+    if (token.length == 0) return;
+
+    var userId = app.resolve<PrefUtils>().getUserDetails().id;
+
+    Map<String, dynamic> req = {};
+    req["fcm_id"] = token;
+    req["user_id"] = userId;
+
+    NetworkClient.getInstance.callApi(
+      params: req,
+      context: NavigationUtilities.key.currentState.overlay.context,
+      baseUrl: ApiConstants.apiUrl,
+      command: ApiConstants.updateFCMToken,
+      headers: NetworkClient.getInstance.getAuthHeaders(),
+      method: MethodType.Post,
+      successCallback: (response, message) async {},
+      failureCallback: (code, message) {},
+    );
+  }
+
   //Logout
   logout() {
     NetworkClient.getInstance.callApi(

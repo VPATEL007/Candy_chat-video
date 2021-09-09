@@ -57,4 +57,5 @@ class ApiConstants {
   static const String receivedGift = "gift/received";
   static const String startApp = "auth/app-open";
   static const String logout = "auth/logout";
+  static const String updateFCMToken = "profile/update-fcm";
 }

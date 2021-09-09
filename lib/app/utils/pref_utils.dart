@@ -25,6 +25,7 @@ class PrefUtils {
   String get keyIsUserLogin => "keyIsUserLogin";
   String get keyIsShowIntro => "keyIsShowIntro";
   String get keySelectLang => "selected_lang";
+  String get keyIsFCMToken => "keyIsFCMToken";
 
   bool isHomeVisible;
 

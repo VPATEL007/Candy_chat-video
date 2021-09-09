@@ -13,6 +13,7 @@ import java.security.NoSuchAlgorithmException
 class MainActivity: FlutterActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
 //        printHashKey(this@MainActivity)
     }
     fun printHashKey(pContext: Context) {

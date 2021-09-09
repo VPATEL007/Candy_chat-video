@@ -12,6 +12,7 @@ const String icFemale = "assets/Common/feMale.png";
 
 const String splashLogo = "assets/Splash/splashLogo.png";
 const String splashBottom = "assets/Splash/splashBottom.png";
+const String appIcon = "assets/Splash/appIcon.png";
 
 const String loginBg = "assets/Login/LoginBg.png";
 const String loginLogo = "assets/Login/LoginLogo.png";
