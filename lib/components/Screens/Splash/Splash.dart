@@ -1,5 +1,6 @@
 import 'dart:async';
 
+// import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:video_chat/app/AppConfiguration/AppNavigation.dart';
@@ -29,6 +30,7 @@ class _SplashState extends State<Splash> {
   goToNext() async {
     await AgoraService.instance.initialize(AGORA_APPID);
     AppNavigation.shared.goNextFromSplash();
+    // FirebaseCrashlytics.instance.crash();
   }
 
   @override

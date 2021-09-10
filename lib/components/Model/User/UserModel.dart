@@ -64,7 +64,11 @@ class UserModel {
       email: json["email"],
       phone: json["phone"],
       id: json["id"],
-      isInfluencer: json["is_influencer"],
+      isInfluencer: json["is_influencer"] == 1
+          ? true
+          : json["is_influencer"] == 0
+              ? false
+              : json["is_influencer"],
       uid: int.tryParse(json["uid"].toString()),
       providerDisplayName: json["provider_display_name"],
       photoUrl: json["photo_url"],

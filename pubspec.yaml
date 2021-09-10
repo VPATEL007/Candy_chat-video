@@ -57,8 +57,10 @@ dependencies:
   device_info: ^2.0.2
   screen: ^0.0.5
   socket_io_client: ^0.9.11
-  firebase_messaging: ^7.0.3
-  flutter_local_notifications : any
+  # firebase_crashlytics: any
+  firebase_messaging: 8.0.0-dev.15
+  flutter_local_notifications : 4.0.1+2
+  
 
 
 

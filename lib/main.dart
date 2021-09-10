@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:io';
 
+// import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -56,7 +57,6 @@ Future<void> main() async {
     setup();
 
     await app.resolve<PrefUtils>().init();
-
     setupFCM();
 
     runApp(SettingsModelsProvider(
@@ -78,35 +78,18 @@ Future<void> main() async {
 
 Future<void> setupFCM() async {
   await Firebase.initializeApp();
-  final FirebaseMessaging _firebaseMessaging = FirebaseMessaging();
+  // FlutterError.onError = FirebaseCrashlytics.instance.recordFlutterError;
 
-  _firebaseMessaging.configure(
-    //onBackgroundMessage: _firebaseMessagingBackgroundHandler,
-    onMessage: (Map<String, dynamic> message) async {
-      print("onMessageASDASD: $message");
-      showNotification(message);
-      // onNotificationReceived(message, context);
-    },
-    onLaunch: (Map<String, dynamic> message) async {
-      print("onLaunch: $message");
+  final FirebaseMessaging _firebaseMessaging = FirebaseMessaging.instance;
 
-      Future.delayed(const Duration(seconds: 3), () {
-        // onNotificationReceived(message, context);
-      });
-    },
-    onResume: (Map<String, dynamic> message) async {
-      print("onResume: $message");
-      // onNotificationReceived(message, context);
-    },
-  );
-
-  //Needed by iOS only
-  _firebaseMessaging.requestNotificationPermissions(
-      const IosNotificationSettings(sound: true, badge: true, alert: true));
-  _firebaseMessaging.onIosSettingsRegistered
-      .listen((IosNotificationSettings settings) {
-    print("Settings registered: $settings");
+  FirebaseMessaging.onMessage.listen((RemoteMessage event) {
+    showNotification(event.notification);
   });
+  FirebaseMessaging.onMessageOpenedApp.listen((message) {
+    print('Message clicked!');
+  });
+
+  _firebaseMessaging.requestPermission(sound: true, badge: true, alert: true);
 
   var token = app
       .resolve<PrefUtils>()
@@ -138,7 +121,7 @@ void configLocalNotification() {
   flutterLocalNotificationsPlugin.initialize(initializationSettings);
 }
 
-void showNotification(message) async {
+void showNotification(RemoteNotification message) async {
   var androidPlatformChannelSpecifics = new AndroidNotificationDetails(
     Platform.isAndroid
         ? 'high_importance_channel'
@@ -155,11 +138,9 @@ void showNotification(message) async {
       android: androidPlatformChannelSpecifics,
       iOS: iOSPlatformChannelSpecifics);
   await flutterLocalNotificationsPlugin.show(
-      0,
-      message['notification']['title'].toString(),
-      message['notification']['body'].toString(),
-      platformChannelSpecifics,
-      payload: json.encode(message));
+      0, message?.title ?? "", message?.body ?? "", platformChannelSpecifics,
+      payload: 'data');
+  print("Show Notification");
 }
 
 GlobalKey navigationKey = GlobalKey();
