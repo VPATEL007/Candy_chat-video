@@ -10,6 +10,7 @@ import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:kiwi/kiwi.dart';
 import 'package:provider/provider.dart';
 import 'package:video_chat/app/app.export.dart';
+import 'package:video_chat/components/Screens/Setting/WithDraw.dart';
 import 'package:video_chat/components/Screens/Splash/Splash.dart';
 import 'package:video_chat/provider/chat_provider.dart';
 import 'package:video_chat/provider/discover_provider.dart';
@@ -25,6 +26,7 @@ import 'package:video_chat/provider/tags_provider.dart';
 import 'package:video_chat/provider/video_call_status_provider.dart';
 import 'package:video_chat/provider/visitor_provider.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:video_chat/provider/withdraw_provider.dart';
 
 import 'app/Helper/Themehelper.dart';
 import 'app/constant/constants.dart';
@@ -208,6 +210,9 @@ class _BaseState extends State<Base> {
         ),
         ChangeNotifierProvider.value(
           value: GiftProvider(),
+        ),
+        ChangeNotifierProvider.value(
+          value: WithDrawProvider(),
         ),
       ],
       child: MaterialApp(

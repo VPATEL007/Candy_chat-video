@@ -5,6 +5,7 @@ import 'package:video_chat/app/app.export.dart';
 import 'package:video_chat/app/utils/CommonWidgets.dart';
 import 'package:video_chat/components/Model/User/UserModel.dart';
 import 'package:video_chat/provider/followes_provider.dart';
+import 'package:video_chat/provider/withdraw_provider.dart';
 
 class WithDraw extends StatefulWidget {
   WithDraw({Key key}) : super(key: key);
@@ -17,12 +18,20 @@ class _WithDrawState extends State<WithDraw> {
   TextEditingController coinsController = TextEditingController();
   TextEditingController mobileController = TextEditingController();
   TextEditingController emailController = TextEditingController();
+  WithDrawProvider withDrawProvider;
 
   String paymentType;
 
   @override
   void initState() {
     super.initState();
+    getPaymentMethod();
+  }
+
+  getPaymentMethod() async {
+    withDrawProvider = Provider.of<WithDrawProvider>(context, listen: false);
+    await withDrawProvider.getPaymentMethod(context);
+    setState(() {});
   }
 
   @override
@@ -54,7 +63,7 @@ class _WithDrawState extends State<WithDraw> {
                 child: Text(
                   Provider.of<FollowesProvider>(context, listen: false)
                           .userModel
-                          ?.coinBalance
+                          ?.coinsEarned
                           ?.toStringAsFixed(0) ??
                       "",
                   style: appTheme.black16Bold.copyWith(
@@ -66,7 +75,7 @@ class _WithDrawState extends State<WithDraw> {
               ),
               Center(
                 child: Text(
-                  "Total Coin Balance",
+                  "Earned Coins",
                   style: appTheme.black16Medium,
                 ),
               ),
@@ -121,10 +130,11 @@ class _WithDrawState extends State<WithDraw> {
                     onChanged: (String newValue) {
                       paymentType = newValue;
                       setState(() {});
-                      if (newValue == "Paytm") {
-                      } else {}
                     },
-                    items: <String>['Paypal']
+                    items: ((withDrawProvider?.paymentMethod?.length ?? 0) > 0
+                            ? withDrawProvider.paymentMethod
+                                .map((e) => e.name ?? "")
+                            : <String>[])
                         .map<DropdownMenuItem<String>>((String value) {
                       return DropdownMenuItem<String>(
                         value: value,
@@ -137,7 +147,7 @@ class _WithDrawState extends State<WithDraw> {
               SizedBox(
                 height: getSize(12),
               ),
-              paymentType == "Paytm"
+              paymentType?.toLowerCase() == "paytm"
                   ? Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
@@ -157,7 +167,7 @@ class _WithDrawState extends State<WithDraw> {
                         )
                       ],
                     )
-                  : paymentType == "Paypal"
+                  : paymentType != null
                       ? Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
@@ -187,8 +197,14 @@ class _WithDrawState extends State<WithDraw> {
   callApiForWithdraw() {
     Map<String, dynamic> req = {};
     req["coins"] = int.parse(coinsController.text);
-    req["payment_method"] = 1;
-    req["payment_id"] = emailController.text;
+    req["payment_method"] = withDrawProvider.paymentMethod
+        .firstWhere((element) => element.name == paymentType)
+        ?.id;
+    if (paymentType.toLowerCase() == "paytm") {
+      req["payment_id"] = mobileController.text;
+    } else {
+      req["payment_id"] = emailController.text;
+    }
 
     NetworkClient.getInstance.showLoader(context);
     NetworkClient.getInstance.callApi(
@@ -224,23 +240,25 @@ class _WithDrawState extends State<WithDraw> {
       return false;
     }
 
-    if (paymentType == "Paypal" && emailController.text.isEmpty) {
-      View.showMessage(context, "Please enter email.");
-      return false;
-    }
-
-    if (paymentType == "Paypal" && !validateEmail(emailController.text)) {
-      View.showMessage(context, "Please enter valid email.");
-      return false;
-    }
-
-    if (paymentType == "Paytm" && mobileController.text.isEmpty) {
+    if (paymentType.toLowerCase() == "paytm" && mobileController.text.isEmpty) {
       View.showMessage(context, "Please enter mobile no.");
       return false;
     }
 
-    if (paymentType == "Paytm" && !validateMobile(mobileController.text)) {
+    if (paymentType.toLowerCase() == "paytm" &&
+        !validateMobile(mobileController.text)) {
       View.showMessage(context, "Please enter valid mobile no.");
+      return false;
+    }
+
+    if (paymentType.toLowerCase() != "paytm" && emailController.text.isEmpty) {
+      View.showMessage(context, "Please enter email.");
+      return false;
+    }
+
+    if (paymentType.toLowerCase() != "paytm" &&
+        !validateEmail(emailController.text)) {
+      View.showMessage(context, "Please enter valid email.");
       return false;
     }
 

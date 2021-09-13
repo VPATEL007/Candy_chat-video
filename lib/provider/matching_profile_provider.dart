@@ -150,12 +150,14 @@ class MatchingProfileProvider with ChangeNotifier {
             } else {
               coinBalance = CoinModel.fromJson(response);
               if (coinBalance?.lowBalance == true) {
-                View.showMessage(context, "your balance is low.");
+                View.showMessage(context, "Insufficient coin balance.");
               }
             }
           } else {
             coinBalance = null;
           }
+
+          notifyListeners();
         },
         failureCallback: (code, message) {
           coinBalance = null;

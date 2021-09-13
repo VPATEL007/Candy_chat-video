@@ -370,6 +370,7 @@ class _MathProfileState extends State<MathProfile> {
                                           right: getFontSize(29)),
                                       child: getTopButton(icVector, () {
                                         NavigationUtilities.push(ReportBlock(
+                                          gender: _matchProfile.gender ?? "",
                                           userId: _matchProfile.id,
                                           reportImageURl: (_matchProfile
                                                       ?.imageUrl?.isEmpty ??

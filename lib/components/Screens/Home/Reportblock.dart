@@ -10,8 +10,12 @@ import 'package:video_chat/provider/report_and_block_provider.dart';
 
 class ReportBlock extends StatefulWidget {
   final int userId;
-  final String reportImageURl;
-  ReportBlock({Key key, @required this.userId, @required this.reportImageURl})
+  final String reportImageURl, gender;
+  ReportBlock(
+      {Key key,
+      @required this.userId,
+      @required this.reportImageURl,
+      @required this.gender})
       : super(key: key);
 
   @override
@@ -202,11 +206,22 @@ class _ReportBlockState extends State<ReportBlock> {
             borderRadius: BorderRadius.circular(
               getSize(20),
             ),
-            image: DecorationImage(
-              image: CachedNetworkImageProvider(widget.reportImageURl ?? ""),
+          ),
+          child: ClipRRect(
+            borderRadius: BorderRadius.circular(
+              getSize(20),
+            ),
+            child: CachedNetworkImage(
+              imageUrl: (widget.reportImageURl ?? ""),
+              width: getSize(156),
+              height: getSize(210),
               fit: BoxFit.cover,
-              onError: (exception, stackTrace) =>
-                  Image.asset("assets/Profile/no_image.png"),
+              errorWidget: (context, url, error) => Image.asset(
+                getUserPlaceHolder(widget?.gender ?? ""),
+                fit: BoxFit.cover,
+                width: getSize(156),
+                height: getSize(210),
+              ),
             ),
           ),
         ),

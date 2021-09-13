@@ -58,7 +58,7 @@ class _SettingState extends State<Setting> {
                             .userModel
                             ?.isInfluencer ==
                         true
-                    ? getListItem("Payment History", () {
+                    ? getListItem("Withdraw History", () {
                         NavigationUtilities.push(WithDrawHistory());
                       })
                     : SizedBox(),

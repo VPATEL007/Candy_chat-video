@@ -777,6 +777,7 @@ class _UserProfileState extends State<UserProfile> {
             NavigationUtilities.push(ReportBlock(
               userId: widget.userModel?.id,
               reportImageURl: widget.userModel?.photoUrl ?? "",
+              gender: widget.userModel?.gender ?? "",
             ));
             // } else {
             //   openBlockConfirmation();

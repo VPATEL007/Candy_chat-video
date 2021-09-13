@@ -59,4 +59,7 @@ class ApiConstants {
   static const String logout = "auth/logout";
   static const String updateFCMToken = "profile/update-fcm";
   static const String withDrawRequest = "transaction/withdrawal-request";
+  static const String paymentMethod = "payment-method/get-all";
+  static const String withDrawRequestList =
+      "transaction/app-withdrawal-requests";
 }

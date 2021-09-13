@@ -594,7 +594,7 @@ class VideoCallState extends State<VideoCall> {
           status: "ended");
       agoraService.endCallMessage(widget.toUserId);
       endCall();
-      View.showMessage(context, "your balance is low.");
+      View.showMessage(context, "Insufficient coin balance.");
 
       // InAppPurchase.instance.openCoinPurchasePopUp();
     }
