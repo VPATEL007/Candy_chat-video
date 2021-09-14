@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:flutter/cupertino.dart';
+import 'package:provider/provider.dart';
 import 'package:video_chat/app/constant/ApiConstants.dart';
 import 'package:video_chat/app/network/NetworkClient.dart';
 import 'package:video_chat/components/Model/Language/Language.dart';
@@ -10,6 +11,7 @@ import 'package:video_chat/components/Model/User/report_reason_model.dart';
 import 'package:video_chat/components/Screens/Auth/Gender.dart';
 import 'package:video_chat/components/widgets/shared/routes.dart';
 import 'package:video_chat/main.dart';
+import 'package:video_chat/provider/followes_provider.dart';
 
 import '../app.export.dart';
 
@@ -44,9 +46,27 @@ class CommonApiHelper {
         if (response["userData"] != null) {
           UserModel model = UserModel.fromJson(response["userData"]);
           app.resolve<PrefUtils>().saveUser(model, isLoggedIn: true);
-          if (model?.gender?.isEmpty ?? true) {
+
+          NetworkClient.getInstance
+              .showLoader(NavigationUtilities.key.currentState.overlay.context);
+
+          var profileProvider = Provider.of<FollowesProvider>(
+              NavigationUtilities.key.currentState.overlay.context,
+              listen: false);
+          await profileProvider.fetchMyProfile(
+              NavigationUtilities.key.currentState.overlay.context);
+
+          NetworkClient.getInstance.hideProgressDialog();
+
+          if (profileProvider.userModel?.gender?.isEmpty ?? true) {
             NavigationUtilities.key.currentState.pushReplacement(FadeRoute(
               builder: (context) => Gender(),
+            ));
+          } else {
+            NavigationUtilities.key.currentState.pushReplacement(FadeRoute(
+              builder: (context) => Gender(
+                isFromPreGender: true,
+              ),
             ));
           }
         }

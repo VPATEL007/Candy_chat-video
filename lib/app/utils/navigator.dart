@@ -5,6 +5,7 @@ import 'package:video_chat/components/Screens/Discover/Discover.dart';
 import 'package:video_chat/components/Screens/Home/Home.dart';
 import 'package:video_chat/components/Screens/Language%20Selection/Language.dart';
 import 'package:video_chat/components/Screens/Onboarding/Onboarding.dart';
+import 'package:video_chat/components/Screens/Profile/edit_profile.dart';
 
 import 'fade_route.dart';
 
@@ -105,6 +106,11 @@ Route<dynamic> onGenerateRoute(RouteSettings settings) {
       break;
     case Discover.route:
       screen = Discover();
+      break;
+    case EditProfileScreen.route:
+      screen = EditProfileScreen(
+        isFromSignUp: true,
+      );
       break;
   }
 

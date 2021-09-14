@@ -1,9 +1,13 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:video_chat/app/AppConfiguration/AppNavigation.dart';
 import 'package:video_chat/app/app.export.dart';
 import 'package:video_chat/app/utils/CommonWidgets.dart';
+import 'package:video_chat/components/Screens/Home/Home.dart';
+import 'package:video_chat/components/Screens/Profile/edit_profile.dart';
+import 'package:video_chat/provider/followes_provider.dart';
 
 class Gender extends StatefulWidget {
   final bool isFromPreGender;
@@ -113,53 +117,7 @@ class _GenderState extends State<Gender> {
                 ),
                 Spacer(),
                 getPopBottomButton(context, "Next", () async {
-                  if (widget.isFromPreGender == false) {
-                    NetworkClient.getInstance.showLoader(context);
-                    await NetworkClient.getInstance.callApi(
-                      context: context,
-                      baseUrl: ApiConstants.apiUrl,
-                      command: ApiConstants.selectGender,
-                      headers: NetworkClient.getInstance.getAuthHeaders(),
-                      method: MethodType.Post,
-                      params: {
-                        "gender": describeEnum(_genders).toLowerCase(),
-                      },
-                      successCallback: (response, message) {
-                        NetworkClient.getInstance.hideProgressDialog();
-                        View.showMessage(context, message);
-                        Navigator.of(context).push(MaterialPageRoute(
-                          builder: (context) => Gender(
-                            isFromPreGender: true,
-                          ),
-                        ));
-                      },
-                      failureCallback: (code, message) {
-                        NetworkClient.getInstance.hideProgressDialog();
-                        View.showMessage(context, message);
-                      },
-                    );
-                  } else {
-                    NetworkClient.getInstance.showLoader(context);
-                    await NetworkClient.getInstance.callApi(
-                      context: context,
-                      baseUrl: ApiConstants.apiUrl,
-                      command: ApiConstants.selectGender,
-                      headers: NetworkClient.getInstance.getAuthHeaders(),
-                      method: MethodType.Post,
-                      params: {
-                        "prefgender": describeEnum(_genders).toLowerCase()
-                      },
-                      successCallback: (response, message) {
-                        NetworkClient.getInstance.hideProgressDialog();
-                        View.showMessage(context, message);
-                        AppNavigation.shared.moveToHome();
-                      },
-                      failureCallback: (code, message) {
-                        NetworkClient.getInstance.hideProgressDialog();
-                        View.showMessage(context, message);
-                      },
-                    );
-                  }
+                  callApiGender();
                 })
               ],
             ),
@@ -167,5 +125,70 @@ class _GenderState extends State<Gender> {
         ),
       ),
     );
+  }
+
+  callApiGender() async {
+    if (widget.isFromPreGender == false) {
+      NetworkClient.getInstance.showLoader(context);
+      await NetworkClient.getInstance.callApi(
+        context: context,
+        baseUrl: ApiConstants.apiUrl,
+        command: ApiConstants.selectGender,
+        headers: NetworkClient.getInstance.getAuthHeaders(),
+        method: MethodType.Post,
+        params: {
+          "gender": describeEnum(_genders).toLowerCase(),
+        },
+        successCallback: (response, message) {
+          NetworkClient.getInstance.hideProgressDialog();
+          View.showMessage(context, message);
+          Navigator.of(context).push(MaterialPageRoute(
+            builder: (context) => Gender(
+              isFromPreGender: true,
+            ),
+          ));
+        },
+        failureCallback: (code, message) {
+          NetworkClient.getInstance.hideProgressDialog();
+          View.showMessage(context, message);
+        },
+      );
+    } else {
+      NetworkClient.getInstance.showLoader(context);
+      await NetworkClient.getInstance.callApi(
+        context: context,
+        baseUrl: ApiConstants.apiUrl,
+        command: ApiConstants.selectGender,
+        headers: NetworkClient.getInstance.getAuthHeaders(),
+        method: MethodType.Post,
+        params: {"prefgender": describeEnum(_genders).toLowerCase()},
+        successCallback: (response, message) {
+          NetworkClient.getInstance.hideProgressDialog();
+          moveToScreen();
+        },
+        failureCallback: (code, message) {
+          NetworkClient.getInstance.hideProgressDialog();
+          View.showMessage(context, message);
+        },
+      );
+    }
+  }
+
+  moveToScreen() async {
+    AppNavigation.shared.moveToHome();
+    // NetworkClient.getInstance.showLoader(context);
+    // var provider = Provider.of<FollowesProvider>(context, listen: false);
+    // await provider.fetchMyProfile(context);
+    // NetworkClient.getInstance.hideProgressDialog();
+
+    // if (provider?.userModel?.userName == null ||
+    //     provider.userModel.userName.isEmpty ||
+    //     provider.userModel.userImages != null ||
+    //     provider.userModel.userImages.isEmpty) {
+    //   NavigationUtilities.pushReplacementNamed(EditProfileScreen.route,
+    //       type: RouteType.fade);
+    // } else {
+    //   AppNavigation.shared.moveToHome();
+    // }
   }
 }

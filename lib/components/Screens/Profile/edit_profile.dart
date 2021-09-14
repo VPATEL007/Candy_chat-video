@@ -5,12 +5,18 @@ import 'package:flutter/services.dart';
 import 'package:intl/intl.dart';
 import 'package:multi_image_picker2/multi_image_picker2.dart';
 import 'package:provider/provider.dart';
+import 'package:video_chat/app/AppConfiguration/AppNavigation.dart';
 import 'package:video_chat/app/app.export.dart';
 import 'package:video_chat/components/Model/User/UserModel.dart';
+import 'package:video_chat/components/Screens/Home/Home.dart';
 import 'package:video_chat/provider/followes_provider.dart';
 
 class EditProfileScreen extends StatefulWidget {
-  const EditProfileScreen({Key key}) : super(key: key);
+  static const route = "EditProfileScreen";
+  final bool isFromSignUp;
+
+  const EditProfileScreen({Key key, this.isFromSignUp = false})
+      : super(key: key);
 
   @override
   _EditProfileScreenState createState() => _EditProfileScreenState();
@@ -25,6 +31,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
   TextEditingController _nationController = TextEditingController();
   TextEditingController _aboutController = TextEditingController();
   Gender _gender = Gender.Male;
+  bool isImage = false;
 
   UserModel _userInfo;
 
@@ -80,6 +87,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
     if (_userInfo.userImages != null)
       for (var i = 0; i < _userInfo.userImages.length; i++) {
         userImages[i] = _userInfo.userImages[i];
+        isImage = true;
       }
     _userInfo.userImages = userImages;
   }
@@ -92,7 +100,8 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
         backgroundColor: Colors.white,
         elevation: 0,
         centerTitle: true,
-        leading: getBackButton(context),
+        leading:
+            widget.isFromSignUp == false ? getBackButton(context) : SizedBox(),
         title: Row(
           mainAxisAlignment: MainAxisAlignment.center,
           mainAxisSize: MainAxisSize.min,
@@ -106,16 +115,27 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
       ),
       bottomSheet: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 15),
-        child: getBottomButton(context, "Save Profile", () {
-          _userInfo?.userName = userNameController.text;
-          _userInfo?.gender = genderController.text;
-          _userInfo?.dob = _dobController.text;
-          _userInfo?.region?.regionName = _nationController.text;
-          _userInfo?.about = _aboutController.text;
-          _userInfo?.phone = contactController.text;
-          Provider.of<FollowesProvider>(context, listen: false)
-              .saveMyProfile(context, _userInfo, removeImage);
-          Navigator.of(context).pop();
+        child: getBottomButton(context, "Save Profile", () async {
+          if (isValid()) {
+            _userInfo?.userName = userNameController.text;
+            _userInfo?.gender = genderController.text;
+            _userInfo?.dob = _dobController.text;
+            _userInfo?.region?.regionName = _nationController.text;
+            _userInfo?.about = _aboutController.text;
+            _userInfo?.phone = contactController.text;
+
+            if (widget.isFromSignUp) {
+              NetworkClient.getInstance.showLoader(context);
+              await Provider.of<FollowesProvider>(context, listen: false)
+                  .saveMyProfile(context, _userInfo, removeImage);
+              NetworkClient.getInstance.hideProgressDialog();
+              NavigationUtilities.pushReplacementNamed(Home.route);
+            } else {
+              Provider.of<FollowesProvider>(context, listen: false)
+                  .saveMyProfile(context, _userInfo, removeImage);
+              Navigator.of(context).pop();
+            }
+          }
         }),
       ),
       body: SingleChildScrollView(
@@ -433,6 +453,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
               ? ((i - resultLengthMultiByProductLength) - 1)
               : i;
           if (mounted) {
+            isImage = true;
             setState(() {
               _userInfo.userImages
                   .where((img) => img.id == null)
@@ -457,6 +478,50 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
     if (!currentFocus.hasPrimaryFocus) {
       currentFocus.unfocus();
     }
+  }
+
+  bool isValid() {
+    if (userNameController.text.isEmpty) {
+      View.showMessage(context, "Please enter Username.");
+      return false;
+    }
+
+    if (contactController.text.isEmpty) {
+      View.showMessage(context, "Please enter Contact no.");
+      return false;
+    }
+
+    if (genderController.text.isEmpty) {
+      View.showMessage(context, "Please select Gender.");
+      return false;
+    }
+
+    if (_dobController.text.isEmpty) {
+      View.showMessage(context, "Please select Date of Birth.");
+      return false;
+    }
+
+    if (_aboutController.text.isEmpty) {
+      View.showMessage(context, "Please enter About me.");
+      return false;
+    }
+
+    if (_userInfo.userImages == null) {
+      View.showMessage(context, "Please select atleast one Photo.");
+      return false;
+    }
+
+    if (_userInfo.userImages.length == 0) {
+      View.showMessage(context, "Please select atleast one Photo.");
+      return false;
+    }
+
+    if (isImage == false) {
+      View.showMessage(context, "Please select atleast one Photo.");
+      return false;
+    }
+
+    return true;
   }
 }
 
