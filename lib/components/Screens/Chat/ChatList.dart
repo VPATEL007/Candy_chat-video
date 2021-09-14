@@ -163,9 +163,9 @@ class _ChatListState extends State<ChatList> {
                 height: getSize(10),
                 width: getSize(10),
                 decoration: BoxDecoration(
-                  // color:
-                  //     index % 2 == 0 ? fromHex("#50F5C3") : ColorConstants.red,
-                  color: fromHex("#50F5C3"),
+                  color: (model?.withUser?.onlineStatus ?? offline) == online
+                      ? fromHex("#50F5C3")
+                      : fromHex("#F55050"),
                   border: Border.all(color: Colors.white, width: 1),
                   borderRadius: BorderRadius.circular(
                     getSize(10),

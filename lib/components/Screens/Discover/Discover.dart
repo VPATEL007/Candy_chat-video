@@ -253,7 +253,10 @@ class _DiscoverState extends State<Discover> {
                         child: Text(
                           "• ${discover?.onlineStatus ?? ""}",
                           style: appTheme.black16Bold.copyWith(
-                              fontSize: getSize(10), color: fromHex("#00DE9B")),
+                              fontSize: getSize(10),
+                              color: discover?.onlineStatus == online
+                                  ? fromHex("#00DE9B")
+                                  : fromHex("#F55050")),
                         ),
                       ),
                     ),

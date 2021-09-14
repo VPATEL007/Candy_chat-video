@@ -65,6 +65,7 @@ class ChatProvider with ChangeNotifier {
             model.userImages = List<UserImage>.from(
                 response["image_url"].map((x) => UserImage.fromJson(x)));
           }
+          notifyListeners();
         },
         failureCallback: (code, message) {
           View.showMessage(context, message);

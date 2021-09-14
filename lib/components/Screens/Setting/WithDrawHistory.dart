@@ -1,11 +1,13 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:lazy_loading_list/lazy_loading_list.dart';
 import 'package:provider/provider.dart';
 import 'package:video_chat/app/Helper/Themehelper.dart';
 import 'package:video_chat/app/constant/ImageConstant.dart';
 import 'package:video_chat/app/utils/CommonWidgets.dart';
 import 'package:video_chat/app/utils/math_utils.dart';
+import 'package:video_chat/components/Model/Payment/WithDrawRequestList.dart';
 import 'package:video_chat/provider/withdraw_provider.dart';
 
 class WithDrawHistory extends StatefulWidget {
@@ -61,7 +63,7 @@ class _WithDrawHistoryState extends State<WithDrawHistory> {
                           Provider.of<WithDrawProvider>(context, listen: false)
                               .getWithDrawRequest(page, context);
                         },
-                        child: cellItem());
+                        child: cellItem(withDraw.withDrawList[index]));
                   },
                   separatorBuilder: (BuildContext context, int index) {
                     return SizedBox(
@@ -72,7 +74,7 @@ class _WithDrawHistoryState extends State<WithDrawHistory> {
     );
   }
 
-  Widget cellItem() {
+  Widget cellItem(WithDrawListModel model) {
     return Container(
       decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(12),
@@ -107,7 +109,7 @@ class _WithDrawHistoryState extends State<WithDrawHistory> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  "30 Coins",
+                  (model?.coins?.toString() ?? "") + " Coins",
                   style:
                       appTheme.black16Bold.copyWith(fontSize: getFontSize(18)),
                 ),
@@ -115,7 +117,9 @@ class _WithDrawHistoryState extends State<WithDrawHistory> {
                   height: getSize(6),
                 ),
                 Text(
-                  "Paytm" + " - " + "9662650383",
+                  (model?.paymentMethod?.name ?? "") +
+                      " - " +
+                      (model?.paymentId ?? ""),
                   style: appTheme.black14SemiBold,
                 ),
                 SizedBox(
@@ -124,14 +128,14 @@ class _WithDrawHistoryState extends State<WithDrawHistory> {
                 Row(
                   children: [
                     Text(
-                      "Pending",
+                      model?.requestStatus?.toUpperCase() ?? "",
                       style: appTheme.black14SemiBold,
                     ),
                     SizedBox(
                       width: getSize(6),
                     ),
                     Text(
-                      "Sep 10,2021",
+                      DateFormat.yMMMd().format(model.createdOn),
                       style: appTheme.black12Normal,
                     ),
                   ],
@@ -139,10 +143,10 @@ class _WithDrawHistoryState extends State<WithDrawHistory> {
               ],
             ),
             Spacer(),
-            Text(
-              "100",
-              style: appTheme.black14SemiBold,
-            ),
+            // Text(
+            //   "100",
+            //   style: appTheme.black14SemiBold,
+            // ),
           ],
         ),
       ),

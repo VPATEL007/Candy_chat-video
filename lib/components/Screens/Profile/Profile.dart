@@ -2,6 +2,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:video_chat/app/AppConfiguration/AppNavigation.dart';
 import 'package:video_chat/app/Helper/CommonApiHelper.dart';
 import 'package:video_chat/app/Helper/facebook_login_helper.dart';
 import 'package:video_chat/app/Helper/google_signin_helper.dart';
@@ -123,11 +124,12 @@ class _ProfileState extends State<Profile> {
                                   app
                                       .resolve<PrefUtils>()
                                       .clearPreferenceAndDB();
-                                  Navigator.of(context).pushAndRemoveUntil(
-                                      MaterialPageRoute(
-                                        builder: (context) => Splash(),
-                                      ),
-                                      (route) => false);
+                                  AppNavigation.shared.logOut();
+                                  // Navigator.of(context).pushAndRemoveUntil(
+                                  //     MaterialPageRoute(
+                                  //       builder: (context) => Splash(),
+                                  //     ),
+                                  //     (route) => false);
                                   CommonApiHelper.shared.logout();
                                 },
                                 child: Text("Logout"),

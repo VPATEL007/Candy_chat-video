@@ -22,6 +22,15 @@ class FollowUp extends StatefulWidget {
 class _FollowUpState extends State<FollowUp> {
   int page = 1;
   @override
+  void initState() {
+    super.initState();
+    Provider.of<FollowesProvider>(context, listen: false)
+        .fetchFollowes(context);
+    Provider.of<FollowesProvider>(context, listen: false)
+        .fetchFollowing(context);
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,

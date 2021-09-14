@@ -24,7 +24,7 @@ import 'package:video_chat/provider/video_call_status_provider.dart';
 
 class UserProfile extends StatefulWidget {
   final bool isPopUp;
-  final UserModel userModel;
+  UserModel userModel;
   UserProfile({Key key, this.isPopUp, @required this.userModel})
       : super(key: key);
 
@@ -43,11 +43,12 @@ class _UserProfileState extends State<UserProfile> {
     getDataFromApi();
   }
 
-  getDataFromApi() {
-    Provider.of<ChatProvider>(context, listen: false)
+  getDataFromApi() async {
+    widget.userModel = await Provider.of<ChatProvider>(context, listen: false)
         .getUserProfile(widget.userModel.id, context);
     Provider.of<GiftProvider>(context, listen: false)
         .fetchReceivedGift(context, widget.userModel?.id ?? 0);
+    setState(() {});
   }
 
   getTags() async {

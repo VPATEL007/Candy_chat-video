@@ -11,7 +11,7 @@ class WithDrawListModel {
   int userId;
   int coins;
   String requestStatus;
-  String createdOn;
+  DateTime createdOn;
   String updatedOn;
   PaymentMethod paymentMethod;
   String paymentId;
@@ -35,7 +35,7 @@ class WithDrawListModel {
     userId = json['user_id'];
     coins = json['coins'];
     requestStatus = json['request_status'];
-    createdOn = json['created_on'];
+    createdOn = DateTime.parse(json["created_on"]);
     updatedOn = json['updated_on'];
     paymentMethod = json['payment_method'] != null
         ? new PaymentMethod.fromJson(json['payment_method'])
@@ -51,7 +51,7 @@ class WithDrawListModel {
     data['user_id'] = this.userId;
     data['coins'] = this.coins;
     data['request_status'] = this.requestStatus;
-    data['created_on'] = this.createdOn;
+    data['created_on'] = this.createdOn.toIso8601String();
     data['updated_on'] = this.updatedOn;
     if (this.paymentMethod != null) {
       data['payment_method'] = this.paymentMethod.toJson();

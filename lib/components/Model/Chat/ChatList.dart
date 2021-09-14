@@ -65,11 +65,13 @@ class WithUser {
   int id;
   String userName;
   List<UserImage> userImages;
+  String onlineStatus;
 
-  WithUser({this.id, this.userName, this.userImages});
+  WithUser({this.id, this.userName, this.userImages, this.onlineStatus});
 
   WithUser.fromJson(Map<String, dynamic> json) {
     id = json['id'];
+    onlineStatus = json["online_status"];
     userName = json['user_name'];
     if (json['user_images'] != null) {
       userImages = [];
@@ -83,6 +85,7 @@ class WithUser {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     data['id'] = this.id;
     data['user_name'] = this.userName;
+    data['online_status'] = this.onlineStatus;
     if (this.userImages != null) {
       data['user_images'] = this.userImages.map((v) => v.toJson()).toList();
     }

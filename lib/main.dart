@@ -10,6 +10,8 @@ import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:kiwi/kiwi.dart';
 import 'package:provider/provider.dart';
 import 'package:video_chat/app/app.export.dart';
+import 'package:video_chat/components/Model/Notification/NotificatonModel.dart';
+import 'package:video_chat/components/Model/User/UserModel.dart';
 import 'package:video_chat/components/Screens/Setting/WithDraw.dart';
 import 'package:video_chat/components/Screens/Splash/Splash.dart';
 import 'package:video_chat/provider/chat_provider.dart';
@@ -39,6 +41,9 @@ import 'app/utils/pref_utils.dart';
 import 'app/utils/route_observer.dart';
 import 'package:video_chat/modules/ThemeSetting.dart';
 import 'package:http_proxy/http_proxy.dart';
+
+import 'components/Screens/Profile/FollowUp.dart';
+import 'components/Screens/UserProfile/UserProfile.dart';
 
 KiwiContainer app;
 FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
@@ -88,6 +93,7 @@ Future<void> setupFCM() async {
     showNotification(event.notification);
   });
   FirebaseMessaging.onMessageOpenedApp.listen((message) {
+    openNotification(message);
     print('Message clicked!');
   });
 
@@ -135,14 +141,24 @@ void showNotification(RemoteNotification message) async {
     importance: Importance.max,
     priority: Priority.high,
   );
-  var iOSPlatformChannelSpecifics = new IOSNotificationDetails();
+  const IOSNotificationDetails iOSPlatformChannelSpecifics =
+      IOSNotificationDetails(subtitle: 'the subtitle');
   var platformChannelSpecifics = new NotificationDetails(
       android: androidPlatformChannelSpecifics,
       iOS: iOSPlatformChannelSpecifics);
   await flutterLocalNotificationsPlugin.show(
-      0, message?.title ?? "", message?.body ?? "", platformChannelSpecifics,
+      0, message.title, message.body, platformChannelSpecifics,
       payload: 'data');
   print("Show Notification");
+}
+
+openNotification(RemoteMessage message) {
+  NotificationModel model = NotificationModel.fromJson(message.data);
+  if (model.type == "follow") {
+    NavigationUtilities.push(UserProfile(
+      userModel: UserModel(id: int.parse(model.userId)),
+    ));
+  }
 }
 
 GlobalKey navigationKey = GlobalKey();

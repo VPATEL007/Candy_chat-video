@@ -1,9 +1,11 @@
 import 'dart:async';
 import 'dart:convert';
+import 'dart:io';
 
 import 'package:agora_rtm/agora_rtm.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_tags/flutter_tags.dart';
+import 'package:path_provider/path_provider.dart';
 import 'package:provider/provider.dart';
 import 'package:video_chat/app/app.export.dart';
 import 'package:video_chat/components/Model/Match%20Profile/video_call.dart';
@@ -30,6 +32,9 @@ class AgoraService {
     try {
       if (appId.isEmpty) throw "APP_ID missing, please provide your APP_ID";
       _client = await AgoraRtmClient.createInstance(appId);
+      // Directory appDocDir = await getApplicationDocumentsDirectory();
+
+      // _client.setLog(1, 524288, appDocDir.path);
       _client?.onConnectionStateChanged = (int state, int reason) {
         debugPrint('Connection state changed: ' +
             state.toString() +

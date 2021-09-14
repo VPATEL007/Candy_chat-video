@@ -35,6 +35,11 @@ class AppNavigation {
     CommonApiHelper.shared.updateFCMToken();
   }
 
+  void logOut() {
+    SocketHealper.shared.disconnect();
+    NavigationUtilities.pushReplacementNamed(LanguageSelection.route);
+  }
+
   void moveToLogin() {
     NavigationUtilities.pushReplacementNamed(Login.route);
   }

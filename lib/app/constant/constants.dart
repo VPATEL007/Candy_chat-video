@@ -61,3 +61,7 @@ List<Color> randomColorArr = [
 const faceBook = "facebook";
 const google = "google";
 const apple = "apple";
+
+//User Status
+const online = "online";
+const offline = "offline";

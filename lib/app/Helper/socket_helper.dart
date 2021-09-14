@@ -36,6 +36,6 @@ class SocketHealper {
   }
 
   disconnect() {
-    // socket?.disconnect();
+    socket?.disconnect();
   }
 }

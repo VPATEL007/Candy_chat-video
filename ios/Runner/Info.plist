@@ -23,7 +23,7 @@
 	<key>CFBundleSignature</key>
 	<string>????</string>
 	<key>CFBundleTypeRole</key>
-		<string>Editor</string>
+	<string>Editor</string>
 	<key>CFBundleURLTypes</key>
 	<array>
 		<dict>
@@ -32,10 +32,6 @@
 				<string>fb234543204337461</string>
 				<string>com.googleusercontent.apps.154586257070-20tj6mdnhkl02mra7dkbs8mbsth746q1</string>
 			</array>
-
-		
-	
-
 		</dict>
 	</array>
 	<key>CFBundleVersion</key>
@@ -46,9 +42,7 @@
 	<string>Random Video Chat</string>
 	<key>LSApplicationQueriesSchemes</key>
 	<array>
-		<string>fbapi</string>
-		<string>fbauth2</string>
-		<string>fbshareextension</string>
+		<string>itms</string>
 	</array>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
@@ -57,21 +51,17 @@
 		<key>NSAllowsArbitraryLoads</key>
 		<true/>
 	</dict>
-	<key>NSAppTransportSecurity</key>
-    <dict>
-	<key>NSAllowsArbitraryLoads</key>
-	<true/>
-    </dict>
-	<key>LSApplicationQueriesSchemes</key>
-   <array>
-    <string>itms</string>
-   </array>
-   <key>NSPhotoLibraryUsageDescription</key>
-    <string>Photo permission required for pick images.</string>
 	<key>NSCameraUsageDescription</key>
 	<string>Use your camera for video call</string>
 	<key>NSMicrophoneUsageDescription</key>
 	<string>Use your microphone for video call</string>
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>Photo permission required for pick images.</string>
+	<key>UIBackgroundModes</key>
+	<array>
+		<string>fetch</string>
+		<string>remote-notification</string>
+	</array>
 	<key>UILaunchStoryboardName</key>
 	<string>LaunchScreen</string>
 	<key>UIMainStoryboardFile</key>
@@ -91,6 +81,5 @@
 	</array>
 	<key>UIViewControllerBasedStatusBarAppearance</key>
 	<false/>
-	
 </dict>
 </plist>

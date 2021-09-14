@@ -116,9 +116,11 @@ class _ChatState extends State<Chat> {
                     SizedBox(
                       width: 8,
                     ),
-                    Text("• Online",
-                        style: appTheme.black_Medium_16Text
-                            .copyWith(color: fromHex("#00DE9B"))),
+                    Text("• " + (toUser?.onlineStatus ?? offline),
+                        style: appTheme.black_Medium_16Text.copyWith(
+                            color: (toUser?.onlineStatus ?? offline) == online
+                                ? fromHex("#00DE9B")
+                                : fromHex("#F55050"))),
                     Spacer(),
                     getBarButton(context, icCall, () async {
                       if (toUser == null) return;
