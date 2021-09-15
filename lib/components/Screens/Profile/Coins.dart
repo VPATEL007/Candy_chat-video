@@ -24,7 +24,9 @@ class _CoinsState extends State<Coins> {
   @override
   void initState() {
     super.initState();
-    getList();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      getList();
+    });
   }
 
   getList() async {

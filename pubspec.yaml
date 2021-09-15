@@ -60,8 +60,7 @@ dependencies:
   # firebase_crashlytics: any
   firebase_messaging: 8.0.0-dev.15
   flutter_local_notifications : 4.0.1+2
-  
-  
+
 
 
 

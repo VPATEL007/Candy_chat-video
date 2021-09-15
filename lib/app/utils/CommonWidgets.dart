@@ -541,6 +541,7 @@ Widget getColorText(String text, Color color, {double fontSize = 25}) {
 
 Widget getCoinItem(
     ProductDetails product, bool isSelected, BuildContext context) {
+  var title = product.title.split(" ");
   return Padding(
     padding: EdgeInsets.only(right: getSize(10), bottom: getSize(10)),
     child: Stack(
@@ -577,7 +578,9 @@ Widget getCoinItem(
                 ),
                 SizedBox(height: getSize(8)),
                 Text(
-                  product.title,
+                  (title?.length ?? 0) > 2
+                      ? (title[0] + " " + title[1])
+                      : product.title,
                   style:
                       appTheme.black16Bold.copyWith(fontSize: getFontSize(18)),
                 ),

@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:in_app_purchase/in_app_purchase.dart';
@@ -17,6 +18,7 @@ import 'package:video_chat/provider/followes_provider.dart';
 
 import '../../main.dart';
 import 'Themehelper.dart';
+import 'dart:io' as io;
 
 class InAppPurchase {
   InAppPurchase._();
@@ -34,10 +36,10 @@ class InAppPurchase {
   Future<List<ProductDetails>> getProducts() async {
     intialConfig();
 
-    final bool isAvailable = await _connection.isAvailable();
-    if (!isAvailable) {
-      return [];
-    }
+    // final bool isAvailable = await _connection.isAvailable();
+    // if (!isAvailable) {
+    //   return [];
+    // }
 
     List<ProductDetails> products = [];
 
@@ -57,7 +59,10 @@ class InAppPurchase {
     }
 
     NetworkClient.getInstance.hideProgressDialog();
-    completeTransaction();
+    if (io.Platform.isIOS) {
+      completeTransaction();
+    }
+
     return products;
   }
 
@@ -96,17 +101,32 @@ class InAppPurchase {
 
   //Purchase
   purchaseProduct(ProductDetails product) {
-    PurchaseParam purchaseParam = PurchaseParam(
-        productDetails: product,
-        applicationUserName: app.resolve<PrefUtils>().getUserDetails().userName,
-        changeSubscriptionParam: null,
-        sandboxTesting: false);
-    _connection.buyConsumable(purchaseParam: purchaseParam);
+    if (Platform.isAndroid) {
+      PurchaseParam purchaseParam = PurchaseParam(
+          productDetails: product,
+          applicationUserName:
+              app.resolve<PrefUtils>().getUserDetails().userName,
+          changeSubscriptionParam: null);
+      _connection.buyConsumable(
+          purchaseParam: purchaseParam, autoConsume: true);
+    } else {
+      PurchaseParam purchaseParam = PurchaseParam(
+          productDetails: product,
+          applicationUserName:
+              app.resolve<PrefUtils>().getUserDetails().userName,
+          changeSubscriptionParam: null,
+          sandboxTesting: false);
+      _connection.buyConsumable(purchaseParam: purchaseParam);
+    }
   }
 
 //Verify Purchase
   Future<bool> verifyPurchase(
       PurchaseDetails purchaseDetails, BuildContext context) {
+    if (Platform.isAndroid) {
+      return Future<bool>.value(true);
+    }
+
     Map<String, dynamic> req = {};
 
     req["receipt-data"] =

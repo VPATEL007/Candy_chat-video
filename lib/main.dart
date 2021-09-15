@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'dart:io';
+import 'dart:io' as io;
 
 // import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
@@ -7,8 +8,10 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import 'package:in_app_purchase/in_app_purchase.dart';
 import 'package:kiwi/kiwi.dart';
 import 'package:provider/provider.dart';
+import 'package:socket_io_client/socket_io_client.dart';
 import 'package:video_chat/app/app.export.dart';
 import 'package:video_chat/components/Model/Notification/NotificatonModel.dart';
 import 'package:video_chat/components/Model/User/UserModel.dart';
@@ -51,6 +54,9 @@ FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  if (io.Platform.isAndroid) {
+    InAppPurchaseConnection.enablePendingPurchases();
+  }
 
   app = KiwiContainer();
 
