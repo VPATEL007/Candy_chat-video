@@ -73,7 +73,7 @@ class _HomeState extends State<Home> {
               width: getSize(280),
               decoration: BoxDecoration(
                 image: DecorationImage(
-                  image: AssetImage(icCircleHome),
+                  image: AssetImage(icHomeRotation),
                   fit: BoxFit.fill,
                 ),
               ),

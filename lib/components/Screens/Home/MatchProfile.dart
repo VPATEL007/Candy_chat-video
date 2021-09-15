@@ -1,9 +1,11 @@
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:circular_countdown_timer/circular_countdown_timer.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_tags/flutter_tags.dart';
 import 'package:lazy_loading_list/lazy_loading_list.dart';
 import 'package:provider/provider.dart';
+
 import 'package:video_chat/app/Helper/inAppPurchase_service.dart';
 
 import 'package:video_chat/app/app.export.dart';
@@ -64,79 +66,83 @@ class _MathProfileState extends State<MathProfile> {
           content: e,
           likeAction: (index) async {
             print("like $index");
-            bool startCall = await Provider.of<MatchingProfileProvider>(context,
-                    listen: false)
-                .leftAndRightSwipe(context, SwipeType.Right);
-            if (startCall == true) {
-              await Provider.of<MatchingProfileProvider>(context, listen: false)
-                  .checkCoinBalance(
-                      context,
-                      Provider.of<MatchingProfileProvider>(context,
-                              listen: false)
-                          .matchProfileList[index]
-                          .id,
-                      Provider.of<MatchingProfileProvider>(context,
-                                  listen: false)
-                              .matchProfileList[index]
-                              .userName ??
-                          "");
+            var model =
+                Provider.of<MatchingProfileProvider>(context, listen: false)
+                    .matchProfileList[index];
+            openProgressPopUp(model);
+            // bool startCall = await Provider.of<MatchingProfileProvider>(context,
+            //         listen: false)
+            //     .leftAndRightSwipe(context, SwipeType.Right);
+            // if (startCall == true) {
+            //   await Provider.of<MatchingProfileProvider>(context, listen: false)
+            //       .checkCoinBalance(
+            //           context,
+            // Provider.of<MatchingProfileProvider>(context,
+            //         listen: false)
+            //     .matchProfileList[index]
+            //               .id,
+            //           Provider.of<MatchingProfileProvider>(context,
+            //                       listen: false)
+            //                   .matchProfileList[index]
+            //                   .userName ??
+            //               "");
 
-              CoinModel coins =
-                  Provider.of<MatchingProfileProvider>(context, listen: false)
-                      .coinBalance;
+            //   CoinModel coins =
+            //       Provider.of<MatchingProfileProvider>(context, listen: false)
+            //           .coinBalance;
 
-              if (coins?.lowBalance == false) {
-                await Provider.of<MatchingProfileProvider>(context,
-                        listen: false)
-                    .startVideoCall(
-                        context,
-                        Provider.of<MatchingProfileProvider>(context,
-                                listen: false)
-                            .matchProfileList[index]
-                            .id);
-                VideoCallModel videoCallModel =
-                    Provider.of<MatchingProfileProvider>(context, listen: false)
-                        .videoCallModel;
-                UserModel userModel =
-                    Provider.of<FollowesProvider>(context, listen: false)
-                        .userModel;
-                if (videoCallModel != null)
-                  AgoraService.instance.sendVideoCallMessage(
-                      videoCallModel.toUserId.toString(),
-                      videoCallModel.sessionId,
-                      videoCallModel.channelName,
-                      Provider.of<MatchingProfileProvider>(context,
-                                  listen: false)
-                              .matchProfileList[index]
-                              .gender ??
-                          "",
-                      context);
-                Provider.of<VideoCallStatusProvider>(context, listen: false)
-                    .setCallStatus = CallStatus.Start;
-                Navigator.of(context).push(MaterialPageRoute(
-                  builder: (context) => MatchedProfile(
-                    channelName: videoCallModel.channelName,
-                    token: videoCallModel.sessionId,
-                    fromId: Provider.of<MatchingProfileProvider>(context,
-                            listen: false)
-                        .matchProfileList[index]
-                        .id
-                        ?.toString(),
-                    name: e?.providerDisplayName ?? "",
-                    toImageUrl: (e?.imageUrl?.isEmpty ?? true)
-                        ? ""
-                        : e?.imageUrl?.first ?? "",
-                    fromImageUrl: (userModel?.userImages?.isEmpty ?? true)
-                        ? ""
-                        : userModel?.userImages?.first?.photoUrl ?? "",
-                    id: videoCallModel.toUserId.toString(),
-                    toGender: e?.gender ?? "",
-                  ),
-                ));
-              } else if (coins?.lowBalance == true) {
-                InAppPurchase.instance.openCoinPurchasePopUp();
-              }
-            }
+            //   if (coins?.lowBalance == false) {
+            //     await Provider.of<MatchingProfileProvider>(context,
+            //             listen: false)
+            //         .startVideoCall(
+            //             context,
+            //             Provider.of<MatchingProfileProvider>(context,
+            //                     listen: false)
+            //                 .matchProfileList[index]
+            //                 .id);
+            //     VideoCallModel videoCallModel =
+            //         Provider.of<MatchingProfileProvider>(context, listen: false)
+            //             .videoCallModel;
+            //     UserModel userModel =
+            //         Provider.of<FollowesProvider>(context, listen: false)
+            //             .userModel;
+            //     if (videoCallModel != null)
+            //       AgoraService.instance.sendVideoCallMessage(
+            //           videoCallModel.toUserId.toString(),
+            //           videoCallModel.sessionId,
+            //           videoCallModel.channelName,
+            //           Provider.of<MatchingProfileProvider>(context,
+            //                       listen: false)
+            //                   .matchProfileList[index]
+            //                   .gender ??
+            //               "",
+            //           context);
+            //     Provider.of<VideoCallStatusProvider>(context, listen: false)
+            //         .setCallStatus = CallStatus.Start;
+            //     Navigator.of(context).push(MaterialPageRoute(
+            //       builder: (context) => MatchedProfile(
+            //         channelName: videoCallModel.channelName,
+            //         token: videoCallModel.sessionId,
+            //         fromId: Provider.of<MatchingProfileProvider>(context,
+            //                 listen: false)
+            //             .matchProfileList[index]
+            //             .id
+            //             ?.toString(),
+            //         name: e?.providerDisplayName ?? "",
+            //         toImageUrl: (e?.imageUrl?.isEmpty ?? true)
+            //             ? ""
+            //             : e?.imageUrl?.first ?? "",
+            //         fromImageUrl: (userModel?.userImages?.isEmpty ?? true)
+            //             ? ""
+            //             : userModel?.userImages?.first?.photoUrl ?? "",
+            //         id: videoCallModel.toUserId.toString(),
+            //         toGender: e?.gender ?? "",
+            //       ),
+            //     ));
+            //   } else if (coins?.lowBalance == true) {
+            //     InAppPurchase.instance.openCoinPurchasePopUp();
+            //   }
+            // }
           },
           nopeAction: (index) {
             Provider.of<MatchingProfileProvider>(context, listen: false)
@@ -406,6 +412,7 @@ class _MathProfileState extends State<MathProfile> {
                           right: getFontSize(29)),
                       child: getTopButton(icDrawer, () {
                         openFilter();
+                        // openProgressPopUp();
                       })),
                 ),
               ),
@@ -744,6 +751,119 @@ class _MathProfileState extends State<MathProfile> {
                 ),
               );
             },
+          );
+        });
+  }
+
+  openProgressPopUp(MatchProfileModel model) {
+    showDialog(
+        context: context,
+        builder: (builder) {
+          return Dialog(
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(50),
+            ),
+            elevation: 0,
+            backgroundColor: Colors.transparent,
+            child: Center(
+              child: Container(
+                width: MathUtilities.screenWidth(context) - 32,
+                decoration: BoxDecoration(
+                    shape: BoxShape.rectangle,
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(16),
+                    boxShadow: [
+                      BoxShadow(
+                          color: Colors.black54,
+                          offset: Offset(0, 4),
+                          blurRadius: 4),
+                    ]),
+                child: Padding(
+                  padding: EdgeInsets.all(getSize(24)),
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Stack(
+                        children: [
+                          CircularCountDownTimer(
+                            duration: 30,
+                            initialDuration: 0,
+                            controller: CountDownController(),
+                            width: getSize(120),
+                            height: getSize(120),
+                            ringColor: Colors.white,
+                            ringGradient: null,
+                            fillColor: ColorConstants.redText,
+                            fillGradient: null,
+                            backgroundColor: Colors.white,
+                            backgroundGradient: null,
+                            strokeWidth: 6,
+                            strokeCap: StrokeCap.round,
+                            textStyle: TextStyle(
+                                fontSize: 0.0,
+                                color: Colors.white,
+                                fontWeight: FontWeight.bold),
+                            textFormat: CountdownTextFormat.S,
+                            isReverse: false,
+                            isReverseAnimation: false,
+                            isTimerTextShown: false,
+                            autoStart: true,
+                            onStart: () {
+                              print('Countdown Started');
+                            },
+                            onComplete: () {
+                              print('Countdown Ended');
+                            },
+                          ),
+                          Positioned(
+                              child: ClipRRect(
+                                  borderRadius: BorderRadius.circular(119),
+                                  child: CachedNetworkImage(
+                                    imageUrl: (model?.imageUrl?.isEmpty ?? true)
+                                        ? ""
+                                        : model?.imageUrl?.first ?? "",
+                                    width: getSize(119),
+                                    height: getSize(119),
+                                    fit: BoxFit.cover,
+                                    errorWidget: (context, url, error) =>
+                                        Image.asset(
+                                      getUserPlaceHolder(model?.gender ?? ""),
+                                      width: getSize(119),
+                                      height: getSize(119),
+                                      fit: BoxFit.cover,
+                                    ),
+                                  )
+                                  //  Image.asset(
+                                  //   loginBg,
+                                  //   width: getSize(119),
+                                  //   height: getSize(119),
+                                  //   fit: BoxFit.cover,
+                                  // ),
+                                  )),
+                        ],
+                      ),
+                      SizedBox(
+                        height: 24,
+                      ),
+                      Text(
+                        model.userName,
+                        style: appTheme.black14SemiBold
+                            .copyWith(fontSize: getFontSize(16)),
+                      ),
+                      SizedBox(
+                        height: 16,
+                      ),
+                      Text(
+                        "You like her. Waiting for her reply.",
+                        textAlign: TextAlign.center,
+                        style: appTheme.black16Bold
+                            .copyWith(fontSize: getFontSize(18)),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ),
           );
         });
   }

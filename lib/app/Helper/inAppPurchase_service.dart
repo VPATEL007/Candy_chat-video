@@ -59,9 +59,7 @@ class InAppPurchase {
     }
 
     NetworkClient.getInstance.hideProgressDialog();
-    if (io.Platform.isIOS) {
-      completeTransaction();
-    }
+    completeTransaction();
 
     return products;
   }
@@ -93,10 +91,12 @@ class InAppPurchase {
 
   //Complete Transaction
   Future<void> completeTransaction() async {
-    var transactions = await SKPaymentQueueWrapper().transactions();
-    transactions.forEach((skPaymentTransactionWrapper) {
-      SKPaymentQueueWrapper().finishTransaction(skPaymentTransactionWrapper);
-    });
+    if (io.Platform.isIOS) {
+      var transactions = await SKPaymentQueueWrapper().transactions();
+      transactions.forEach((skPaymentTransactionWrapper) {
+        SKPaymentQueueWrapper().finishTransaction(skPaymentTransactionWrapper);
+      });
+    }
   }
 
   //Purchase

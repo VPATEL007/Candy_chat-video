@@ -20,6 +20,7 @@ const String icApple = "assets/Login/icApple.png";
 const String icFacebook = "assets/Login/icFacebook.png";
 const String icGoogle = "assets/Login/icGoogle.png";
 const String icGuest = "assets/Login/icGuest.png";
+const String icHomeRotation = "assets/Home/homeRotation.gif";
 
 const String icCircleHome = "assets/Home/homeRound.png";
 const String icTabHome = "assets/Tab/tabHome.png";
