@@ -4,8 +4,10 @@ import 'package:intl/intl.dart';
 import 'package:lazy_loading_list/lazy_loading_list.dart';
 import 'package:provider/provider.dart';
 import 'package:video_chat/app/Helper/Themehelper.dart';
+import 'package:video_chat/app/constant/ColorConstant.dart';
 import 'package:video_chat/app/constant/ImageConstant.dart';
 import 'package:video_chat/app/utils/CommonWidgets.dart';
+import 'package:video_chat/app/utils/date_utils.dart';
 import 'package:video_chat/app/utils/json_utils.dart';
 import 'package:video_chat/app/utils/math_utils.dart';
 import 'package:video_chat/components/Model/payment_history_model.dart';
@@ -20,12 +22,23 @@ class PaymentHistory extends StatefulWidget {
 
 class _PaymentHistoryState extends State<PaymentHistory> {
   int page = 1;
+  DateTime _selectedDate = DateTime.now();
   @override
   void initState() {
     super.initState();
-    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-      Provider.of<PaymentHistoryProvider>(context, listen: false)
-          .fetchPaymentHistory(context);
+    resetPagination();
+  }
+
+  resetPagination() {
+    page = 1;
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+        Provider.of<PaymentHistoryProvider>(context, listen: false)
+            .fetchPaymentHistory(
+                context,
+                DateUtilities().getFormattedDateString(_selectedDate,
+                    formatter: DateUtilities.yyyy_mm_dd));
+      });
     });
   }
 
@@ -35,7 +48,32 @@ class _PaymentHistoryState extends State<PaymentHistory> {
       backgroundColor: Colors.white,
       appBar: getAppBar(context, "Payment History",
           isWhite: true, leadingButton: getBackButton(context)),
-      body: SafeArea(child: getList()),
+      body: SafeArea(
+          child: Column(
+        children: [
+          InkWell(
+            onTap: () {
+              _selectDate();
+            },
+            child: Container(
+                decoration: BoxDecoration(
+                    color: ColorConstants.borderColor.withAlpha(60),
+                    borderRadius: BorderRadius.circular(22)),
+                child: Padding(
+                  padding: const EdgeInsets.only(
+                      left: 16, right: 16, top: 10, bottom: 10),
+                  child: Text(
+                    DateFormat.yMMMd().format(_selectedDate),
+                    style: appTheme.black16Medium
+                        .copyWith(fontSize: getFontSize(20)),
+                  ),
+                )),
+          ),
+          Expanded(
+            child: getList(),
+          )
+        ],
+      )),
     );
   }
 
@@ -62,8 +100,13 @@ class _PaymentHistoryState extends State<PaymentHistory> {
 
                           Provider.of<PaymentHistoryProvider>(context,
                                   listen: false)
-                              .fetchPaymentHistory(context,
-                                  pageNumber: page, fetchInBackground: true);
+                              .fetchPaymentHistory(
+                                  context,
+                                  DateUtilities().getFormattedDateString(
+                                      _selectedDate,
+                                      formatter: DateUtilities.yyyy_mm_dd),
+                                  pageNumber: page,
+                                  fetchInBackground: true);
                         },
                         child: cellItem(payemntHistory.paymentHistory[index]));
                   },
@@ -133,5 +176,22 @@ class _PaymentHistoryState extends State<PaymentHistory> {
         ),
       ),
     );
+  }
+
+  _selectDate() async {
+    DateTime newSelectedDate = await showDatePicker(
+        context: context,
+        initialDate: _selectedDate != null ? _selectedDate : DateTime.now(),
+        firstDate: DateTime(1900),
+        lastDate: DateTime.now(),
+        builder: (BuildContext context, Widget child) {
+          return child;
+        });
+
+    if (newSelectedDate != null) {
+      _selectedDate = newSelectedDate;
+      setState(() {});
+      resetPagination();
+    }
   }
 }

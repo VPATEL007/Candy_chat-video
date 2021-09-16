@@ -43,11 +43,8 @@ class WithDrawProvider with ChangeNotifier {
 
   set withDrawList(List<WithDrawListModel> value) => this._withDrawList = value;
 
-  getWithDrawRequest(int page, BuildContext context) async {
-    Map<String, dynamic> parms = {
-      "page": page,
-      "size": 20,
-    };
+  getWithDrawRequest(int page, String date, BuildContext context) async {
+    Map<String, dynamic> parms = {"page": page, "size": 20};
     try {
       if (page == 1) NetworkClient.getInstance.showLoader(context);
       await NetworkClient.getInstance.callApi(

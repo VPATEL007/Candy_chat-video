@@ -486,10 +486,10 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
       return false;
     }
 
-    if (contactController.text.isEmpty) {
-      View.showMessage(context, "Please enter Contact no.");
-      return false;
-    }
+    // if (contactController.text.isEmpty) {
+    //   View.showMessage(context, "Please enter Contact no.");
+    //   return false;
+    // }
 
     if (genderController.text.isEmpty) {
       View.showMessage(context, "Please select Gender.");
@@ -501,10 +501,10 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
       return false;
     }
 
-    if (_aboutController.text.isEmpty) {
-      View.showMessage(context, "Please enter About me.");
-      return false;
-    }
+    // if (_aboutController.text.isEmpty) {
+    //   View.showMessage(context, "Please enter About me.");
+    //   return false;
+    // }
 
     if (_userInfo.userImages == null) {
       View.showMessage(context, "Please select atleast one Photo.");

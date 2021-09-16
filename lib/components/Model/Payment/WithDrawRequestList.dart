@@ -15,7 +15,7 @@ class WithDrawListModel {
   String updatedOn;
   PaymentMethod paymentMethod;
   String paymentId;
-  Null transactionId;
+  String transactionId;
   int requestStatusCode;
 
   WithDrawListModel(

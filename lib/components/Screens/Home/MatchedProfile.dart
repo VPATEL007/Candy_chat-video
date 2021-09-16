@@ -1,3 +1,6 @@
+import 'dart:async';
+
+import 'package:assets_audio_player/assets_audio_player.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -35,6 +38,45 @@ class MatchedProfile extends StatefulWidget {
 
 class _MatchedProfileState extends State<MatchedProfile> {
   // List<ProductDetails> _products = [];
+  final assetsAudioPlayer = AssetsAudioPlayer();
+  Timer timer;
+
+  @override
+  void initState() {
+    super.initState();
+    startRing();
+  }
+
+  @override
+  void dispose() {
+    assetsAudioPlayer.stop();
+    timer.cancel();
+    super.dispose();
+  }
+
+  startRing() {
+    var status =
+        Provider.of<VideoCallStatusProvider>(context, listen: false).callStatus;
+
+    if (status == CallStatus.None) {
+      assetsAudioPlayer.open(Audio("assets/Audio/incommingcall.mp3"),
+          showNotification: false, autoStart: true);
+    }
+
+    if (status == CallStatus.Start) {
+      timer =
+          Timer.periodic(Duration(seconds: 10), (Timer t) => endTimerCall());
+    }
+  }
+
+  endTimerCall() {
+    Navigator.pop(context);
+    AgoraService.instance.sendRejectCallMessage(widget.id);
+    AgoraService.instance.updateCallStatus(
+        channelName: widget.channelName,
+        sessionId: widget.token,
+        status: "unanswered");
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -151,7 +193,7 @@ class _MatchedProfileState extends State<MatchedProfile> {
                           navigationKey.currentContext,
                           listen: false)
                       .userModel;
-                  if (userModel.isInfluencer == false) {
+                  if (userModel?.isInfluencer == false) {
                     await Provider.of<MatchingProfileProvider>(context,
                             listen: false)
                         .checkCoinBalance(

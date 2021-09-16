@@ -4,8 +4,10 @@ import 'package:intl/intl.dart';
 import 'package:lazy_loading_list/lazy_loading_list.dart';
 import 'package:provider/provider.dart';
 import 'package:video_chat/app/Helper/Themehelper.dart';
+import 'package:video_chat/app/app.export.dart';
 import 'package:video_chat/app/constant/ImageConstant.dart';
 import 'package:video_chat/app/utils/CommonWidgets.dart';
+import 'package:video_chat/app/utils/date_utils.dart';
 import 'package:video_chat/app/utils/math_utils.dart';
 import 'package:video_chat/components/Model/Payment/WithDrawRequestList.dart';
 import 'package:video_chat/provider/withdraw_provider.dart';
@@ -19,13 +21,22 @@ class WithDrawHistory extends StatefulWidget {
 
 class _WithDrawHistoryState extends State<WithDrawHistory> {
   int page = 1;
+  DateTime _selectedDate = DateTime.now();
 
   @override
   void initState() {
     super.initState();
+    resetPagination();
+  }
+
+  resetPagination() {
+    page = 1;
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      Provider.of<WithDrawProvider>(context, listen: false)
-          .getWithDrawRequest(page, context);
+      Provider.of<WithDrawProvider>(context, listen: false).getWithDrawRequest(
+          page,
+          DateUtilities().getFormattedDateString(_selectedDate,
+              formatter: DateUtilities.yyyy_mm_dd),
+          context);
     });
   }
 
@@ -35,11 +46,36 @@ class _WithDrawHistoryState extends State<WithDrawHistory> {
       backgroundColor: Colors.white,
       appBar: getAppBar(context, "Withdraw History",
           isWhite: true, leadingButton: getBackButton(context)),
-      body: SafeArea(child: getList()),
+      body: SafeArea(
+          child: Column(
+        children: [
+          // InkWell(
+          //   onTap: () {
+          //     _selectDate();
+          //   },
+          //   child: Container(
+          //       decoration: BoxDecoration(
+          //           color: ColorConstants.borderColor.withAlpha(60),
+          //           borderRadius: BorderRadius.circular(22)),
+          //       child: Padding(
+          //         padding: const EdgeInsets.only(
+          //             left: 16, right: 16, top: 10, bottom: 10),
+          //         child: Text(
+          //           DateFormat.yMMMd().format(_selectedDate),
+          //           style: appTheme.black16Medium
+          //               .copyWith(fontSize: getFontSize(20)),
+          //         ),
+          //       )),
+          // ),
+          Expanded(
+            child: getList(),
+          )
+        ],
+      )),
     );
   }
 
-  getList() {
+  Widget getList() {
     return Consumer<WithDrawProvider>(
       builder: (context, withDraw, child) =>
           (withDraw?.withDrawList?.isEmpty ?? true)
@@ -61,7 +97,12 @@ class _WithDrawHistoryState extends State<WithDrawHistory> {
                               "--------========================= Lazy Loading $page ==========================---------");
 
                           Provider.of<WithDrawProvider>(context, listen: false)
-                              .getWithDrawRequest(page, context);
+                              .getWithDrawRequest(
+                                  page,
+                                  DateUtilities().getFormattedDateString(
+                                      _selectedDate,
+                                      formatter: DateUtilities.yyyy_mm_dd),
+                                  context);
                         },
                         child: cellItem(withDraw.withDrawList[index]));
                   },
@@ -151,5 +192,22 @@ class _WithDrawHistoryState extends State<WithDrawHistory> {
         ),
       ),
     );
+  }
+
+  _selectDate() async {
+    DateTime newSelectedDate = await showDatePicker(
+        context: context,
+        initialDate: _selectedDate != null ? _selectedDate : DateTime.now(),
+        firstDate: DateTime(1900),
+        lastDate: DateTime.now(),
+        builder: (BuildContext context, Widget child) {
+          return child;
+        });
+
+    if (newSelectedDate != null) {
+      _selectedDate = newSelectedDate;
+      setState(() {});
+      resetPagination();
+    }
   }
 }

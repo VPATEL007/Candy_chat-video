@@ -12,9 +12,13 @@ class PaymentHistoryProvider with ChangeNotifier {
       this._paymentHistory = value;
 
   // Fetch payment history...
-  Future<void> fetchPaymentHistory(BuildContext context,
+  Future<void> fetchPaymentHistory(BuildContext context, String date,
       {bool fetchInBackground = false, int pageNumber = 1}) async {
-    Map<String, dynamic> _parms = {"page": pageNumber, "pageSize": 20};
+    Map<String, dynamic> _parms = {
+      "page": pageNumber,
+      "pageSize": 20,
+      "date": date
+    };
     if (!fetchInBackground) NetworkClient.getInstance.showLoader(context);
     await NetworkClient.getInstance.callApi(
       context: context,
