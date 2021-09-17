@@ -55,6 +55,16 @@ class _MathProfileState extends State<MathProfile> {
           .fetchLanguageList(context, true);
     });
     prepareSwipeItems();
+
+    _currentRangeValues = RangeValues(
+        app
+            .resolve<PrefUtils>()
+            .getInt(app.resolve<PrefUtils>().keyIsFromAge)
+            .toDouble(),
+        app
+            .resolve<PrefUtils>()
+            .getInt(app.resolve<PrefUtils>().keyIsToAge)
+            .toDouble());
   }
 
   prepareSwipeItems() {
@@ -733,6 +743,12 @@ class _MathProfileState extends State<MathProfile> {
                         height: getSize(33),
                       ),
                       getPopBottomButton(context, "Apply", () async {
+                        app.resolve<PrefUtils>().saveInt(
+                            app.resolve<PrefUtils>().keyIsFromAge,
+                            _currentRangeValues.start.toInt());
+                        app.resolve<PrefUtils>().saveInt(
+                            app.resolve<PrefUtils>().keyIsToAge,
+                            _currentRangeValues.end.toInt());
                         Navigator.pop(context);
                         page = 1;
                         await Provider.of<MatchingProfileProvider>(context,
@@ -756,6 +772,7 @@ class _MathProfileState extends State<MathProfile> {
   }
 
   openProgressPopUp(MatchProfileModel model) {
+    AgoraService.instance.sendLikeMessage(model.id.toString(), context);
     showDialog(
         context: context,
         builder: (builder) {
@@ -812,7 +829,7 @@ class _MathProfileState extends State<MathProfile> {
                               print('Countdown Started');
                             },
                             onComplete: () {
-                              print('Countdown Ended');
+                              Navigator.pop(context);
                             },
                           ),
                           Positioned(
@@ -832,14 +849,7 @@ class _MathProfileState extends State<MathProfile> {
                                       height: getSize(119),
                                       fit: BoxFit.cover,
                                     ),
-                                  )
-                                  //  Image.asset(
-                                  //   loginBg,
-                                  //   width: getSize(119),
-                                  //   height: getSize(119),
-                                  //   fit: BoxFit.cover,
-                                  // ),
-                                  )),
+                                  ))),
                         ],
                       ),
                       SizedBox(

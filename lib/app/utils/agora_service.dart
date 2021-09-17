@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:agora_rtm/agora_rtm.dart';
+import 'package:flushbar/flushbar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_tags/flutter_tags.dart';
 import 'package:path_provider/path_provider.dart';
@@ -10,6 +11,7 @@ import 'package:provider/provider.dart';
 import 'package:video_chat/app/app.export.dart';
 import 'package:video_chat/components/Model/Match%20Profile/video_call.dart';
 import 'package:video_chat/components/Model/User/UserModel.dart';
+import 'package:video_chat/components/Screens/Home/CallMessage.dart';
 import 'package:video_chat/components/Screens/Home/MatchedProfile.dart';
 import 'package:video_chat/components/Screens/VideoCall/VideoCall.dart';
 import 'package:video_chat/provider/followes_provider.dart';
@@ -96,6 +98,46 @@ class AgoraService {
     }
   }
 
+  //send Reverse Like Message
+  sendReverseLikeMessage(String toUserId, BuildContext context) async {
+    Map<String, dynamic> req = {};
+    req["isReverseLike"] = true;
+    var user = Provider.of<FollowesProvider>(context, listen: false).userModel;
+    req["name"] = user?.userName ?? "";
+    req["to_gender"] = user?.gender ?? "";
+    req["user_id"] = user.id;
+
+    var image = user.userImages;
+    if (image != null && image.length > 0) {
+      req["image"] = image?.first ?? UserImage(photoUrl: "");
+    } else {
+      req["image"] = UserImage(photoUrl: "");
+    }
+
+    await _client.sendMessageToPeer(
+        toUserId, AgoraRtmMessage.fromText(jsonEncode(req)));
+  }
+
+  //send Like Message
+  sendLikeMessage(String toUserId, BuildContext context) async {
+    Map<String, dynamic> req = {};
+    req["isLike"] = true;
+    var user = Provider.of<FollowesProvider>(context, listen: false).userModel;
+    req["name"] = user?.userName ?? "";
+    req["to_gender"] = user?.gender ?? "";
+    req["user_id"] = user.id;
+
+    var image = user.userImages;
+    if (image != null && image.length > 0) {
+      req["image"] = image?.first ?? UserImage(photoUrl: "");
+    } else {
+      req["image"] = UserImage(photoUrl: "");
+    }
+
+    await _client.sendMessageToPeer(
+        toUserId, AgoraRtmMessage.fromText(jsonEncode(req)));
+  }
+
 //Start Call
   sendVideoCallMessage(String toUserId, String sessionId, String channelName,
       String toGender, BuildContext context) async {
@@ -168,16 +210,16 @@ class AgoraService {
   }
 
   Future<void> logOut() async {
-    // try {
-    //   await _client?.logout();
-    //   debugPrint('logout success: ');
-    // } on AgoraRtmClientException catch (e) {
-    //   throw e.reason.toString();
-    // } on AgoraRtmChannelException catch (e) {
-    //   throw e.reason.toString();
-    // } catch (e) {
-    //   throw e.toString();
-    // }
+    try {
+      await _client?.logout();
+      debugPrint('logout success: ');
+    } on AgoraRtmClientException catch (e) {
+      throw e.reason.toString();
+    } on AgoraRtmChannelException catch (e) {
+      throw e.reason.toString();
+    } catch (e) {
+      throw e.toString();
+    }
   }
 
   Future<void> sendMessage(String message) async {
@@ -284,7 +326,36 @@ class AgoraService {
         .userModel;
     setCallStatus(model);
 
-    if (model.videoCall == true) {
+    if (model.isLike == true) {
+      Flushbar(
+        padding: EdgeInsets.only(top: 16, bottom: 16, left: 16, right: 16),
+        flushbarPosition: FlushbarPosition.TOP,
+        backgroundColor: ColorConstants.button,
+        message: "likes you!",
+        titleText: Text(
+          model.name,
+          style: appTheme.white14Bold,
+        ),
+        mainButton: InkWell(
+          onTap: () {
+            sendReverseLikeMessage(model.userId.toString(),
+                NavigationUtilities.key.currentState.overlay.context);
+          },
+          child: Text(
+            'Click To Like Me',
+            style: appTheme.white14Bold,
+          ),
+        ),
+        duration: Duration(seconds: 5),
+      )..show(NavigationUtilities.key.currentState.overlay.context);
+    } else if (model.isReverseLike == true) {
+      Navigator.pop(NavigationUtilities.key.currentState.overlay.context);
+      NavigationUtilities.push(CallMessage(
+          userId: model.userId,
+          name: model.name ?? "",
+          gender: model.toGender ?? "",
+          imageUrl: model?.image?.photoUrl ?? ""));
+    } else if (model.videoCall == true) {
       if (isOngoingCall == true) {
         sendBusyCallMessage(peerId);
         return;

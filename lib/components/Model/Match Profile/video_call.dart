@@ -83,7 +83,10 @@ class StartVideoCallModel {
       this.endCall,
       this.busyCall,
       this.toGender,
-      this.inSufficientCoin});
+      this.inSufficientCoin,
+      this.isLike,
+      this.userId,
+      this.isReverseLike});
 
   bool videoCall;
   String name;
@@ -95,7 +98,10 @@ class StartVideoCallModel {
   bool endCall;
   bool busyCall;
   bool inSufficientCoin;
+  bool isReverseLike;
+  bool isLike;
   String toGender;
+  int userId;
 
   factory StartVideoCallModel.fromJson(Map<String, dynamic> json) =>
       StartVideoCallModel(
@@ -109,6 +115,9 @@ class StartVideoCallModel {
         sessionId: json["session_id"],
         channelName: json["channel_name"],
         toGender: json["to_gender"],
+        isLike: json["isLike"],
+        userId: json["user_id"],
+        isReverseLike: json["isReverseLike"],
         image: json["image"] == null
             ? ImageResponse(photoUrl: "")
             : ImageResponse.fromJson(json["image"]),
@@ -116,6 +125,7 @@ class StartVideoCallModel {
 
   Map<String, dynamic> toJson() => {
         "VideoCall": videoCall,
+        "isLike": isLike,
         "name": name,
         "session_id": sessionId,
         "channel_name": channelName,
@@ -124,6 +134,8 @@ class StartVideoCallModel {
         "ReceiveCall": receiveCall,
         "EndCall": endCall,
         "BusyCall": busyCall,
+        "user_id": userId,
+        "isReverseLike": isReverseLike,
         "InSufficientCoin": inSufficientCoin
       };
 }

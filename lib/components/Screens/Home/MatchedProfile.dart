@@ -50,7 +50,7 @@ class _MatchedProfileState extends State<MatchedProfile> {
   @override
   void dispose() {
     assetsAudioPlayer.stop();
-    timer.cancel();
+    timer?.cancel();
     super.dispose();
   }
 
@@ -65,7 +65,7 @@ class _MatchedProfileState extends State<MatchedProfile> {
 
     if (status == CallStatus.Start) {
       timer =
-          Timer.periodic(Duration(seconds: 10), (Timer t) => endTimerCall());
+          Timer.periodic(Duration(seconds: 45), (Timer t) => endTimerCall());
     }
   }
 

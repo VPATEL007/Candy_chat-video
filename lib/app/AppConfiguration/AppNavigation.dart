@@ -68,8 +68,9 @@ class AppNavigation {
   }
 
   void logOut() {
-    SocketHealper.shared.disconnect();
     NavigationUtilities.pushReplacementNamed(LanguageSelection.route);
+    SocketHealper.shared.disconnect();
+    AgoraService.instance.logOut();
   }
 
   void moveToLogin() {

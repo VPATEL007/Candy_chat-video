@@ -154,7 +154,13 @@ class _HomeState extends State<Home> {
     return InkWell(
       onTap: () async {
         await Provider.of<MatchingProfileProvider>(context, listen: false)
-            .fetchMatchProfileList(context);
+            .fetchMatchProfileList(context,
+                fromAge: app
+                    .resolve<PrefUtils>()
+                    .getInt(app.resolve<PrefUtils>().keyIsFromAge),
+                toAge: app
+                    .resolve<PrefUtils>()
+                    .getInt(app.resolve<PrefUtils>().keyIsToAge));
         NavigationUtilities.push(MathProfile());
       },
       child: Container(
