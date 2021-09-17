@@ -776,100 +776,108 @@ class _MathProfileState extends State<MathProfile> {
     showDialog(
         context: context,
         builder: (builder) {
-          return Dialog(
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(50),
-            ),
-            elevation: 0,
-            backgroundColor: Colors.transparent,
-            child: Center(
-              child: Container(
-                width: MathUtilities.screenWidth(context) - 32,
-                decoration: BoxDecoration(
-                    shape: BoxShape.rectangle,
-                    color: Colors.white,
-                    borderRadius: BorderRadius.circular(16),
-                    boxShadow: [
-                      BoxShadow(
-                          color: Colors.black54,
-                          offset: Offset(0, 4),
-                          blurRadius: 4),
-                    ]),
-                child: Padding(
-                  padding: EdgeInsets.all(getSize(24)),
-                  child: Column(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      Stack(
-                        children: [
-                          CircularCountDownTimer(
-                            duration: 30,
-                            initialDuration: 0,
-                            controller: CountDownController(),
-                            width: getSize(120),
-                            height: getSize(120),
-                            ringColor: Colors.white,
-                            ringGradient: null,
-                            fillColor: ColorConstants.redText,
-                            fillGradient: null,
-                            backgroundColor: Colors.white,
-                            backgroundGradient: null,
-                            strokeWidth: 6,
-                            strokeCap: StrokeCap.round,
-                            textStyle: TextStyle(
-                                fontSize: 0.0,
-                                color: Colors.white,
-                                fontWeight: FontWeight.bold),
-                            textFormat: CountdownTextFormat.S,
-                            isReverse: false,
-                            isReverseAnimation: false,
-                            isTimerTextShown: false,
-                            autoStart: true,
-                            onStart: () {
-                              print('Countdown Started');
-                            },
-                            onComplete: () {
-                              Navigator.pop(context);
-                            },
-                          ),
-                          Positioned(
-                              child: ClipRRect(
-                                  borderRadius: BorderRadius.circular(119),
-                                  child: CachedNetworkImage(
-                                    imageUrl: (model?.imageUrl?.isEmpty ?? true)
-                                        ? ""
-                                        : model?.imageUrl?.first ?? "",
-                                    width: getSize(119),
-                                    height: getSize(119),
-                                    fit: BoxFit.cover,
-                                    errorWidget: (context, url, error) =>
-                                        Image.asset(
-                                      getUserPlaceHolder(model?.gender ?? ""),
+          return WillPopScope(
+            onWillPop: () {
+              return;
+            },
+            child: Dialog(
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(50),
+              ),
+              elevation: 0,
+              backgroundColor: Colors.transparent,
+              child: Center(
+                child: Container(
+                  width: MathUtilities.screenWidth(context) - 32,
+                  decoration: BoxDecoration(
+                      shape: BoxShape.rectangle,
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(16),
+                      boxShadow: [
+                        BoxShadow(
+                            color: Colors.black54,
+                            offset: Offset(0, 4),
+                            blurRadius: 4),
+                      ]),
+                  child: Padding(
+                    padding: EdgeInsets.all(getSize(24)),
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Stack(
+                          children: [
+                            CircularCountDownTimer(
+                              duration: 30,
+                              initialDuration: 0,
+                              controller: CountDownController(),
+                              width: getSize(120),
+                              height: getSize(120),
+                              ringColor: Colors.white,
+                              ringGradient: null,
+                              fillColor: ColorConstants.redText,
+                              fillGradient: null,
+                              backgroundColor: Colors.white,
+                              backgroundGradient: null,
+                              strokeWidth: 6,
+                              strokeCap: StrokeCap.round,
+                              textStyle: TextStyle(
+                                  fontSize: 0.0,
+                                  color: Colors.white,
+                                  fontWeight: FontWeight.bold),
+                              textFormat: CountdownTextFormat.S,
+                              isReverse: false,
+                              isReverseAnimation: false,
+                              isTimerTextShown: false,
+                              autoStart: true,
+                              onStart: () {
+                                print('Countdown Started');
+                              },
+                              onComplete: () {
+                                Navigator.pop(context);
+                              },
+                            ),
+                            Positioned(
+                                child: ClipRRect(
+                                    borderRadius: BorderRadius.circular(119),
+                                    child: CachedNetworkImage(
+                                      imageUrl:
+                                          (model?.imageUrl?.isEmpty ?? true)
+                                              ? ""
+                                              : model?.imageUrl?.first ?? "",
                                       width: getSize(119),
                                       height: getSize(119),
                                       fit: BoxFit.cover,
-                                    ),
-                                  ))),
-                        ],
-                      ),
-                      SizedBox(
-                        height: 24,
-                      ),
-                      Text(
-                        model.userName,
-                        style: appTheme.black14SemiBold
-                            .copyWith(fontSize: getFontSize(16)),
-                      ),
-                      SizedBox(
-                        height: 16,
-                      ),
-                      Text(
-                        "You like her. Waiting for her reply.",
-                        textAlign: TextAlign.center,
-                        style: appTheme.black16Bold
-                            .copyWith(fontSize: getFontSize(18)),
-                      ),
-                    ],
+                                      errorWidget: (context, url, error) =>
+                                          Image.asset(
+                                        getUserPlaceHolder(model?.gender ?? ""),
+                                        width: getSize(119),
+                                        height: getSize(119),
+                                        fit: BoxFit.cover,
+                                      ),
+                                    ))),
+                          ],
+                        ),
+                        SizedBox(
+                          height: 24,
+                        ),
+                        Text(
+                          model.userName,
+                          style: appTheme.black14SemiBold
+                              .copyWith(fontSize: getFontSize(16)),
+                        ),
+                        SizedBox(
+                          height: 16,
+                        ),
+                        Text(
+                          "You like " +
+                              (model.userName ?? "") +
+                              ". Waiting for reply.",
+                          textAlign: TextAlign.center,
+                          style: appTheme.black16Bold
+                              .copyWith(fontSize: getFontSize(18)),
+                        ),
+                      ],
+                    ),
                   ),
                 ),
               ),
