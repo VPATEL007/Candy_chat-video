@@ -79,8 +79,7 @@ class _LanguageSelectionState extends State<LanguageSelection> {
           .fetchLanguageList(context, false);
     });
 
-    app.resolve<PrefUtils>().saveInt(app.resolve<PrefUtils>().keyIsFromAge, 18);
-    app.resolve<PrefUtils>().saveInt(app.resolve<PrefUtils>().keyIsToAge, 24);
+    
   }
 
   @override

@@ -42,7 +42,7 @@ class AppNavigation {
     NetworkClient.getInstance.hideProgressDialog();
     isValidProfile();
 
-    // SocketHealper.shared.connect();
+    SocketHealper.shared.connect();
     // NavigationUtilities.pushReplacementNamed(Home.route, type: RouteType.fade);
     // CommonApiHelper.shared.appStart();
     // CommonApiHelper.shared.updateFCMToken();

@@ -4,6 +4,7 @@ import 'dart:io' as io;
 
 // import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:firebase_performance/firebase_performance.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -52,6 +53,7 @@ import 'components/Screens/UserProfile/UserProfile.dart';
 KiwiContainer app;
 FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
     FlutterLocalNotificationsPlugin();
+FirebasePerformance _performance = FirebasePerformance.instance;
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -93,7 +95,7 @@ Future<void> main() async {
 Future<void> setupFCM() async {
   await Firebase.initializeApp();
   // FlutterError.onError = FirebaseCrashlytics.instance.recordFlutterError;
-
+  _performance.setPerformanceCollectionEnabled(true);
   final FirebaseMessaging _firebaseMessaging = FirebaseMessaging.instance;
 
   FirebaseMessaging.onMessage.listen((RemoteMessage event) {

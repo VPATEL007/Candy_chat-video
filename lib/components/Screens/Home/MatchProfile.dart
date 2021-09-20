@@ -38,7 +38,7 @@ class _MathProfileState extends State<MathProfile> {
   MatchEngine _matchEngine;
   // GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey();
 
-  RangeValues _currentRangeValues = const RangeValues(18, 24);
+  RangeValues _currentRangeValues = RangeValues(11, 50);
   int selectedLanguage;
   SlideRegion region = SlideRegion.inSuperLikeRegion;
   int currentIndex = 0;
@@ -56,6 +56,8 @@ class _MathProfileState extends State<MathProfile> {
     });
     prepareSwipeItems();
 
+    print(
+        app.resolve<PrefUtils>().getInt(app.resolve<PrefUtils>().keyIsFromAge));
     _currentRangeValues = RangeValues(
         app
             .resolve<PrefUtils>()
@@ -65,6 +67,14 @@ class _MathProfileState extends State<MathProfile> {
             .resolve<PrefUtils>()
             .getInt(app.resolve<PrefUtils>().keyIsToAge)
             .toDouble());
+
+    if (_currentRangeValues.start == 0 && _currentRangeValues.end == 0) {
+      app
+          .resolve<PrefUtils>()
+          .saveInt(app.resolve<PrefUtils>().keyIsFromAge, 11);
+      app.resolve<PrefUtils>().saveInt(app.resolve<PrefUtils>().keyIsToAge, 50);
+      _currentRangeValues = RangeValues(11, 50);
+    }
   }
 
   prepareSwipeItems() {

@@ -30,6 +30,8 @@ class _LoginState extends State<Login> {
     app
         .resolve<PrefUtils>()
         .saveBoolean(app.resolve<PrefUtils>().keyIsShowIntro, true);
+    app.resolve<PrefUtils>().saveInt(app.resolve<PrefUtils>().keyIsFromAge, 11);
+    app.resolve<PrefUtils>().saveInt(app.resolve<PrefUtils>().keyIsToAge, 50);
   }
 
   @override
