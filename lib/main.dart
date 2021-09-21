@@ -2,6 +2,7 @@ import 'dart:io' as io;
 import 'dart:io';
 
 import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 // import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:firebase_performance/firebase_performance.dart';
@@ -88,7 +89,7 @@ Future<void> main() async {
 
 Future<void> setupFCM() async {
   await Firebase.initializeApp();
-  // FlutterError.onError = FirebaseCrashlytics.instance.recordFlutterError;
+  FlutterError.onError = FirebaseCrashlytics.instance.recordFlutterError;
   _performance.setPerformanceCollectionEnabled(true);
   final FirebaseMessaging _firebaseMessaging = FirebaseMessaging.instance;
 

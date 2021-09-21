@@ -53,141 +53,148 @@ class _WithDrawState extends State<WithDraw> {
         padding: EdgeInsets.only(left: getSize(16), right: getSize(16)),
         child: Container(
           width: MathUtilities.screenWidth(context),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              SizedBox(
-                height: getSize(20),
-              ),
-              Center(
-                child: Text(
-                  Provider.of<FollowesProvider>(context, listen: false)
-                          .userModel
-                          ?.coinsEarned
-                          ?.toStringAsFixed(0) ??
-                      "",
-                  style: appTheme?.black16Bold.copyWith(
-                      fontSize: getFontSize(80), color: ColorConstants.redText),
+          child: SingleChildScrollView(
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                SizedBox(
+                  height: getSize(20),
                 ),
-              ),
-              SizedBox(
-                height: getSize(12),
-              ),
-              Center(
-                child: Text(
-                  "Earned Coins",
-                  style: appTheme?.black16Medium,
-                ),
-              ),
-              SizedBox(
-                height: getSize(20),
-              ),
-              Text(
-                "Coins",
-                style: appTheme?.black16Medium,
-              ),
-              SizedBox(
-                height: getSize(12),
-              ),
-              CommonTextfield(
-                textOption: TextFieldOption(
-                    keyboardType: TextInputType.phone,
-                    hintText: "Coins",
-                    inputController: coinsController),
-                textCallback: (text) {},
-              ),
-              SizedBox(
-                height: getSize(12),
-              ),
-              Text(
-                "Payment types",
-                style: appTheme?.black16Medium,
-              ),
-              SizedBox(
-                height: getSize(12),
-              ),
-              Container(
-                width: MathUtilities.screenWidth(context) - getSize(32),
-                decoration: BoxDecoration(
-                    color: fromHex("#F6F6F6"),
-                    borderRadius:
-                        BorderRadius.all(Radius.circular(getSize(10)))),
-                child: Padding(
-                  padding: EdgeInsets.only(left: 16),
-                  child: DropdownButton<String>(
-                    value: paymentType,
-                    hint: Padding(
-                      padding: EdgeInsets.all(getSize(16)),
-                      child: Text("Select Payment Type"),
-                    ),
-                    iconSize: 0,
-                    elevation: 16,
-                    style: appTheme?.black14Normal,
-                    underline: Container(
-                      height: 0,
-                      color: Colors.white,
-                    ),
-                    onChanged: (String? newValue) {
-                      paymentType = newValue;
-                      setState(() {});
-                    },
-                    items: ((withDrawProvider?.paymentMethod.length ?? 0) > 0
-                            ? withDrawProvider?.paymentMethod
-                                .map((e) => e.name ?? "")
-                            : <String>[])!
-                        .map<DropdownMenuItem<String>>((String value) {
-                      return DropdownMenuItem<String>(
-                        value: value,
-                        child: Text(value),
-                      );
-                    }).toList(),
+                Center(
+                  child: Text(
+                    Provider.of<FollowesProvider>(context, listen: false)
+                            .userModel
+                            ?.coinsEarned
+                            ?.toStringAsFixed(0) ??
+                        "",
+                    style: appTheme?.black16Bold.copyWith(
+                        fontSize: getFontSize(80),
+                        color: ColorConstants.redText),
                   ),
                 ),
-              ),
-              SizedBox(
-                height: getSize(12),
-              ),
-              paymentType?.toLowerCase() == "paytm"
-                  ? Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          "Mobile no",
-                          style: appTheme?.black16Medium,
-                        ),
-                        SizedBox(
-                          height: getSize(12),
-                        ),
-                        CommonTextfield(
-                          textOption: TextFieldOption(
-                              keyboardType: TextInputType.phone,
-                              hintText: "Mobile no",
-                              inputController: mobileController),
-                          textCallback: (text) {},
-                        )
-                      ],
-                    )
-                  : paymentType != null
-                      ? Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              "Email",
-                              style: appTheme?.black16Medium,
-                            ),
-                            SizedBox(
-                              height: getSize(12),
-                            ),
-                            CommonTextfield(
-                              textOption: TextFieldOption(
-                                  hintText: "Email",
-                                  inputController: emailController),
-                              textCallback: (text) {},
-                            )
-                          ],
-                        )
-                      : SizedBox()
-            ],
+                SizedBox(
+                  height: getSize(12),
+                ),
+                Center(
+                  child: Text(
+                    "Earned Coins",
+                    style: appTheme?.black16Medium,
+                  ),
+                ),
+                SizedBox(
+                  height: getSize(20),
+                ),
+                Text(
+                  "Coins",
+                  style: appTheme?.black16Medium,
+                ),
+                SizedBox(
+                  height: getSize(12),
+                ),
+                CommonTextfield(
+                  textOption: TextFieldOption(
+                      keyboardType: TextInputType.phone,
+                      hintText: "Coins",
+                      inputController: coinsController),
+                  textCallback: (text) {},
+                ),
+                SizedBox(
+                  height: getSize(12),
+                ),
+                Text(
+                  "Payment types",
+                  style: appTheme?.black16Medium,
+                ),
+                SizedBox(
+                  height: getSize(12),
+                ),
+                Container(
+                  width: MathUtilities.screenWidth(context) - getSize(32),
+                  decoration: BoxDecoration(
+                      color: fromHex("#F6F6F6"),
+                      borderRadius:
+                          BorderRadius.all(Radius.circular(getSize(10)))),
+                  child: Padding(
+                    padding: EdgeInsets.only(left: 16),
+                    child: DropdownButton<String>(
+                      value: paymentType,
+                      hint: Padding(
+                        padding: EdgeInsets.all(getSize(16)),
+                        child: Text("Select Payment Type"),
+                      ),
+                      iconSize: 0,
+                      elevation: 16,
+                      style: appTheme?.black14Normal,
+                      underline: Container(
+                        height: 0,
+                        color: Colors.white,
+                      ),
+                      onChanged: (String? newValue) {
+                        paymentType = newValue;
+                        setState(() {});
+                      },
+                      items: ((withDrawProvider?.paymentMethod.length ?? 0) > 0
+                              ? withDrawProvider?.paymentMethod
+                                  .map((e) => e.name ?? "")
+                              : <String>[])!
+                          .map<DropdownMenuItem<String>>((String value) {
+                        return DropdownMenuItem<String>(
+                          value: value,
+                          child: Text(value),
+                        );
+                      }).toList(),
+                    ),
+                  ),
+                ),
+                SizedBox(
+                  height: getSize(12),
+                ),
+                paymentType?.toLowerCase() == "paytm"
+                    ? Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            "Mobile no",
+                            style: appTheme?.black16Medium,
+                          ),
+                          SizedBox(
+                            height: getSize(12),
+                          ),
+                          CommonTextfield(
+                            textOption: TextFieldOption(
+                                keyboardType: TextInputType.phone,
+                                hintText: "Mobile no",
+                                inputController: mobileController),
+                            textCallback: (text) {},
+                          )
+                        ],
+                      )
+                    : paymentType != null
+                        ? Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                "Email",
+                                style: appTheme?.black16Medium,
+                              ),
+                              SizedBox(
+                                height: getSize(12),
+                              ),
+                              CommonTextfield(
+                                textOption: TextFieldOption(
+                                    hintText: "Email",
+                                    inputController: emailController),
+                                textCallback: (text) {},
+                              )
+                            ],
+                          )
+                        : SizedBox(),
+                SizedBox(
+                  height: 80,
+                )
+              ],
+            ),
           ),
         ),
       )),

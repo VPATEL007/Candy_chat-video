@@ -6,7 +6,7 @@ import 'package:agora_rtm/agora_rtm.dart';
 import 'package:another_flushbar/flushbar.dart';
 
 import 'package:flutter/material.dart';
-import 'package:flutter_tags/flutter_tags.dart';
+
 import 'package:path_provider/path_provider.dart';
 import 'package:provider/provider.dart';
 import 'package:video_chat/app/app.export.dart';
@@ -347,7 +347,7 @@ class AgoraService {
             style: appTheme?.white14Bold,
           ),
         ),
-        duration: Duration(seconds: 5),
+        duration: Duration(seconds: 20),
       )..show(NavigationUtilities.key.currentState!.overlay!.context);
     } else if (model.isReverseLike == true) {
       Navigator.pop(NavigationUtilities.key.currentState!.overlay!.context);
@@ -513,46 +513,46 @@ class AgoraService {
                       SizedBox(
                         height: getSize(18),
                       ),
-                      Container(
-                        child: Tags(
-                            itemCount: provider.tagsList.length,
-                            spacing: getSize(8),
-                            runSpacing: getSize(20),
-                            alignment: WrapAlignment.center,
-                            itemBuilder: (int index) {
-                              return ItemTags(
-                                active: false,
-                                pressEnabled: true,
-                                activeColor: fromHex("#FFDFDF"),
-                                title: provider.tagsList[index].tag ?? "",
-                                index: index,
-                                textStyle: appTheme!.black12Normal
-                                    .copyWith(fontWeight: FontWeight.w500),
-                                textColor: Colors.black,
-                                textActiveColor: ColorConstants.red,
-                                color: fromHex("#F1F1F1"),
-                                elevation: 0,
-                                padding: EdgeInsets.only(
-                                    left: getSize(16),
-                                    right: getSize(16),
-                                    top: getSize(7),
-                                    bottom: getSize(7)),
-                                onPressed: (item) {
-                                  if (selectedTags.contains(provider
-                                      .tagsList[item.index ?? 0].id
-                                      .toString())) {
-                                    selectedTags.remove(provider
-                                        .tagsList[item.index ?? 0].id
-                                        .toString());
-                                  } else {
-                                    selectedTags.add(provider
-                                        .tagsList[item.index ?? 0].id
-                                        .toString());
-                                  }
-                                },
-                              );
-                            }),
-                      ),
+                      // Container(
+                      //   child: Tags(
+                      //       itemCount: provider.tagsList.length,
+                      //       spacing: getSize(8),
+                      //       runSpacing: getSize(20),
+                      //       alignment: WrapAlignment.center,
+                      //       itemBuilder: (int index) {
+                      //         return ItemTags(
+                      //           active: false,
+                      //           pressEnabled: true,
+                      //           activeColor: fromHex("#FFDFDF"),
+                      //           title: provider.tagsList[index].tag ?? "",
+                      //           index: index,
+                      //           textStyle: appTheme!.black12Normal
+                      //               .copyWith(fontWeight: FontWeight.w500),
+                      //           textColor: Colors.black,
+                      //           textActiveColor: ColorConstants.red,
+                      //           color: fromHex("#F1F1F1"),
+                      //           elevation: 0,
+                      //           padding: EdgeInsets.only(
+                      //               left: getSize(16),
+                      //               right: getSize(16),
+                      //               top: getSize(7),
+                      //               bottom: getSize(7)),
+                      //           onPressed: (item) {
+                      //             if (selectedTags.contains(provider
+                      //                 .tagsList[item.index ?? 0].id
+                      //                 .toString())) {
+                      //               selectedTags.remove(provider
+                      //                   .tagsList[item.index ?? 0].id
+                      //                   .toString());
+                      //             } else {
+                      //               selectedTags.add(provider
+                      //                   .tagsList[item.index ?? 0].id
+                      //                   .toString());
+                      //             }
+                      //           },
+                      //         );
+                      //       }),
+                      // ),
                       SizedBox(
                         height: getSize(35),
                       ),

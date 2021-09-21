@@ -33,7 +33,7 @@ dependencies:
   permission_handler: ^8.1.6
   flutter_spinkit: ^5.1.0
   another_flushbar: ^1.10.24
-  flutter_tags: ^1.0.0-nullsafety.1
+ 
   flutter_facebook_auth: ^3.5.1
   sign_in_with_apple: ^3.0.0
   # http_proxy: ^1.1.0
@@ -57,10 +57,13 @@ dependencies:
   firebase_performance: ^0.7.0+9
 
   firebase_messaging: ^10.0.7
+  firebase_core: ^1.6.0
   flutter_local_notifications : ^8.2.0
   circular_countdown_timer: ^0.2.0
   assets_audio_player: ^3.0.3+6
   dio: ^4.0.0
+  simple_tags: ^0.0.4
+  firebase_crashlytics: ^2.2.1
   flutter_absolute_path:
     path: ./flutter_absolute_path
   

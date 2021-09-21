@@ -2,9 +2,10 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:circular_countdown_timer/circular_countdown_timer.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_tags/flutter_tags.dart';
+
 import 'package:lazy_loading_list/lazy_loading_list.dart';
 import 'package:provider/provider.dart';
+import 'package:simple_tags/simple_tags.dart';
 
 import 'package:video_chat/app/app.export.dart';
 import 'package:video_chat/app/utils/CommonWidgets.dart';
@@ -33,6 +34,7 @@ class _MathProfileState extends State<MathProfile> {
 
   RangeValues _currentRangeValues = RangeValues(11, 50);
   int? selectedLanguage;
+  String? selectedLanguageName;
   SlideRegion region = SlideRegion.inSuperLikeRegion;
   int currentIndex = 0;
   int page = 1;
@@ -569,7 +571,7 @@ class _MathProfileState extends State<MathProfile> {
           borderRadius: BorderRadius.circular(
             getSize(50),
           ),
-          color: Colors.white.withOpacity(0.3),
+          color: Colors.black.withOpacity(0.3),
         ),
         child: Padding(
           padding: EdgeInsets.all(getSize(14)),
@@ -666,43 +668,70 @@ class _MathProfileState extends State<MathProfile> {
                         height: getSize(15),
                       ),
                       Container(
-                        child: Tags(
-                            itemCount: provider.arrList.length,
-                            spacing: getSize(8),
-                            runSpacing: getSize(20),
-                            alignment: WrapAlignment.center,
-                            itemBuilder: (int index) {
-                              return ItemTags(
-                                active: false,
-                                pressEnabled: true,
-                                activeColor: fromHex("#FFDFDF"),
-                                title:
-                                    provider.arrList[index].languageName ?? "",
-                                index: index,
-                                textStyle: appTheme!.black12Normal
-                                    .copyWith(fontWeight: FontWeight.w500),
-                                textColor: Colors.black,
-                                textActiveColor: ColorConstants.red,
-                                color: fromHex("#F1F1F1"),
-                                elevation: 0,
-                                padding: EdgeInsets.only(
-                                    left: getSize(16),
-                                    right: getSize(16),
-                                    top: getSize(7),
-                                    bottom: getSize(7)),
-                                onPressed: (item) {
-                                  // if (selectedLanguage ==
-                                  //     provider.arrList[item.index].id) {
-                                  //   selectedLanguage = null;
-                                  // } else {
-                                  selectedLanguage =
-                                      provider.arrList[item.index ?? 0].id;
-                                  setState(() {});
-                                  // }
-                                },
-                              );
-                            }),
-                      ),
+                          child: SimpleTags(
+                        content: provider.arrList
+                            .map((e) => e.languageName ?? "")
+                            .toList(),
+                        wrapSpacing: getSize(6),
+                        wrapRunSpacing: getSize(20),
+                        onTagPress: (tag) {
+                          selectedLanguage = provider.arrList
+                                  .firstWhere(
+                                      (element) => element.languageName == tag)
+                                  .id ??
+                              0;
+                        },
+                        onTagLongPress: (tag) {},
+                        onTagDoubleTap: (tag) {},
+                        tagContainerPadding: EdgeInsets.all(10),
+                        tagTextStyle: appTheme!.black12Normal.copyWith(
+                            fontWeight: FontWeight.w500,
+                            color: ColorConstants.red),
+
+                        tagContainerDecoration: BoxDecoration(
+                          color: fromHex("#FFDFDF"),
+                          borderRadius: BorderRadius.all(
+                            Radius.circular(6),
+                          ),
+                        ), // This trailing comma makes auto-formatting nicer for build methods.
+                      )
+                          // Tags(
+                          //     itemCount: provider.arrList.length,
+                          //     spacing: getSize(8),
+                          //     runSpacing: getSize(20),
+                          //     alignment: WrapAlignment.center,
+                          //     itemBuilder: (int index) {
+                          //       return ItemTags(
+                          //         active: false,
+                          //         pressEnabled: true,
+                          //         activeColor: fromHex("#FFDFDF"),
+                          //         title:
+                          //             provider.arrList[index].languageName ?? "",
+                          //         index: index,
+                          //         textStyle: appTheme!.black12Normal
+                          //             .copyWith(fontWeight: FontWeight.w500),
+                          //         textColor: Colors.black,
+                          //         textActiveColor: ColorConstants.red,
+                          //         color: fromHex("#F1F1F1"),
+                          //         elevation: 0,
+                          //         padding: EdgeInsets.only(
+                          //             left: getSize(16),
+                          //             right: getSize(16),
+                          //             top: getSize(7),
+                          //             bottom: getSize(7)),
+                          //         onPressed: (item) {
+                          //           // if (selectedLanguage ==
+                          //           //     provider.arrList[item.index].id) {
+                          //           //   selectedLanguage = null;
+                          //           // } else {
+                          //           selectedLanguage =
+                          //               provider.arrList[item.index ?? 0].id;
+                          //           setState(() {});
+                          //           // }
+                          //         },
+                          //       );
+                          //     }),
+                          ),
                       SizedBox(
                         height: getSize(35),
                       ),

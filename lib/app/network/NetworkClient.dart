@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:dio/adapter.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
@@ -238,7 +239,7 @@ class NetworkClient {
       {required Function(dynamic response, String message) successCallback,
       required Function(String statusCode, String message) failureCallback}) {
     String statusCode = response.data['status'].toString();
-    String message = response.data['message'];
+    String? message = response.data['message'];
 
     if (statusCode == "0") {
       int status = response.data['status'];
@@ -254,13 +255,13 @@ class NetworkClient {
     if (statusCode == "success") {
       if (response.data["data"] is Map<String, dynamic> ||
           response.data["data"] is List<dynamic>) {
-        successCallback(response.data["data"], message);
+        successCallback(response.data["data"], message ?? "");
         return;
       } else if (response.data["data"] is List<Map<String, dynamic>>) {
-        successCallback(response.data["data"], message);
+        successCallback(response.data["data"], message ?? "");
         return;
       } else {
-        successCallback(response.data["data"], message);
+        successCallback(response.data["data"], message ?? "");
         // failureCallback("$statusCode", message);
         return;
       }
@@ -278,7 +279,7 @@ class NetworkClient {
     //   failureCallback("$statusCode", message);
     // }
 
-    failureCallback("$statusCode", message);
+    failureCallback("$statusCode", message ?? "");
     return;
   }
 

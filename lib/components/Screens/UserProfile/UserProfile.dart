@@ -1,8 +1,8 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_tags/flutter_tags.dart';
 import 'package:provider/provider.dart';
+import 'package:simple_tags/simple_tags.dart';
 import 'package:video_chat/app/Helper/inAppPurchase_service.dart';
 import 'package:video_chat/app/app.export.dart';
 import 'package:video_chat/app/constant/ColorConstant.dart';
@@ -35,7 +35,6 @@ class UserProfile extends StatefulWidget {
 class _UserProfileState extends State<UserProfile> {
   int currentIndex = 0;
   List<String> selectedTags = [];
-  final GlobalKey<TagsState> _tagStateKey = GlobalKey<TagsState>();
 
   @override
   void initState() {
@@ -279,40 +278,26 @@ class _UserProfileState extends State<UserProfile> {
         children: [
           tagsProvider.userFeedBack.length == 0
               ? Text("Feedback not received")
-              : Tags(
-                  key: _tagStateKey,
-                  itemCount: 10,
-                  spacing: getSize(6),
-                  runSpacing: getSize(20),
-                  alignment: WrapAlignment.center,
-                  itemBuilder: (int index) {
-                    return ItemTags(
-                      key: Key(index.toString()),
-                      active: true,
-                      pressEnabled: false,
-                      activeColor: fromHex("#FFDFDF"),
-                      title: tagsProvider.userFeedBack[index].tag?.name ?? "",
-                      index: index,
-                      onPressed: (item) {},
-                      textStyle: appTheme!.black12Normal
-                          .copyWith(fontWeight: FontWeight.w500),
-                      textColor: Colors.black,
-                      textActiveColor: ColorConstants.red,
-                      color: fromHex("#F1F1F1"),
-                      elevation: 0,
-                      borderRadius: BorderRadius.circular(6),
-                      padding: EdgeInsets.only(
-                          left: getSize(14),
-                          right: getSize(14),
-                          top: getSize(7),
-                          bottom: getSize(7)),
-                    );
-                  }),
-          // SizedBox(height: 20),
-          // getPopBottomButton(context, "Submit FeedBack", () {
-          //   tagsProvider.submitTags(
-          //       context, selectedTags, widget.userModel?.id ?? 0);
-          // })
+              : SimpleTags(
+                  content: tagsProvider.userFeedBack
+                      .map((e) => e.tag?.name ?? "")
+                      .toList(),
+                  wrapSpacing: getSize(6),
+                  wrapRunSpacing: getSize(20),
+                  onTagPress: (tag) {},
+                  onTagLongPress: (tag) {},
+                  onTagDoubleTap: (tag) {},
+                  tagContainerPadding: EdgeInsets.all(10),
+                  tagTextStyle: appTheme!.black12Normal.copyWith(
+                      fontWeight: FontWeight.w500, color: ColorConstants.red),
+
+                  tagContainerDecoration: BoxDecoration(
+                    color: fromHex("#FFDFDF"),
+                    borderRadius: BorderRadius.all(
+                      Radius.circular(6),
+                    ),
+                  ), // This trailing comma makes auto-formatting nicer for build methods.
+                )
         ],
       ),
     );
