@@ -14,7 +14,7 @@ import 'package:video_chat/provider/matching_profile_provider.dart';
 
 class Home extends StatefulWidget {
   static const route = "Home";
-  Home({Key key}) : super(key: key);
+  Home({Key? key}) : super(key: key);
 
   @override
   _HomeState createState() => _HomeState();
@@ -33,7 +33,7 @@ class _HomeState extends State<Home> {
     super.initState();
     Provider.of<FollowesProvider>(context, listen: false)
         .fetchMyProfile(context);
-    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+    WidgetsBinding.instance?.addPostFrameCallback((timeStamp) {
       Provider.of<DiscoverProvider>(context, listen: false)
           .fetchDiscoverProfileList(context, SortBy.General);
 
@@ -94,7 +94,7 @@ class _HomeState extends State<Home> {
                   child: Center(
                     child: Text(
                       getRandomNumberString,
-                      style: appTheme.white14Bold
+                      style: appTheme?.white14Bold
                           .copyWith(fontSize: getFontSize(25)),
                     ),
                   ),
@@ -139,7 +139,7 @@ class _HomeState extends State<Home> {
               child: Text(
                 "Girls in real time interaction\n Find your Dream girl right now!",
                 textAlign: TextAlign.center,
-                style: appTheme.black14Normal,
+                style: appTheme?.black14Normal,
               ),
             ),
             Spacer(),
@@ -176,7 +176,7 @@ class _HomeState extends State<Home> {
         child: Center(
           child: Text(
             "Start Matching",
-            style: appTheme.black16Bold.copyWith(color: ColorConstants.red),
+            style: appTheme?.black16Bold.copyWith(color: ColorConstants.red),
           ),
         ),
       ),

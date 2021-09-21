@@ -15,9 +15,9 @@ import 'package:video_chat/provider/language_provider.dart';
 
 class LanguageSelection extends StatefulWidget {
   static const route = "LanguageSelection";
-  bool isChange = false;
+  bool? isChange = false;
 
-  LanguageSelection({Key key, this.isChange}) : super(key: key);
+  LanguageSelection({Key? key, this.isChange}) : super(key: key);
 
   @override
   _LanguageSelectionState createState() => _LanguageSelectionState();
@@ -36,9 +36,8 @@ class _LanguageSelectionState extends State<LanguageSelection> {
     if (!app.resolve<PrefUtils>().isShowIntro()) {
       Map<String, dynamic> req = {};
       req["langid"] = Provider.of<LanguageProvider>(context, listen: false)
-              ?.selctedLanguage
-              ?.id ??
-          "";
+          .selctedLanguages
+          ?.id;
       print(req);
 
       NetworkClient.getInstance.showLoader(context);
@@ -74,12 +73,10 @@ class _LanguageSelectionState extends State<LanguageSelection> {
   @override
   void initState() {
     super.initState();
-    WidgetsBinding.instance.addPostFrameCallback((_) {
+    WidgetsBinding.instance?.addPostFrameCallback((_) {
       Provider.of<LanguageProvider>(context, listen: false)
           .fetchLanguageList(context, false);
     });
-
-    
   }
 
   @override
@@ -92,7 +89,7 @@ class _LanguageSelectionState extends State<LanguageSelection> {
       }),
       body: Consumer<LanguageProvider>(
         builder: (ctx, languageProvider, _) => SafeArea(
-          child: (languageProvider?.arrList?.isEmpty ?? true)
+          child: (languageProvider.arrList.isEmpty)
               ? Container()
               : Container(
                   width: MathUtilities.screenWidth(context),
@@ -144,7 +141,8 @@ class _LanguageSelectionState extends State<LanguageSelection> {
                           child: ClipRRect(
                             borderRadius: BorderRadius.circular(getSize(210)),
                             child: getImageView(
-                                languageProvider?.selctedLanguage?.flagUrl,
+                                languageProvider.selctedLanguages?.flagUrl ??
+                                    "",
                                 height: getSize(200),
                                 width: getSize(200)),
                           ),
@@ -155,7 +153,7 @@ class _LanguageSelectionState extends State<LanguageSelection> {
                       ),
                       Center(
                         child: getColorText(
-                            languageProvider?.selctedLanguage?.languageName ??
+                            languageProvider.selctedLanguages?.languageName ??
                                 "",
                             ColorConstants.black,
                             fontSize: 35),
@@ -192,10 +190,10 @@ class _LanguageSelectionState extends State<LanguageSelection> {
   }
 
   getLanguageItem(LanguageModel model, LanguageProvider languageProvider) {
-    var height = model.id == languageProvider.selctedLanguage.id
+    var height = model.id == languageProvider.selctedLanguages?.id
         ? getSize(100)
         : getSize(62);
-    var width = model.id == languageProvider.selctedLanguage.id
+    var width = model.id == languageProvider.selctedLanguages?.id
         ? getSize(100)
         : getSize(62);
     return InkWell(
@@ -222,7 +220,8 @@ class _LanguageSelectionState extends State<LanguageSelection> {
           ),
           child: ClipRRect(
             borderRadius: BorderRadius.circular(getSize(62)),
-            child: getImageView(model.flagUrl, height: height, width: width),
+            child:
+                getImageView(model.flagUrl ?? "", height: height, width: width),
           ),
         ),
       ),

@@ -17,7 +17,7 @@ import 'package:video_chat/provider/language_provider.dart';
 
 class Login extends StatefulWidget {
   static const route = "Login";
-  Login({Key key}) : super(key: key);
+  Login({Key? key}) : super(key: key);
 
   @override
   _LoginState createState() => _LoginState();
@@ -85,13 +85,13 @@ class _LoginState extends State<Login> {
                 child: Text(
                     "Welcome to the new world of socializing via video call and chat",
                     textAlign: TextAlign.center,
-                    style: appTheme.white14Normal),
+                    style: appTheme?.white14Normal),
               ),
               Spacer(),
               if (Platform.isIOS)
                 getButton(icApple, "Continue with Apple", Colors.black, () {
-                  int langId =
-                      context.read<LanguageProvider>().selctedLanguage?.id;
+                  int? langId =
+                      context.read<LanguageProvider>().selctedLanguages?.id;
                   String deviceId = app.resolve<PrefUtils>().deviceId ?? "";
                   Map<String, dynamic> req = {
                     "device_id": deviceId,
@@ -106,8 +106,8 @@ class _LoginState extends State<Login> {
               getButton(
                   icFacebook, "Continue with Facebook", ColorConstants.facebook,
                   () {
-                int langId =
-                    context.read<LanguageProvider>().selctedLanguage?.id;
+                int? langId =
+                    context.read<LanguageProvider>().selctedLanguages?.id;
                 String deviceId = app.resolve<PrefUtils>().deviceId ?? "";
                 Map<String, dynamic> req = {
                   "device_id": deviceId,
@@ -121,8 +121,8 @@ class _LoginState extends State<Login> {
                 height: getSize(12),
               ),
               getButton(icGoogle, "Continue with Google", Colors.white, () {
-                int langId =
-                    context.read<LanguageProvider>().selctedLanguage?.id;
+                int? langId =
+                    context.read<LanguageProvider>().selctedLanguages?.id;
                 String deviceId = app.resolve<PrefUtils>().deviceId ?? "";
                 Map<String, dynamic> req = {
                   "device_id": deviceId,
@@ -134,8 +134,8 @@ class _LoginState extends State<Login> {
                 height: getSize(12),
               ),
               getButton(icGuest, "Continue with Guest", Colors.white, () async {
-                int langId =
-                    context.read<LanguageProvider>().selctedLanguage?.id;
+                int? langId =
+                    context.read<LanguageProvider>().selctedLanguages?.id;
                 String deviceId = app.resolve<PrefUtils>().deviceId ?? "";
                 Map<String, dynamic> req = {
                   "device_id": deviceId,
@@ -187,8 +187,8 @@ class _LoginState extends State<Login> {
               Text(
                 title,
                 style: color == Colors.white
-                    ? appTheme.black16Bold.copyWith(fontSize: getFontSize(14))
-                    : appTheme.white14Bold,
+                    ? appTheme?.black16Bold.copyWith(fontSize: getFontSize(14))
+                    : appTheme?.white14Bold,
               )
             ],
           ),

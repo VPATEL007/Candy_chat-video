@@ -12,12 +12,12 @@ class ValidationUtils {
     String patttern = r'(^(?:[+0]9)?[0-9]{10}$)';
     RegExp regExp = new RegExp(patttern);
     if (isStingEmpty(value)) {
-      View.showMessage(context, R.string().errorString.enterPhone,
-          title: R.string().commonString.error, mode: DisplayMode.ERROR);
+      View.showMessage(context, R.string()?.errorString.enterPhone ?? "",
+          title: R.string()?.commonString.error ?? "", mode: DisplayMode.ERROR);
       return false;
     } else if (!regExp.hasMatch(value)) {
-      View.showMessage(context, R.string().errorString.enterValidPhone,
-          title: R.string().commonString.error, mode: DisplayMode.ERROR);
+      View.showMessage(context, R.string()?.errorString.enterValidPhone ?? "",
+          title: R.string()?.commonString.error ?? "", mode: DisplayMode.ERROR);
       return false;
     }
     return true;
@@ -26,6 +26,6 @@ class ValidationUtils {
   static bool validateEmail(String value) {
     Pattern pattern =
         r'^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$';
-    return (!RegExp(pattern).hasMatch(value)) ? false : true;
+    return (!RegExp(pattern.toString()).hasMatch(value)) ? false : true;
   }
 }

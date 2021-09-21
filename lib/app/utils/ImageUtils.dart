@@ -10,7 +10,7 @@ CachedNetworkImage getImageView(String url,
     width = 100.0,
     placeHolderImage,
     fit: BoxFit.contain,
-    BoxShape shape}) {
+    BoxShape? shape}) {
   String imageUrl = (url == null || url.length == 0)
       ? ""
       : ((url.startsWith("images") || url.startsWith("/"))
@@ -19,7 +19,7 @@ CachedNetworkImage getImageView(String url,
   return new CachedNetworkImage(
     height: height,
     width: width,
-    imageUrl: imageUrl??"",
+    imageUrl: imageUrl,
     fit: fit,
     placeholder: (context, url) => Container(
       height: height,

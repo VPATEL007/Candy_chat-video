@@ -17,11 +17,11 @@ import 'package:video_chat/provider/matching_profile_provider.dart';
 import 'package:video_chat/provider/video_call_status_provider.dart';
 
 class MatchedProfile extends StatefulWidget {
-  final String name;
-  final String id, fromId;
-  final String toImageUrl, fromImageUrl, channelName, token, toGender;
+  final String? name;
+  final String? id, fromId;
+  final String? toImageUrl, fromImageUrl, channelName, token, toGender;
   MatchedProfile(
-      {Key key,
+      {Key? key,
       @required this.id,
       @required this.fromId,
       @required this.toImageUrl,
@@ -39,7 +39,7 @@ class MatchedProfile extends StatefulWidget {
 class _MatchedProfileState extends State<MatchedProfile> {
   // List<ProductDetails> _products = [];
   final assetsAudioPlayer = AssetsAudioPlayer();
-  Timer timer;
+  Timer? timer;
 
   @override
   void initState() {
@@ -71,10 +71,10 @@ class _MatchedProfileState extends State<MatchedProfile> {
 
   endTimerCall() {
     Navigator.pop(context);
-    AgoraService.instance.sendRejectCallMessage(widget.id);
+    AgoraService.instance.sendRejectCallMessage(widget.id ?? "");
     AgoraService.instance.updateCallStatus(
-        channelName: widget.channelName,
-        sessionId: widget.token,
+        channelName: widget.channelName ?? "",
+        sessionId: widget.token ?? "",
         status: "unanswered");
   }
 
@@ -102,7 +102,7 @@ class _MatchedProfileState extends State<MatchedProfile> {
                   Center(
                     child: Text(
                       videoCallStatus.statusText,
-                      style: appTheme.black14Normal.copyWith(
+                      style: appTheme?.black14Normal.copyWith(
                           fontWeight: FontWeight.w500,
                           fontSize: getFontSize(16)),
                     ),
@@ -133,7 +133,7 @@ class _MatchedProfileState extends State<MatchedProfile> {
                     child: Center(
                       child: Text(
                         "You are invited to a video call with ${widget.name}.",
-                        style: appTheme.black14Normal.copyWith(
+                        style: appTheme?.black14Normal.copyWith(
                             fontWeight: FontWeight.w500,
                             fontSize: getFontSize(16)),
                         textAlign: TextAlign.center,
@@ -152,11 +152,11 @@ class _MatchedProfileState extends State<MatchedProfile> {
         ));
   }
 
-  getCallButton(CallStatus callStatus) {
+  getCallButton(CallStatus? callStatus) {
     if (callStatus == CallStatus.Busy) {
       AgoraService.instance.updateCallStatus(
-          channelName: widget.channelName,
-          sessionId: widget.token,
+          channelName: widget.channelName ?? "",
+          sessionId: widget.token ?? "",
           status: "busy");
     }
     return Row(
@@ -168,10 +168,10 @@ class _MatchedProfileState extends State<MatchedProfile> {
               return;
             }
             Navigator.pop(context);
-            AgoraService.instance.sendRejectCallMessage(widget.id);
+            AgoraService.instance.sendRejectCallMessage(widget.id ?? "");
             AgoraService.instance.updateCallStatus(
-                channelName: widget.channelName,
-                sessionId: widget.token,
+                channelName: widget.channelName ?? "",
+                sessionId: widget.token ?? "",
                 status: "reject");
           },
           child: Image.asset(
@@ -189,49 +189,52 @@ class _MatchedProfileState extends State<MatchedProfile> {
             ? Container()
             : InkWell(
                 onTap: () async {
-                  UserModel userModel = Provider.of<FollowesProvider>(
-                          navigationKey.currentContext,
+                  UserModel? userModel = Provider.of<FollowesProvider>(
+                          navigationKey.currentContext!,
                           listen: false)
                       .userModel;
                   if (userModel?.isInfluencer == false) {
                     await Provider.of<MatchingProfileProvider>(context,
                             listen: false)
-                        .checkCoinBalance(
-                            context, int.parse(widget.id), widget.name ?? "");
+                        .checkCoinBalance(context, int.parse(widget.id ?? ""),
+                            widget.name ?? "");
 
-                    CoinModel coins = Provider.of<MatchingProfileProvider>(
+                    CoinModel? coins = Provider.of<MatchingProfileProvider>(
                             context,
                             listen: false)
                         .coinBalance;
 
                     if (coins?.lowBalance == true) {
                       Navigator.pop(context);
-                      InAppPurchase.instance.openCoinPurchasePopUp();
-                      AgoraService.instance.inSufficientCoinMessage(widget.id);
+                      InAppPurchaseHelper.instance.openCoinPurchasePopUp();
+                      AgoraService.instance
+                          .inSufficientCoinMessage(widget.id ?? "");
                       return;
                     }
                   }
 
                   await Provider.of<MatchingProfileProvider>(context,
                           listen: false)
-                      .receiveVideoCall(
-                          context, widget.token, widget.channelName);
-                  CallStatusModel coinStatus =
+                      .receiveVideoCall(context, widget.token ?? "",
+                          widget.channelName ?? "");
+                  CallStatusModel? coinStatus =
                       Provider.of<MatchingProfileProvider>(
-                              navigationKey.currentContext,
+                              navigationKey.currentContext!,
                               listen: false)
                           .coinStatus;
 
                   Navigator.pop(context);
                   if (coinStatus?.continueCall == true) {
-                    AgoraService.instance.sendReceiveCallMessage(widget.id);
+                    AgoraService.instance
+                        .sendReceiveCallMessage(widget.id ?? "");
                     AgoraService.instance.openVideoCall(
-                        channelName: widget.channelName,
-                        sessionId: widget.token,
-                        toUserId: widget.id);
+                        channelName: widget.channelName ?? "",
+                        sessionId: widget.token ?? "",
+                        toUserId: widget.id ?? "");
                   } else {
-                    InAppPurchase.instance.openCoinPurchasePopUp();
-                    AgoraService.instance.inSufficientCoinMessage(widget.id);
+                    InAppPurchaseHelper.instance.openCoinPurchasePopUp();
+                    AgoraService.instance
+                        .inSufficientCoinMessage(widget.id ?? "");
                   }
                 },
                 child: Image.asset(
@@ -284,7 +287,7 @@ class _MatchedProfileState extends State<MatchedProfile> {
                       getSize(20),
                     ),
                     child: CachedNetworkImage(
-                      imageUrl: widget.toImageUrl,
+                      imageUrl: widget.toImageUrl ?? "",
                       width: getSize(156),
                       height: getSize(210),
                       fit: BoxFit.cover,
@@ -322,7 +325,7 @@ class _MatchedProfileState extends State<MatchedProfile> {
                       getSize(20),
                     ),
                     child: CachedNetworkImage(
-                      imageUrl: widget.fromImageUrl,
+                      imageUrl: widget.fromImageUrl ?? "",
                       width: getSize(156),
                       height: getSize(210),
                       fit: BoxFit.cover,

@@ -5,11 +5,11 @@ List<FavouriteListModel> favouriteListModelFromJson(String str) =>
         jsonDecode(str).map((e) => FavouriteListModel.fromJson(e)));
 
 class FavouriteListModel {
-  String providerDisplayName;
-  String photoUrl;
-  int id;
-  String countryIp;
-  String gender;
+  String? providerDisplayName;
+  String? photoUrl;
+  int? id;
+  String? countryIp;
+  String? gender;
 
   FavouriteListModel(
       {this.providerDisplayName, this.photoUrl, this.id, this.countryIp});

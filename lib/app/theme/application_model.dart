@@ -18,7 +18,7 @@ class ApplicationModel {
   final ConnectivityService connectivityService =
       app.resolve<ConnectivityService>();
 
-  final ThemeSettingsModel themeSettingsModel;
+  final ThemeSettingsModel? themeSettingsModel;
 
   static ApplicationModel of(BuildContext context) {
     return Provider.of<ApplicationModel>(context);
@@ -41,7 +41,7 @@ class ApplicationModel {
   /// Called when the [ApplicationModel] finished initializing and navigates
   /// to the next screen.
   Future<void> _onInitialized() async {
-    themeSettingsModel.updateSystemUi();
-    themeSettingsModel.initTheme();
+    themeSettingsModel?.updateSystemUi();
+    themeSettingsModel?.initTheme();
   }
 }

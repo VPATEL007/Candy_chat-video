@@ -23,9 +23,9 @@ import 'package:video_chat/provider/tags_provider.dart';
 import 'package:video_chat/provider/video_call_status_provider.dart';
 
 class UserProfile extends StatefulWidget {
-  final bool isPopUp;
-  UserModel userModel;
-  UserProfile({Key key, this.isPopUp, @required this.userModel})
+  final bool? isPopUp;
+  UserModel? userModel;
+  UserProfile({Key? key, this.isPopUp, @required this.userModel})
       : super(key: key);
 
   @override
@@ -35,6 +35,7 @@ class UserProfile extends StatefulWidget {
 class _UserProfileState extends State<UserProfile> {
   int currentIndex = 0;
   List<String> selectedTags = [];
+  final GlobalKey<TagsState> _tagStateKey = GlobalKey<TagsState>();
 
   @override
   void initState() {
@@ -45,7 +46,7 @@ class _UserProfileState extends State<UserProfile> {
 
   getDataFromApi() async {
     widget.userModel = await Provider.of<ChatProvider>(context, listen: false)
-        .getUserProfile(widget.userModel.id, context);
+        .getUserProfile(widget.userModel?.id ?? 0, context);
     Provider.of<GiftProvider>(context, listen: false)
         .fetchReceivedGift(context, widget.userModel?.id ?? 0);
     setState(() {});
@@ -57,7 +58,7 @@ class _UserProfileState extends State<UserProfile> {
     await provider.fetchTags(context, widget.userModel?.id ?? 0);
 
     for (var item in provider.tagsList) {
-      if (provider.checkFeedBackTagExist(item.id)) {
+      if (provider.checkFeedBackTagExist(item.id ?? 0)) {
         selectedTags.add(item.id.toString());
       }
     }
@@ -128,8 +129,8 @@ class _UserProfileState extends State<UserProfile> {
 
   //Bottom Sheet
   Widget getBottomButton() {
-    UserModel model = Provider.of<FollowesProvider>(
-            navigationKey.currentContext,
+    UserModel? model = Provider.of<FollowesProvider>(
+            navigationKey.currentContext!,
             listen: false)
         .userModel;
     return Padding(
@@ -146,7 +147,7 @@ class _UserProfileState extends State<UserProfile> {
             InkWell(
               onTap: () {
                 Provider.of<ChatProvider>(context, listen: false)
-                    .startChat(widget.userModel.id, context, true);
+                    .startChat(widget.userModel?.id ?? 0, context, true);
               },
               child: Container(
                 decoration: BoxDecoration(
@@ -174,10 +175,10 @@ class _UserProfileState extends State<UserProfile> {
               onTap: () async {
                 await Provider.of<MatchingProfileProvider>(context,
                         listen: false)
-                    .checkCoinBalance(context, widget.userModel.id,
+                    .checkCoinBalance(context, widget.userModel?.id ?? 0,
                         widget.userModel?.userName ?? "");
 
-                CoinModel coins =
+                CoinModel? coins =
                     Provider.of<MatchingProfileProvider>(context, listen: false)
                         .coinBalance;
 
@@ -185,8 +186,8 @@ class _UserProfileState extends State<UserProfile> {
                   // discover.id = 41;
                   await Provider.of<MatchingProfileProvider>(context,
                           listen: false)
-                      .startVideoCall(context, widget.userModel.id);
-                  VideoCallModel videoCallModel =
+                      .startVideoCall(context, widget.userModel?.id ?? 0);
+                  VideoCallModel? videoCallModel =
                       Provider.of<MatchingProfileProvider>(context,
                               listen: false)
                           .videoCallModel;
@@ -195,28 +196,28 @@ class _UserProfileState extends State<UserProfile> {
                     // videoCallModel.toUserId = 41;
                     AgoraService.instance.sendVideoCallMessage(
                         videoCallModel.toUserId.toString(),
-                        videoCallModel.sessionId,
-                        videoCallModel.channelName,
-                        widget.userModel.gender ?? "",
+                        videoCallModel.sessionId ?? "",
+                        videoCallModel.channelName ?? "",
+                        widget.userModel?.gender ?? "",
                         context);
                     Provider.of<VideoCallStatusProvider>(context, listen: false)
                         .setCallStatus = CallStatus.Start;
-                    UserModel userModel =
+                    UserModel? userModel =
                         Provider.of<FollowesProvider>(context, listen: false)
                             .userModel;
                     Navigator.of(context).push(MaterialPageRoute(
                       builder: (context) => MatchedProfile(
-                        channelName: videoCallModel.channelName,
-                        token: videoCallModel.sessionId,
+                        channelName: videoCallModel.channelName ?? "",
+                        token: videoCallModel.sessionId ?? "",
                         fromId: videoCallModel.fromUserId.toString(),
                         fromImageUrl: (userModel?.userImages?.isEmpty ?? true)
                             ? ""
-                            : userModel?.userImages?.first?.photoUrl ?? "",
-                        name: widget.userModel?.userName,
+                            : userModel?.userImages?.first.photoUrl ?? "",
+                        name: widget.userModel?.userName ?? "",
                         toImageUrl: (widget.userModel?.userImages?.isEmpty ??
                                 true)
                             ? ""
-                            : widget.userModel?.userImages?.first?.photoUrl ??
+                            : widget.userModel?.userImages?.first.photoUrl ??
                                 "",
                         id: videoCallModel.toUserId.toString(),
                         toGender: widget.userModel?.gender ?? "",
@@ -224,7 +225,7 @@ class _UserProfileState extends State<UserProfile> {
                     ));
                   }
                 } else if (coins?.lowBalance == true) {
-                  InAppPurchase.instance.openCoinPurchasePopUp();
+                  InAppPurchaseHelper.instance.openCoinPurchasePopUp();
                 }
               },
               child: Container(
@@ -254,7 +255,7 @@ class _UserProfileState extends State<UserProfile> {
                       (model?.isInfluencer ?? false) == false
                           ? Text(
                               "${widget.userModel?.callRate ?? 0} Token/minute",
-                              style: appTheme.white16Normal
+                              style: appTheme?.white16Normal
                                   .copyWith(fontWeight: FontWeight.w600),
                             )
                           : SizedBox(),
@@ -279,34 +280,21 @@ class _UserProfileState extends State<UserProfile> {
           tagsProvider.userFeedBack.length == 0
               ? Text("Feedback not received")
               : Tags(
-                  itemCount: tagsProvider.userFeedBack.length,
+                  key: _tagStateKey,
+                  itemCount: 10,
                   spacing: getSize(6),
                   runSpacing: getSize(20),
                   alignment: WrapAlignment.center,
                   itemBuilder: (int index) {
                     return ItemTags(
+                      key: Key(index.toString()),
                       active: true,
                       pressEnabled: false,
                       activeColor: fromHex("#FFDFDF"),
-                      title: tagsProvider.userFeedBack[index]?.tag?.name ?? "",
+                      title: tagsProvider.userFeedBack[index].tag?.name ?? "",
                       index: index,
-                      onPressed: (item) {
-                        // if (mounted) {
-                        //   setState(() {
-                        //     bool isExist = tagsProvider.checkFeedBackTagExist(
-                        //         tagsProvider.tagsList[item.index].id);
-
-                        //     if (isExist) {
-                        //       selectedTags.remove(
-                        //           tagsProvider.tagsList[item.index].id.toString());
-                        //     } else {
-                        //       selectedTags.add(
-                        //           tagsProvider.tagsList[item.index].id.toString());
-                        //     }
-                        //   });
-                        // }
-                      },
-                      textStyle: appTheme.black12Normal
+                      onPressed: (item) {},
+                      textStyle: appTheme!.black12Normal
                           .copyWith(fontWeight: FontWeight.w500),
                       textColor: Colors.black,
                       textActiveColor: ColorConstants.red,
@@ -353,7 +341,7 @@ class _UserProfileState extends State<UserProfile> {
     return Column(
       children: [
         CachedNetworkImage(
-          imageUrl: model.gift.imageUrl ?? "",
+          imageUrl: model.gift?.imageUrl ?? "",
           width: getSize(45),
           height: getSize(45),
           fit: BoxFit.cover,
@@ -368,8 +356,8 @@ class _UserProfileState extends State<UserProfile> {
           height: 6,
         ),
         Text(
-          "X" + model.count?.toString() ?? "",
-          style: appTheme.black_Medium_14Text,
+          "X" + (model.count?.toString() ?? ""),
+          style: appTheme?.black_Medium_14Text,
         )
       ],
     );
@@ -390,7 +378,7 @@ class _UserProfileState extends State<UserProfile> {
               width: getSize(10),
             ),
             (widget.userModel?.totalPoint != null &&
-                    double.parse(widget.userModel.totalPoint) > 0)
+                    double.parse(widget.userModel?.totalPoint ?? "") > 0)
                 ? Container(
                     decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(10),
@@ -403,7 +391,7 @@ class _UserProfileState extends State<UserProfile> {
                           bottom: getSize(2)),
                       child: Text(
                         widget.userModel?.totalPoint ?? '0',
-                        style: appTheme.white12Normal,
+                        style: appTheme?.white12Normal,
                       ),
                     ),
                   )
@@ -417,13 +405,14 @@ class _UserProfileState extends State<UserProfile> {
           children: [
             Text(
               "ID : ${widget.userModel?.id ?? 0}",
-              style: appTheme.black16Medium.copyWith(color: fromHex("#696968")),
+              style:
+                  appTheme?.black16Medium.copyWith(color: fromHex("#696968")),
             ),
             SizedBox(
               width: getSize(8),
             ),
             (widget.userModel?.callRate != null &&
-                    widget.userModel.callRate > 0)
+                    (widget.userModel?.callRate ?? 0) > 0)
                 ? Container(
                     decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(10),
@@ -445,7 +434,7 @@ class _UserProfileState extends State<UserProfile> {
                           ),
                           Text(
                             widget.userModel?.callRate?.toString() ?? "",
-                            style: appTheme.black12Normal
+                            style: appTheme?.black12Normal
                                 .copyWith(color: ColorConstants.redText),
                           )
                         ],
@@ -467,7 +456,7 @@ class _UserProfileState extends State<UserProfile> {
                 : ClipRRect(
                     borderRadius: BorderRadius.circular(getSize(12)),
                     child: CachedNetworkImage(
-                      imageUrl: widget.userModel?.region?.regionFlagUrl,
+                      imageUrl: widget.userModel?.region?.regionFlagUrl ?? "",
                       height: getSize(16),
                       width: getSize(16),
                       fit: BoxFit.cover,
@@ -485,7 +474,7 @@ class _UserProfileState extends State<UserProfile> {
                   ),
             Text(
               widget.userModel?.countryIp ?? "",
-              style: appTheme.black14Normal.copyWith(
+              style: appTheme?.black14Normal.copyWith(
                 fontSize: getSize(18),
                 fontWeight: FontWeight.w500,
               ),
@@ -501,7 +490,7 @@ class _UserProfileState extends State<UserProfile> {
         ),
         Text(
           widget.userModel?.about ?? "-",
-          style: appTheme.black_Medium_14Text,
+          style: appTheme?.black_Medium_14Text,
         )
       ],
     );
@@ -512,15 +501,13 @@ class _UserProfileState extends State<UserProfile> {
     return Row(
       children: [
         Expanded(
-          child: getCountItem(
-              (widget.userModel?.userFollowers ?? 0)?.toString(),
-              "Followers",
-              () {}),
+          child: getCountItem((widget.userModel?.userFollowers ?? 0).toString(),
+              "Followers", () {}),
         ),
         SizedBox(width: 15),
         Expanded(
           child: getCountItem(
-              (widget.userModel?.byUserUserFollowers ?? 0)?.toString(),
+              (widget.userModel?.byUserUserFollowers ?? 0).toString(),
               "Following",
               () {}),
         ),
@@ -552,8 +539,8 @@ class _UserProfileState extends State<UserProfile> {
           child: Column(
             children: [
               Text(
-                count ?? 0,
-                style: appTheme.black16Bold.copyWith(
+                count,
+                style: appTheme?.black16Bold.copyWith(
                     fontSize: getFontSize(16),
                     fontWeight: FontWeight.w700,
                     color: ColorConstants.redText),
@@ -563,7 +550,7 @@ class _UserProfileState extends State<UserProfile> {
               ),
               Text(
                 title,
-                style: appTheme.black16Bold.copyWith(
+                style: appTheme?.black16Bold.copyWith(
                     fontSize: getFontSize(16), fontWeight: FontWeight.w600),
               ),
             ],
@@ -586,7 +573,7 @@ class _UserProfileState extends State<UserProfile> {
               child: ProfileSlider(
                 images: widget.userModel?.userImages
                         ?.map((e) => e.photoUrl)
-                        ?.toList() ??
+                        .toList() ??
                     [],
                 gender: widget.userModel?.gender ?? "",
                 scroll: (index) {
@@ -615,29 +602,34 @@ class _UserProfileState extends State<UserProfile> {
                 children: [
                   InkWell(
                       onTap: () {
-                        if (widget.userModel.id != null) {
+                        if (widget.userModel?.id != null) {
                           if (((widget.userModel?.userFollowers != null) &&
-                              (widget.userModel.isFollowing == false))) {
+                              (widget.userModel?.isFollowing == false))) {
                             Provider.of<FollowesProvider>(context,
                                     listen: false)
-                                .followUser(context, widget.userModel.id);
+                                .followUser(context, widget.userModel?.id ?? 0);
                             if (mounted) {
                               setState(() {
                                 if (widget.userModel?.userFollowers != null) {
-                                  widget.userModel.isFollowing = true;
-                                  widget.userModel.userFollowers++;
+                                  widget.userModel?.isFollowing = true;
+                                  widget.userModel?.userFollowers =
+                                      (widget.userModel?.userFollowers ?? 0) +
+                                          1;
                                 }
                               });
                             }
                           } else {
                             Provider.of<FollowesProvider>(context,
                                     listen: false)
-                                .unfollowUser(context, widget.userModel.id);
+                                .unfollowUser(
+                                    context, widget.userModel?.id ?? 0);
                             if (mounted) {
                               setState(() {
                                 if (widget.userModel?.userFollowers != null) {
-                                  widget.userModel.isFollowing = false;
-                                  widget.userModel.userFollowers--;
+                                  widget.userModel?.isFollowing = false;
+                                  widget.userModel?.userFollowers =
+                                      (widget.userModel?.userFollowers ?? 0) +
+                                          1;
                                 }
                               });
                             }
@@ -646,7 +638,7 @@ class _UserProfileState extends State<UserProfile> {
                       },
                       child: getProfileButton(
                           ((widget.userModel?.userFollowers != null) &&
-                                  (widget.userModel.isFollowing == true))
+                                  (widget.userModel?.isFollowing == true))
                               ? "assets/Profile/remove_user.png"
                               : icFollow)),
                   Spacer(),
@@ -675,17 +667,19 @@ class _UserProfileState extends State<UserProfile> {
                   Spacer(),
                   InkWell(
                       onTap: () {
-                        if (widget.userModel.id != null) {
+                        if (widget.userModel?.id != null) {
                           if (((widget.userModel?.isFavourite != null) &&
-                              (widget.userModel.isFavourite == false))) {
+                              (widget.userModel?.isFavourite == false))) {
                             Provider.of<FollowesProvider>(context,
                                     listen: false)
-                                .favouriteUnfavouriteUser(context,
-                                    widget.userModel.id, FavouriteStatus.add);
+                                .favouriteUnfavouriteUser(
+                                    context,
+                                    widget.userModel?.id ?? 0,
+                                    FavouriteStatus.add);
                             if (mounted) {
                               setState(() {
                                 if (widget.userModel?.userFollowers != null) {
-                                  widget.userModel.isFavourite = true;
+                                  widget.userModel?.isFavourite = true;
                                 }
                               });
                             }
@@ -694,12 +688,12 @@ class _UserProfileState extends State<UserProfile> {
                                     listen: false)
                                 .favouriteUnfavouriteUser(
                                     context,
-                                    widget.userModel.id,
+                                    widget.userModel?.id ?? 0,
                                     FavouriteStatus.delete);
                             if (mounted) {
                               setState(() {
                                 if (widget.userModel?.isFavourite != null) {
-                                  widget.userModel.isFavourite = false;
+                                  widget.userModel?.isFavourite = false;
                                 }
                               });
                             }
@@ -708,7 +702,7 @@ class _UserProfileState extends State<UserProfile> {
                       },
                       child: getProfileButton(
                           ((widget.userModel?.isFavourite != null) &&
-                                  (widget.userModel.isFavourite == true))
+                                  (widget.userModel?.isFavourite == true))
                               ? "assets/Profile/unfavourite.png"
                               : icFavourite)),
                 ],
@@ -768,21 +762,17 @@ class _UserProfileState extends State<UserProfile> {
           ),
           iconSize: 18,
           elevation: 16,
-          style: appTheme.black14Normal,
+          style: appTheme?.black14Normal,
           underline: Container(
             height: 0,
             color: Colors.white,
           ),
-          onChanged: (String newValue) {
-            // if (newValue == "Report") {
+          onChanged: (String? newValue) {
             NavigationUtilities.push(ReportBlock(
-              userId: widget.userModel?.id,
+              userId: widget.userModel?.id ?? 0,
               reportImageURl: widget.userModel?.photoUrl ?? "",
               gender: widget.userModel?.gender ?? "",
             ));
-            // } else {
-            //   openBlockConfirmation();
-            // }
           },
           items: <String>['Add to blocklist']
               .map<DropdownMenuItem<String>>((String value) {
@@ -801,7 +791,7 @@ class _UserProfileState extends State<UserProfile> {
 
   Widget getHeaderTitle(String title) {
     return Text(title,
-        style: appTheme.black12Normal.copyWith(
+        style: appTheme?.black12Normal.copyWith(
           fontWeight: FontWeight.w800,
           fontSize: getFontSize(20),
         ));
@@ -829,7 +819,7 @@ class _UserProfileState extends State<UserProfile> {
                     Text(
                       "Are you sure you want to block this user?",
                       textAlign: TextAlign.center,
-                      style: appTheme.black14SemiBold
+                      style: appTheme?.black14SemiBold
                           .copyWith(fontSize: getFontSize(18)),
                     ),
                     SizedBox(
@@ -849,7 +839,7 @@ class _UserProfileState extends State<UserProfile> {
                             borderRadius: BorderRadius.circular(16)),
                         child: Center(
                             child: Text("Yes, Block",
-                                style: appTheme.whiteBold32.copyWith(
+                                style: appTheme?.whiteBold32.copyWith(
                                     fontSize: getFontSize(18),
                                     color: ColorConstants.red))),
                       ),

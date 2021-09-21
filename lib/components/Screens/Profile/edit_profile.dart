@@ -15,7 +15,7 @@ class EditProfileScreen extends StatefulWidget {
   static const route = "EditProfileScreen";
   final bool isFromSignUp;
 
-  const EditProfileScreen({Key key, this.isFromSignUp = false})
+  const EditProfileScreen({Key? key, this.isFromSignUp = false})
       : super(key: key);
 
   @override
@@ -33,9 +33,9 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
   Gender _gender = Gender.Male;
   bool isImage = false;
 
-  UserModel _userInfo;
+  UserModel? _userInfo;
 
-  List<Asset> get getSelectedAssets => _userInfo.userImages
+  List<Asset>? get getSelectedAssets => _userInfo?.userImages!
       .where((image) => image.id == null && image.assetPath.isNotEmpty)
       .map<Asset>((img) => Asset(img.assetPath, img.assetPath, 0, 0))
       .toList();
@@ -50,19 +50,19 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
 
   Future<void> init() async {
     _userInfo = Provider.of<FollowesProvider>(context, listen: false)
-        .userModel
+        .userModel!
         .toCloneInfo;
     if (_userInfo == null) {
       await Provider.of<FollowesProvider>(context, listen: false)
           .fetchMyProfile(context);
       _userInfo = Provider.of<FollowesProvider>(context, listen: false)
-          .userModel
+          .userModel!
           .toCloneInfo;
       if (mounted) setState(() {});
     }
     userNameController.text = _userInfo?.userName ?? "";
     _aboutController.text = _userInfo?.about ?? "";
-    contactController.text = _userInfo.phone ?? "";
+    contactController.text = _userInfo?.phone ?? "";
 
     _gender = _userInfo?.gender == describeEnum(Gender.Female).toLowerCase()
         ? Gender.Female
@@ -72,8 +72,8 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
     genderController.text = describeEnum(_gender);
     _dobController.text = _userInfo?.dob ?? "";
     _nationController.text = _userInfo?.region?.regionName ?? "";
-    if (_userInfo.dob != null) {
-      _selectedDate = DateTime.tryParse(_userInfo.dob);
+    if (_userInfo?.dob != null) {
+      _selectedDate = DateTime.tryParse(_userInfo?.dob ?? "")!;
     }
     List<UserImage> userImages = [
       UserImage(),
@@ -84,12 +84,12 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
       UserImage(),
     ];
 
-    if (_userInfo.userImages != null)
-      for (var i = 0; i < _userInfo.userImages.length; i++) {
-        userImages[i] = _userInfo.userImages[i];
+    if (_userInfo?.userImages != null)
+      for (var i = 0; i < _userInfo!.userImages!.length; i++) {
+        userImages[i] = _userInfo!.userImages![i];
         isImage = true;
       }
-    _userInfo.userImages = userImages;
+    _userInfo?.userImages = userImages;
   }
 
   @override
@@ -152,9 +152,10 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                   mainAxisSpacing: 10,
                   physics: NeverScrollableScrollPhysics(),
                   shrinkWrap: true,
-                  children: List.generate(_userInfo.userImages.length, (index) {
+                  children: List.generate(_userInfo?.userImages?.length ?? 0,
+                      (index) {
                     // Asset asset = images[index];
-                    return (_userInfo.userImages[index].photoUrl?.isEmpty ??
+                    return (_userInfo?.userImages?[index].photoUrl.isEmpty ??
                             true)
                         ? InkWell(
                             highlightColor: Colors.transparent,
@@ -176,15 +177,15 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                                 child: SizedBox.expand(
                                   child: ClipRRect(
                                     borderRadius: BorderRadius.circular(10),
-                                    child: (_userInfo.userImages[index]
-                                                ?.assetPath?.isNotEmpty ??
+                                    child: (_userInfo?.userImages?[index]
+                                                .assetPath.isNotEmpty ??
                                             false)
                                         ? AssetThumb(
                                             asset: Asset(
-                                                _userInfo.userImages[index]
-                                                    ?.assetPath,
-                                                _userInfo.userImages[index]
-                                                    ?.assetPath,
+                                                _userInfo?.userImages?[index]
+                                                    .assetPath,
+                                                _userInfo?.userImages?[index]
+                                                    .assetPath,
                                                 100,
                                                 100),
                                             width: 100,
@@ -192,7 +193,9 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                                           )
                                         : CachedNetworkImage(
                                             imageUrl: _userInfo
-                                                ?.userImages[index]?.photoUrl,
+                                                    ?.userImages?[index]
+                                                    .photoUrl ??
+                                                "",
                                             width: 100,
                                             height: 100,
                                             fit: BoxFit.cover,
@@ -207,13 +210,15 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                                     onTap: () {
                                       if (mounted) {
                                         setState(() {
-                                          removeImage.add(
-                                              _userInfo.userImages[index].id);
-                                          _userInfo.userImages[index].photoUrl =
-                                              "";
-                                          _userInfo.userImages[index].id = null;
-                                          _userInfo
-                                              .userImages[index].assetPath = "";
+                                          removeImage.add(_userInfo
+                                                  ?.userImages?[index].id ??
+                                              0);
+                                          _userInfo?.userImages?[index]
+                                              .photoUrl = "";
+                                          _userInfo?.userImages?[index].id =
+                                              null;
+                                          _userInfo?.userImages?[index]
+                                              .assetPath = "";
                                         });
                                       }
                                     },
@@ -230,14 +235,14 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                 SizedBox(height: 30),
                 Text(
                   "Personal details",
-                  style: appTheme.settingMenu.copyWith(
+                  style: appTheme?.settingMenu.copyWith(
                     color: Colors.black,
                   ),
                 ),
                 SizedBox(height: 10),
                 Text(
                   "Username",
-                  style: appTheme.black16Medium.copyWith(),
+                  style: appTheme?.black16Medium.copyWith(),
                 ),
                 SizedBox(height: 5),
                 CommonTextfield(
@@ -249,7 +254,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                 SizedBox(height: 10),
                 Text(
                   "Contact no",
-                  style: appTheme.black16Medium.copyWith(),
+                  style: appTheme?.black16Medium.copyWith(),
                 ),
                 SizedBox(height: 5),
                 CommonTextfield(
@@ -262,7 +267,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                 SizedBox(height: 10),
                 Text(
                   "Gender",
-                  style: appTheme.black16Medium.copyWith(),
+                  style: appTheme?.black16Medium.copyWith(),
                 ),
                 SizedBox(height: 5),
                 CommonTextfield(
@@ -288,10 +293,10 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                                             describeEnum(Gender.values[index])),
                                         onChanged: (gender) {
                                           setState(() {
-                                            _gender = gender;
+                                            _gender = gender!;
                                           });
                                           Navigator.of(context)
-                                              .pop(describeEnum(gender));
+                                              .pop(describeEnum(gender!));
                                         })),
                               ),
                             ),
@@ -304,7 +309,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                 SizedBox(height: 10),
                 Text(
                   "Date of Birth",
-                  style: appTheme.black16Medium.copyWith(),
+                  style: appTheme?.black16Medium.copyWith(),
                 ),
                 SizedBox(height: 5),
                 CommonTextfield(
@@ -329,7 +334,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                 SizedBox(height: 10),
                 Text(
                   "About me",
-                  style: appTheme.black16Medium.copyWith(),
+                  style: appTheme?.black16Medium.copyWith(),
                 ),
                 SizedBox(height: 5),
                 CommonTextfield(
@@ -390,13 +395,13 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
   }
 
   _selectDate(BuildContext context) async {
-    DateTime newSelectedDate = await showDatePicker(
+    DateTime? newSelectedDate = await showDatePicker(
         context: context,
         initialDate: _selectedDate != null ? _selectedDate : DateTime.now(),
         firstDate: DateTime(1900),
         lastDate: DateTime.now(),
-        builder: (BuildContext context, Widget child) {
-          return child;
+        builder: (BuildContext? context, Widget? child) {
+          return child ?? Container();
         });
 
     if (newSelectedDate != null) {
@@ -411,34 +416,34 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
 
   // Image Picker...
   loadAssets() async {
-    int maxImageSelectLength = _userInfo.userImages
+    int? maxImageSelectLength = _userInfo?.userImages!
         .where((maxImage) => maxImage.id == null)
         .toList()
         .length;
     try {
       List<Asset> _resultList = await MultiImagePicker.pickImages(
-        maxImages: maxImageSelectLength,
+        maxImages: maxImageSelectLength ?? 0,
         enableCamera: true,
-        selectedAssets: getSelectedAssets,
+        selectedAssets: getSelectedAssets ?? [],
         materialOptions: MaterialOptions(
           actionBarTitle: "Video chat App",
         ),
       );
       if (_resultList.isNotEmpty) {
         // Whenever assign path to originalPhotoPath When then assign path to assetPath
-        _userInfo.userImages
+        _userInfo?.userImages!
             .where((images) => images.photoUrl.isNotEmpty && images.id == null)
             .forEach((img) => img.photoUrl = "");
 
-        _userInfo.userImages
+        _userInfo?.userImages!
             .where((images) => images.assetPath.isNotEmpty && images.id == null)
             .forEach((img) => img.assetPath = "");
 
         final bool resultLengthGeterThanProductImage =
-            _resultList.length > _userInfo.userImages.length;
+            _resultList.length > (_userInfo?.userImages?.length ?? 0);
         final int resultLength = _resultList.length - 1;
         final int resultLengthMultiByProductLength =
-            (resultLength - _userInfo.userImages.length);
+            (resultLength - (_userInfo?.userImages?.length ?? 0));
 
         int imageIndex = 0;
         // If images is more then _listingObj.productImage.length then get only last _listingObj.productImage.length images...
@@ -447,7 +452,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                 ? i > resultLengthMultiByProductLength
                 : i < _resultList.length);
             (resultLengthGeterThanProductImage ? i-- : i++)) {
-          final String filePath = _resultList[i].identifier;
+          final String filePath = _resultList[i].identifier ?? "";
 
           imageIndex = resultLengthGeterThanProductImage
               ? ((i - resultLengthMultiByProductLength) - 1)
@@ -455,11 +460,11 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
           if (mounted) {
             isImage = true;
             setState(() {
-              _userInfo.userImages
+              _userInfo?.userImages!
                   .where((img) => img.id == null)
                   .toList()[imageIndex]
                   .photoUrl = filePath;
-              _userInfo.userImages
+              _userInfo?.userImages!
                   .where((img) => img.id == null)
                   .toList()[imageIndex]
                   .assetPath = filePath;
@@ -506,12 +511,12 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
     //   return false;
     // }
 
-    if (_userInfo.userImages == null) {
+    if (_userInfo?.userImages == null) {
       View.showMessage(context, "Please select atleast one Photo.");
       return false;
     }
 
-    if (_userInfo.userImages.length == 0) {
+    if (_userInfo?.userImages?.length == 0) {
       View.showMessage(context, "Please select atleast one Photo.");
       return false;
     }

@@ -11,15 +11,15 @@ import 'ScreenTitle.dart';
 import 'RideStrings.dart';
 
 class R {
-  static BaseLocale string() => _getDefaultLocal();
+  static BaseLocale? string() => _getDefaultLocal();
 
-  static String _appLocale;
+  static String? _appLocale;
 
   static Map<String, BaseLocale> _supportedLocales = const {
     "en_us": ENLocale()
   };
 
-  static BaseLocale _getDefaultLocal() {
+  static BaseLocale? _getDefaultLocal() {
     //return default strings if locale is not set
 
     if (_appLocale == null) return BaseLocale();

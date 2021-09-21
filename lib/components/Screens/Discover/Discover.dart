@@ -21,7 +21,7 @@ import 'package:video_chat/provider/video_call_status_provider.dart';
 
 class Discover extends StatefulWidget {
   static const route = "Discover";
-  Discover({Key key}) : super(key: key);
+  Discover({Key? key}) : super(key: key);
 
   @override
   _DiscoverState createState() => _DiscoverState();
@@ -76,7 +76,7 @@ class _DiscoverState extends State<Discover> {
         child: Center(
           child: Text(
             "Start Matching",
-            style: appTheme.black16Bold.copyWith(color: ColorConstants.red),
+            style: appTheme?.black16Bold.copyWith(color: ColorConstants.red),
           ),
         ),
       ),
@@ -119,24 +119,24 @@ class _DiscoverState extends State<Discover> {
                           gender: matchProfileModel.gender,
                           preferedGender: matchProfileModel.preferedGender,
                           photoUrl:
-                              (matchProfileModel?.imageUrl?.isEmpty ?? true)
+                              (matchProfileModel.imageUrl?.isEmpty ?? true)
                                   ? ""
-                                  : matchProfileModel?.imageUrl?.first ?? "",
+                                  : matchProfileModel.imageUrl?.first ?? "",
                           userName: matchProfileModel.userName,
                           region: Region(
                               regionName: matchProfileModel.regionName,
                               regionFlagUrl: matchProfileModel.regionFlagUrl),
                           language: Language(
                               languageName: matchProfileModel.languageName),
-                          userImages: matchProfileModel?.imageUrl
+                          userImages: matchProfileModel.imageUrl
                                   ?.map((e) => UserImage(photoUrl: e))
-                                  ?.toList() ??
+                                  .toList() ??
                               [],
                           byUserUserFollowers: matchProfileModel.followings,
-                          userVisiteds: matchProfileModel?.visitorCount ?? 0,
+                          userVisiteds: matchProfileModel.visitorCount ?? 0,
                           userFollowers: matchProfileModel.followers,
-                          isFollowing: matchProfileModel?.isFollowing == 1,
-                          isFavourite: matchProfileModel?.isFavourite == 1,
+                          isFollowing: matchProfileModel.isFollowing == 1,
+                          isFavourite: matchProfileModel.isFavourite == 1,
                           providerDisplayName:
                               matchProfileModel.providerDisplayName,
                           id: matchProfileModel.id,
@@ -171,20 +171,20 @@ class _DiscoverState extends State<Discover> {
               fit: StackFit.expand,
               children: [
                 CachedNetworkImage(
-                  imageUrl: (discover?.imageUrl?.isEmpty ?? true)
+                  imageUrl: (discover.imageUrl?.isEmpty ?? true)
                       ? ""
-                      : discover?.imageUrl?.first ?? "",
+                      : discover.imageUrl?.first ?? "",
                   width: (MathUtilities.screenWidth(context) / 2) - getSize(28),
                   fit: BoxFit.cover,
                   errorWidget: (context, url, error) => Image.asset(
-                    getUserPlaceHolder(discover?.gender ?? ""),
+                    getUserPlaceHolder(discover.gender ?? ""),
                     fit: BoxFit.cover,
                   ),
                 ),
                 Container(
                   color: Colors.black38,
                 ),
-                (discover?.regionFlagUrl?.isEmpty ?? true)
+                (discover.regionFlagUrl?.isEmpty ?? true)
                     ? Container()
                     : Positioned(
                         left: 8,
@@ -192,7 +192,7 @@ class _DiscoverState extends State<Discover> {
                         child: ClipRRect(
                           borderRadius: BorderRadius.circular(getSize(12)),
                           child: CachedNetworkImage(
-                            imageUrl: discover?.regionFlagUrl ?? "",
+                            imageUrl: discover.regionFlagUrl ?? "",
                             height: getSize(20),
                             width: getSize(20),
                             fit: BoxFit.cover,
@@ -207,7 +207,7 @@ class _DiscoverState extends State<Discover> {
                       child: Row(
                         crossAxisAlignment: CrossAxisAlignment.end,
                         children: [
-                          discover?.age == null
+                          discover.age == null
                               ? Container()
                               : Container(
                                   decoration: BoxDecoration(
@@ -217,8 +217,8 @@ class _DiscoverState extends State<Discover> {
                                     padding: EdgeInsets.only(
                                         left: 6, right: 6, top: 4, bottom: 4),
                                     child: Text(
-                                      discover?.age.toString() ?? "",
-                                      style: appTheme.white14Bold.copyWith(
+                                      discover.age.toString(),
+                                      style: appTheme?.white14Bold.copyWith(
                                           fontWeight: FontWeight.w700,
                                           fontSize: getSize(8)),
                                     ),
@@ -229,10 +229,10 @@ class _DiscoverState extends State<Discover> {
                           ),
                           Flexible(
                             child: Text(
-                              discover?.userName,
+                              discover.userName ?? "",
                               overflow: TextOverflow.ellipsis,
                               maxLines: 2,
-                              style: appTheme.white14Bold
+                              style: appTheme?.white14Bold
                                   .copyWith(fontWeight: FontWeight.w600),
                             ),
                           ),
@@ -251,10 +251,10 @@ class _DiscoverState extends State<Discover> {
                         padding: EdgeInsets.only(
                             left: 4, right: 4, top: 2, bottom: 4),
                         child: Text(
-                          "• ${discover?.onlineStatus ?? ""}",
-                          style: appTheme.black16Bold.copyWith(
+                          "• ${discover.onlineStatus ?? ""}",
+                          style: appTheme?.black16Bold.copyWith(
                               fontSize: getSize(10),
-                              color: discover?.onlineStatus == online
+                              color: discover.onlineStatus == online
                                   ? fromHex("#00DE9B")
                                   : fromHex("#F55050")),
                         ),
@@ -296,17 +296,17 @@ class _DiscoverState extends State<Discover> {
 
   startCall(MatchProfileModel discover) async {
     await Provider.of<MatchingProfileProvider>(context, listen: false)
-        .checkCoinBalance(context, discover.id, discover.userName ?? "");
+        .checkCoinBalance(context, discover.id ?? 0, discover.userName ?? "");
 
-    CoinModel coins =
+    CoinModel? coins =
         Provider.of<MatchingProfileProvider>(context, listen: false)
             .coinBalance;
 
     if (coins?.lowBalance == false) {
       // discover.id = 41;
       await Provider.of<MatchingProfileProvider>(context, listen: false)
-          .startVideoCall(context, discover.id);
-      VideoCallModel videoCallModel =
+          .startVideoCall(context, discover.id ?? 0);
+      VideoCallModel? videoCallModel =
           Provider.of<MatchingProfileProvider>(context, listen: false)
               .videoCallModel;
 
@@ -314,33 +314,33 @@ class _DiscoverState extends State<Discover> {
         // videoCallModel.toUserId = 41;
         AgoraService.instance.sendVideoCallMessage(
             videoCallModel.toUserId.toString(),
-            videoCallModel.sessionId,
-            videoCallModel.channelName,
+            videoCallModel.sessionId ?? "",
+            videoCallModel.channelName ?? "",
             discover.gender ?? "",
             context);
         Provider.of<VideoCallStatusProvider>(context, listen: false)
             .setCallStatus = CallStatus.Start;
-        UserModel userModel =
+        UserModel? userModel =
             Provider.of<FollowesProvider>(context, listen: false).userModel;
         Navigator.of(context).push(MaterialPageRoute(
           builder: (context) => MatchedProfile(
-            channelName: videoCallModel.channelName,
-            token: videoCallModel.sessionId,
+            channelName: videoCallModel.channelName ?? "",
+            token: videoCallModel.sessionId ?? "",
             fromId: videoCallModel.fromUserId.toString(),
             fromImageUrl: (userModel?.userImages?.isEmpty ?? true)
                 ? ""
-                : userModel?.userImages?.first?.photoUrl ?? "",
-            name: discover?.userName,
-            toImageUrl: (discover?.imageUrl?.isEmpty ?? true)
+                : userModel?.userImages?.first.photoUrl ?? "",
+            name: discover.userName ?? "",
+            toImageUrl: (discover.imageUrl?.isEmpty ?? true)
                 ? ""
-                : discover?.imageUrl?.first ?? "",
+                : discover.imageUrl?.first ?? "",
             id: videoCallModel.toUserId.toString(),
             toGender: discover.gender ?? "",
           ),
         ));
       }
     } else if (coins?.lowBalance == true) {
-      InAppPurchase.instance.openCoinPurchasePopUp();
+      InAppPurchaseHelper.instance.openCoinPurchasePopUp();
     }
   }
 
@@ -386,7 +386,7 @@ class _DiscoverState extends State<Discover> {
                       bottom: getSize(12)),
                   child: Text(
                     describeEnum(tab[index]),
-                    style: appTheme.black12Normal.copyWith(
+                    style: appTheme?.black12Normal.copyWith(
                         fontWeight: index == selectedIndex
                             ? FontWeight.w700
                             : FontWeight.w600,

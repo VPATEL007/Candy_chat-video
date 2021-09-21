@@ -41,30 +41,30 @@ class MatchProfileModel {
       this.followings,
       this.countryIp});
 
-  int id, age, visitorCount;
-  String providerDisplayName;
+  int? id, age, visitorCount;
+  String? providerDisplayName;
 
-  List<String> imageUrl;
-  String userName;
-  String gender;
-  String about;
+  List<String>? imageUrl;
+  String? userName;
+  String? gender;
+  String? about;
   dynamic dob;
-  int regionId;
-  String regionName;
-  String regionFlagUrl;
-  int languageId;
-  String languageName;
-  String languageFlagUrl;
-  String preferedGender;
-  int isFollowing, isFavourite;
-  int callRate;
-  String fcmId;
-  String onlineStatus;
-  int followers, followings;
-  int favourites;
-  String totalPoint;
-  bool isInfluencer;
-  String countryIp;
+  int? regionId;
+  String? regionName;
+  String? regionFlagUrl;
+  int? languageId;
+  String? languageName;
+  String? languageFlagUrl;
+  String? preferedGender;
+  int? isFollowing, isFavourite;
+  int? callRate;
+  String? fcmId;
+  String? onlineStatus;
+  int? followers, followings;
+  int? favourites;
+  String? totalPoint;
+  bool? isInfluencer;
+  String? countryIp;
 
   factory MatchProfileModel.fromJson(Map<String, dynamic> json) =>
       MatchProfileModel(
@@ -104,7 +104,7 @@ class MatchProfileModel {
         "visitor_count": visitorCount,
         "followings": followings,
         "provider_display_name": providerDisplayName,
-        "image_url": List<dynamic>.from(imageUrl.map((x) => x)),
+        "image_url": List<dynamic>.from(imageUrl!.map((x) => x)),
         "user_name": userName,
         "gender": gender,
         "about": about,

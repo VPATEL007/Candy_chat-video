@@ -11,8 +11,8 @@ class LanguageProvider with ChangeNotifier {
     notifyListeners();
   }
 
-  LanguageModel get selctedLanguage =>
-      app.resolve<PrefUtils>().selectedLanguage;
+  LanguageModel? get selctedLanguages =>
+      app.resolve<PrefUtils>().selectedLanguages;
 
   set arrList(List<LanguageModel> language) {
     _arrList = language;
@@ -26,7 +26,7 @@ class LanguageProvider with ChangeNotifier {
       BuildContext context, bool isBackgroundFetch) async {
     await CommonApiHelper.shared.callLanguageListApi(context, (list) {
       arrList = list;
-      if (selctedLanguage == null) selctedLanguage = arrList.first;
+      if (selctedLanguages == null) selctedLanguage = arrList.first;
     }, () {}, isBackgroundFetch);
   }
 }

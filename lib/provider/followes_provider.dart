@@ -16,7 +16,7 @@ import 'discover_provider.dart';
 class FollowesProvider with ChangeNotifier {
   List<FollowesModel> _followersList = [];
   List<FollowesModel> _followingList = [];
-  UserModel userModel;
+  UserModel? userModel;
 
   List<FollowesModel> get followingList => this._followingList;
 
@@ -98,7 +98,7 @@ class FollowesProvider with ChangeNotifier {
     int userId, {
     bool fetchInBackground = true,
   }) async {
-    _followingList.removeWhere((element) => element?.byUser?.id == userId);
+    _followingList.removeWhere((element) => element.byUser?.id == userId);
     if (!fetchInBackground) NetworkClient.getInstance.showLoader(context);
     await NetworkClient.getInstance.callApi(
       context: context,
@@ -109,8 +109,9 @@ class FollowesProvider with ChangeNotifier {
       params: {"userId": userId},
       successCallback: (response, message) {
         if (!fetchInBackground) NetworkClient.getInstance.hideProgressDialog();
-        if (userModel.byUserUserFollowers != null) {
-          userModel.byUserUserFollowers--;
+        if (userModel?.byUserUserFollowers != null) {
+          userModel?.byUserUserFollowers =
+              (userModel?.byUserUserFollowers ?? 0) - 1;
         }
         View.showMessage(context, message, mode: DisplayMode.SUCCESS);
         Provider.of<DiscoverProvider>(context, listen: false)
@@ -159,8 +160,9 @@ class FollowesProvider with ChangeNotifier {
       method: MethodType.Post,
       params: {"userId": userId},
       successCallback: (response, message) {
-        if (userModel.byUserUserFollowers != null) {
-          userModel.byUserUserFollowers++;
+        if (userModel?.byUserUserFollowers != null) {
+          userModel?.byUserUserFollowers =
+              (userModel?.byUserUserFollowers ?? 0) + 1;
           Provider.of<DiscoverProvider>(context, listen: false)
               .fetchDiscoverProfileList(context, SortBy.General);
         }
@@ -196,15 +198,15 @@ class FollowesProvider with ChangeNotifier {
 
   // SAve my profile...
   Future<void> saveMyProfile(
-      BuildContext context, UserModel userInfo, List<int> removeImage) async {
+      BuildContext context, UserModel? userInfo, List<int> removeImage) async {
     List<String> profileImages = [];
 
-    if (null != userInfo.userImages) {
-      for (var i = 0; i < userInfo.userImages.length; i++) {
-        if (userInfo.userImages[i].photoUrl.isNotEmpty &&
-            userInfo.userImages[i].id == null) {
+    if (null != userInfo?.userImages) {
+      for (var i = 0; i < (userInfo!.userImages?.length ?? 0); i++) {
+        if (userInfo.userImages?[i].photoUrl.isNotEmpty == true &&
+            userInfo.userImages?[i].id == null) {
           final filePath = await FlutterAbsolutePath.getAbsolutePath(
-              userInfo.userImages[i].photoUrl);
+              userInfo.userImages?[i].photoUrl ?? "");
           String compressPath = await compressImage(filePath);
 
           await NetworkClient.getInstance.uploadImages(
@@ -230,14 +232,14 @@ class FollowesProvider with ChangeNotifier {
       headers: NetworkClient.getInstance.getAuthHeaders(),
       method: MethodType.Post,
       params: {
-        "id": userInfo.id,
-        "user_name": userInfo.userName,
-        "dob": userInfo.dob,
-        "gender": userInfo.gender.toLowerCase(),
+        "id": userInfo?.id,
+        "user_name": userInfo?.userName,
+        "dob": userInfo?.dob,
+        "gender": userInfo?.gender?.toLowerCase(),
         "image_add": profileImages,
-        "image_remove": removeImage ?? [],
-        "about": userInfo.about ?? "",
-        "phone": userInfo.phone ?? ""
+        "image_remove": removeImage,
+        "about": userInfo?.about ?? "",
+        "phone": userInfo?.phone ?? ""
       },
       successCallback: (response, message) {
         // userModel = userModelFromJson(jsonEncode(response));
@@ -254,13 +256,13 @@ class FollowesProvider with ChangeNotifier {
   // Compress image...
   Future<String> compressImage(String oriImgPath) async {
     try {
-      if ((oriImgPath?.isEmpty ?? true)) return "";
+      if ((oriImgPath.isEmpty)) return "";
 
       final tempDir = await getTemporaryDirectory();
 
       String targetPath =
           tempDir.path + "/" + DateTime.now().toString() + ".jpeg";
-      File compressedFile = await FlutterImageCompress.compressAndGetFile(
+      File? compressedFile = await FlutterImageCompress.compressAndGetFile(
           oriImgPath, targetPath,
           quality: 75);
 

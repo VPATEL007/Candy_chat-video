@@ -1,21 +1,21 @@
 import 'package:intl/intl.dart';
 
 class DateUtilities {
-  String getFormattedDateString(DateTime date, {String formatter}) {
+  String getFormattedDateString(DateTime date, {String? formatter}) {
     if (formatter == null) {
       formatter = kMainSourceFormat;
     }
     return DateFormat(formatter).format(date);
   }
 
-  DateTime getDateFromString(String dateString, {String formatter}) {
+  DateTime getDateFromString(String dateString, {String? formatter}) {
     if (formatter == null) {
       formatter = kMainSourceFormat;
     }
     return DateFormat(formatter).parse(dateString);
   }
 
-  String convertDateToFormatterString(String dateString, {String formatter}) {
+  String convertDateToFormatterString(String dateString, {String? formatter}) {
     return getFormattedDateString(
       getDateFromString(dateString, formatter: formatter),
       formatter: formatter,
@@ -23,7 +23,7 @@ class DateUtilities {
   }
 
   String convertServerDateToFormatterString(String dateString,
-      {String formatter}) {
+      {String? formatter}) {
     if (dateString == "" || dateString == null) return "";
     DateTime dateTime = DateTime.fromMillisecondsSinceEpoch(
             DateTime.parse(dateString).millisecondsSinceEpoch)

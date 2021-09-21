@@ -30,7 +30,7 @@ class _ThemeSelectionState extends State<ThemeSelection> {
 
   final List<AppTheme> _themes = PredefinedThemes.themes;
 
-  PageController _controller;
+  PageController? _controller;
 
   bool _lockGestures = true;
 
@@ -46,7 +46,7 @@ class _ThemeSelectionState extends State<ThemeSelection> {
     _controller = PageController(viewportFraction: .3)
       ..addListener(() {
         setState(() {
-          _currentPage = _controller.page.round();
+          _currentPage = _controller?.page?.round() ?? 1;
         });
       });
 
@@ -61,7 +61,7 @@ class _ThemeSelectionState extends State<ThemeSelection> {
   @override
   void dispose() {
     super.dispose();
-    _controller.dispose();
+    _controller?.dispose();
   }
 
   List<Widget> _buildItems() {
@@ -80,14 +80,14 @@ class _ThemeSelectionState extends State<ThemeSelection> {
 
   void _previous() {
     if (_canPrevious) {
-      _controller.previousPage(duration: _duration, curve: _curve);
+      _controller?.previousPage(duration: _duration, curve: _curve);
       _onSelectionChange(_currentPage - 1);
     }
   }
 
   void _next() {
     if (_canNext) {
-      _controller.nextPage(duration: _duration, curve: _curve);
+      _controller?.nextPage(duration: _duration, curve: _curve);
 
       _onSelectionChange(_currentPage + 1);
     }
@@ -100,24 +100,24 @@ class _ThemeSelectionState extends State<ThemeSelection> {
   @override
   Widget build(BuildContext context) {
     final iconColor = IconTheme.of(context).color;
-    final leftIconColor = iconColor.withOpacity(_canPrevious ? 0.8 : 0.2);
-    final rightIconColor = iconColor.withOpacity(_canNext ? 0.8 : 0.2);
+    final leftIconColor = iconColor?.withOpacity(_canPrevious ? 0.8 : 0.2);
+    final rightIconColor = iconColor?.withOpacity(_canNext ? 0.8 : 0.2);
 
     return Column(
       children: <Widget>[
-        Padding(
-          padding: const EdgeInsets.only(top: 16, bottom: 20),
-          child: SlideFadeInAnimation(
-            child: Text(
-              _themes[_currentPage].name,
-              style: TextStyle(
-                fontSize: 16,
-                fontStyle: FontStyle.italic,
-                letterSpacing: 2,
-              ),
-            ),
-          ),
-        ),
+        // Padding(
+        //   padding: const EdgeInsets.only(top: 16, bottom: 20),
+        //   child: SlideFadeInAnimation(
+        //     child: Text(
+        //       _themes[_currentPage].name ?? "",
+        //       style: TextStyle(
+        //         fontSize: 16,
+        //         fontStyle: FontStyle.italic,
+        //         letterSpacing: 2,
+        //       ),
+        //     ),
+        //   ),
+        // ),
         Expanded(
           child: Stack(
             children: <Widget>[
@@ -194,7 +194,10 @@ class ThemeCirclePainter extends CustomPainter {
         ..shader = ui.Gradient.linear(
           size.topLeft(Offset.zero),
           size.bottomRight(Offset.zero),
-          [theme.backgroundColors.first, theme.backgroundColors.last],
+          [
+            theme.backgroundColors?.first ?? Colors.white,
+            theme.backgroundColors?.last ?? Colors.white
+          ],
         ),
     );
 

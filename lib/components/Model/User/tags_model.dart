@@ -16,9 +16,9 @@ class TagsModel {
     this.isActive,
   });
 
-  int id;
-  String tag;
-  bool isActive;
+  int? id;
+  String? tag;
+  bool? isActive;
 
   factory TagsModel.fromJson(Map<String, dynamic> json) => TagsModel(
         id: json["id"],

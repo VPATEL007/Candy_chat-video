@@ -20,52 +20,53 @@ class CustomDialog extends StatelessWidget {
     this.scrollPhysics,
   });
 
-  final String title;
-  final List<DialogAction> actions;
+  final String? title;
+  final List<DialogAction>? actions;
 
   /// The text is build below the [title] if not `null`.
-  final String text;
+  final String? text;
 
   /// The body is build below the [text] if not `null`.
-  final Widget body;
+  final Widget? body;
 
   /// The colors used by the [AppBackground].
   ///
   /// Uses the theme colors when `null`.
-  final List<Color> backgroundColors;
+  final List<Color>? backgroundColors;
 
   /// The scroll physics of the dialog (title, text + body).
-  final ScrollPhysics scrollPhysics;
+  final ScrollPhysics? scrollPhysics;
 
   List<Widget> _buildContent(TextTheme textTheme) {
     return <Widget>[
       if (title != null) ...[
-        Text(title, style: textTheme.title, textAlign: TextAlign.center),
+        Text(title ?? "", style: textTheme.title, textAlign: TextAlign.center),
         const SizedBox(height: 12),
       ],
       if (text != null) ...[
-        Text(text, style: textTheme.subtitle, textAlign: TextAlign.center),
+        Text(text ?? "",
+            style: textTheme.subtitle, textAlign: TextAlign.center),
         const SizedBox(height: 12),
       ],
       if (body != null) ...[
-        body,
+        body ?? SizedBox(),
         const SizedBox(height: 12),
       ],
       const SizedBox(height: 12),
     ];
   }
 
-  Widget _buildActions() {
-    if (actions.length > 1) {
+  Widget? _buildActions() {
+    if ((actions?.length ?? 0) > 1) {
       return SizedBox(
         width: double.infinity,
         child: Wrap(
           alignment: WrapAlignment.spaceAround,
-          children: actions,
+          children: actions ?? [],
         ),
       );
-    } else if (actions.length == 1) {
-      return actions.first;
+    } else if (actions?.length == 1) {
+      return actions?.first;
     } else {
       return Container();
     }
@@ -75,31 +76,29 @@ class CustomDialog extends StatelessWidget {
   Widget build(BuildContext context) {
     final textTheme = Theme.of(context).textTheme;
 
-    return BounceInAnimation(
-      child: Dialog(
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(16),
-        ),
-        child: AppBackground(
-          colors: backgroundColors,
-          borderRadius: BorderRadius.circular(16),
-          child: Container(
-            width: double.infinity,
-            // less on the bottom to compensate for the button padding
-            padding: const EdgeInsets.fromLTRB(12, 24, 12, 12),
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: <Widget>[
-                Flexible(
-                  child: ListView(
-                    shrinkWrap: true,
-                    physics: scrollPhysics,
-                    children: _buildContent(textTheme),
-                  ),
+    return Dialog(
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(16),
+      ),
+      child: AppBackground(
+        colors: backgroundColors,
+        borderRadius: BorderRadius.circular(16),
+        child: Container(
+          width: double.infinity,
+          // less on the bottom to compensate for the button padding
+          padding: const EdgeInsets.fromLTRB(12, 24, 12, 12),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: <Widget>[
+              Flexible(
+                child: ListView(
+                  shrinkWrap: true,
+                  physics: scrollPhysics,
+                  children: _buildContent(textTheme),
                 ),
-                _buildActions(),
-              ],
-            ),
+              ),
+              _buildActions() ?? SizedBox(),
+            ],
           ),
         ),
       ),
@@ -109,56 +108,58 @@ class CustomDialog extends StatelessWidget {
 
 class CustomNormalDialog extends StatelessWidget {
   const CustomNormalDialog({
-    @required this.actions,
+    required this.actions,
     this.title,
     this.text,
     this.body,
     this.backgroundColors,
   });
 
-  final String title;
-  final List<DialogAction> actions;
+  final String? title;
+  final List<DialogAction>? actions;
 
   /// The text is build below the [title] if not `null`.
-  final String text;
+  final String? text;
 
   /// The body is build below the [text] if not `null`.
-  final Widget body;
+  final Widget? body;
 
   /// The colors used by the [AppBackground].
   ///
   /// Uses the theme colors when `null`.
-  final List<Color> backgroundColors;
+  final List<Color>? backgroundColors;
 
   List<Widget> _buildContent(TextTheme textTheme) {
     return <Widget>[
       if (title != null) ...[
-        Text(title, style: textTheme.title, textAlign: TextAlign.center),
+        Text(title ?? "",
+            style: textTheme.headline6, textAlign: TextAlign.center),
         const SizedBox(height: 12),
       ],
       if (text != null) ...[
-        Text(text, style: textTheme.subtitle, textAlign: TextAlign.center),
+        Text(text ?? "",
+            style: textTheme.subtitle2, textAlign: TextAlign.center),
         const SizedBox(height: 12),
       ],
       if (body != null) ...[
-        body,
+        body ?? SizedBox(),
         const SizedBox(height: 12),
       ],
       const SizedBox(height: 12),
     ];
   }
 
-  Widget _buildActions() {
-    if (actions.length > 1) {
+  Widget? _buildActions() {
+    if ((actions?.length ?? 0) > 1) {
       return SizedBox(
         width: double.infinity,
         child: Wrap(
           alignment: WrapAlignment.spaceAround,
-          children: actions,
+          children: actions ?? [],
         ),
       );
-    } else if (actions.length == 1) {
-      return actions.first;
+    } else if (actions?.length == 1) {
+      return actions?.first;
     } else {
       return Container();
     }
@@ -178,7 +179,7 @@ class CustomNormalDialog extends StatelessWidget {
               shrinkWrap: true,
               children: _buildContent(textTheme),
             ),
-            _buildActions(),
+            _buildActions() ?? SizedBox(),
           ],
         ),
       ),
@@ -206,10 +207,10 @@ class DialogAction<T> extends StatelessWidget {
       : assert(result != null || onTap != null),
         assert(text != null || icon != null);
 
-  final T result;
-  final VoidCallback onTap;
-  final String text;
-  final IconData icon;
+  final T? result;
+  final VoidCallback? onTap;
+  final String? text;
+  final IconData? icon;
   final bool dense;
   final bool isWhite;
 
@@ -227,25 +228,25 @@ class DialogAction<T> extends StatelessWidget {
   Widget build(BuildContext context) {
     final Function callback = onTap ?? () => Navigator.of(context).pop(result);
 
-    if (text != null) {
-      return AppButton.flat(
-        text: text,
-        onTap: callback,
-        dense: dense,
-        backgroundColor: Colors.transparent,
-        textColor: isWhite ? Colors.white : Colors.black,
-      );
-    } else if (icon != null) {
-      return AppButton.flat(
-        icon: icon,
-        onTap: callback,
-        dense: dense,
-        backgroundColor: Colors.transparent,
-        textColor: isWhite ? Colors.white : Colors.black,
-      );
-    } else {
-      return Container();
-    }
+    // if (text != null) {
+    //   return AppButton.flat(
+    //     text: text,
+    //     onTap: callback,
+    //     dense: dense,
+    //     backgroundColor: Colors.transparent,
+    //     textColor: isWhite ? Colors.white : Colors.black,
+    //   );
+    // } else if (icon != null) {
+    //   return AppButton.flat(
+    //     icon: icon,
+    //     onTap: callback,
+    //     dense: dense,
+    //     backgroundColor: Colors.transparent,
+    //     textColor: isWhite ? Colors.white : Colors.black,
+    //   );
+    // } else {
+    return Container();
+    // }
   }
 }
 
@@ -253,7 +254,7 @@ class DialogAction<T> extends StatelessWidget {
 /// the pro version of app.
 class ProgressDialog extends StatefulWidget {
   const ProgressDialog({
-    @required this.message,
+    required this.message,
   });
 
   /// The name of the feature.
@@ -315,7 +316,7 @@ class _LoaderState extends State<Loader> {
 /// the pro version of app.
 class AppUpdateDialog extends StatefulWidget {
   const AppUpdateDialog({
-    @required this.message,
+    required this.message,
   });
 
   /// The name of the feature.
@@ -326,21 +327,21 @@ class AppUpdateDialog extends StatefulWidget {
 }
 
 class _AppUpdateDialogState extends State<AppUpdateDialog> {
-  GestureRecognizer _recognizer;
+  GestureRecognizer? _recognizer;
 
   @override
   void initState() {
     _recognizer = TapGestureRecognizer()
       ..onTap = () => app
           .resolve<FlushbarService>()
-          .info(R.string().commonString.notYetAvailable);
+          .info(R.string()!.commonString.notYetAvailable);
 
     super.initState();
   }
 
   @override
   void dispose() {
-    _recognizer.dispose();
+    _recognizer?.dispose();
 
     super.dispose();
   }
@@ -351,13 +352,13 @@ class _AppUpdateDialogState extends State<AppUpdateDialog> {
 
     final style = theme.textTheme.subtitle;
 
-    final linkStyle = style.copyWith(
+    final linkStyle = style?.copyWith(
       color: theme.accentColor,
       fontWeight: FontWeight.bold,
     );
 
     return CustomDialog(
-      title: R.string().commonString.updateAvailable,
+      title: R.string()?.commonString.updateAvailable,
       body: Column(
         children: <Widget>[
 //          const FlareIcon.shiningStar(size: 64),
@@ -371,13 +372,13 @@ class _AppUpdateDialogState extends State<AppUpdateDialog> {
             TextSpan(
               children: <TextSpan>[
                 TextSpan(
-                  text: R.string().commonString.downloadAppFrom,
+                  text: R.string()?.commonString.downloadAppFrom,
                 ),
                 TextSpan(
                   text: " ",
                 ),
                 TextSpan(
-                  text: R.string().commonString.playStore,
+                  text: R.string()?.commonString.playStore,
                   style: linkStyle,
                   recognizer: _recognizer,
                 ),
@@ -390,7 +391,7 @@ class _AppUpdateDialogState extends State<AppUpdateDialog> {
       actions: [
         DialogAction<bool>(
           result: false,
-          text: R.string().commonString.skipUpdate,
+          text: R.string()?.commonString.skipUpdate,
         ),
       ],
     );
@@ -401,7 +402,7 @@ class _AppUpdateDialogState extends State<AppUpdateDialog> {
 /// the pro version of app.
 class AppExitDialog extends StatefulWidget {
   const AppExitDialog({
-    @required this.message,
+    required this.message,
   });
 
   /// The name of the feature.
@@ -412,21 +413,21 @@ class AppExitDialog extends StatefulWidget {
 }
 
 class _AppExitDialogState extends State<AppExitDialog> {
-  GestureRecognizer _recognizer;
+  GestureRecognizer? _recognizer;
 
   @override
   void initState() {
     _recognizer = TapGestureRecognizer()
       ..onTap = () => app
           .resolve<FlushbarService>()
-          .info(R.string().commonString.notYetAvailable);
+          .info(R.string()!.commonString.notYetAvailable);
 
     super.initState();
   }
 
   @override
   void dispose() {
-    _recognizer.dispose();
+    _recognizer?.dispose();
 
     super.dispose();
   }
@@ -437,13 +438,13 @@ class _AppExitDialogState extends State<AppExitDialog> {
 
     final style = theme.textTheme.subtitle;
 
-    final linkStyle = style.copyWith(
+    final linkStyle = style?.copyWith(
       color: theme.accentColor,
       fontWeight: FontWeight.bold,
     );
 
     return CustomDialog(
-      title: R.string().commonString.updateAvailable,
+      title: R.string()?.commonString.updateAvailable,
       body: Column(
         children: <Widget>[
 //          const FlareIcon.shiningStar(size: 64),
@@ -457,13 +458,13 @@ class _AppExitDialogState extends State<AppExitDialog> {
             TextSpan(
               children: <TextSpan>[
                 TextSpan(
-                  text: R.string().commonString.downloadAppFrom,
+                  text: R.string()?.commonString.downloadAppFrom,
                 ),
                 TextSpan(
                   text: " ",
                 ),
                 TextSpan(
-                  text: R.string().commonString.playStore,
+                  text: R.string()?.commonString.playStore,
                   style: linkStyle,
                   recognizer: _recognizer,
                 ),
@@ -476,7 +477,7 @@ class _AppExitDialogState extends State<AppExitDialog> {
       actions: [
         DialogAction<bool>(
           result: false,
-          text: R.string().commonString.skipUpdate,
+          text: R.string()?.commonString.skipUpdate,
         ),
       ],
     );

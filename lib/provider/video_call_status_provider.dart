@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 
 class VideoCallStatusProvider with ChangeNotifier {
-  CallStatus callStatus;
-  CallStatus get getCallStatus => this.callStatus;
+  CallStatus? callStatus;
+  CallStatus? get getCallStatus => this.callStatus;
 
   set setCallStatus(CallStatus callStatus) {
     this.callStatus = callStatus;

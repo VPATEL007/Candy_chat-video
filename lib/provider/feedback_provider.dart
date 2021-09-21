@@ -4,6 +4,7 @@ import 'dart:io' as io;
 
 import 'package:flutter/material.dart';
 import 'package:flutter_absolute_path/flutter_absolute_path.dart';
+
 import 'package:flutter_image_compress/flutter_image_compress.dart';
 import 'package:multi_image_picker2/multi_image_picker2.dart';
 import 'package:package_info/package_info.dart';
@@ -50,7 +51,7 @@ class FeedBackProvider with ChangeNotifier {
       if (null != images) {
         for (Asset asset in images) {
           final filePath =
-              await FlutterAbsolutePath.getAbsolutePath(asset.identifier);
+              await FlutterAbsolutePath.getAbsolutePath(asset.identifier ?? "");
           String compressPath = await compressImage(filePath);
 
           await NetworkClient.getInstance.uploadImages(
@@ -80,7 +81,7 @@ class FeedBackProvider with ChangeNotifier {
                 ? "Ios"
                 : "Unknown",
         "app_os_version": osInfo,
-        "app_version": (info?.version) + info?.buildNumber
+        "app_version": (info.version) + (info.buildNumber)
       };
 
       print(block);
@@ -108,13 +109,13 @@ class FeedBackProvider with ChangeNotifier {
   // Compress image...
   Future<String> compressImage(String oriImgPath) async {
     try {
-      if ((oriImgPath?.isEmpty ?? true)) return "";
+      if ((oriImgPath.isEmpty)) return "";
 
       final io.Directory tempDir = await getTemporaryDirectory();
 
       String targetPath =
           tempDir.path + "/" + DateTime.now().toString() + ".jpeg";
-      io.File compressedFile = await FlutterImageCompress.compressAndGetFile(
+      io.File? compressedFile = await FlutterImageCompress.compressAndGetFile(
           oriImgPath, targetPath,
           quality: 75);
 

@@ -119,14 +119,15 @@ class GiftProvider with ChangeNotifier {
 //Open Gift Pop Up
   openGiftPopUp(int userId) async {
     int page = 1;
-    await fetchGift(NavigationUtilities.key.currentState.overlay.context, page);
+    await fetchGift(
+        NavigationUtilities.key.currentState!.overlay!.context, page);
     showModalBottomSheet(
         isScrollControlled: false,
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.only(
               topLeft: Radius.circular(20.0), topRight: Radius.circular(20.0)),
         ),
-        context: NavigationUtilities.key.currentState.overlay.context,
+        context: NavigationUtilities.key.currentState!.overlay!.context,
         builder: (builder) {
           return Consumer<GiftProvider>(
             builder: (context, giftProvider, child) {
@@ -146,7 +147,7 @@ class GiftProvider with ChangeNotifier {
                             children: [
                               Text(
                                 "Gift",
-                                style: appTheme.black16Bold
+                                style: appTheme?.black16Bold
                                     .copyWith(fontSize: getFontSize(25)),
                               ),
                               Spacer(),
@@ -156,7 +157,7 @@ class GiftProvider with ChangeNotifier {
                                 },
                                 child: Text(
                                   "Close",
-                                  style: appTheme.black14SemiBold.copyWith(
+                                  style: appTheme?.black14SemiBold.copyWith(
                                       fontSize: getFontSize(18),
                                       color: ColorConstants.red),
                                 ),
@@ -182,8 +183,8 @@ class GiftProvider with ChangeNotifier {
                                     loadMore: () {
                                       page++;
                                       fetchGift(
-                                          NavigationUtilities
-                                              .key.currentState.overlay.context,
+                                          NavigationUtilities.key.currentState!
+                                              .overlay!.context,
                                           page);
                                     },
                                     index: index,
@@ -191,8 +192,11 @@ class GiftProvider with ChangeNotifier {
                                     child: InkWell(
                                       onTap: () {
                                         Navigator.pop(context);
-                                        buyGift(context, userId,
-                                            giftProvider.giftList[index].id);
+                                        buyGift(
+                                            context,
+                                            userId,
+                                            giftProvider.giftList[index].id ??
+                                                0);
                                       },
                                       child: Column(
                                         children: [
@@ -219,7 +223,8 @@ class GiftProvider with ChangeNotifier {
                                             giftProvider
                                                     .giftList[index].price ??
                                                 "",
-                                            style: appTheme.black_Medium_14Text,
+                                            style:
+                                                appTheme?.black_Medium_14Text,
                                           )
                                         ],
                                       ),

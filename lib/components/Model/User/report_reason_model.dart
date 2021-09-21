@@ -15,10 +15,10 @@ class ReportReasonModel {
     this.isActive,
   });
 
-  int id;
-  String reason;
-  String detail;
-  bool isActive, isSelected = false;
+  int? id;
+  String? reason;
+  String? detail;
+  bool? isActive, isSelected = false;
 
   factory ReportReasonModel.fromJson(Map<String, dynamic> json) =>
       ReportReasonModel(

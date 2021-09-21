@@ -4,7 +4,7 @@ import '../../app/app.export.dart';
 
 abstract class StatefulScreenWidget extends StatefulWidget {
   StatefulScreenWidget({
-    Key key,
+    Key? key,
   }) : super(key: key);
 
   // get visaModel => null;
@@ -61,7 +61,7 @@ abstract class StatefulScreenWidgetState extends State<StatefulScreenWidget> {
   }
 
   changeNavigationandBottomBarColor(
-      {bool isCustomColor, Color statusBarColor, Color bottomBarColor}) {
+      {bool? isCustomColor, Color? statusBarColor, Color? bottomBarColor}) {
     if (isCustomColor != null && isCustomColor == true) {
       // changeStatusColor(statusBarColor);
       // changeNavigationColor(bottomBarColor);

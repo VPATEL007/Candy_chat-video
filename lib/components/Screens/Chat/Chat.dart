@@ -25,9 +25,9 @@ class Chat extends StatefulWidget {
   final isFromProfile;
 
   Chat(
-      {Key key,
-      @required this.channelId,
-      @required this.toUserId,
+      {Key? key,
+      required this.channelId,
+      required this.toUserId,
       this.isFromProfile = false})
       : super(key: key);
 
@@ -40,14 +40,14 @@ class _ChatState extends State<Chat> {
   AgoraService agoraService = AgoraService.instance;
   List<MessageObj> _chatsList = [];
   ScrollController messageListScrollController = ScrollController();
-  String userId = app.resolve<PrefUtils>().getUserDetails()?.id.toString();
-  UserModel toUser;
+  String? userId = app.resolve<PrefUtils>().getUserDetails()?.id.toString();
+  UserModel? toUser;
 
   @override
   void initState() {
     super.initState();
     init();
-    WidgetsBinding.instance.addPostFrameCallback((_) {
+    WidgetsBinding.instance?.addPostFrameCallback((_) {
       getToUserDetail();
     });
   }
@@ -60,7 +60,7 @@ class _ChatState extends State<Chat> {
   }
 
   Future<void> init() async {
-    agoraService.joinChannel((widget?.channelId ?? ""),
+    agoraService.joinChannel((widget.channelId),
         onMemberJoined: (AgoraRtmMember member) {
       print(
           "Member joined: " + member.userId + ', channel: ' + member.channelId);
@@ -71,7 +71,7 @@ class _ChatState extends State<Chat> {
           chatDate: DateTime.now(),
           message: message.text,
           isSendByMe: member.userId.toString().toLowerCase() ==
-              userId.toLowerCase().toLowerCase(),
+              userId?.toLowerCase().toLowerCase(),
           sendBy: member.userId);
 
       _chatsList.add(_chat);
@@ -83,9 +83,9 @@ class _ChatState extends State<Chat> {
   @override
   void dispose() {
     super.dispose();
-    agoraService?.leaveChannel();
+    agoraService.leaveChannel();
     // agoraService?.logOut();
-    messageListScrollController?.dispose();
+    messageListScrollController.dispose();
   }
 
   @override
@@ -111,13 +111,13 @@ class _ChatState extends State<Chat> {
                   children: [
                     getBackButton(context),
                     Text(toUser?.userName ?? "",
-                        style: appTheme.black_Medium_16Text
+                        style: appTheme?.black_Medium_16Text
                             .copyWith(fontWeight: FontWeight.bold)),
                     SizedBox(
                       width: 8,
                     ),
                     Text("• " + (toUser?.onlineStatus ?? offline),
-                        style: appTheme.black_Medium_16Text.copyWith(
+                        style: appTheme?.black_Medium_16Text.copyWith(
                             color: (toUser?.onlineStatus ?? offline) == online
                                 ? fromHex("#00DE9B")
                                 : fromHex("#F55050"))),
@@ -128,9 +128,9 @@ class _ChatState extends State<Chat> {
                       await Provider.of<MatchingProfileProvider>(context,
                               listen: false)
                           .checkCoinBalance(
-                              context, toUser.id, toUser.userName ?? "");
+                              context, toUser?.id ?? 0, toUser?.userName ?? "");
 
-                      CoinModel coins = Provider.of<MatchingProfileProvider>(
+                      CoinModel? coins = Provider.of<MatchingProfileProvider>(
                               context,
                               listen: false)
                           .coinBalance;
@@ -139,8 +139,8 @@ class _ChatState extends State<Chat> {
                         // discover.id = 41;
                         await Provider.of<MatchingProfileProvider>(context,
                                 listen: false)
-                            .startVideoCall(context, toUser.id);
-                        VideoCallModel videoCallModel =
+                            .startVideoCall(context, toUser?.id ?? 0);
+                        VideoCallModel? videoCallModel =
                             Provider.of<MatchingProfileProvider>(context,
                                     listen: false)
                                 .videoCallModel;
@@ -149,38 +149,38 @@ class _ChatState extends State<Chat> {
                           // videoCallModel.toUserId = 41;
                           AgoraService.instance.sendVideoCallMessage(
                               videoCallModel.toUserId.toString(),
-                              videoCallModel.sessionId,
-                              videoCallModel.channelName,
+                              videoCallModel.sessionId ?? "",
+                              videoCallModel.channelName ?? "",
                               toUser?.gender ?? "",
                               context);
                           Provider.of<VideoCallStatusProvider>(context,
                                   listen: false)
                               .setCallStatus = CallStatus.Start;
-                          UserModel userModel = Provider.of<FollowesProvider>(
+                          UserModel? userModel = Provider.of<FollowesProvider>(
                                   context,
                                   listen: false)
                               .userModel;
                           Navigator.of(context).push(MaterialPageRoute(
                             builder: (context) => MatchedProfile(
-                                channelName: videoCallModel.channelName,
-                                token: videoCallModel.sessionId,
+                                channelName: videoCallModel.channelName ?? "",
+                                token: videoCallModel.sessionId ?? "",
                                 fromId: videoCallModel.fromUserId.toString(),
                                 fromImageUrl: (userModel?.userImages?.isEmpty ??
                                         true)
                                     ? ""
-                                    : userModel?.userImages?.first?.photoUrl ??
+                                    : userModel?.userImages?.first.photoUrl ??
                                         "",
-                                name: toUser?.userName,
+                                name: toUser?.userName ?? "",
                                 toImageUrl: (toUser?.userImages?.isEmpty ??
                                         true)
                                     ? ""
-                                    : toUser?.userImages?.first?.photoUrl ?? "",
+                                    : toUser?.userImages?.first.photoUrl ?? "",
                                 id: videoCallModel.toUserId.toString(),
                                 toGender: toUser?.gender ?? ""),
                           ));
                         }
                       } else if (coins?.lowBalance == true) {
-                        InAppPurchase.instance.openCoinPurchasePopUp();
+                        InAppPurchaseHelper.instance.openCoinPurchasePopUp();
                       }
                     }),
                     SizedBox(
@@ -234,7 +234,7 @@ class _ChatState extends State<Chat> {
             return Center(
               child: Text(
                 snapshot.error.toString(),
-                style: appTheme.black14Normal,
+                style: appTheme?.black14Normal,
               ),
             );
           } else if (snapshot.connectionState == ConnectionState.waiting) {
@@ -244,18 +244,18 @@ class _ChatState extends State<Chat> {
           } else {
             return ListView.builder(
               reverse: true,
-              itemCount: snapshot.data.length,
+              itemCount: snapshot.data?.length,
               shrinkWrap: true,
               padding: EdgeInsets.only(top: getSize(20), bottom: getSize(120)),
               controller: messageListScrollController,
               physics: AlwaysScrollableScrollPhysics(),
               itemBuilder: (context, index) {
-                List<MessageObj> msgObjList = [];
+                List<MessageObj>? msgObjList = [];
 
-                if (index != snapshot.data.length) {
-                  msgObjList = snapshot.data[index].messageObjList;
+                if (index != snapshot.data?.length) {
+                  msgObjList = snapshot.data?[index].messageObjList;
                 }
-                return snapshot.data.isEmpty
+                return snapshot.data?.isEmpty ?? true
                     ? Container()
                     : StickyHeader(
                         // Header...
@@ -271,14 +271,15 @@ class _ChatState extends State<Chat> {
                                   left: getSize(20),
                                   right: getSize(20)),
                               child: Text(
-                                snapshot.data[index].getChatingDates,
-                                style: appTheme.black12Normal,
+                                snapshot.data?[index].getChatingDates ?? "",
+                                style: appTheme?.black12Normal,
                               ),
                             ),
                           ),
                         ),
                         // Content...
-                        content: _buildChats(snapshot.data[index], msgObjList),
+                        content: _buildChats(
+                            snapshot.data![index], msgObjList ?? []),
                       );
               },
             );
@@ -333,8 +334,8 @@ class _ChatState extends State<Chat> {
                   )),
               padding: EdgeInsets.all(16),
               child: Text(
-                messageList?.message,
-                style: appTheme.black12Normal.copyWith(
+                messageList.message ?? "",
+                style: appTheme?.black12Normal.copyWith(
                     fontWeight: FontWeight.w500,
                     color:
                         messageList.isSendByMe ? Colors.white : Colors.black),
@@ -350,7 +351,7 @@ class _ChatState extends State<Chat> {
                 textAlign: messageList.sendBy != userId
                     ? TextAlign.left
                     : TextAlign.right,
-                style: appTheme.black12Normal.copyWith(
+                style: appTheme?.black12Normal.copyWith(
                     fontWeight: FontWeight.w500,
                     color: Color(0xFFC2C2C2),
                     fontSize: 10),
@@ -427,7 +428,7 @@ class _ChatState extends State<Chat> {
                               top: getSize(16), right: getSize(16)),
                           child: InkWell(
                             onTap: () async {
-                              if (_chatController.text?.isEmpty ?? true) return;
+                              if (_chatController.text.isEmpty) return;
                               MessageObj _chat = MessageObj(
                                   chatDate: DateTime.now(),
                                   message: _chatController.text,
@@ -440,13 +441,13 @@ class _ChatState extends State<Chat> {
                                   .sendMessage(_chatController.text);
 
                               _chatController.clear();
-                              if (_chatsList?.isNotEmpty ?? false)
-                                messageListScrollController?.jumpTo(0.0);
+                              if (_chatsList.isNotEmpty)
+                                messageListScrollController.jumpTo(0.0);
                               if (mounted) setState(() {});
                             },
                             child: Text(
                               "Send",
-                              style: appTheme.black14Normal.copyWith(
+                              style: appTheme?.black14Normal.copyWith(
                                   fontWeight: FontWeight.w700,
                                   color: ColorConstants.red),
                             ),
@@ -488,7 +489,7 @@ class _ChatState extends State<Chat> {
         children: [
           Text(
             "Start your conversation with",
-            style: appTheme.black14Normal.copyWith(
+            style: appTheme?.black14Normal.copyWith(
                 fontWeight: FontWeight.w700, fontSize: getFontSize(18)),
           ),
           SizedBox(
@@ -496,7 +497,7 @@ class _ChatState extends State<Chat> {
           ),
           Text(
             "a simple wave, maybe?",
-            style: appTheme.black14Normal.copyWith(
+            style: appTheme?.black14Normal.copyWith(
                 fontWeight: FontWeight.w500, fontSize: getFontSize(18)),
           ),
           SizedBox(
@@ -524,8 +525,8 @@ class _ChatState extends State<Chat> {
                   await agoraService.sendMessage("hi");
 
                   _chatController.clear();
-                  if (_chatsList?.isNotEmpty ?? false)
-                    messageListScrollController?.jumpTo(0.0);
+                  if (_chatsList.isNotEmpty)
+                    messageListScrollController.jumpTo(0.0);
                   if (mounted) setState(() {});
                 },
                 child: Container(
@@ -544,7 +545,7 @@ class _ChatState extends State<Chat> {
                       ),
                       Text(
                         "Say hi",
-                        style: appTheme.black14Normal.copyWith(
+                        style: appTheme?.black14Normal.copyWith(
                             fontSize: getSize(16), fontWeight: FontWeight.w500),
                       ),
                       // SizedBox(
@@ -572,13 +573,14 @@ class _ChatState extends State<Chat> {
     chatList.forEach((chats) {
       //Get list Index...
       int transIndex = tempArray.indexWhere((item) {
-        return DateFormat('dd MMMM yyyy').format(item.chatDate) ==
-            DateFormat('dd MMMM yyyy')
-                .format(chats.chatDate); //Sort by List Category...
+        return DateFormat('dd MMMM yyyy')
+                .format(item.chatDate ?? DateTime.now()) ==
+            DateFormat('dd MMMM yyyy').format(
+                chats.chatDate ?? DateTime.now()); //Sort by List Category...
       });
       //Check If Project Already Added, if added then add category and list in same project...
       if (transIndex >= 0) {
-        tempArray[transIndex].messageObjList.insert(0, chats);
+        tempArray[transIndex].messageObjList?.insert(0, chats);
       } else {
         //New Temp List...
         ChatObj tempList = ChatObj();

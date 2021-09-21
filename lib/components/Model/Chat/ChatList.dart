@@ -9,13 +9,13 @@ List<ChatListModel> chatListModelFromJson(String str) =>
         jsonDecode(str).map((e) => ChatListModel.fromJson(e)));
 
 class ChatListModel {
-  int id;
-  int user1;
-  int user2;
-  String channelName;
-  String updatedOn;
-  String createdOn;
-  WithUser withUser;
+  int? id;
+  int? user1;
+  int? user2;
+  String? channelName;
+  String? updatedOn;
+  String? createdOn;
+  WithUser? withUser;
 
   ChatListModel(
       {this.id,
@@ -47,13 +47,13 @@ class ChatListModel {
     data['updated_on'] = this.updatedOn;
     data['created_on'] = this.createdOn;
     if (this.withUser != null) {
-      data['withUser'] = this.withUser.toJson();
+      data['withUser'] = this.withUser?.toJson();
     }
     return data;
   }
 
-  int getToUserId() {
-    int userId = app.resolve<PrefUtils>().getUserDetails()?.id;
+  int? getToUserId() {
+    int? userId = app.resolve<PrefUtils>().getUserDetails()?.id;
     if (userId == user1) {
       return user2;
     }
@@ -62,10 +62,10 @@ class ChatListModel {
 }
 
 class WithUser {
-  int id;
-  String userName;
-  List<UserImage> userImages;
-  String onlineStatus;
+  int? id;
+  String? userName;
+  List<UserImage>? userImages;
+  String? onlineStatus;
 
   WithUser({this.id, this.userName, this.userImages, this.onlineStatus});
 
@@ -76,7 +76,7 @@ class WithUser {
     if (json['user_images'] != null) {
       userImages = [];
       json['user_images'].forEach((v) {
-        userImages.add(new UserImage.fromJson(v));
+        userImages?.add(new UserImage.fromJson(v));
       });
     }
   }
@@ -87,14 +87,14 @@ class WithUser {
     data['user_name'] = this.userName;
     data['online_status'] = this.onlineStatus;
     if (this.userImages != null) {
-      data['user_images'] = this.userImages.map((v) => v.toJson()).toList();
+      data['user_images'] = this.userImages?.map((v) => v.toJson()).toList();
     }
     return data;
   }
 
   String getUserImage() {
-    if (userImages.length > 0) {
-      return userImages?.first?.photoUrl ?? "";
+    if ((userImages?.length ?? 0) > 0) {
+      return userImages?.first.photoUrl ?? "";
     }
     return "";
   }

@@ -26,36 +26,36 @@ class NavigationUtilities {
   static GlobalKey<NavigatorState> key = GlobalKey<NavigatorState>();
 
   /// A convenience method to push a new [MaterialPageRoute] to the [Navigator].
-  static void push(Widget widget, {String name}) {
-    key.currentState.push(MaterialPageRoute(
+  static void push(Widget widget, {String? name}) {
+    key.currentState?.push(MaterialPageRoute(
       builder: (context) => widget,
       settings: RouteSettings(name: name),
     ));
   }
 
   static void pop() {
-    key.currentState.pop();
+    key.currentState?.pop();
   }
 
   /// A convenience method to push a new [route] to the [Navigator].
   static Future<dynamic> pushRoute(String route,
-      {RouteType type = RouteType.fade, Map args}) async {
+      {RouteType type = RouteType.fade, Map? args}) async {
     if (args == null) {
       args = Map<String, dynamic>();
     }
     args["routeType"] = type;
-    return await key.currentState.pushNamed(route, arguments: args);
+    return await key.currentState?.pushNamed(route, arguments: args);
   }
 
   /// A convenience method to push a named replacement route.
   static void pushReplacementNamed(String route,
-      {RouteType type = RouteType.fade, Map args}) {
+      {RouteType type = RouteType.fade, Map? args}) {
     if (args == null) {
       args = Map<String, dynamic>();
     }
     args["routeType"] = type;
 
-    key.currentState.pushReplacementNamed(
+    key.currentState?.pushReplacementNamed(
       route,
       arguments: args,
     );
@@ -82,11 +82,10 @@ class NavigationUtilities {
 /// arguments for the screen.
 Route<dynamic> onGenerateRoute(RouteSettings settings) {
   final routeName = settings.name;
-  final arguments = settings.arguments as Map<String, dynamic> ?? {};
-  final routeType =
-      arguments["routeType"] as RouteType ?? RouteType.defaultRoute;
+  final arguments = settings.arguments as Map<String, dynamic>;
+  final routeType = arguments["routeType"] as RouteType;
 
-  Widget screen;
+  late Widget screen;
 
   switch (routeName) {
     case LanguageSelection.route:

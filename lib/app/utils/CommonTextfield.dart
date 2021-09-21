@@ -8,22 +8,22 @@ import 'math_utils.dart';
 class CommonTextfield extends StatefulWidget {
   final TextFieldOption textOption;
   final Function(String text) textCallback;
-  final VoidCallback tapCallback;
-  final VoidCallback onNextPress;
-  final TextInputAction inputAction;
-  final FocusNode focusNode;
+  final VoidCallback? tapCallback;
+  final VoidCallback? onNextPress;
+  final TextInputAction? inputAction;
+  final FocusNode? focusNode;
   final bool showUnderLine;
   final bool enable;
-  final bool autoFocus;
+  final bool? autoFocus;
   final bool autoCorrect;
-  final bool alignment;
+  final bool? alignment;
   final String lableText;
-  final Function(String text) validation;
-  TextStyle hintStyleText;
+  final Function(String text)? validation;
+  TextStyle? hintStyleText;
 
   CommonTextfield({
-    @required this.textOption,
-    @required this.textCallback,
+    required this.textOption,
+    required this.textCallback,
     this.tapCallback,
     this.onNextPress,
     this.inputAction,
@@ -80,14 +80,14 @@ class _CommonTextfieldState extends State<CommonTextfield> {
           textInputAction: widget.inputAction ?? TextInputAction.done,
           focusNode: widget.focusNode ?? null,
           autofocus: widget.autoFocus ?? false,
-          controller: widget.textOption.inputController ?? null,
+          controller: widget.textOption.inputController,
           obscureText: this.obscureText,
-          style: appTheme.grey_Medium_14Text,
-          keyboardType: widget.textOption.keyboardType ?? TextInputType.text,
+          style: appTheme?.grey_Medium_14Text,
+          keyboardType: widget.textOption.keyboardType,
           textCapitalization:
-              widget.textOption.textCapitalization ?? TextCapitalization.none,
-          cursorColor: appTheme.colorPrimary,
-          inputFormatters: widget.textOption.formatter ?? [],
+              widget.textOption.textCapitalization ?? TextCapitalization.words,
+          cursorColor: appTheme?.colorPrimary,
+          inputFormatters: widget.textOption.formatter,
           decoration: InputDecoration(
             contentPadding: EdgeInsets.only(
               top: getSize(16),
@@ -95,8 +95,8 @@ class _CommonTextfieldState extends State<CommonTextfield> {
               left: getSize(16),
             ),
             errorMaxLines: 2,
-            errorStyle: appTheme.errorText,
-            fillColor: widget.textOption.fillColor ?? fromHex("#F6F6F6"),
+            errorStyle: appTheme?.errorText,
+            fillColor: fromHex("#F6F6F6"),
             filled: true,
             enabledBorder: OutlineInputBorder(
               borderRadius: BorderRadius.all(
@@ -130,19 +130,18 @@ class _CommonTextfieldState extends State<CommonTextfield> {
                 //  width: getSize(0.5),
               ),
             ),
-            hintStyle: appTheme.grey_Medium_14Text,
+            hintStyle: appTheme?.grey_Medium_14Text,
             hintText: widget.textOption.hintText,
             prefixIcon: widget.textOption.prefixWid,
             suffix: widget.textOption.postfixWidOnFocus,
-            suffixIcon: (widget.textOption.isSecureTextField != null &&
-                    widget.textOption.isSecureTextField)
+            suffixIcon: (widget.textOption.isSecureTextField != null)
                 ? InkWell(
                     onTap: () {
                       setState(() {
                         this.obscureText = !this.obscureText;
-                        if (!widget.focusNode.hasPrimaryFocus)
-                          widget.focusNode.canRequestFocus = false;
-                        widget.focusNode.unfocus();
+                        if (!widget.focusNode!.hasPrimaryFocus)
+                          widget.focusNode!.canRequestFocus = false;
+                        widget.focusNode!.unfocus();
                       });
                       //TextInputConnection;
                     },
@@ -168,15 +167,17 @@ class _CommonTextfieldState extends State<CommonTextfield> {
             this.widget.textCallback(text);
             FocusScope.of(context).unfocus();
             if (widget.onNextPress != null) {
-              widget.onNextPress();
+              widget.onNextPress!();
             }
           },
-          validator: widget.validation,
+          // validator: widget.validation,
           onChanged: (String text) {
             this.widget.textCallback(text);
           },
           onEditingComplete: () {
-            this.widget.textCallback(widget.textOption.inputController.text);
+            this
+                .widget
+                .textCallback(widget.textOption.inputController?.text ?? "");
           },
         ),
       ],
@@ -185,24 +186,24 @@ class _CommonTextfieldState extends State<CommonTextfield> {
 }
 
 class TextFieldOption {
-  String text = "";
-  String labelText;
-  String hintText;
-  bool isSecureTextField = false;
-  TextInputType keyboardType;
-  TextFieldType type;
-  int maxLine;
-  TextStyle hintStyleText;
-  Widget prefixWid;
-  Widget postfixWid;
-  Widget postfixWidOnFocus;
-  bool autoFocus;
-  Color fillColor;
-  InputBorder errorBorder;
-  List<TextInputFormatter> formatter;
-  TextEditingController inputController;
-  TextCapitalization textCapitalization;
-  double radious;
+  String? text = "";
+  String? labelText;
+  String? hintText;
+  bool? isSecureTextField = false;
+  TextInputType? keyboardType;
+  TextFieldType? type;
+  int? maxLine;
+  TextStyle? hintStyleText;
+  Widget? prefixWid;
+  Widget? postfixWid;
+  Widget? postfixWidOnFocus;
+  bool? autoFocus;
+  Color? fillColor;
+  InputBorder? errorBorder;
+  List<TextInputFormatter>? formatter;
+  TextEditingController? inputController;
+  TextCapitalization? textCapitalization;
+  double? radious;
 
   TextFieldOption(
       {this.text,

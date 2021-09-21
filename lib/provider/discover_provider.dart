@@ -15,7 +15,7 @@ class DiscoverProvider with ChangeNotifier {
   Future<void> fetchDiscoverProfileList(BuildContext context, SortBy sortBy,
       {int pageNumber = 1, bool isbackgroundCall = true}) async {
     try {
-      int userId = app.resolve<PrefUtils>().getUserDetails()?.id;
+      int? userId = app.resolve<PrefUtils>().getUserDetails()?.id;
       Map<String, dynamic> _parms = {
         "page": pageNumber,
         "size": 20,

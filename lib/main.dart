@@ -1,7 +1,7 @@
-import 'dart:convert';
-import 'dart:io';
 import 'dart:io' as io;
+import 'dart:io';
 
+import 'package:firebase_core/firebase_core.dart';
 // import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:firebase_performance/firebase_performance.dart';
@@ -12,13 +12,11 @@ import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:in_app_purchase/in_app_purchase.dart';
 import 'package:kiwi/kiwi.dart';
 import 'package:provider/provider.dart';
-import 'package:socket_io_client/socket_io_client.dart';
 import 'package:video_chat/app/app.export.dart';
 import 'package:video_chat/components/Model/Notification/NotificatonModel.dart';
 import 'package:video_chat/components/Model/User/UserModel.dart';
-import 'package:video_chat/components/Screens/Home/CallMessage.dart';
-import 'package:video_chat/components/Screens/Setting/WithDraw.dart';
 import 'package:video_chat/components/Screens/Splash/Splash.dart';
+
 import 'package:video_chat/provider/chat_provider.dart';
 import 'package:video_chat/provider/discover_provider.dart';
 import 'package:video_chat/provider/favourite_provider.dart';
@@ -32,7 +30,6 @@ import 'package:video_chat/provider/report_and_block_provider.dart';
 import 'package:video_chat/provider/tags_provider.dart';
 import 'package:video_chat/provider/video_call_status_provider.dart';
 import 'package:video_chat/provider/visitor_provider.dart';
-import 'package:firebase_core/firebase_core.dart';
 import 'package:video_chat/provider/withdraw_provider.dart';
 
 import 'app/Helper/Themehelper.dart';
@@ -44,13 +41,10 @@ import 'app/theme/settings_models_provider.dart';
 import 'app/utils/navigator.dart';
 import 'app/utils/pref_utils.dart';
 import 'app/utils/route_observer.dart';
-import 'package:video_chat/modules/ThemeSetting.dart';
-import 'package:http_proxy/http_proxy.dart';
-
-import 'components/Screens/Profile/FollowUp.dart';
 import 'components/Screens/UserProfile/UserProfile.dart';
+import 'package:in_app_purchase_android/in_app_purchase_android.dart';
 
-KiwiContainer app;
+late KiwiContainer app;
 FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
     FlutterLocalNotificationsPlugin();
 FirebasePerformance _performance = FirebasePerformance.instance;
@@ -58,15 +52,15 @@ FirebasePerformance _performance = FirebasePerformance.instance;
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   if (io.Platform.isAndroid) {
-    InAppPurchaseConnection.enablePendingPurchases();
+    InAppPurchaseAndroidPlatformAddition.enablePendingPurchases();
   }
 
   app = KiwiContainer();
 
-  if (kDebugMode) {
-    HttpProxy httpProxy = await HttpProxy.createHttpProxy();
-    HttpOverrides.global = httpProxy;
-  }
+  // if (kDebugMode) {
+  //   HttpProxy httpProxy = await HttpProxy.createHttpProxy();
+  //   HttpOverrides.global = httpProxy;
+  // }
 
   SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp])
       .then((value) async {
@@ -113,16 +107,12 @@ Future<void> setupFCM() async {
       .getString(app.resolve<PrefUtils>().keyIsFCMToken);
   if (token.length == 0) {
     print("sdfsdf");
-    //Getting the token from FCM
-    _firebaseMessaging.getToken().then((String token) async {
-      assert(token != null);
-      print('------------------------');
-      print('token: $token');
-      app
-          .resolve<PrefUtils>()
-          .saveString(app.resolve<PrefUtils>().keyIsFCMToken, token);
-      print('------------------------');
-      // UserPreferences().saveToken(token);
+    _firebaseMessaging.getToken().then((token) {
+      if (token != null) {
+        app
+            .resolve<PrefUtils>()
+            .saveString(app.resolve<PrefUtils>().keyIsFCMToken, token);
+      }
     });
   }
 
@@ -138,7 +128,7 @@ void configLocalNotification() {
   flutterLocalNotificationsPlugin.initialize(initializationSettings);
 }
 
-void showNotification(RemoteNotification message) async {
+void showNotification(RemoteNotification? message) async {
   var androidPlatformChannelSpecifics = new AndroidNotificationDetails(
     Platform.isAndroid
         ? 'high_importance_channel'
@@ -156,7 +146,7 @@ void showNotification(RemoteNotification message) async {
       android: androidPlatformChannelSpecifics,
       iOS: iOSPlatformChannelSpecifics);
   await flutterLocalNotificationsPlugin.show(
-      0, message.title, message.body, platformChannelSpecifics,
+      0, message?.title, message?.body, platformChannelSpecifics,
       payload: 'data');
   print("Show Notification");
 }
@@ -165,7 +155,7 @@ openNotification(RemoteMessage message) {
   NotificationModel model = NotificationModel.fromJson(message.data);
   if (model.type == "follow") {
     NavigationUtilities.push(UserProfile(
-      userModel: UserModel(id: int.parse(model.userId)),
+      userModel: UserModel(id: int.parse(model.userId ?? "")),
     ));
   }
 }
@@ -178,14 +168,14 @@ class Base extends StatefulWidget {
 }
 
 class _BaseState extends State<Base> {
-  ThemeData themeData;
+  late ThemeData themeData;
 
   @override
   void initState() {
     super.initState();
     ThemeHelper.changeTheme("light");
 
-    WidgetsBinding.instance.addPostFrameCallback(
+    WidgetsBinding.instance?.addPostFrameCallback(
       (_) => setState(() {
         themeData = AppTheme.of(context).theme;
       }),
@@ -252,24 +242,24 @@ class _BaseState extends State<Base> {
         theme: ThemeData(
           // Define the default brightness and colors.
           brightness: Brightness.light,
-          primaryColor: appTheme.colorPrimary,
+          primaryColor: appTheme?.colorPrimary,
           splashColor: Colors.transparent,
           highlightColor: Colors.transparent,
           fontFamily: 'Montserrat',
         ),
         home: Splash(),
-        routes: <String, WidgetBuilder>{
-          '/ThemeSetting': (BuildContext context) => ThemeSetting(),
-        },
+        // routes: <String, WidgetBuilder>{
+        //   '/ThemeSetting': (BuildContext context) => ThemeSetting(),
+        // },
         builder: _builder,
       ),
     );
   }
 
-  Widget _builder(BuildContext context, Widget child) {
+  Widget _builder(BuildContext context, Widget? child) {
     return Column(
       children: <Widget>[
-        Expanded(child: child),
+        Expanded(child: child ?? Container()),
       ],
     );
   }

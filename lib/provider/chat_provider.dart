@@ -14,7 +14,7 @@ class ChatProvider with ChangeNotifier {
   Future<void> startChat(
       int toUserId, BuildContext context, bool isFromProfile) async {
     try {
-      int userId = app.resolve<PrefUtils>().getUserDetails()?.id;
+      int? userId = app.resolve<PrefUtils>().getUserDetails()?.id;
       Map<String, dynamic> _parms = {
         "to_user_id": toUserId,
         "from_user_id": userId,
@@ -50,8 +50,8 @@ class ChatProvider with ChangeNotifier {
   }
 
   // Get Profile...
-  Future<UserModel> getUserProfile(int userId, BuildContext context) async {
-    UserModel model;
+  Future<UserModel?> getUserProfile(int userId, BuildContext context) async {
+    UserModel? model;
     try {
       await NetworkClient.getInstance.callApi(
         context: context,
@@ -62,7 +62,7 @@ class ChatProvider with ChangeNotifier {
         successCallback: (response, message) {
           model = UserModel.fromJson(response);
           if (response["image_url"] != null) {
-            model.userImages = List<UserImage>.from(
+            model?.userImages = List<UserImage>.from(
                 response["image_url"].map((x) => UserImage.fromJson(x)));
           }
           notifyListeners();

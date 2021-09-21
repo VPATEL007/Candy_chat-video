@@ -8,8 +8,8 @@ String paymentMethodModelToJson(PaymentMethodModel data) =>
     json.encode(data.toJson());
 
 class PaymentMethodModel {
-  int id;
-  String name;
+  int? id;
+  String? name;
 
   PaymentMethodModel({this.id, this.name});
 

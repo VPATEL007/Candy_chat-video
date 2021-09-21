@@ -13,7 +13,7 @@ import 'package:video_chat/provider/followes_provider.dart';
 
 class FollowUp extends StatefulWidget {
   bool isFromFollowing;
-  FollowUp({Key key, this.isFromFollowing = false}) : super(key: key);
+  FollowUp({Key? key, this.isFromFollowing = false}) : super(key: key);
 
   @override
   _FollowUpState createState() => _FollowUpState();
@@ -52,11 +52,11 @@ class _FollowUpState extends State<FollowUp> {
       String noContentLabel = widget.isFromFollowing
           ? "No Following Found! "
           : "No Followers Found! ";
-      return (_followes?.isEmpty ?? true)
+      return (_followes.isEmpty)
           ? Center(
               child: Text(
                 noContentLabel,
-                style: appTheme.black14Normal.copyWith(
+                style: appTheme?.black14Normal.copyWith(
                     fontSize: getFontSize(16), fontWeight: FontWeight.w700),
               ),
             )
@@ -120,14 +120,14 @@ class _FollowUpState extends State<FollowUp> {
             ClipRRect(
               borderRadius: BorderRadius.circular(10),
               child: CachedNetworkImage(
-                imageUrl: (followes?.byUser?.userImages?.isEmpty ?? true)
+                imageUrl: (followes.byUser?.userImages?.isEmpty ?? true)
                     ? ""
-                    : followes?.byUser?.userImages?.first?.photoUrl ?? "",
+                    : followes.byUser?.userImages?.first.photoUrl ?? "",
                 height: getSize(48),
                 width: getSize(51),
                 fit: BoxFit.cover,
                 errorWidget: (context, url, error) => Image.asset(
-                  getUserPlaceHolder(followes.byUser.gender ?? ""),
+                  getUserPlaceHolder(followes.byUser?.gender ?? ""),
                   height: getSize(48),
                   width: getSize(51),
                 ),
@@ -141,8 +141,8 @@ class _FollowUpState extends State<FollowUp> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  followes?.byUser?.providerDisplayName ?? "",
-                  style: appTheme.black14Normal.copyWith(
+                  followes.byUser?.providerDisplayName ?? "",
+                  style: appTheme?.black14Normal.copyWith(
                       fontSize: getFontSize(16), fontWeight: FontWeight.w700),
                 ),
                 SizedBox(
@@ -165,8 +165,8 @@ class _FollowUpState extends State<FollowUp> {
                     //   width: getSize(6),
                     // ),
                     Text(
-                      followes?.byUser?.countryIp ?? "",
-                      style: appTheme.black14Normal
+                      followes.byUser?.countryIp ?? "",
+                      style: appTheme?.black14Normal
                           .copyWith(fontWeight: FontWeight.w500),
                     ),
                   ],
@@ -178,11 +178,11 @@ class _FollowUpState extends State<FollowUp> {
                 ? TextButton(
                     onPressed: () {
                       followesProvider.unfollowUser(
-                          context, followes.byUser.id);
+                          context, followes.byUser?.id ?? 0);
                     },
                     child: Text(
                       "Remove",
-                      style: appTheme.black12Normal.copyWith(
+                      style: appTheme?.black12Normal.copyWith(
                           color: ColorConstants.redText,
                           fontWeight: FontWeight.w700),
                     ),

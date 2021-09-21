@@ -10,7 +10,10 @@ class ProfileSlider extends StatefulWidget {
   List<String> images;
   String gender;
   ProfileSlider(
-      {Key key, this.scroll, @required this.images, @required this.gender})
+      {Key? key,
+      required this.scroll,
+      required this.images,
+      required this.gender})
       : super(key: key);
 
   @override
@@ -30,7 +33,7 @@ class _ProfileSliderState extends State<ProfileSlider> {
         child: PageView(
           scrollDirection: Axis.vertical,
           controller: pageController,
-          children: (widget.images?.isEmpty ?? true)
+          children: (widget.images.isEmpty)
               ? [
                   Stack(
                     children: [

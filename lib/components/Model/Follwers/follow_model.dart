@@ -11,8 +11,8 @@ List<FollowesModel> followesModelFromJson(String str) =>
 String followesModelToJson(FollowesModel data) => json.encode(data.toJson());
 
 class FollowesModel {
-  String createdOn;
-  ByUser byUser;
+  String? createdOn;
+  ByUser? byUser;
 
   FollowesModel({this.createdOn, this.byUser});
 
@@ -25,20 +25,20 @@ class FollowesModel {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     data['created_on'] = this.createdOn;
     if (this.byUser != null) {
-      data['user'] = this.byUser.toJson();
+      data['user'] = this.byUser?.toJson();
     }
     return data;
   }
 }
 
 class ByUser {
-  String providerDisplayName;
-  String photoUrl;
-  int id;
-  String gender;
-  String countryIp;
-  Region region;
-  List<UserImages> userImages;
+  String? providerDisplayName;
+  String? photoUrl;
+  int? id;
+  String? gender;
+  String? countryIp;
+  Region? region;
+  List<UserImages>? userImages;
 
   ByUser(
       {this.providerDisplayName,
@@ -58,9 +58,9 @@ class ByUser {
     region =
         json['region'] != null ? new Region.fromJson(json['region']) : null;
     if (json['user_images'] != null) {
-      userImages = new List<UserImages>();
+      userImages = [];
       json['user_images'].forEach((v) {
-        userImages.add(new UserImages.fromJson(v));
+        userImages?.add(new UserImages.fromJson(v));
       });
     }
   }
@@ -73,17 +73,17 @@ class ByUser {
     data['gender'] = this.gender;
     data['country_ip'] = this.countryIp;
     if (this.region != null) {
-      data['region'] = this.region.toJson();
+      data['region'] = this.region?.toJson();
     }
     if (this.userImages != null) {
-      data['user_images'] = this.userImages.map((v) => v.toJson()).toList();
+      data['user_images'] = this.userImages?.map((v) => v.toJson()).toList();
     }
     return data;
   }
 }
 
 class Region {
-  String regionName;
+  String? regionName;
 
   Region({this.regionName});
 
@@ -99,8 +99,8 @@ class Region {
 }
 
 class UserImages {
-  int id;
-  String photoUrl;
+  int? id;
+  String? photoUrl;
 
   UserImages({this.id, this.photoUrl});
 

@@ -5,14 +5,14 @@ List<VisitorModel> visitorListModelFromJson(String str) =>
         jsonDecode(str).map((e) => VisitorModel.fromJson(e)));
 
 class VisitorModel {
-  int id;
-  String createdOn;
-  String photoUrl;
-  String country;
-  List<String> imageUrl;
-  String userName;
-  String time;
-  String gender;
+  int? id;
+  String? createdOn;
+  String? photoUrl;
+  String? country;
+  List<String>? imageUrl;
+  String? userName;
+  String? time;
+  String? gender;
 
   VisitorModel(
       {this.id,
@@ -49,8 +49,8 @@ class VisitorModel {
   }
 
   String getUserImage() {
-    if (imageUrl.length > 0) {
-      return imageUrl.first ?? "";
+    if ((imageUrl?.length ?? 0) > 0) {
+      return imageUrl?.first ?? "";
     }
     return photoUrl ?? "";
   }

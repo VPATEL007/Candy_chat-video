@@ -1,16 +1,17 @@
-
 import 'dart:convert';
 
-LanguageModel languageModelFromJson(String str) => LanguageModel.fromJson(json.decode(str));
+LanguageModel languageModelFromJson(String str) =>
+    LanguageModel.fromJson(json.decode(str));
 
 String languageModelToJson(LanguageModel data) => json.encode(data.toJson());
+
 class LanguageModel {
-  int id;
-  String languageName;
-  bool isActive;
-  String flagUrl;
-  String appResourceUrl;
-  String localTag;
+  int? id;
+  String? languageName;
+  bool? isActive;
+  String? flagUrl;
+  String? appResourceUrl;
+  String? localTag;
 
   LanguageModel(
       {this.id,

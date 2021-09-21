@@ -5,7 +5,6 @@ import 'package:agora_rtm/agora_rtm.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
-import 'package:keyboard_visibility/keyboard_visibility.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:provider/provider.dart';
 import 'package:video_chat/app/app.export.dart';
@@ -20,7 +19,7 @@ import 'package:video_chat/provider/chat_provider.dart';
 import 'package:video_chat/provider/followes_provider.dart';
 import 'package:video_chat/provider/gift_provider.dart';
 import 'package:video_chat/provider/matching_profile_provider.dart';
-import 'package:screen/screen.dart';
+// import 'package:screen/screen.dart';
 
 class VideoCall extends StatefulWidget {
   final String token;
@@ -29,11 +28,11 @@ class VideoCall extends StatefulWidget {
   final String toUserId;
 
   VideoCall({
-    Key key,
-    @required this.channelName,
-    @required this.token,
-    @required this.userId,
-    @required this.toUserId,
+    Key? key,
+    required this.channelName,
+    required this.token,
+    required this.userId,
+    required this.toUserId,
   }) : super(key: key);
 
   @override
@@ -43,7 +42,7 @@ class VideoCall extends StatefulWidget {
 class VideoCallState extends State<VideoCall> {
   final TextEditingController _chatController = TextEditingController();
   ScrollController messageListScrollController = ScrollController();
-  RtcEngine engine;
+  RtcEngine? engine;
   bool _joined = false;
   bool _micMute = false;
   bool _videoMute = false;
@@ -52,29 +51,29 @@ class VideoCallState extends State<VideoCall> {
   bool isRemoteAudioMute = false;
   AgoraService agoraService = AgoraService.instance;
   List<MessageObj> _chatsList = [];
-  Timer timer;
+  Timer? timer;
   bool isKeyboardOpen = false;
-  UserModel toUser;
-  UserModel fromUser;
+  UserModel? toUser;
+  UserModel? fromUser;
   @override
   void initState() {
     super.initState();
-    Screen.keepOn(true);
+    // Screen.keepOn(true);
     agoraService.isOngoingCall = true;
-    WidgetsBinding.instance.addPostFrameCallback((_) {
+    WidgetsBinding.instance?.addPostFrameCallback((_) {
       initPlatformState();
       init();
 
       getToUserDetail();
     });
 
-    fromUser = Provider.of<FollowesProvider>(context, listen: false)?.userModel;
+    fromUser = Provider.of<FollowesProvider>(context, listen: false).userModel;
     if (fromUser == null) {
       Provider.of<FollowesProvider>(context, listen: false)
           .fetchMyProfile(context)
           .then((_) {
-        UserModel user =
-            Provider.of<FollowesProvider>(context, listen: false)?.userModel;
+        UserModel? user =
+            Provider.of<FollowesProvider>(context, listen: false).userModel;
         if (user?.isInfluencer == false) {
           timer = Timer.periodic(
               Duration(seconds: 60), (Timer t) => callReceiveApiCall());
@@ -87,13 +86,13 @@ class VideoCallState extends State<VideoCall> {
       }
     }
 
-    KeyboardVisibilityNotification().addNewListener(
-      onChange: (bool visible) {
-        setState(() {
-          isKeyboardOpen = visible;
-        });
-      },
-    );
+    // KeyboardVisibilityNotification().addNewListener(
+    //   onChange: (bool visible) {
+    //     setState(() {
+    //       isKeyboardOpen = visible;
+    //     });
+    //   },
+    // );
   }
 
   @override
@@ -101,10 +100,10 @@ class VideoCallState extends State<VideoCall> {
     // destroy sdk
     agoraService.openUserFeedBackPopUp(toUser?.id ?? 0);
     agoraService.isOngoingCall = false;
-    Screen.keepOn(false);
+    // Screen.keepOn(false);
     timer?.cancel();
     endCall();
-    agoraService?.leaveChannel();
+    agoraService.leaveChannel();
     super.dispose();
   }
 
@@ -115,7 +114,7 @@ class VideoCallState extends State<VideoCall> {
   }
 
   Future<void> init() async {
-    await agoraService.joinChannel((widget?.channelName ?? ""),
+    await agoraService.joinChannel((widget.channelName),
         onMemberJoined: (AgoraRtmMember member) {
       print(
           "Member joined: " + member.userId + ', channel: ' + member.channelId);
@@ -144,7 +143,7 @@ class VideoCallState extends State<VideoCall> {
     RtcEngineContext config = RtcEngineContext(AGORA_APPID);
     engine = await RtcEngine.createWithContext(config);
     // Define event handling logic
-    engine.setEventHandler(RtcEngineEventHandler(
+    engine?.setEventHandler(RtcEngineEventHandler(
         joinChannelSuccess: (String channel, int uid, int elapsed) {
       print('joinChannelSuccess $channel, $uid');
       setState(() {
@@ -170,8 +169,8 @@ class VideoCallState extends State<VideoCall> {
       print(e);
     }));
     // Enable video
-    await engine.enableVideo();
-    await engine.joinChannel(widget.token, widget.channelName, null, 0);
+    await engine?.enableVideo();
+    await engine?.joinChannel(widget.token, widget.channelName, null, 0);
   }
 
   @override
@@ -222,7 +221,7 @@ class VideoCallState extends State<VideoCall> {
                                     ? " camera off"
                                     : ""),
                     style:
-                        appTheme.black14SemiBold.copyWith(color: Colors.white),
+                        appTheme?.black14SemiBold.copyWith(color: Colors.white),
                   ))
                 : SizedBox(),
             Positioned(
@@ -250,8 +249,8 @@ class VideoCallState extends State<VideoCall> {
                                           top: getSize(16), right: getSize(16)),
                                       child: InkWell(
                                         onTap: () async {
-                                          if (_chatController.text?.isEmpty ??
-                                              true) return;
+                                          if (_chatController.text.isEmpty)
+                                            return;
                                           MessageObj _chat = MessageObj(
                                               chatDate: DateTime.now(),
                                               message: _chatController.text,
@@ -266,14 +265,14 @@ class VideoCallState extends State<VideoCall> {
                                               _chatController.text);
 
                                           _chatController.clear();
-                                          if (_chatsList?.isNotEmpty ?? false)
+                                          if (_chatsList.isNotEmpty)
                                             messageListScrollController
-                                                ?.jumpTo(0.0);
+                                                .jumpTo(0.0);
                                           if (mounted) setState(() {});
                                         },
                                         child: Text(
                                           "Send",
-                                          style: appTheme.black14Normal
+                                          style: appTheme?.black14Normal
                                               .copyWith(
                                                   fontWeight: FontWeight.w700,
                                                   color: ColorConstants.red),
@@ -431,17 +430,17 @@ class VideoCallState extends State<VideoCall> {
                       Text(
                         messageList[contentIndex].isSendByMe == true
                             ? (fromUser?.userName ?? "")
-                            : (toUser.userName ?? ""),
+                            : (toUser?.userName ?? ""),
                         textAlign: TextAlign.left,
                         style:
-                            appTheme.black14Normal.copyWith(color: Colors.red),
+                            appTheme?.black14Normal.copyWith(color: Colors.red),
                       ),
                       SizedBox(
                         height: 6,
                       ),
                       Text(
-                        messageList[contentIndex].message,
-                        style: appTheme.black16Medium
+                        messageList[contentIndex].message ?? "",
+                        style: appTheme?.black16Medium
                             .copyWith(fontSize: getSize(16)),
                       )
                     ],
@@ -461,8 +460,8 @@ class VideoCallState extends State<VideoCall> {
   void endCall() {
     try {
       timer?.cancel();
-      engine.leaveChannel();
-      engine.destroy();
+      engine?.leaveChannel();
+      engine?.destroy();
     } catch (e) {
       print(e);
     }
@@ -473,7 +472,7 @@ class VideoCallState extends State<VideoCall> {
     setState(() {
       _micMute = !_micMute;
     });
-    engine.muteLocalAudioStream(_micMute);
+    engine?.muteLocalAudioStream(_micMute);
   }
 
   //Video Mute
@@ -481,12 +480,12 @@ class VideoCallState extends State<VideoCall> {
     setState(() {
       _videoMute = !_videoMute;
     });
-    engine.muteLocalVideoStream(_videoMute);
+    engine?.muteLocalVideoStream(_videoMute);
   }
 
 //Switch
   void _onSwitchCamera() {
-    engine.switchCamera();
+    engine?.switchCamera();
   }
 
   // Local preview
@@ -529,7 +528,7 @@ class VideoCallState extends State<VideoCall> {
                     Text(
                       "Are you sure you want to end your Video Call?",
                       textAlign: TextAlign.center,
-                      style: appTheme.black14SemiBold
+                      style: appTheme?.black14SemiBold
                           .copyWith(fontSize: getFontSize(18)),
                     ),
                     SizedBox(
@@ -548,7 +547,7 @@ class VideoCallState extends State<VideoCall> {
                             borderRadius: BorderRadius.circular(16)),
                         child: Center(
                             child: Text("Cancel",
-                                style: appTheme.whiteBold32.copyWith(
+                                style: appTheme?.whiteBold32.copyWith(
                                     fontSize: getFontSize(18),
                                     color: ColorConstants.red))),
                       ),
@@ -577,12 +576,12 @@ class VideoCallState extends State<VideoCall> {
 
 //Receive Video Call
   callReceiveApiCall() async {
-    await Provider.of<MatchingProfileProvider>(navigationKey.currentContext,
+    await Provider.of<MatchingProfileProvider>(navigationKey.currentContext!,
             listen: false)
         .receiveVideoCall(
-            navigationKey.currentContext, widget.token, widget.channelName);
-    CallStatusModel callStatus = Provider.of<MatchingProfileProvider>(
-            navigationKey.currentContext,
+            navigationKey.currentContext!, widget.token, widget.channelName);
+    CallStatusModel? callStatus = Provider.of<MatchingProfileProvider>(
+            navigationKey.currentContext!,
             listen: false)
         .coinStatus;
 

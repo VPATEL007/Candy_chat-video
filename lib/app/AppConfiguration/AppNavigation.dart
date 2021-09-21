@@ -18,7 +18,7 @@ class AppNavigation {
 
   void goNextFromSplash() {
     if (!app.resolve<PrefUtils>().isShowIntro() ||
-        app.resolve<PrefUtils>().selectedLanguage == null) {
+        app.resolve<PrefUtils>().selectedLanguages == null) {
       //show Intro
       NavigationUtilities.pushReplacementNamed(LanguageSelection.route,
           type: RouteType.fade);
@@ -33,11 +33,11 @@ class AppNavigation {
 
   Future<void> moveToHome() async {
     NetworkClient.getInstance
-        .showLoader(NavigationUtilities.key.currentState.overlay.context);
+        .showLoader(NavigationUtilities.key.currentState!.overlay!.context);
     await Provider.of<FollowesProvider>(
-            NavigationUtilities.key.currentState.overlay.context,
+            NavigationUtilities.key.currentState!.overlay!.context,
             listen: false)
-        .fetchMyProfile(NavigationUtilities.key.currentState.overlay.context);
+        .fetchMyProfile(NavigationUtilities.key.currentState!.overlay!.context);
 
     NetworkClient.getInstance.hideProgressDialog();
     isValidProfile();
@@ -50,12 +50,12 @@ class AppNavigation {
 
   isValidProfile() {
     var provider = Provider.of<FollowesProvider>(
-        NavigationUtilities.key.currentState.overlay.context,
+        NavigationUtilities.key.currentState!.overlay!.context,
         listen: false);
-    if (provider?.userModel?.userName == null ||
-        provider.userModel.userName.isEmpty ||
-        provider.userModel.userImages == null ||
-        provider.userModel.userImages.isEmpty) {
+    if (provider.userModel?.userName == null ||
+        provider.userModel?.userName?.isEmpty == true ||
+        provider.userModel?.userImages == null ||
+        provider.userModel?.userImages?.isEmpty == true) {
       NavigationUtilities.pushReplacementNamed(EditProfileScreen.route,
           type: RouteType.fade);
     } else {

@@ -13,7 +13,7 @@ import 'package:video_chat/components/Model/Payment/WithDrawRequestList.dart';
 import 'package:video_chat/provider/withdraw_provider.dart';
 
 class WithDrawHistory extends StatefulWidget {
-  WithDrawHistory({Key key}) : super(key: key);
+  WithDrawHistory({Key? key}) : super(key: key);
 
   @override
   _WithDrawHistoryState createState() => _WithDrawHistoryState();
@@ -31,7 +31,7 @@ class _WithDrawHistoryState extends State<WithDrawHistory> {
 
   resetPagination() {
     page = 1;
-    WidgetsBinding.instance.addPostFrameCallback((_) {
+    WidgetsBinding.instance?.addPostFrameCallback((_) {
       Provider.of<WithDrawProvider>(context, listen: false).getWithDrawRequest(
           page,
           DateUtilities().getFormattedDateString(_selectedDate,
@@ -77,41 +77,40 @@ class _WithDrawHistoryState extends State<WithDrawHistory> {
 
   Widget getList() {
     return Consumer<WithDrawProvider>(
-      builder: (context, withDraw, child) =>
-          (withDraw?.withDrawList?.isEmpty ?? true)
-              ? Center(
-                  child: Text("No Withdraw Request found!"),
-                )
-              : ListView.separated(
-                  padding: EdgeInsets.only(
-                      top: getSize(20), left: getSize(25), right: getSize(25)),
-                  itemCount: withDraw.withDrawList.length,
-                  itemBuilder: (BuildContext context, int index) {
-                    return LazyLoadingList(
-                        initialSizeOfItems: 20,
-                        index: index,
-                        hasMore: true,
-                        loadMore: () {
-                          page++;
-                          print(
-                              "--------========================= Lazy Loading $page ==========================---------");
+      builder: (context, withDraw, child) => (withDraw.withDrawList.isEmpty)
+          ? Center(
+              child: Text("No Withdraw Request found!"),
+            )
+          : ListView.separated(
+              padding: EdgeInsets.only(
+                  top: getSize(20), left: getSize(25), right: getSize(25)),
+              itemCount: withDraw.withDrawList.length,
+              itemBuilder: (BuildContext context, int index) {
+                return LazyLoadingList(
+                    initialSizeOfItems: 20,
+                    index: index,
+                    hasMore: true,
+                    loadMore: () {
+                      page++;
+                      print(
+                          "--------========================= Lazy Loading $page ==========================---------");
 
-                          Provider.of<WithDrawProvider>(context, listen: false)
-                              .getWithDrawRequest(
-                                  page,
-                                  DateUtilities().getFormattedDateString(
-                                      _selectedDate,
-                                      formatter: DateUtilities.yyyy_mm_dd),
-                                  context);
-                        },
-                        child: cellItem(withDraw.withDrawList[index]));
-                  },
-                  separatorBuilder: (BuildContext context, int index) {
-                    return SizedBox(
-                      height: getSize(15),
-                    );
-                  },
-                ),
+                      Provider.of<WithDrawProvider>(context, listen: false)
+                          .getWithDrawRequest(
+                              page,
+                              DateUtilities().getFormattedDateString(
+                                  _selectedDate,
+                                  formatter: DateUtilities.yyyy_mm_dd),
+                              context);
+                    },
+                    child: cellItem(withDraw.withDrawList[index]));
+              },
+              separatorBuilder: (BuildContext context, int index) {
+                return SizedBox(
+                  height: getSize(15),
+                );
+              },
+            ),
     );
   }
 
@@ -150,18 +149,18 @@ class _WithDrawHistoryState extends State<WithDrawHistory> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  (model?.coins?.toString() ?? "") + " Coins",
+                  (model.coins?.toString() ?? "") + " Coins",
                   style:
-                      appTheme.black16Bold.copyWith(fontSize: getFontSize(18)),
+                      appTheme?.black16Bold.copyWith(fontSize: getFontSize(18)),
                 ),
                 SizedBox(
                   height: getSize(6),
                 ),
                 Text(
-                  (model?.paymentMethod?.name ?? "") +
+                  (model.paymentMethod?.name ?? "") +
                       " - " +
-                      (model?.paymentId ?? ""),
-                  style: appTheme.black14SemiBold,
+                      (model.paymentId ?? ""),
+                  style: appTheme?.black14SemiBold,
                 ),
                 SizedBox(
                   height: getSize(6),
@@ -169,15 +168,16 @@ class _WithDrawHistoryState extends State<WithDrawHistory> {
                 Row(
                   children: [
                     Text(
-                      model?.requestStatus?.toUpperCase() ?? "",
-                      style: appTheme.black14SemiBold,
+                      model.requestStatus?.toUpperCase() ?? "",
+                      style: appTheme?.black14SemiBold,
                     ),
                     SizedBox(
                       width: getSize(6),
                     ),
                     Text(
-                      DateFormat.yMMMd().format(model.createdOn),
-                      style: appTheme.black12Normal,
+                      DateFormat.yMMMd()
+                          .format(model.createdOn ?? DateTime.now()),
+                      style: appTheme?.black12Normal,
                     ),
                   ],
                 )
@@ -195,13 +195,13 @@ class _WithDrawHistoryState extends State<WithDrawHistory> {
   }
 
   _selectDate() async {
-    DateTime newSelectedDate = await showDatePicker(
+    DateTime? newSelectedDate = await showDatePicker(
         context: context,
         initialDate: _selectedDate != null ? _selectedDate : DateTime.now(),
         firstDate: DateTime(1900),
         lastDate: DateTime.now(),
-        builder: (BuildContext context, Widget child) {
-          return child;
+        builder: (BuildContext? context, Widget? child) {
+          return child ?? Container();
         });
 
     if (newSelectedDate != null) {

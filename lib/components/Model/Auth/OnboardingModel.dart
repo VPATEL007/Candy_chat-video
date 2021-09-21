@@ -1,12 +1,12 @@
 class OnboardingModel {
-  int id;
-  int sequence;
-  String title;
-  String introText;
-  String imageUrl;
-  String createdOn;
-  bool isActive;
-  int languageId;
+  int? id;
+  int? sequence;
+  String? title;
+  String? introText;
+  String? imageUrl;
+  String? createdOn;
+  bool? isActive;
+  int? languageId;
 
   OnboardingModel(
       {this.id,

@@ -114,7 +114,7 @@ class ReportAndBlockProvider with ChangeNotifier {
         method: MethodType.Post,
         successCallback: (response, message) {
           NetworkClient.getInstance.hideProgressDialog();
-          blockList.removeWhere((element) => element.user.id == userId);
+          blockList.removeWhere((element) => element.user?.id == userId);
           notifyListeners();
         },
         failureCallback: (code, message) {

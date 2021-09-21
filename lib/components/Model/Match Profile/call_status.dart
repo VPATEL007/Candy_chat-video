@@ -1,6 +1,6 @@
 class CallStatusModel {
-  bool continueCall;
-  bool lowBalance;
+  bool? continueCall;
+  bool? lowBalance;
   // int newBalance;
   // double minutesRemaining;
 
@@ -27,7 +27,7 @@ class CallStatusModel {
 }
 
 class CoinModel {
-  bool lowBalance;
+  bool? lowBalance;
   // double maxCallMinutes;
 
   CoinModel({

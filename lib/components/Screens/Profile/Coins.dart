@@ -10,21 +10,21 @@ import 'package:video_chat/app/utils/math_utils.dart';
 import 'package:video_chat/provider/followes_provider.dart';
 
 class Coins extends StatefulWidget {
-  const Coins({Key key}) : super(key: key);
+  const Coins({Key? key}) : super(key: key);
 
   @override
   _CoinsState createState() => _CoinsState();
 }
 
 class _CoinsState extends State<Coins> {
-  InAppPurchase purchase = InAppPurchase.instance;
+  InAppPurchaseHelper purchase = InAppPurchaseHelper.instance;
 
   List<ProductDetails> _products = [];
 
   @override
   void initState() {
     super.initState();
-    WidgetsBinding.instance.addPostFrameCallback((_) {
+    WidgetsBinding.instance?.addPostFrameCallback((_) {
       getList();
     });
   }
@@ -98,9 +98,9 @@ class _CoinsState extends State<Coins> {
     req["currency"] = "INR";
 
     NetworkClient.getInstance
-        .showLoader(NavigationUtilities.key.currentContext);
+        .showLoader(NavigationUtilities.key.currentContext!);
     NetworkClient.getInstance.callApi(
-      context: NavigationUtilities.key.currentContext,
+      context: NavigationUtilities.key.currentContext!,
       baseUrl: ApiConstants.apiUrl,
       command: ApiConstants.buyPackage,
       headers: NetworkClient.getInstance.getAuthHeaders(),
@@ -110,17 +110,17 @@ class _CoinsState extends State<Coins> {
         NetworkClient.getInstance.hideProgressDialog();
 
         Provider.of<FollowesProvider>(
-                NavigationUtilities.key.currentState.overlay.context,
+                NavigationUtilities.key.currentState!.overlay!.context,
                 listen: false)
             .fetchMyProfile(
-                NavigationUtilities.key.currentState.overlay.context);
-        View.showMessage(NavigationUtilities.key.currentContext,
+                NavigationUtilities.key.currentState!.overlay!.context);
+        View.showMessage(NavigationUtilities.key.currentContext!,
             "Your coin credited in your account.",
             mode: DisplayMode.SUCCESS);
       },
       failureCallback: (code, message) {
         NetworkClient.getInstance.hideProgressDialog();
-        View.showMessage(NavigationUtilities.key.currentContext, message);
+        View.showMessage(NavigationUtilities.key.currentContext!, message);
       },
     );
   }

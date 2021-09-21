@@ -3,7 +3,6 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:in_app_purchase/in_app_purchase.dart';
-import 'package:in_app_purchase/store_kit_wrappers.dart';
 import 'package:provider/provider.dart';
 import 'package:video_chat/app/constant/ApiConstants.dart';
 import 'package:video_chat/app/constant/ColorConstant.dart';
@@ -20,12 +19,12 @@ import '../../main.dart';
 import 'Themehelper.dart';
 import 'dart:io' as io;
 
-class InAppPurchase {
-  InAppPurchase._();
+class InAppPurchaseHelper {
+  InAppPurchaseHelper._();
 
-  static InAppPurchase instance = InAppPurchase._();
-  final InAppPurchaseConnection _connection = InAppPurchaseConnection.instance;
-  StreamSubscription<List<PurchaseDetails>> subscription;
+  static InAppPurchaseHelper instance = InAppPurchaseHelper._();
+  final InAppPurchase _connection = InAppPurchase.instance;
+  late StreamSubscription<List<PurchaseDetails>> subscription;
   List<String> _kProductIds = <String>[
     "com.randomvideochat.videochat.30",
     "com.randomvideochat.videochat.203"
@@ -44,7 +43,7 @@ class InAppPurchase {
     List<ProductDetails> products = [];
 
     NetworkClient.getInstance
-        .showLoader(NavigationUtilities.key.currentContext);
+        .showLoader(NavigationUtilities.key.currentContext!);
     ProductDetailsResponse productDetailResponse =
         await _connection.queryProductDetails(_kProductIds.toSet());
 
@@ -66,7 +65,7 @@ class InAppPurchase {
 
   intialConfig() {
     final Stream<List<PurchaseDetails>> purchaseUpdated =
-        InAppPurchaseConnection.instance.purchaseUpdatedStream;
+        InAppPurchase.instance.purchaseStream;
     subscription = purchaseUpdated.listen((purchaseDetailsList) {
       listenToPurchaseUpdated(purchaseDetailsList);
     }, onDone: () {
@@ -81,9 +80,9 @@ class InAppPurchase {
       List<PurchaseDetails> purchaseDetailsList) async {
     purchaseDetailsList.forEach((PurchaseDetails purchaseDetails) async {
       if (purchaseDetails.status == PurchaseStatus.purchased) {
-        InAppPurchaseConnection.instance.completePurchase(purchaseDetails);
+        InAppPurchase.instance.completePurchase(purchaseDetails);
         await verifyPurchase(
-            purchaseDetails, NavigationUtilities.key.currentContext);
+            purchaseDetails, NavigationUtilities.key.currentContext!);
         completeTransaction();
       }
     });
@@ -91,48 +90,47 @@ class InAppPurchase {
 
   //Complete Transaction
   Future<void> completeTransaction() async {
-    if (io.Platform.isIOS) {
-      var transactions = await SKPaymentQueueWrapper().transactions();
-      transactions.forEach((skPaymentTransactionWrapper) {
-        SKPaymentQueueWrapper().finishTransaction(skPaymentTransactionWrapper);
-      });
-    }
+    // if (io.Platform.isIOS) {
+    //   var transactions = await SKPaymentQueueWrapper().transactions();
+    //   transactions.forEach((skPaymentTransactionWrapper) {
+    //     SKPaymentQueueWrapper().finishTransaction(skPaymentTransactionWrapper);
+    //   });
+    // }
   }
 
   //Purchase
   purchaseProduct(ProductDetails product) {
     if (Platform.isAndroid) {
       PurchaseParam purchaseParam = PurchaseParam(
-          productDetails: product,
-          applicationUserName:
-              app.resolve<PrefUtils>().getUserDetails().userName,
-          changeSubscriptionParam: null);
+        productDetails: product,
+        applicationUserName:
+            app.resolve<PrefUtils>().getUserDetails()?.userName,
+      );
       _connection.buyConsumable(
           purchaseParam: purchaseParam, autoConsume: true);
     } else {
       PurchaseParam purchaseParam = PurchaseParam(
-          productDetails: product,
-          applicationUserName:
-              app.resolve<PrefUtils>().getUserDetails().userName,
-          changeSubscriptionParam: null,
-          sandboxTesting: false);
+        productDetails: product,
+        applicationUserName:
+            app.resolve<PrefUtils>().getUserDetails()?.userName,
+      );
       _connection.buyConsumable(purchaseParam: purchaseParam);
     }
   }
 
 //Verify Purchase
   Future<bool> verifyPurchase(
-      PurchaseDetails purchaseDetails, BuildContext context) {
+      PurchaseDetails purchaseDetails, BuildContext context) async {
     if (Platform.isAndroid) {
       return Future<bool>.value(true);
     }
-
+    var isSuccess = false;
     Map<String, dynamic> req = {};
 
     req["receipt-data"] =
         purchaseDetails.verificationData.serverVerificationData;
     // NetworkClient.getInstance.showLoader(context);
-    NetworkClient.getInstance.callApi(
+    await NetworkClient.getInstance.callApi(
       context: context,
       baseUrl: ApiConstants.inAppVerfiySandBoxURL,
       command: "",
@@ -142,15 +140,16 @@ class InAppPurchase {
       successCallback: (response, message) async {
         // NetworkClient.getInstance.hideProgressDialog();
         creditCoin(purchaseDetails);
-
-        return Future<bool>.value(true);
+        isSuccess = true;
       },
       failureCallback: (code, message) {
         // NetworkClient.getInstance.hideProgressDialog();
         View.showMessage(context, message);
-        return Future<bool>.value(true);
+        isSuccess = false;
       },
     );
+
+    return isSuccess;
   }
 
 //Credit Coin
@@ -162,16 +161,14 @@ class InAppPurchase {
     req["gateway"] = "apple";
     req["package_id"] = purchaseDetails.productID;
     req["transaction_id"] = purchaseDetails.purchaseID;
-    req["package_name"] = product?.title;
-    req["paid_amount"] = product?.rawPrice;
-    req["currency"] = product?.currencyCode;
-    print(DateTime.fromMillisecondsSinceEpoch(
-        purchaseDetails.skPaymentTransaction.transactionTimeStamp.toInt()));
+    req["package_name"] = product.title;
+    req["paid_amount"] = product.rawPrice;
+    req["currency"] = product.currencyCode;
 
     // NetworkClient.getInstance
     //     .showLoader(NavigationUtilities.key.currentContext);
     await NetworkClient.getInstance.callApi(
-      context: NavigationUtilities.key.currentContext,
+      context: NavigationUtilities.key.currentContext!,
       baseUrl: ApiConstants.apiUrl,
       command: ApiConstants.buyPackage,
       headers: NetworkClient.getInstance.getAuthHeaders(),
@@ -181,30 +178,30 @@ class InAppPurchase {
         // NetworkClient.getInstance.hideProgressDialog();
 
         Provider.of<FollowesProvider>(
-                NavigationUtilities.key.currentState.overlay.context,
+                NavigationUtilities.key.currentState!.overlay!.context,
                 listen: false)
             .fetchMyProfile(
-                NavigationUtilities.key.currentState.overlay.context);
-        View.showMessage(NavigationUtilities.key.currentContext,
+                NavigationUtilities.key.currentState!.overlay!.context);
+        View.showMessage(NavigationUtilities.key.currentContext!,
             "Your coin credited in your account.",
             mode: DisplayMode.SUCCESS);
       },
       failureCallback: (code, message) {
         // NetworkClient.getInstance.hideProgressDialog();
-        View.showMessage(NavigationUtilities.key.currentContext, message);
+        View.showMessage(NavigationUtilities.key.currentContext!, message);
       },
     );
   }
 
   openCoinPurchasePopUp() async {
-    var _products = await InAppPurchase.instance.getProducts();
+    var _products = await InAppPurchaseHelper.instance.getProducts();
     showModalBottomSheet(
         isScrollControlled: true,
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.only(
               topLeft: Radius.circular(20.0), topRight: Radius.circular(20.0)),
         ),
-        context: NavigationUtilities.key.currentContext,
+        context: NavigationUtilities.key.currentContext!,
         builder: (builder) {
           return StatefulBuilder(
             builder: (BuildContext context, setState) {
@@ -220,7 +217,7 @@ class InAppPurchase {
                       children: [
                         Text(
                           "Insufficient Coins",
-                          style: appTheme.black16Bold
+                          style: appTheme?.black16Bold
                               .copyWith(fontSize: getFontSize(25)),
                         ),
                         Spacer(),
@@ -230,7 +227,7 @@ class InAppPurchase {
                           },
                           child: Text(
                             "Close",
-                            style: appTheme.black14SemiBold.copyWith(
+                            style: appTheme?.black14SemiBold.copyWith(
                                 fontSize: getFontSize(18),
                                 color: ColorConstants.red),
                           ),
@@ -251,7 +248,7 @@ class InAppPurchase {
                         ),
                         Text(
                           "30/min",
-                          style: appTheme.black12Normal.copyWith(
+                          style: appTheme?.black12Normal.copyWith(
                               fontSize: getFontSize(18),
                               color: ColorConstants.red),
                         )
@@ -262,7 +259,7 @@ class InAppPurchase {
                     ),
                     Text(
                       "Recharge to enable 1 to 1 Video chat.",
-                      style: appTheme.black14Normal
+                      style: appTheme?.black14Normal
                           .copyWith(fontWeight: FontWeight.w500),
                     ),
                     SizedBox(
@@ -278,7 +275,7 @@ class InAppPurchase {
                         itemBuilder: (BuildContext context, int index) {
                           return InkWell(
                               onTap: () {
-                                InAppPurchase.instance
+                                InAppPurchaseHelper.instance
                                     .purchaseProduct(_products[index]);
                               },
                               child: getCoinItem(

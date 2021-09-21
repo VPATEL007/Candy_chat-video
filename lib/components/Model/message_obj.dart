@@ -11,11 +11,11 @@ MessageObj messageObjFromJson(String str) =>
 String messageObjToJson(MessageObj data) => json.encode(data.toJson());
 
 class MessageObj {
-  String toSend;
-  String sendBy;
-  String message;
-  int type;
-  DateTime chatDate;
+  String? toSend;
+  String? sendBy;
+  String? message;
+  int? type;
+  DateTime? chatDate;
 
   bool isSendByMe;
 
@@ -42,5 +42,6 @@ class MessageObj {
         "chatDate": chatDate ?? "",
       };
 
-  String get getChatDate => DateFormat("hh:mm a").format(chatDate);
+  String get getChatDate =>
+      DateFormat("hh:mm a").format(chatDate ?? DateTime.now());
 }

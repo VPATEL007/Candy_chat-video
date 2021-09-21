@@ -25,18 +25,18 @@ class VisitUserModel {
     this.language,
   });
 
-  String email;
-  String phone;
-  String providerDisplayName;
-  String photoUrl;
-  String gender;
-  int callRate;
+  String? email;
+  String? phone;
+  String? providerDisplayName;
+  String? photoUrl;
+  String? gender;
+  int? callRate;
   dynamic dob;
-  String preferedGender;
-  String about;
-  Region region;
-  List<UserImage> userImages;
-  Language language;
+  String? preferedGender;
+  String? about;
+  Region? region;
+  List<UserImage>? userImages;
+  Language? language;
 
   factory VisitUserModel.fromJson(Map<String, dynamic> json) => VisitUserModel(
         email: json["email"],
@@ -64,9 +64,9 @@ class VisitUserModel {
         "dob": dob,
         "prefered_gender": preferedGender,
         "about": about,
-        "region": region.toJson(),
-        "user_images": List<dynamic>.from(userImages.map((x) => x.toJson())),
-        "language": language.toJson(),
+        "region": region?.toJson(),
+        "user_images": List<dynamic>.from(userImages!.map((x) => x.toJson())),
+        "language": language?.toJson(),
       };
 }
 
@@ -75,7 +75,7 @@ class Language {
     this.languageName,
   });
 
-  String languageName;
+  String? languageName;
 
   factory Language.fromJson(Map<String, dynamic> json) => Language(
         languageName: json["language_name"],
@@ -91,7 +91,7 @@ class Region {
     this.regionName,
   });
 
-  String regionName;
+  String? regionName;
 
   factory Region.fromJson(Map<String, dynamic> json) => Region(
         regionName: json["region_name"],
@@ -107,7 +107,7 @@ class UserImage {
     this.photoUrl,
   });
 
-  String photoUrl;
+  String? photoUrl;
 
   factory UserImage.fromJson(Map<String, dynamic> json) => UserImage(
         photoUrl: json["photo_url"],

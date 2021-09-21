@@ -2,8 +2,8 @@ import 'package:flutter/cupertino.dart';
 
 class FadeRoute<T> extends PageRoute<T> {
   FadeRoute({
-    @required this.builder,
-    RouteSettings settings,
+    required this.builder,
+    RouteSettings? settings,
     this.duration = const Duration(milliseconds: 300),
   }) : super(settings: settings);
 
@@ -11,10 +11,10 @@ class FadeRoute<T> extends PageRoute<T> {
   final Duration duration;
 
   @override
-  Color get barrierColor => null;
+  Color? get barrierColor => null;
 
   @override
-  String get barrierLabel => null;
+  String? get barrierLabel => null;
 
   @override
   bool get maintainState => true;

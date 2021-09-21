@@ -65,7 +65,7 @@ class FlareIcon extends StatelessWidget {
   static const String _path = "assets/flare";
 
   /// The path of the flare asset file.
-  final String fileName;
+  final String? fileName;
 
   /// The size is used with the [sizeDifference] to calculate the size of the
   /// container.
@@ -79,10 +79,10 @@ class FlareIcon extends StatelessWidget {
   final Offset offset;
 
   /// The name of the animation that should play.
-  final String animation;
+  final String? animation;
 
   /// If set the color will overwrite the icon color.
-  final Color color;
+  final Color? color;
 
   double get _calculatedSize => size + sizeDifference;
 
@@ -90,8 +90,8 @@ class FlareIcon extends StatelessWidget {
   /// using a [FlareIcon] doesn't appear blank for a few frames when it
   /// builds for the first time.
   static void cacheIcons(BuildContext context) {
-    cachedActor(DefaultAssetBundle.of(context), "$_path/buildings.flr");
-    cachedActor(DefaultAssetBundle.of(context), "$_path/loader.flr");
+    // cachedActor(DefaultAssetBundle.of(context), "$_path/buildings.flr");
+    // cachedActor(DefaultAssetBundle.of(context), "$_path/loader.flr");
   }
 
   @override

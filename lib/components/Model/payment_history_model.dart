@@ -23,14 +23,14 @@ class PaymentHistoryModel {
     this.data,
   });
 
-  int id;
-  String paidAmount;
-  String currency;
-  DateTime purchasedOn;
-  String gateway;
-  String transactionStatus;
-  String transactionId;
-  Data data;
+  int? id;
+  String? paidAmount;
+  String? currency;
+  DateTime? purchasedOn;
+  String? gateway;
+  String? transactionStatus;
+  String? transactionId;
+  Data? data;
 
   factory PaymentHistoryModel.fromJson(Map<String, dynamic> json) =>
       PaymentHistoryModel(
@@ -48,11 +48,11 @@ class PaymentHistoryModel {
         "id": id,
         "paid_amount": paidAmount,
         "currency": currency,
-        "purchased_on": purchasedOn.toIso8601String(),
+        "purchased_on": purchasedOn?.toIso8601String(),
         "gateway": gateway,
         "transaction_status": transactionStatus,
         "transaction_id": transactionId,
-        "data": data.toJson(),
+        "data": data?.toJson(),
       };
 }
 
@@ -63,9 +63,9 @@ class Data {
     this.detail,
   });
 
-  int id;
-  String packageName;
-  String detail;
+  int? id;
+  String? packageName;
+  String? detail;
 
   factory Data.fromJson(Map<String, dynamic> json) => Data(
         id: json["id"],

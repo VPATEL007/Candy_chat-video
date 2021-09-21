@@ -15,8 +15,8 @@ class ChatObj {
     this.messageObjList,
   });
 
-  DateTime chatDate;
-  List<MessageObj> messageObjList;
+  DateTime? chatDate;
+  List<MessageObj>? messageObjList;
 
   factory ChatObj.fromJson(Map<String, dynamic> json) => ChatObj(
         chatDate: json[_kChatDate] ?? "",
@@ -29,9 +29,10 @@ class ChatObj {
   Map<String, dynamic> toJson() => {
         _kChatDate: chatDate,
         _kChatMessages:
-            List<dynamic>.from(messageObjList.map((x) => x.toJson())),
+            List<dynamic>.from(messageObjList!.map((x) => x.toJson())),
       };
 
   // Get chating dates...
-  String get getChatingDates => DateUtilities().getFormattedDay(chatDate);
+  String get getChatingDates =>
+      DateUtilities().getFormattedDay(chatDate ?? DateTime.now());
 }

@@ -68,7 +68,7 @@ bool isStringEmpty(String string) {
 bool validateEmail(String value) {
   Pattern pattern =
       r'^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$';
-  RegExp regex = new RegExp(pattern);
+  RegExp regex = new RegExp(pattern.toString());
   return (!regex.hasMatch(value)) ? false : true;
 }
 
@@ -161,13 +161,13 @@ abstract class StringValidator {
 class ValidatorInputFormatter implements TextInputFormatter {
   ValidatorInputFormatter({this.editingValidator});
 
-  final StringValidator editingValidator;
+  final StringValidator? editingValidator;
 
   TextEditingValue formatEditUpdate(
       TextEditingValue oldValue, TextEditingValue newValue) {
-    final oldValueValid = editingValidator.isValid(oldValue.text);
-    final newValueValid = editingValidator.isValid(newValue.text);
-    if (oldValueValid && !newValueValid) {
+    final oldValueValid = editingValidator?.isValid(oldValue.text);
+    final newValueValid = editingValidator?.isValid(newValue.text);
+    if (oldValueValid == true && newValueValid == false) {
       return oldValue;
     }
     return newValue;
@@ -192,13 +192,13 @@ class LicenceValidator extends RegexValidator {
 class RegexValidator implements StringValidator {
   RegexValidator({this.regexSource});
 
-  final String regexSource;
+  final String? regexSource;
 
   /// value: the input string
   /// returns: true if the input string is a full match for regexSource
   bool isValid(String value) {
     try {
-      final regex = RegExp(regexSource);
+      final regex = RegExp(regexSource ?? "");
       final matches = regex.allMatches(value);
       for (Match match in matches) {
         if (match.start == 0 && match.end == value.length) {

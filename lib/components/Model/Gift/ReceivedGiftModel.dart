@@ -8,9 +8,9 @@ String receivedGiftModelToJson(ReceivedGiftModel data) =>
     json.encode(data.toJson());
 
 class ReceivedGiftModel {
-  int giftId;
-  Gift gift;
-  int count;
+  int? giftId;
+  Gift? gift;
+  int? count;
 
   ReceivedGiftModel({this.giftId, this.gift, this.count});
 
@@ -24,7 +24,7 @@ class ReceivedGiftModel {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     data['gift_id'] = this.giftId;
     if (this.gift != null) {
-      data['gift'] = this.gift.toJson();
+      data['gift'] = this.gift?.toJson();
     }
     data['count'] = this.count;
     return data;
@@ -32,9 +32,9 @@ class ReceivedGiftModel {
 }
 
 class Gift {
-  String giftName;
-  String imageUrl;
-  int id;
+  String? giftName;
+  String? imageUrl;
+  int? id;
 
   Gift({this.giftName, this.imageUrl, this.id});
 

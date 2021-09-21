@@ -8,7 +8,7 @@ import 'theme_settings_model.dart';
 /// These models are above the root [MaterialApp] and are only created once.
 class SettingsModelsProvider extends StatelessWidget {
   const SettingsModelsProvider({
-    @required this.child,
+    required this.child,
   });
 
   final Widget child;

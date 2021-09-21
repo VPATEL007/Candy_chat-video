@@ -11,9 +11,9 @@ class AppBackground extends StatelessWidget {
     this.borderRadius,
   });
 
-  final Widget child;
-  final List<Color> colors;
-  final BorderRadius borderRadius;
+  final Widget? child;
+  final List<Color>? colors;
+  final BorderRadius? borderRadius;
 
   @override
   Widget build(BuildContext context) {
@@ -21,8 +21,8 @@ class AppBackground extends StatelessWidget {
 
     final backgroundColors = colors ?? appTheme.backgroundColors;
 
-    if (backgroundColors.length == 1) {
-      backgroundColors.add(backgroundColors.first);
+    if (backgroundColors?.length == 1) {
+      backgroundColors?.add(backgroundColors.first);
     }
 
     return Container(
@@ -41,7 +41,7 @@ class AppBackground extends StatelessWidget {
               gradient: LinearGradient(
                 begin: Alignment.topLeft,
                 end: Alignment.bottomRight,
-                colors: colors ?? appTheme.backgroundColors,
+                colors: colors ?? [Colors.white],
               ),
             ),
             child: Material(

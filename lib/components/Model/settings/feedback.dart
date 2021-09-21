@@ -18,10 +18,10 @@ class FeedBackModel {
     this.isActive,
   });
 
-  int id;
-  String category;
-  String detail;
-  bool isActive,isSelected = false;
+  int? id;
+  String? category;
+  String? detail;
+  bool? isActive, isSelected = false;
 
   factory FeedBackModel.fromJson(Map<String, dynamic> json) => FeedBackModel(
         id: json["id"],

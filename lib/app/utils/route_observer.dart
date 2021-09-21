@@ -17,8 +17,8 @@ class _AppRouteObserver extends RouteObserver<PageRoute<dynamic>> {
   }
 
   @override
-  void didPush(Route<dynamic> route, Route<dynamic> previousRoute) {
-    super.didPush(route, previousRoute);
+  void didPush(Route<dynamic>? route, Route<dynamic>? previousRoute) {
+    super.didPush(route!, previousRoute);
 
     log.fine("did push");
 
@@ -28,8 +28,8 @@ class _AppRouteObserver extends RouteObserver<PageRoute<dynamic>> {
   }
 
   @override
-  void didPop(Route<dynamic> route, Route<dynamic> previousRoute) {
-    super.didPop(route, previousRoute);
+  void didPop(Route<dynamic>? route, Route<dynamic>? previousRoute) {
+    super.didPop(route!, previousRoute);
 
     log.fine("did pop");
 
@@ -39,7 +39,7 @@ class _AppRouteObserver extends RouteObserver<PageRoute<dynamic>> {
   }
 
   @override
-  void didReplace({Route<dynamic> newRoute, Route<dynamic> oldRoute}) {
+  void didReplace({Route<dynamic>? newRoute, Route<dynamic>? oldRoute}) {
     log.fine("did replace");
 
     if (newRoute is PageRoute) {

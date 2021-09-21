@@ -5,12 +5,12 @@ List<UserFeedbackModel> userFeedBackModelFromJson(String str) =>
         jsonDecode(str).map((e) => UserFeedbackModel.fromJson(e)));
 
 class UserFeedbackModel {
-  int id;
-  int userId;
-  int byUserId;
-  int tagId;
-  String createdOn;
-  Tag tag;
+  int? id;
+  int? userId;
+  int? byUserId;
+  int? tagId;
+  String? createdOn;
+  Tag? tag;
 
   UserFeedbackModel(
       {this.id,
@@ -37,14 +37,14 @@ class UserFeedbackModel {
     data['tag_id'] = this.tagId;
     data['created_on'] = this.createdOn;
     if (this.tag != null) {
-      data['tag'] = this.tag.toJson();
+      data['tag'] = this.tag?.toJson();
     }
     return data;
   }
 }
 
 class Tag {
-  String name;
+  String? name;
 
   Tag({this.name});
 

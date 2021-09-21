@@ -35,31 +35,31 @@ class UserModel {
       this.coinBalance,
       this.coinsEarned});
 
-  String userName;
-  String email;
-  String phone;
-  int id;
-  int uid;
-  String providerDisplayName;
-  String photoUrl;
-  String gender;
-  int callRate;
-  String dob;
-  String preferedGender;
-  String about;
-  int byUserUserFollowers;
-  int userFollowers;
-  int userVisiteds;
-  Region region;
-  List<UserImage> userImages;
-  Language language;
-  String totalPoint;
-  String onlineStatus;
-  bool isFollowing = false, isFavourite = false;
-  bool isInfluencer;
-  String countryIp;
-  num coinBalance;
-  num coinsEarned;
+  String? userName;
+  String? email;
+  String? phone;
+  int? id;
+  int? uid;
+  String? providerDisplayName;
+  String? photoUrl;
+  String? gender;
+  int? callRate;
+  String? dob;
+  String? preferedGender;
+  String? about;
+  int? byUserUserFollowers;
+  int? userFollowers;
+  int? userVisiteds;
+  Region? region;
+  List<UserImage>? userImages;
+  Language? language;
+  String? totalPoint;
+  String? onlineStatus;
+  bool? isFollowing = false, isFavourite = false;
+  bool? isInfluencer;
+  String? countryIp;
+  num? coinBalance;
+  num? coinsEarned;
 
   factory UserModel.fromJson(Map<String, dynamic> json) => UserModel(
       userName: json["user_name"],
@@ -124,24 +124,23 @@ class UserModel {
         "country_ip": countryIp,
         "coin_balance": coinBalance,
         "coins_earned": coinsEarned,
-        "user_images": List<dynamic>.from(userImages.map((x) => x.toJson())),
+        "user_images": List<dynamic>.from(userImages!.map((x) => x.toJson())),
       };
 
-  UserModel get toCloneInfo =>
-      this == null ? Null : UserModel.fromJson(this.toJson());
+  UserModel? get toCloneInfo => UserModel.fromJson(this.toJson());
 
   Map<String, dynamic> toUpdateJson() => {
         "user_name": userName,
         "id": id,
-        "photo_url": List<dynamic>.from(userImages.map((x) => x.toJson())),
+        "photo_url": List<dynamic>.from(userImages!.map((x) => x.toJson())),
         "gender": gender,
         "dob": dob,
         "region": region?.toJson(),
       };
 
   String getUserImage() {
-    if (userImages.length > 0) {
-      return userImages.first?.photoUrl ?? "";
+    if ((userImages?.length ?? 0) > 0) {
+      return userImages?.first.photoUrl ?? "";
     }
 
     return photoUrl ?? "";
@@ -153,7 +152,7 @@ class Language {
     this.languageName,
   });
 
-  String languageName;
+  String? languageName;
 
   factory Language.fromJson(Map<String, dynamic> json) => Language(
         languageName: json["language_name"],
@@ -170,7 +169,7 @@ class Region {
     this.regionFlagUrl,
   });
 
-  String regionName, regionFlagUrl;
+  String? regionName, regionFlagUrl;
 
   factory Region.fromJson(Map<String, dynamic> json) => Region(
       regionName: json["region_name"], regionFlagUrl: json["region_flag_url"]);
@@ -182,7 +181,7 @@ class Region {
 class UserImage {
   UserImage({this.id, this.photoUrl = "", this.assetPath = ""});
 
-  int id;
+  int? id;
   String photoUrl, assetPath;
 
   factory UserImage.fromJson(Map<String, dynamic> json) => UserImage(

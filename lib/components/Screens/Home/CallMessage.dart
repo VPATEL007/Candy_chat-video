@@ -19,11 +19,11 @@ class CallMessage extends StatefulWidget {
   int userId;
 
   CallMessage(
-      {Key key,
-      @required this.name,
-      @required this.gender,
-      @required this.imageUrl,
-      @required this.userId})
+      {Key? key,
+      required this.name,
+      required this.gender,
+      required this.imageUrl,
+      required this.userId})
       : super(key: key);
 
   @override
@@ -31,9 +31,10 @@ class CallMessage extends StatefulWidget {
 }
 
 class _CallMessageState extends State<CallMessage> {
-  UserModel userModel =
-      Provider.of<FollowesProvider>(navigationKey.currentContext, listen: false)
-          .userModel;
+  UserModel? userModel = Provider.of<FollowesProvider>(
+          navigationKey.currentContext!,
+          listen: false)
+      .userModel;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -47,15 +48,15 @@ class _CallMessageState extends State<CallMessage> {
             Center(
                 child: Text(
               "It's Match",
-              style: appTheme.black16Bold.copyWith(
+              style: appTheme?.black16Bold.copyWith(
                   fontSize: getFontSize(36), color: ColorConstants.redText),
             )),
             SizedBox(
               height: 8,
             ),
             Text(
-              "You and " + (widget.name ?? "") + " like each other!",
-              style: appTheme.black14SemiBold,
+              "You and " + (widget.name) + " like each other!",
+              style: appTheme?.black14SemiBold,
             ),
             // SizedBox(
             //   height: getSize(30),
@@ -87,8 +88,8 @@ class _CallMessageState extends State<CallMessage> {
               height: getSize(18),
             ),
             Text(
-              "Video call to " + (widget.name ?? ""),
-              style: appTheme.black14SemiBold,
+              "Video call to " + (widget.name),
+              style: appTheme?.black14SemiBold,
             ),
             SizedBox(
               height: getSize(18),
@@ -118,7 +119,7 @@ class _CallMessageState extends State<CallMessage> {
                       ),
                       Text(
                         "Say hello",
-                        style: appTheme.white16Normal.copyWith(
+                        style: appTheme?.white16Normal.copyWith(
                             fontSize: getFontSize(18),
                             fontWeight: FontWeight.w500),
                       )
@@ -147,7 +148,7 @@ class _CallMessageState extends State<CallMessage> {
                     children: [
                       Text(
                         "Continue Matching",
-                        style: appTheme.black14Normal.copyWith(
+                        style: appTheme?.black14Normal.copyWith(
                             color: ColorConstants.gradiantStart,
                             fontSize: getFontSize(18),
                             fontWeight: FontWeight.w500),
@@ -238,7 +239,7 @@ class _CallMessageState extends State<CallMessage> {
                     child: CachedNetworkImage(
                       imageUrl: (userModel?.userImages?.isEmpty ?? true)
                           ? ""
-                          : userModel?.userImages?.first?.photoUrl ?? "",
+                          : userModel?.userImages?.first.photoUrl ?? "",
                       width: getSize(156),
                       height: getSize(210),
                       fit: BoxFit.cover,
@@ -266,9 +267,9 @@ class _CallMessageState extends State<CallMessage> {
 
   startCall() async {
     await Provider.of<MatchingProfileProvider>(context, listen: false)
-        .checkCoinBalance(context, widget.userId, widget.name ?? "");
+        .checkCoinBalance(context, widget.userId, widget.name);
 
-    CoinModel coins =
+    CoinModel? coins =
         Provider.of<MatchingProfileProvider>(context, listen: false)
             .coinBalance;
 
@@ -276,7 +277,7 @@ class _CallMessageState extends State<CallMessage> {
       // discover.id = 41;
       await Provider.of<MatchingProfileProvider>(context, listen: false)
           .startVideoCall(context, widget.userId);
-      VideoCallModel videoCallModel =
+      VideoCallModel? videoCallModel =
           Provider.of<MatchingProfileProvider>(context, listen: false)
               .videoCallModel;
 
@@ -285,9 +286,9 @@ class _CallMessageState extends State<CallMessage> {
         Navigator.pop(context);
         AgoraService.instance.sendVideoCallMessage(
             videoCallModel.toUserId.toString(),
-            videoCallModel.sessionId,
-            videoCallModel.channelName,
-            userModel.gender,
+            videoCallModel.sessionId ?? "",
+            videoCallModel.channelName ?? "",
+            userModel?.gender ?? "",
             context);
         Provider.of<VideoCallStatusProvider>(context, listen: false)
             .setCallStatus = CallStatus.Start;
@@ -299,16 +300,16 @@ class _CallMessageState extends State<CallMessage> {
             fromId: videoCallModel.fromUserId.toString(),
             fromImageUrl: (userModel?.userImages?.isEmpty ?? true)
                 ? ""
-                : userModel?.userImages?.first?.photoUrl ?? "",
+                : userModel?.userImages?.first.photoUrl ?? "",
             name: widget.name,
-            toImageUrl: widget.imageUrl ?? "",
+            toImageUrl: widget.imageUrl,
             id: videoCallModel.toUserId.toString(),
-            toGender: widget.gender ?? "",
+            toGender: widget.gender,
           ),
         ));
       }
     } else if (coins?.lowBalance == true) {
-      InAppPurchase.instance.openCoinPurchasePopUp();
+      InAppPurchaseHelper.instance.openCoinPurchasePopUp();
     }
   }
 }

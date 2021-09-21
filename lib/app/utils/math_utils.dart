@@ -5,7 +5,7 @@ import '../app.export.dart';
 
 bool isPad() {
   var query =
-      MediaQuery.of(NavigationUtilities.key.currentState.overlay.context);
+      MediaQuery.of(NavigationUtilities.key.currentState!.overlay!.context);
   var size = query.size;
   var diagonal = sqrt((size.width * size.width) + (size.height * size.height));
 
@@ -15,20 +15,20 @@ bool isPad() {
 dynamic getSize(double px) {
   return px *
       ((MathUtilities.screenWidth(
-              NavigationUtilities.key.currentState.overlay.context)) /
+              NavigationUtilities.key.currentState!.overlay!.context)) /
           (isPad() ? 568 : 414));
 }
 
 dynamic getFontSize(double px) {
   return px *
       (MathUtilities.screenWidth(
-              NavigationUtilities.key.currentState.overlay.context) /
+              NavigationUtilities.key.currentState!.overlay!.context) /
           (isPad() ? 568 : 414));
 }
 
 dynamic getPercentageWidth(double percentage) {
   return MathUtilities.screenWidth(
-          NavigationUtilities.key.currentState.overlay.context) *
+          NavigationUtilities.key.currentState!.overlay!.context) *
       percentage /
       100;
 }

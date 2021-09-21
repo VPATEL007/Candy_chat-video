@@ -7,9 +7,9 @@ List<BlockListModel> blockListModelFromJson(String str) =>
         jsonDecode(str).map((e) => BlockListModel.fromJson(e)));
 
 class BlockListModel {
-  String commentByUser;
-  String createdOn;
-  User user;
+  String? commentByUser;
+  String? createdOn;
+  User? user;
 
   BlockListModel({this.commentByUser, this.createdOn, this.user});
 
@@ -24,19 +24,19 @@ class BlockListModel {
     data['comment_by_user'] = this.commentByUser;
     data['created_on'] = this.createdOn;
     if (this.user != null) {
-      data['user'] = this.user.toJson();
+      data['user'] = this.user?.toJson();
     }
     return data;
   }
 }
 
 class User {
-  String userName;
-  int id;
-  String photoUrl;
-  String countryIp;
-  String gender;
-  List<UserImage> userImages;
+  String? userName;
+  int? id;
+  String? photoUrl;
+  String? countryIp;
+  String? gender;
+  List<UserImage>? userImages;
 
   User(
       {this.userName,
@@ -55,7 +55,7 @@ class User {
     if (json['user_images'] != null) {
       userImages = [];
       json['user_images'].forEach((v) {
-        userImages.add(new UserImage.fromJson(v));
+        userImages?.add(new UserImage.fromJson(v));
       });
     }
   }
@@ -68,7 +68,7 @@ class User {
     data['country_ip'] = this.countryIp;
     data['gender'] = this.gender;
     if (this.userImages != null) {
-      data['user_images'] = this.userImages.map((v) => v.toJson()).toList();
+      data['user_images'] = this.userImages?.map((v) => v.toJson()).toList();
     }
     return data;
   }

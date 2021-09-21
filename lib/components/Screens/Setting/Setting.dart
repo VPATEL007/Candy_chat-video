@@ -20,7 +20,7 @@ import 'package:video_chat/provider/followes_provider.dart';
 import 'WithDrawHistory.dart';
 
 class Setting extends StatefulWidget {
-  Setting({Key key}) : super(key: key);
+  Setting({Key? key}) : super(key: key);
 
   @override
   _SettingState createState() => _SettingState();
@@ -150,7 +150,7 @@ class _SettingState extends State<Setting> {
                   Expanded(
                     child: Text(
                       text,
-                      style: appTheme.black14Normal
+                      style: appTheme?.black14Normal
                           .copyWith(fontWeight: FontWeight.w500),
                     ),
                   ),

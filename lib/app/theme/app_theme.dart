@@ -6,13 +6,14 @@ class AppTheme {
   AppTheme.fromData(AppThemeData data) {
     name = data.name ?? "";
 
-    backgroundColors = data.backgroundColors?.map(_colorFromValue)?.toList();
+    backgroundColors =
+        data.backgroundColors?.map(_colorFromValue).cast<Color>().toList();
 
-    if (backgroundColors == null || backgroundColors.length < 2) {
+    if (backgroundColors == null || (backgroundColors?.length ?? 0) < 2) {
       backgroundColors = [Colors.black, const Color(0xff17233d)];
     }
 
-    accentColor = _colorFromValue(data.accentColor) ?? const Color(0xff2D0DB2);
+    accentColor = _colorFromValue(data.accentColor) ?? Colors.white;
   }
 
   /// Returns the currently selected [AppTheme].
@@ -21,25 +22,25 @@ class AppTheme {
   }
 
   /// The name of the theme that is used in the [ThemeCard].
-  String name;
+  String? name;
 
   /// A list of colors that define the background gradient.
   /// The [AppBackground] uses these colors to build the background gradient.
-  List<Color> backgroundColors;
+  List<Color>? backgroundColors;
 
-  Color get primaryColor => backgroundColors.last;
+  Color? get primaryColor => backgroundColors?.last;
 
   /// The accent color should compliment the background color.
-  Color accentColor;
+  Color? accentColor;
 
   /// Gets the brightness by averaging the relative luminance of each
   /// background color.
   /// Similar to [ThemeData.estimateBrightnessForColor] for multiple colors.
   Brightness get brightness {
-    final double relativeLuminance = backgroundColors
+    final double relativeLuminance = backgroundColors!
             .map((color) => color.computeLuminance())
             .reduce((a, b) => a + b) /
-        backgroundColors.length;
+        backgroundColors!.length;
 
     const double kThreshold = 0.15;
 
@@ -59,9 +60,9 @@ class AppTheme {
 
   /// Returns the [primaryColor] if it is not the same brightness as the button
   /// color, otherwise a complimentary color (white / black).
-  Color get buttonTextColor {
+  Color? get buttonTextColor {
     final primaryColorBrightness =
-        ThemeData.estimateBrightnessForColor(primaryColor);
+        ThemeData.estimateBrightnessForColor(primaryColor ?? Colors.white);
 
     if (brightness == Brightness.dark) {
       // button color is light
@@ -88,7 +89,7 @@ class AppTheme {
   Color get backgroundComplimentaryColor =>
       brightness == Brightness.light ? Colors.black : Colors.white;
 
-  Color get backgroundOffComplimentaryColor =>
+  Color? get backgroundOffComplimentaryColor =>
       brightness == Brightness.light ? Color(0xffF9F9F9) : Colors.grey[800];
 
   Color get successColor => Color(0xff52C07C);
@@ -167,7 +168,6 @@ class AppTheme {
             fontWeight: FontWeight.w400,
             color: bodyTextColor,
           ),
-
         );
   }
 
@@ -188,7 +188,7 @@ class AppTheme {
     );
   }
 
-  Color _colorFromValue(int value) {
+  Color? _colorFromValue(int? value) {
     return value != null ? Color(value) : null;
   }
 }

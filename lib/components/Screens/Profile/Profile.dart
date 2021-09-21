@@ -25,7 +25,7 @@ import 'package:video_chat/provider/followes_provider.dart';
 
 class Profile extends StatefulWidget {
   Profile({
-    Key key,
+    Key? key,
   }) : super(key: key);
 
   @override
@@ -189,7 +189,7 @@ class _ProfileState extends State<Profile> {
                 ),
                 Text(
                   title,
-                  style: appTheme.white16Normal.copyWith(
+                  style: appTheme?.white16Normal.copyWith(
                       fontWeight: FontWeight.w600,
                       color: isColor ? Colors.white : Colors.black),
                 ),
@@ -203,7 +203,7 @@ class _ProfileState extends State<Profile> {
                 title == "Coin Balance"
                     ? Text(
                         balance.toStringAsFixed(0),
-                        style: appTheme.black16Bold
+                        style: appTheme?.black16Bold
                             .copyWith(color: ColorConstants.redText),
                       )
                     : SizedBox()
@@ -264,19 +264,19 @@ class _ProfileState extends State<Profile> {
     ]);
   }
 
-  Widget getCounts(UserModel userModel) {
+  Widget getCounts(UserModel? userModel) {
     return Row(
       children: [
         Expanded(
           child: getCountItem(
-              (userModel?.userFollowers ?? 0)?.toString(), "Followers", () {
+              (userModel?.userFollowers ?? 0).toString(), "Followers", () {
             NavigationUtilities.push(FollowUp());
           }),
         ),
         SizedBox(width: 15),
         Expanded(
           child: getCountItem(
-              (userModel?.byUserUserFollowers ?? 0)?.toString(), "Following",
+              (userModel?.byUserUserFollowers ?? 0).toString(), "Following",
               () {
             NavigationUtilities.push(FollowUp(
               isFromFollowing: true,
@@ -313,7 +313,7 @@ class _ProfileState extends State<Profile> {
                 count,
                 overflow: TextOverflow.ellipsis,
                 maxLines: 1,
-                style: appTheme.black16Bold.copyWith(
+                style: appTheme?.black16Bold.copyWith(
                     fontSize: getFontSize(16),
                     fontWeight: FontWeight.w700,
                     color: ColorConstants.redText),
@@ -325,7 +325,7 @@ class _ProfileState extends State<Profile> {
                 title,
                 maxLines: 1,
                 overflow: TextOverflow.ellipsis,
-                style: appTheme.black16Bold.copyWith(
+                style: appTheme?.black16Bold.copyWith(
                     fontSize: getFontSize(16), fontWeight: FontWeight.w600),
               ),
             ],
@@ -335,7 +335,7 @@ class _ProfileState extends State<Profile> {
     );
   }
 
-  Widget getProfile(UserModel userModel) {
+  Widget getProfile(UserModel? userModel) {
     return Stack(
       children: [
         Container(
@@ -344,7 +344,7 @@ class _ProfileState extends State<Profile> {
             borderRadius: BorderRadius.circular(getSize(15)),
             child: ProfileSlider(
               images:
-                  userModel?.userImages?.map((e) => e.photoUrl)?.toList() ?? [],
+                  userModel?.userImages?.map((e) => e.photoUrl).toList() ?? [],
               gender: userModel?.gender ?? "",
               scroll: (index) {
                 currentIndex = index;
@@ -399,13 +399,13 @@ class _ProfileState extends State<Profile> {
                             ),
                       Text(
                         userModel?.countryIp ?? "",
-                        style: appTheme.white14Normal
+                        style: appTheme?.white14Normal
                             .copyWith(fontWeight: FontWeight.w500),
                       ),
                       Spacer(),
                       Text(
                         "ID : ${userModel?.id}",
-                        style: appTheme.white14Normal
+                        style: appTheme?.white14Normal
                             .copyWith(fontWeight: FontWeight.w500),
                       )
                     ],

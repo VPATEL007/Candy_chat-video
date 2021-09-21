@@ -51,7 +51,7 @@ class ThemeSettingsModel extends ChangeNotifier {
     } else {
       SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
           systemNavigationBarColor: ColorConstants.black,
-          statusBarColor: darken(appTheme.accentColor, 0.2)));
+          statusBarColor: darken(appTheme.accentColor ?? Colors.white, 0.2)));
     }
   }
 
@@ -59,7 +59,7 @@ class ThemeSettingsModel extends ChangeNotifier {
   /// [customThemes].
   void loadCustomThemes() {
     _log.fine("loading custom themes");
-    customThemes = _getCustomThemes();
+    // customThemes = _getCustomThemes();
     _log.fine("found ${customThemes.length} themes");
   }
 
@@ -121,7 +121,7 @@ class ThemeSettingsModel extends ChangeNotifier {
       appTheme = predefinedThemes[id];
     } else {
       // load data from custom theme
-      final AppThemeData customThemeData = _getCustomTheme(id);
+      final AppThemeData? customThemeData = _getCustomTheme(id);
 
       if (customThemeData != null) {
         appTheme = AppTheme.fromData(customThemeData);
@@ -146,7 +146,7 @@ class ThemeSettingsModel extends ChangeNotifier {
   /// Returns the [HarpyThemeData] for the [id] of the custom themes list.
   ///
   /// Returns `null` if the id is not in the list.
-  AppThemeData _getCustomTheme(int id) {
+  AppThemeData? _getCustomTheme(int id) {
     _log.fine("getting custom harpy theme for id: $id");
 
     try {
@@ -160,15 +160,14 @@ class ThemeSettingsModel extends ChangeNotifier {
   }
 
   /// Returns the list of all saved custom [HarpyThemeData].
-  List<AppThemeData> _getCustomThemes() {
+  List<AppThemeData?> _getCustomThemes() {
     _log.fine("getting custom themes");
 
     return appPrefs
-            .getStringList("customThemes")
-            ?.map(_decodeCustomTheme)
-            ?.where((data) => data != null)
-            ?.toList() ??
-        [];
+        .getStringList("customThemes")
+        .map(_decodeCustomTheme)
+        .where((data) => data != null)
+        .toList();
   }
 
   /// Saves the list of [customThemes] into the shared preferences.
@@ -185,7 +184,7 @@ class ThemeSettingsModel extends ChangeNotifier {
 
   /// Returns the [HarpyThemeData] from the [json] string or `null` if it can't
   /// be parsed.
-  AppThemeData _decodeCustomTheme(String json) {
+  AppThemeData? _decodeCustomTheme(String json) {
     try {
       // try to parse the custom theme
       return AppThemeData.fromJson(jsonDecode(json));

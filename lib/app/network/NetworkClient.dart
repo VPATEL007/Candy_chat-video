@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:dio/dio.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -17,12 +18,8 @@ class MethodType {
 }
 
 class NetworkClient {
-  static NetworkClient _shared;
-
   NetworkClient._();
-
-  static NetworkClient get getInstance =>
-      _shared = _shared ?? NetworkClient._();
+  static NetworkClient getInstance = NetworkClient._();
 
   final dio = Dio();
 
@@ -49,14 +46,14 @@ class NetworkClient {
     return authHeaders;
   }
 
-  Future<Response> uploadImages({
-    @required BuildContext context,
-    @required String baseUrl,
-    @required String command,
-    @required String image,
-    Map<String, dynamic> headers,
-    @required Function(dynamic response, String message) successCallback,
-    @required Function(String message, String statusCode) failureCallback,
+  Future<Response?> uploadImages({
+    required BuildContext context,
+    required String baseUrl,
+    required String command,
+    required String image,
+    Map<String, dynamic>? headers,
+    required Function(dynamic response, String message) successCallback,
+    required Function(String message, String statusCode) failureCallback,
   }) async {
     var connectivityResult = await Connectivity().checkConnectivity();
     if (connectivityResult == ConnectivityResult.none) {
@@ -65,7 +62,7 @@ class NetworkClient {
     }
 
     dio.options.validateStatus = (status) {
-      return status < 500;
+      return (status ?? 0) < 500;
     };
     dio.options.connectTimeout = 50000; //5s
     dio.options.receiveTimeout = 50000;
@@ -92,15 +89,15 @@ class NetworkClient {
         successCallback: successCallback, failureCallback: failureCallback);
   }
 
-  Future<Response> callApi({
-    @required BuildContext context,
-    @required String baseUrl,
-    @required String command,
-    @required String method,
-    Map<String, dynamic> params,
-    Map<String, dynamic> headers,
-    @required Function(dynamic response, String message) successCallback,
-    @required Function(String message, String statusCode) failureCallback,
+  Future<Response?> callApi({
+    required BuildContext context,
+    required String baseUrl,
+    required String command,
+    required String method,
+    Map<String, dynamic>? params,
+    Map<String, dynamic>? headers,
+    required Function(dynamic response, String message) successCallback,
+    required Function(String message, String statusCode) failureCallback,
   }) async {
     var connectivityResult = await Connectivity().checkConnectivity();
     if (connectivityResult == ConnectivityResult.none) {
@@ -112,7 +109,7 @@ class NetworkClient {
         "Call Api: URL: ${baseUrl + command} Method: $method Parms: $params Headers: $headers");
 
     dio.options.validateStatus = (status) {
-      return status < 500;
+      return (status ?? 0) < 500;
     };
     dio.options.connectTimeout = 50000; //5s
     dio.options.receiveTimeout = 50000;
@@ -166,7 +163,7 @@ class NetworkClient {
             failureCallback("", "Connection timeout, Please try again. ");
           } else {
             if (e.response != null) {
-              failureCallback("", e?.response?.data["message"].toString());
+              failureCallback("", e.response?.data["message"].toString() ?? "");
             } else {
               failureCallback("", e.message.toString());
             }
@@ -238,8 +235,8 @@ class NetworkClient {
   }
 
   parseResponse(BuildContext context, Response response,
-      {Function(dynamic response, String message) successCallback,
-      Function(String statusCode, String message) failureCallback}) {
+      {required Function(dynamic response, String message) successCallback,
+      required Function(String statusCode, String message) failureCallback}) {
     String statusCode = response.data['status'].toString();
     String message = response.data['message'];
 
@@ -305,11 +302,13 @@ class NetworkClient {
   }
 
   void hideProgressDialog() {
-    Navigator.pop(NavigationUtilities.key.currentState.overlay.context);
+    Navigator.pop(NavigationUtilities.key.currentState!.overlay!.context);
   }
 
   void refereshToken(
-      {@required BuildContext context, Function success, Function failure}) {
+      {required BuildContext context,
+      required Function success,
+      required Function failure}) {
     NetworkClient.getInstance.callApi(
       context: context,
       baseUrl: ApiConstants.apiUrl,

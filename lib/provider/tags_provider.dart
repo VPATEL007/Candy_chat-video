@@ -75,7 +75,7 @@ class TagsProvider with ChangeNotifier {
         "user_id": userId,
       };
       await NetworkClient.getInstance.callApi(
-        context: navigationKey.currentContext,
+        context: navigationKey.currentContext!,
         params: req,
         baseUrl: ApiConstants.apiUrl,
         command: ApiConstants.userFeedBack,

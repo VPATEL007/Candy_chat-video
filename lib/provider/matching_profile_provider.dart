@@ -28,12 +28,12 @@ class MatchingProfileProvider with ChangeNotifier {
   Future<void> fetchMatchProfileList(BuildContext context,
       {int pageNumber = 1,
       bool isbackgroundCall = false,
-      int language,
-      int fromAge,
-      int toAge,
-      bool isNotAppend}) async {
+      int? language,
+      int? fromAge,
+      int? toAge,
+      bool? isNotAppend}) async {
     try {
-      int userId = app.resolve<PrefUtils>().getUserDetails()?.id;
+      int? userId = app.resolve<PrefUtils>().getUserDetails()?.id;
       Map<String, dynamic> _parms = {};
       _parms["page"] = pageNumber;
       _parms["size"] = 20;
@@ -62,10 +62,10 @@ class MatchingProfileProvider with ChangeNotifier {
     }
   }
 
-  VideoCallModel videoCallModel;
+  VideoCallModel? videoCallModel;
   Future<void> startVideoCall(BuildContext context, int id) async {
     try {
-      int userId = app.resolve<PrefUtils>().getUserDetails()?.id;
+      int? userId = app.resolve<PrefUtils>().getUserDetails()?.id;
       Map<String, dynamic> _parms = {
         "to_user_id": id,
         "from_user_id": userId,
@@ -92,7 +92,7 @@ class MatchingProfileProvider with ChangeNotifier {
     }
   }
 
-  CallStatusModel coinStatus;
+  CallStatusModel? coinStatus;
   Future<void> receiveVideoCall(
       BuildContext context, String sessionId, String channelName) async {
     try {
@@ -124,14 +124,14 @@ class MatchingProfileProvider with ChangeNotifier {
     }
   }
 
-  CoinModel coinBalance;
+  CoinModel? coinBalance;
   Future<void> checkCoinBalance(
       BuildContext context, int toUserId, String name) async {
     try {
       var user =
           Provider.of<FollowesProvider>(context, listen: false).userModel;
       Map<String, dynamic> _parms = {
-        "from_user_id": user.id,
+        "from_user_id": user?.id,
         "to_user_id": toUserId,
       };
 
@@ -144,9 +144,9 @@ class MatchingProfileProvider with ChangeNotifier {
         params: _parms,
         successCallback: (response, message) {
           if (response != null) {
-            if (user.isInfluencer) {
+            if (user?.isInfluencer == true) {
               coinBalance = CoinModel();
-              coinBalance.lowBalance = false;
+              coinBalance?.lowBalance = false;
             } else {
               coinBalance = CoinModel.fromJson(response);
               if (coinBalance?.lowBalance == true) {
@@ -174,7 +174,7 @@ class MatchingProfileProvider with ChangeNotifier {
   Future<bool> leftAndRightSwipe(
       BuildContext context, SwipeType swipeType) async {
     try {
-      int userId = app.resolve<PrefUtils>().getUserDetails()?.id;
+      int? userId = app.resolve<PrefUtils>().getUserDetails()?.id;
       Map<String, dynamic> _parms = {
         "userid": userId,
       };
@@ -198,6 +198,8 @@ class MatchingProfileProvider with ChangeNotifier {
     } catch (e) {
       View.showMessage(context, e.toString());
     }
+
+    return false;
   }
 }
 

@@ -6,28 +6,21 @@ import 'package:flutter_tags/flutter_tags.dart';
 import 'package:lazy_loading_list/lazy_loading_list.dart';
 import 'package:provider/provider.dart';
 
-import 'package:video_chat/app/Helper/inAppPurchase_service.dart';
-
 import 'package:video_chat/app/app.export.dart';
 import 'package:video_chat/app/utils/CommonWidgets.dart';
-import 'package:video_chat/components/Model/Match%20Profile/call_status.dart';
 import 'package:video_chat/components/Model/Match%20Profile/match_profile.dart';
-import 'package:video_chat/components/Model/Match%20Profile/video_call.dart';
 import 'package:video_chat/components/Model/User/UserModel.dart';
-import 'package:video_chat/components/Screens/Home/MatchedProfile.dart';
 import 'package:video_chat/components/Screens/Home/Reportblock.dart';
 import 'package:video_chat/components/Screens/UserProfile/UserProfile.dart';
 import 'package:video_chat/components/widgets/TabBar/Tabbar.dart';
-import 'package:video_chat/provider/followes_provider.dart';
 import 'package:video_chat/provider/language_provider.dart';
 import 'package:video_chat/provider/matching_profile_provider.dart';
-import 'package:video_chat/provider/video_call_status_provider.dart';
 
 import 'Card/draggable_card.dart';
 import 'Card/swipe_cards.dart';
 
 class MathProfile extends StatefulWidget {
-  MathProfile({Key key}) : super(key: key);
+  MathProfile({Key? key}) : super(key: key);
 
   @override
   _MathProfileState createState() => _MathProfileState();
@@ -35,11 +28,11 @@ class MathProfile extends StatefulWidget {
 
 class _MathProfileState extends State<MathProfile> {
   List<SwipeItem> _swipeItems = <SwipeItem>[];
-  MatchEngine _matchEngine;
+  late MatchEngine _matchEngine;
   // GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey();
 
   RangeValues _currentRangeValues = RangeValues(11, 50);
-  int selectedLanguage;
+  int? selectedLanguage;
   SlideRegion region = SlideRegion.inSuperLikeRegion;
   int currentIndex = 0;
   int page = 1;
@@ -50,7 +43,7 @@ class _MathProfileState extends State<MathProfile> {
   void initState() {
     super.initState();
 
-    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+    WidgetsBinding.instance?.addPostFrameCallback((timeStamp) {
       Provider.of<LanguageProvider>(context, listen: false)
           .fetchLanguageList(context, true);
     });
@@ -181,24 +174,24 @@ class _MathProfileState extends State<MathProfile> {
                 callRate: matchProfileModel.callRate,
                 gender: matchProfileModel.gender,
                 preferedGender: matchProfileModel.preferedGender,
-                photoUrl: (matchProfileModel?.imageUrl?.isEmpty ?? true)
+                photoUrl: (matchProfileModel.imageUrl?.isEmpty ?? true)
                     ? ""
-                    : matchProfileModel?.imageUrl?.first ?? "",
+                    : matchProfileModel.imageUrl?.first ?? "",
                 userName: matchProfileModel.userName,
                 region: Region(
                     regionName: matchProfileModel.regionName,
                     regionFlagUrl: matchProfileModel.regionFlagUrl),
                 language:
                     Language(languageName: matchProfileModel.languageName),
-                userImages: matchProfileModel?.imageUrl
+                userImages: matchProfileModel.imageUrl
                         ?.map((e) => UserImage(photoUrl: e))
-                        ?.toList() ??
+                        .toList() ??
                     [],
                 byUserUserFollowers: matchProfileModel.followings,
-                userVisiteds: matchProfileModel?.visitorCount ?? 0,
+                userVisiteds: matchProfileModel.visitorCount ?? 0,
                 userFollowers: matchProfileModel.followers,
-                isFollowing: matchProfileModel?.isFollowing == 1,
-                isFavourite: matchProfileModel?.isFavourite == 1,
+                isFollowing: matchProfileModel.isFollowing == 1,
+                isFavourite: matchProfileModel.isFavourite == 1,
                 providerDisplayName: matchProfileModel.providerDisplayName,
                 id: matchProfileModel.id,
                 totalPoint: matchProfileModel.totalPoint,
@@ -230,7 +223,7 @@ class _MathProfileState extends State<MathProfile> {
         return Container(
           child: Stack(
             children: [
-              (matchProfileProvider.matchProfileList?.isEmpty ?? true) ||
+              (matchProfileProvider.matchProfileList.isEmpty) ||
                       (isLoadAll == true)
                   ? Center(
                       child: Text(
@@ -278,26 +271,25 @@ class _MathProfileState extends State<MathProfile> {
                                         ? getSize(16)
                                         : getSize(0)),
                                   ),
-                                  image: _matchProfile?.imageUrl?.isEmpty ==
-                                          true
+                                  image: _matchProfile.imageUrl?.isEmpty == true
                                       ? DecorationImage(
                                           image: AssetImage(getUserPlaceHolder(
-                                              _matchProfile?.gender ?? "")),
+                                              _matchProfile.gender ?? "")),
                                           fit: BoxFit.cover,
                                         )
                                       : DecorationImage(
                                           image: CachedNetworkImageProvider(
-                                            (_matchProfile?.imageUrl?.isEmpty ??
+                                            (_matchProfile.imageUrl?.isEmpty ??
                                                     true)
                                                 ? ""
                                                 : _matchProfile
-                                                        ?.imageUrl?.first ??
+                                                        .imageUrl?.first ??
                                                     "",
                                           ),
                                           onError: (exception, stackTrace) =>
                                               Image.asset(
                                             getUserPlaceHolder(
-                                                _matchProfile?.gender ?? ""),
+                                                _matchProfile.gender ?? ""),
                                           ),
                                           fit: BoxFit.cover,
                                         ),
@@ -330,12 +322,12 @@ class _MathProfileState extends State<MathProfile> {
                                               ),
                                               child: CachedNetworkImage(
                                                 imageUrl: (_matchProfile
-                                                            ?.imageUrl
+                                                            .imageUrl
                                                             ?.isEmpty ??
                                                         true)
                                                     ? ""
                                                     : _matchProfile
-                                                            ?.imageUrl?.first ??
+                                                            .imageUrl?.first ??
                                                         "",
                                                 width: getSize(90),
                                                 height: getSize(120),
@@ -344,7 +336,7 @@ class _MathProfileState extends State<MathProfile> {
                                                     (context, url, error) =>
                                                         Image.asset(
                                                   getUserPlaceHolder(
-                                                      _matchProfile?.gender ??
+                                                      _matchProfile.gender ??
                                                           ""),
                                                   fit: BoxFit.cover,
                                                 ),
@@ -399,11 +391,10 @@ class _MathProfileState extends State<MathProfile> {
                                           gender: _matchProfile.gender ?? "",
                                           userId: _matchProfile.id,
                                           reportImageURl: (_matchProfile
-                                                      ?.imageUrl?.isEmpty ??
+                                                      .imageUrl?.isEmpty ??
                                                   true)
                                               ? ""
-                                              : _matchProfile
-                                                      ?.imageUrl?.first ??
+                                              : _matchProfile.imageUrl?.first ??
                                                   "",
                                         ));
                                       })),
@@ -468,7 +459,7 @@ class _MathProfileState extends State<MathProfile> {
                   bottom: getSize(15)),
               child: Text(
                 "Like",
-                style: appTheme.whiteBold32,
+                style: appTheme?.whiteBold32,
               ),
             ),
           ),
@@ -492,7 +483,7 @@ class _MathProfileState extends State<MathProfile> {
                   bottom: getSize(15)),
               child: Text(
                 "Nope",
-                style: appTheme.whiteBold32,
+                style: appTheme?.whiteBold32,
               ),
             ),
           ),
@@ -530,21 +521,21 @@ class _MathProfileState extends State<MathProfile> {
                         height: getSize(70),
                       ),
                       Text(
-                        matchedProfile?.countryIp ?? "",
-                        style: appTheme.black16Medium,
+                        matchedProfile.countryIp ?? "",
+                        style: appTheme?.black16Medium,
                       ),
                       SizedBox(
                         height: getSize(20),
                       ),
-                      (matchedProfile?.userName?.isEmpty ?? true)
+                      (matchedProfile.userName?.isEmpty ?? true)
                           ? Container()
                           : FittedBox(
                               fit: BoxFit.scaleDown,
                               child: Text(
-                                matchedProfile?.userName ?? "",
+                                matchedProfile.userName ?? "",
                                 maxLines: 1,
                                 overflow: TextOverflow.ellipsis,
-                                style: appTheme.black16Bold
+                                style: appTheme?.black16Bold
                                     .copyWith(fontSize: getFontSize(25)),
                               ),
                             ),
@@ -552,13 +543,13 @@ class _MathProfileState extends State<MathProfile> {
                   ),
                 ),
                 Spacer(),
-                matchedProfile?.age == null
+                matchedProfile.age == null
                     ? Container()
                     : Padding(
                         padding: EdgeInsets.only(top: getSize(40)),
                         child: Text(
-                          matchedProfile?.age?.toString(),
-                          style: appTheme.black16Bold
+                          matchedProfile.age?.toString() ?? "",
+                          style: appTheme?.black16Bold
                               .copyWith(fontSize: getFontSize(35)),
                         ),
                       ),
@@ -646,7 +637,7 @@ class _MathProfileState extends State<MathProfile> {
                         children: [
                           Text(
                             "Filter",
-                            style: appTheme.black16Bold
+                            style: appTheme?.black16Bold
                                 .copyWith(fontSize: getFontSize(25)),
                           ),
                           Spacer(),
@@ -656,7 +647,7 @@ class _MathProfileState extends State<MathProfile> {
                             },
                             child: Text(
                               "Close",
-                              style: appTheme.black14SemiBold.copyWith(
+                              style: appTheme?.black14SemiBold.copyWith(
                                   fontSize: getFontSize(18),
                                   color: ColorConstants.red),
                             ),
@@ -668,7 +659,7 @@ class _MathProfileState extends State<MathProfile> {
                       ),
                       Text(
                         "Language",
-                        style: appTheme.black16Bold
+                        style: appTheme?.black16Bold
                             .copyWith(fontSize: getFontSize(18)),
                       ),
                       SizedBox(
@@ -686,9 +677,9 @@ class _MathProfileState extends State<MathProfile> {
                                 pressEnabled: true,
                                 activeColor: fromHex("#FFDFDF"),
                                 title:
-                                    provider.arrList[index]?.languageName ?? "",
+                                    provider.arrList[index].languageName ?? "",
                                 index: index,
-                                textStyle: appTheme.black12Normal
+                                textStyle: appTheme!.black12Normal
                                     .copyWith(fontWeight: FontWeight.w500),
                                 textColor: Colors.black,
                                 textActiveColor: ColorConstants.red,
@@ -705,7 +696,7 @@ class _MathProfileState extends State<MathProfile> {
                                   //   selectedLanguage = null;
                                   // } else {
                                   selectedLanguage =
-                                      provider.arrList[item.index].id;
+                                      provider.arrList[item.index ?? 0].id;
                                   setState(() {});
                                   // }
                                 },
@@ -719,7 +710,7 @@ class _MathProfileState extends State<MathProfile> {
                         children: [
                           Text(
                             "Age",
-                            style: appTheme.black16Bold
+                            style: appTheme?.black16Bold
                                 .copyWith(fontSize: getFontSize(18)),
                           ),
                           Spacer(),
@@ -727,7 +718,7 @@ class _MathProfileState extends State<MathProfile> {
                             _currentRangeValues.start.round().toString() +
                                 ' - ' +
                                 _currentRangeValues.end.round().toString(),
-                            style: appTheme.black14Normal
+                            style: appTheme?.black14Normal
                                 .copyWith(fontWeight: FontWeight.w600),
                           ),
                         ],
@@ -788,7 +779,7 @@ class _MathProfileState extends State<MathProfile> {
         builder: (builder) {
           return WillPopScope(
             onWillPop: () {
-              return;
+              return Future.value(false);
             },
             child: Dialog(
               shape: RoundedRectangleBorder(
@@ -851,15 +842,15 @@ class _MathProfileState extends State<MathProfile> {
                                     borderRadius: BorderRadius.circular(119),
                                     child: CachedNetworkImage(
                                       imageUrl:
-                                          (model?.imageUrl?.isEmpty ?? true)
+                                          (model.imageUrl?.isEmpty ?? true)
                                               ? ""
-                                              : model?.imageUrl?.first ?? "",
+                                              : model.imageUrl?.first ?? "",
                                       width: getSize(119),
                                       height: getSize(119),
                                       fit: BoxFit.cover,
                                       errorWidget: (context, url, error) =>
                                           Image.asset(
-                                        getUserPlaceHolder(model?.gender ?? ""),
+                                        getUserPlaceHolder(model.gender ?? ""),
                                         width: getSize(119),
                                         height: getSize(119),
                                         fit: BoxFit.cover,
@@ -871,8 +862,8 @@ class _MathProfileState extends State<MathProfile> {
                           height: 24,
                         ),
                         Text(
-                          model.userName,
-                          style: appTheme.black14SemiBold
+                          model.userName ?? "",
+                          style: appTheme?.black14SemiBold
                               .copyWith(fontSize: getFontSize(16)),
                         ),
                         SizedBox(
@@ -883,7 +874,7 @@ class _MathProfileState extends State<MathProfile> {
                               (model.userName ?? "") +
                               ". Waiting for reply.",
                           textAlign: TextAlign.center,
-                          style: appTheme.black16Bold
+                          style: appTheme?.black16Bold
                               .copyWith(fontSize: getFontSize(18)),
                         ),
                       ],
@@ -898,7 +889,7 @@ class _MathProfileState extends State<MathProfile> {
 }
 
 class Content {
-  final String text;
+  final String? text;
 
   Content({this.text});
 }

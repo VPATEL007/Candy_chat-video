@@ -13,7 +13,7 @@ import 'package:video_chat/provider/chat_provider.dart';
 
 class ChatList extends StatefulWidget {
   static const route = "ChatList";
-  ChatList({Key key}) : super(key: key);
+  ChatList({Key? key}) : super(key: key);
 
   @override
   _ChatListState createState() => _ChatListState();
@@ -25,7 +25,7 @@ class _ChatListState extends State<ChatList> {
   @override
   void initState() {
     super.initState();
-    WidgetsBinding.instance.addPostFrameCallback((_) {
+    WidgetsBinding.instance?.addPostFrameCallback((_) {
       Provider.of<ChatProvider>(context, listen: false).getChatList(1, context);
     });
   }
@@ -69,7 +69,7 @@ class _ChatListState extends State<ChatList> {
           ),
           Text(
             "No Message, yet",
-            style: appTheme.black14Normal.copyWith(
+            style: appTheme?.black14Normal.copyWith(
                 fontWeight: FontWeight.w600, fontSize: getFontSize(18)),
           ),
           SizedBox(
@@ -81,7 +81,7 @@ class _ChatListState extends State<ChatList> {
               "No message in your inbox yet! Start chatting with your Randome video chat.",
               textAlign: TextAlign.center,
               style:
-                  appTheme.black14Normal.copyWith(fontWeight: FontWeight.w500),
+                  appTheme?.black14Normal.copyWith(fontWeight: FontWeight.w500),
             ),
           )
         ],
@@ -91,9 +91,7 @@ class _ChatListState extends State<ChatList> {
 
   getList() {
     return Consumer<ChatProvider>(
-      builder: (context, chatHistory, child) => (chatHistory
-                  ?.chatList?.isEmpty ??
-              true)
+      builder: (context, chatHistory, child) => (chatHistory.chatList.isEmpty)
           ? emptyChat()
           : ListView.separated(
               padding: EdgeInsets.only(
@@ -115,8 +113,10 @@ class _ChatListState extends State<ChatList> {
                     child: InkWell(
                         onTap: () {
                           NavigationUtilities.push(Chat(
-                            channelId: chatHistory.chatList[index].channelName,
-                            toUserId: chatHistory.chatList[index].getToUserId(),
+                            channelId:
+                                chatHistory.chatList[index].channelName ?? "",
+                            toUserId:
+                                chatHistory.chatList[index].getToUserId() ?? 0,
                             isFromProfile: false,
                           ));
                         },
@@ -163,7 +163,7 @@ class _ChatListState extends State<ChatList> {
                 height: getSize(10),
                 width: getSize(10),
                 decoration: BoxDecoration(
-                  color: (model?.withUser?.onlineStatus ?? offline) == online
+                  color: (model.withUser?.onlineStatus ?? offline) == online
                       ? fromHex("#50F5C3")
                       : fromHex("#F55050"),
                   border: Border.all(color: Colors.white, width: 1),
@@ -187,7 +187,7 @@ class _ChatListState extends State<ChatList> {
               model.withUser?.userName ?? "",
               maxLines: 1,
               overflow: TextOverflow.ellipsis,
-              style: appTheme.black16Bold.copyWith(fontSize: getFontSize(14)),
+              style: appTheme?.black16Bold.copyWith(fontSize: getFontSize(14)),
             ),
             // SizedBox(height: getSize(6)),
             // Text(
@@ -205,7 +205,7 @@ class _ChatListState extends State<ChatList> {
               DateUtilities().convertServerDateToFormatterString(
                   model.updatedOn ?? "",
                   formatter: DateUtilities.h_mm_a),
-              style: appTheme.black12Normal,
+              style: appTheme?.black12Normal,
             ),
             SizedBox(
               height: getSize(8),
@@ -225,7 +225,7 @@ class _ChatListState extends State<ChatList> {
                     bottom: getSize(2)),
                 child: Text(
                   "0",
-                  style: appTheme.white12Normal,
+                  style: appTheme?.white12Normal,
                 ),
               ),
             )

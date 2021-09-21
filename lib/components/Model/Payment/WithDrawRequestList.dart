@@ -7,16 +7,16 @@ List<WithDrawListModel> withDrawListModelFromJson(String str) =>
 String withDrawListToJson(WithDrawListModel data) => json.encode(data.toJson());
 
 class WithDrawListModel {
-  int id;
-  int userId;
-  int coins;
-  String requestStatus;
-  DateTime createdOn;
-  String updatedOn;
-  PaymentMethod paymentMethod;
-  String paymentId;
-  String transactionId;
-  int requestStatusCode;
+  int? id;
+  int? userId;
+  int? coins;
+  String? requestStatus;
+  DateTime? createdOn;
+  String? updatedOn;
+  PaymentMethod? paymentMethod;
+  String? paymentId;
+  String? transactionId;
+  int? requestStatusCode;
 
   WithDrawListModel(
       {this.id,
@@ -51,10 +51,10 @@ class WithDrawListModel {
     data['user_id'] = this.userId;
     data['coins'] = this.coins;
     data['request_status'] = this.requestStatus;
-    data['created_on'] = this.createdOn.toIso8601String();
+    data['created_on'] = this.createdOn?.toIso8601String();
     data['updated_on'] = this.updatedOn;
     if (this.paymentMethod != null) {
-      data['payment_method'] = this.paymentMethod.toJson();
+      data['payment_method'] = this.paymentMethod?.toJson();
     }
     data['payment_id'] = this.paymentId;
     data['transaction_id'] = this.transactionId;
@@ -64,8 +64,8 @@ class WithDrawListModel {
 }
 
 class PaymentMethod {
-  int id;
-  String name;
+  int? id;
+  String? name;
 
   PaymentMethod({this.id, this.name});
 

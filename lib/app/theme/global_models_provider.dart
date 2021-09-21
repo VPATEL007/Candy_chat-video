@@ -8,7 +8,7 @@ import 'package:video_chat/app/theme/theme_settings_model.dart';
 /// These models are above the root [MaterialApp] and are only created once.
 class GlobalModelsProvider extends StatelessWidget {
   const GlobalModelsProvider({
-    @required this.child,
+    required this.child,
   });
 
   final Widget child;

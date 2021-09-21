@@ -6,13 +6,14 @@ import 'package:video_chat/app/app.export.dart';
 import 'package:video_chat/app/utils/CommonTextfield.dart';
 import 'package:video_chat/app/utils/CommonWidgets.dart';
 import 'package:video_chat/app/utils/math_utils.dart';
+import 'package:video_chat/components/Model/User/report_reason_model.dart';
 import 'package:video_chat/provider/report_and_block_provider.dart';
 
 class ReportBlock extends StatefulWidget {
-  final int userId;
-  final String reportImageURl, gender;
+  final int? userId;
+  final String? reportImageURl, gender;
   ReportBlock(
-      {Key key,
+      {Key? key,
       @required this.userId,
       @required this.reportImageURl,
       @required this.gender})
@@ -28,7 +29,7 @@ class _ReportBlockState extends State<ReportBlock> {
   @override
   void initState() {
     super.initState();
-    WidgetsBinding.instance.addPostFrameCallback((_) {
+    WidgetsBinding.instance?.addPostFrameCallback((_) {
       Provider.of<ReportAndBlockProvider>(context, listen: false)
           .fetchReportReason(context);
     });
@@ -77,8 +78,7 @@ class _ReportBlockState extends State<ReportBlock> {
                           itemBuilder: (context, index) => Padding(
                             padding: const EdgeInsets.only(bottom: 15),
                             child: getRadioButton(
-                                reportProvider
-                                        .reportReasonList[index]?.reason ??
+                                reportProvider.reportReasonList[index].reason ??
                                     "",
                                 reportProvider,
                                 index),
@@ -104,15 +104,16 @@ class _ReportBlockState extends State<ReportBlock> {
                 //   height: getSize(16),
                 // ),
                 getPopBottomButton(context, "Report & Block", () {
-                  int reasonId = reportProvider?.reportReasonList?.firstWhere(
+                  int? reasonId = reportProvider.reportReasonList.firstWhere(
                       (element) => element.isSelected == true, orElse: () {
                     View.showMessage(context, "Please select any reason");
-                  })?.id;
+                    return ReportReasonModel();
+                  }).id;
                   if (reasonId == null) {
                     return;
                   }
-                  reportProvider.blockAndReportUser(context, widget.userId,
-                      reasonId, _reasonController?.text ?? "");
+                  reportProvider.blockAndReportUser(context, widget.userId ?? 0,
+                      reasonId, _reasonController.text);
                   Navigator.pop(context);
                 }),
               ],
@@ -135,7 +136,7 @@ class _ReportBlockState extends State<ReportBlock> {
         ),
         child: Center(
           child: Text("Report",
-              style: appTheme.black16Bold.copyWith(
+              style: appTheme?.black16Bold.copyWith(
                   color: ColorConstants.red, fontSize: getFontSize(18))),
         ));
   }
@@ -153,7 +154,7 @@ class _ReportBlockState extends State<ReportBlock> {
           }
         });
         reportProvider.reportReasonList[index].isSelected =
-            !reportProvider.reportReasonList[index].isSelected;
+            !(reportProvider.reportReasonList[index].isSelected ?? false);
       },
       child: Container(
         width: MathUtilities.screenWidth(context),
@@ -171,12 +172,12 @@ class _ReportBlockState extends State<ReportBlock> {
                 Expanded(
                   child: Text(
                     text,
-                    style: appTheme.black14Normal
+                    style: appTheme?.black14Normal
                         .copyWith(fontWeight: FontWeight.w500),
                   ),
                 ),
                 Image.asset(
-                  reportProvider.reportReasonList[index].isSelected
+                  (reportProvider.reportReasonList[index].isSelected ?? false)
                       ? radioSelected
                       : radio,
                   height: getSize(18),
@@ -217,7 +218,7 @@ class _ReportBlockState extends State<ReportBlock> {
               height: getSize(210),
               fit: BoxFit.cover,
               errorWidget: (context, url, error) => Image.asset(
-                getUserPlaceHolder(widget?.gender ?? ""),
+                getUserPlaceHolder(widget.gender ?? ""),
                 fit: BoxFit.cover,
                 width: getSize(156),
                 height: getSize(210),

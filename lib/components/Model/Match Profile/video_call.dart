@@ -17,14 +17,14 @@ class VideoCallModel {
     this.channelName,
   });
 
-  int fromUserId;
-  int toUserId;
-  int id;
-  StartedOn startedOn;
-  String sessionId;
-  String callType;
-  String callStatus;
-  String channelName;
+  int? fromUserId;
+  int? toUserId;
+  int? id;
+  StartedOn? startedOn;
+  String? sessionId;
+  String? callType;
+  String? callStatus;
+  String? channelName;
 
   factory VideoCallModel.fromJson(Map<String, dynamic> json) => VideoCallModel(
         fromUserId: json["from_user_id"],
@@ -41,7 +41,7 @@ class VideoCallModel {
         "from_user_id": fromUserId,
         "to_user_id": toUserId,
         "id": id,
-        "started_on": startedOn.toJson(),
+        "started_on": startedOn?.toJson(),
         "session_id": sessionId,
         "call_type": callType,
         "call_status": callStatus,
@@ -54,7 +54,7 @@ class StartedOn {
     this.val,
   });
 
-  String val;
+  String? val;
 
   factory StartedOn.fromJson(Map<String, dynamic> json) => StartedOn(
         val: json["val"],
@@ -88,20 +88,20 @@ class StartVideoCallModel {
       this.userId,
       this.isReverseLike});
 
-  bool videoCall;
-  String name;
-  String sessionId;
-  String channelName;
-  ImageResponse image;
-  bool rejectCall;
-  bool receiveCall;
-  bool endCall;
-  bool busyCall;
-  bool inSufficientCoin;
-  bool isReverseLike;
-  bool isLike;
-  String toGender;
-  int userId;
+  bool? videoCall;
+  String? name;
+  String? sessionId;
+  String? channelName;
+  ImageResponse? image;
+  bool? rejectCall;
+  bool? receiveCall;
+  bool? endCall;
+  bool? busyCall;
+  bool? inSufficientCoin;
+  bool? isReverseLike;
+  bool? isLike;
+  String? toGender;
+  int? userId;
 
   factory StartVideoCallModel.fromJson(Map<String, dynamic> json) =>
       StartVideoCallModel(
@@ -129,7 +129,7 @@ class StartVideoCallModel {
         "name": name,
         "session_id": sessionId,
         "channel_name": channelName,
-        "image": image.toJson(),
+        "image": image?.toJson(),
         "RejectCall": rejectCall,
         "ReceiveCall": receiveCall,
         "EndCall": endCall,
@@ -145,7 +145,7 @@ class ImageResponse {
     this.photoUrl,
   });
 
-  String photoUrl;
+  String? photoUrl;
 
   factory ImageResponse.fromJson(Map<String, dynamic> json) => ImageResponse(
         photoUrl: json["photo_url"],

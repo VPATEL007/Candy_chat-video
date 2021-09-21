@@ -3,7 +3,8 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:agora_rtm/agora_rtm.dart';
-import 'package:flushbar/flushbar.dart';
+import 'package:another_flushbar/flushbar.dart';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_tags/flutter_tags.dart';
 import 'package:path_provider/path_provider.dart';
@@ -24,10 +25,10 @@ class AgoraService {
 
   static AgoraService instance = AgoraService._();
 
-  AgoraRtmClient _client;
-  AgoraRtmClient get client => this._client;
+  AgoraRtmClient? _client;
+  AgoraRtmClient? get client => this._client;
 
-  AgoraRtmChannel _channel;
+  AgoraRtmChannel? _channel;
   bool isOngoingCall = false;
 
   Future<void> initialize(String appId) async {
@@ -63,11 +64,11 @@ class AgoraService {
     }
   }
 
-  Future<AgoraRtmChannel> _createChannel(
+  Future<AgoraRtmChannel?> _createChannel(
     String name,
   ) async {
     try {
-      AgoraRtmChannel channel = await _client?.createChannel(name);
+      AgoraRtmChannel? channel = await _client?.createChannel(name);
       channel?.onError = (msg) {
         throw msg.toString();
       };
@@ -82,7 +83,7 @@ class AgoraService {
     }
   }
 
-  Future<void> login({@required String token, @required String userId}) async {
+  Future<void> login({required String token, required String userId}) async {
     try {
       // await _client.logout();
 
@@ -103,18 +104,18 @@ class AgoraService {
     Map<String, dynamic> req = {};
     req["isReverseLike"] = true;
     var user = Provider.of<FollowesProvider>(context, listen: false).userModel;
-    req["name"] = user?.userName ?? "";
-    req["to_gender"] = user?.gender ?? "";
-    req["user_id"] = user.id;
+    req["name"] = user?.userName;
+    req["to_gender"] = user?.gender;
+    req["user_id"] = user?.id;
 
-    var image = user.userImages;
+    var image = user?.userImages;
     if (image != null && image.length > 0) {
-      req["image"] = image?.first ?? UserImage(photoUrl: "");
+      req["image"] = image.first;
     } else {
       req["image"] = UserImage(photoUrl: "");
     }
 
-    await _client.sendMessageToPeer(
+    await _client?.sendMessageToPeer(
         toUserId, AgoraRtmMessage.fromText(jsonEncode(req)));
   }
 
@@ -125,16 +126,16 @@ class AgoraService {
     var user = Provider.of<FollowesProvider>(context, listen: false).userModel;
     req["name"] = user?.userName ?? "";
     req["to_gender"] = user?.gender ?? "";
-    req["user_id"] = user.id;
+    req["user_id"] = user?.id;
 
-    var image = user.userImages;
+    var image = user?.userImages;
     if (image != null && image.length > 0) {
-      req["image"] = image?.first ?? UserImage(photoUrl: "");
+      req["image"] = image.first;
     } else {
       req["image"] = UserImage(photoUrl: "");
     }
 
-    await _client.sendMessageToPeer(
+    await _client?.sendMessageToPeer(
         toUserId, AgoraRtmMessage.fromText(jsonEncode(req)));
   }
 
@@ -149,14 +150,14 @@ class AgoraService {
     req["channel_name"] = channelName;
     req["to_gender"] = toGender;
 
-    var image = user.userImages;
+    var image = user?.userImages;
     if (image != null && image.length > 0) {
-      req["image"] = image?.first ?? UserImage(photoUrl: "");
+      req["image"] = image.first;
     } else {
       req["image"] = UserImage(photoUrl: "");
     }
 
-    await _client.sendMessageToPeer(
+    await _client?.sendMessageToPeer(
         toUserId, AgoraRtmMessage.fromText(jsonEncode(req)));
   }
 
@@ -165,7 +166,7 @@ class AgoraService {
     isOngoingCall = false;
     Map<String, dynamic> req = {};
     req["RejectCall"] = true;
-    await _client.sendMessageToPeer(
+    await _client?.sendMessageToPeer(
         toUserId, AgoraRtmMessage.fromText(jsonEncode(req)));
   }
 
@@ -173,7 +174,7 @@ class AgoraService {
   sendBusyCallMessage(String toUserId) async {
     Map<String, dynamic> req = {};
     req["BusyCall"] = true;
-    await _client.sendMessageToPeer(
+    await _client?.sendMessageToPeer(
         toUserId, AgoraRtmMessage.fromText(jsonEncode(req)));
   }
 
@@ -181,7 +182,7 @@ class AgoraService {
   sendReceiveCallMessage(String toUserId) async {
     Map<String, dynamic> req = {};
     req["ReceiveCall"] = true;
-    await _client.sendMessageToPeer(
+    await _client?.sendMessageToPeer(
         toUserId, AgoraRtmMessage.fromText(jsonEncode(req)));
   }
 
@@ -189,7 +190,7 @@ class AgoraService {
   endCallMessage(String toUserId) async {
     Map<String, dynamic> req = {};
     req["EndCall"] = true;
-    await _client.sendMessageToPeer(
+    await _client?.sendMessageToPeer(
         toUserId, AgoraRtmMessage.fromText(jsonEncode(req)));
   }
 
@@ -197,7 +198,7 @@ class AgoraService {
   dropCallMessage(String toUserId) async {
     Map<String, dynamic> req = {};
     req["DropCall"] = true;
-    await _client.sendMessageToPeer(
+    await _client?.sendMessageToPeer(
         toUserId, AgoraRtmMessage.fromText(jsonEncode(req)));
   }
 
@@ -205,7 +206,7 @@ class AgoraService {
   inSufficientCoinMessage(String toUserId) async {
     Map<String, dynamic> req = {};
     req["InSufficientCoin"] = true;
-    await _client.sendMessageToPeer(
+    await _client?.sendMessageToPeer(
         toUserId, AgoraRtmMessage.fromText(jsonEncode(req)));
   }
 
@@ -224,7 +225,7 @@ class AgoraService {
 
   Future<void> sendMessage(String message) async {
     try {
-      if (message?.isEmpty ?? true) {
+      if (message.isEmpty) {
         throw 'Please input text to send.';
       }
 
@@ -240,10 +241,10 @@ class AgoraService {
     }
   }
 
-  Future<List<AgoraRtmMember>> getChannelMembers() async {
+  Future<List<AgoraRtmMember>?> getChannelMembers() async {
     try {
-      List<AgoraRtmMember> members = await _channel?.getMembers();
-      return (members?.isEmpty ?? true) ? [] : members;
+      List<AgoraRtmMember>? members = await _channel?.getMembers();
+      return members;
     } on AgoraRtmClientException catch (e) {
       throw e.reason.toString();
     } on AgoraRtmChannelException catch (e) {
@@ -254,9 +255,9 @@ class AgoraService {
   }
 
   Future<void> joinChannel(String channelId,
-      {Function(AgoraRtmMember) onMemberJoined,
-      Function(AgoraRtmMember) onMemberLeft,
-      Function(AgoraRtmMessage, AgoraRtmMember) onMessageReceived}) async {
+      {Function(AgoraRtmMember)? onMemberJoined,
+      Function(AgoraRtmMember)? onMemberLeft,
+      Function(AgoraRtmMessage, AgoraRtmMember)? onMessageReceived}) async {
     try {
       if (channelId.isEmpty) {
         debugPrint('Please input channel id to join.');
@@ -288,7 +289,7 @@ class AgoraService {
       await _channel?.leave();
       debugPrint('Leave channel success.');
       if (_channel != null) {
-        _client?.releaseChannel(_channel?.channelId);
+        _client?.releaseChannel(_channel!.channelId ?? "");
       }
     } on AgoraRtmClientException catch (e) {
       throw e.reason.toString();
@@ -301,7 +302,7 @@ class AgoraService {
 
   void setCallStatus(StartVideoCallModel model) {
     VideoCallStatusProvider mutedProvider =
-        Provider.of<VideoCallStatusProvider>(navigationKey.currentContext,
+        Provider.of<VideoCallStatusProvider>(navigationKey.currentContext!,
             listen: false);
     if (model.videoCall == true) {
       mutedProvider.setCallStatus = CallStatus.None;
@@ -320,8 +321,8 @@ class AgoraService {
 
   Future<void> handleVideoCallEvent(
       StartVideoCallModel model, String peerId) async {
-    UserModel userModel = Provider.of<FollowesProvider>(
-            navigationKey.currentContext,
+    UserModel? userModel = Provider.of<FollowesProvider>(
+            navigationKey.currentContext!,
             listen: false)
         .userModel;
     setCallStatus(model);
@@ -333,28 +334,28 @@ class AgoraService {
         backgroundColor: ColorConstants.button,
         message: "likes you!",
         titleText: Text(
-          model.name,
-          style: appTheme.white14Bold,
+          model.name ?? "",
+          style: appTheme?.white14Bold,
         ),
         mainButton: InkWell(
           onTap: () {
             sendReverseLikeMessage(model.userId.toString(),
-                NavigationUtilities.key.currentState.overlay.context);
+                NavigationUtilities.key.currentState!.overlay!.context);
           },
           child: Text(
             'Click To Like Me',
-            style: appTheme.white14Bold,
+            style: appTheme?.white14Bold,
           ),
         ),
         duration: Duration(seconds: 5),
-      )..show(NavigationUtilities.key.currentState.overlay.context);
+      )..show(NavigationUtilities.key.currentState!.overlay!.context);
     } else if (model.isReverseLike == true) {
-      Navigator.pop(NavigationUtilities.key.currentState.overlay.context);
+      Navigator.pop(NavigationUtilities.key.currentState!.overlay!.context);
       NavigationUtilities.push(CallMessage(
-          userId: model.userId,
+          userId: model.userId ?? 0,
           name: model.name ?? "",
           gender: model.toGender ?? "",
-          imageUrl: model?.image?.photoUrl ?? ""));
+          imageUrl: model.image?.photoUrl ?? ""));
     } else if (model.videoCall == true) {
       if (isOngoingCall == true) {
         sendBusyCallMessage(peerId);
@@ -364,13 +365,13 @@ class AgoraService {
       NavigationUtilities.push(MatchedProfile(
         id: peerId,
         name: model.name ?? "",
-        toImageUrl: model?.image?.photoUrl ?? "",
+        toImageUrl: model.image?.photoUrl ?? "",
         fromImageUrl: (userModel?.userImages?.isEmpty ?? true)
             ? ""
-            : userModel?.userImages?.first?.photoUrl ?? "",
-        channelName: model.channelName,
-        token: model.sessionId,
-        fromId: app.resolve<PrefUtils>().getUserDetails()?.id?.toString(),
+            : userModel?.userImages?.first.photoUrl ?? "",
+        channelName: model.channelName ?? "",
+        token: model.sessionId ?? "",
+        fromId: app.resolve<PrefUtils>().getUserDetails()?.id.toString() ?? "",
         toGender: model.toGender ?? "",
       ));
     } else if (model.rejectCall == true) {
@@ -387,14 +388,14 @@ class AgoraService {
 
     } else if (model.receiveCall == true) {
       //Receive Call
-      VideoCallModel videoCallModel = Provider.of<MatchingProfileProvider>(
-              navigationKey.currentContext,
+      late VideoCallModel videoCallModel = Provider.of<MatchingProfileProvider>(
+              navigationKey.currentContext!,
               listen: false)
-          .videoCallModel;
+          .videoCallModel!;
       NavigationUtilities.pop();
       openVideoCall(
-          channelName: videoCallModel.channelName,
-          sessionId: videoCallModel.sessionId,
+          channelName: videoCallModel.channelName!,
+          sessionId: videoCallModel.sessionId!,
           toUserId: videoCallModel.toUserId.toString());
     } else if (model.endCall == true) {
       isOngoingCall = false;
@@ -406,7 +407,7 @@ class AgoraService {
     } else if (model.busyCall == true) {
       Future.delayed(Duration(seconds: 2), () {
         NavigationUtilities.pop();
-        View.showMessage(NavigationUtilities.key.currentState.overlay.context,
+        View.showMessage(NavigationUtilities.key.currentState!.overlay!.context,
             "I am currently on another call.");
       });
     } else if (model.inSufficientCoin == true) {
@@ -418,9 +419,9 @@ class AgoraService {
 
 //Open Video Call
   openVideoCall(
-      {@required String channelName,
-      @required String sessionId,
-      @required String toUserId}) {
+      {required String channelName,
+      required String sessionId,
+      required String toUserId}) {
     isOngoingCall = true;
     // UserModel user = Provider.of<FollowesProvider>(navigationKey.currentContext,
     //         listen: false)
@@ -430,21 +431,22 @@ class AgoraService {
       VideoCall(
           channelName: channelName,
           token: sessionId,
-          userId: app.resolve<PrefUtils>().getUserDetails()?.id?.toString(),
+          userId:
+              app.resolve<PrefUtils>().getUserDetails()?.id.toString() ?? "",
           toUserId: toUserId),
     );
   }
 
   updateCallStatus(
-      {@required String channelName,
-      @required String sessionId,
-      @required String status}) {
+      {required String channelName,
+      required String sessionId,
+      required String status}) {
     Map<String, dynamic> req = {};
     req["channel_name"] = channelName;
     req["call_status"] = status;
     req["session_id"] = sessionId;
     NetworkClient.getInstance.callApi(
-      context: navigationKey.currentContext,
+      context: navigationKey.currentContext!,
       params: req,
       baseUrl: ApiConstants.apiUrl,
       command: ApiConstants.updateCallStatus,
@@ -457,17 +459,17 @@ class AgoraService {
 
 //Opne UserFeedBack After Call
   openUserFeedBackPopUp(int userId) async {
-    UserModel userModel = Provider.of<FollowesProvider>(
-            navigationKey.currentContext,
+    UserModel? userModel = Provider.of<FollowesProvider>(
+            navigationKey.currentContext!,
             listen: false)
         .userModel;
-    if (userModel.isInfluencer == true) return;
+    if (userModel?.isInfluencer == true) return;
 
     var provider = Provider.of<TagsProvider>(
-        NavigationUtilities.key.currentState.overlay.context,
+        NavigationUtilities.key.currentState!.overlay!.context,
         listen: false);
     await provider.fetchTags(
-        NavigationUtilities.key.currentState.overlay.context, 0);
+        NavigationUtilities.key.currentState!.overlay!.context, 0);
     List<String> selectedTags = [];
     showModalBottomSheet(
         isScrollControlled: false,
@@ -475,7 +477,7 @@ class AgoraService {
           borderRadius: BorderRadius.only(
               topLeft: Radius.circular(20.0), topRight: Radius.circular(20.0)),
         ),
-        context: NavigationUtilities.key.currentState.overlay.context,
+        context: NavigationUtilities.key.currentState!.overlay!.context,
         builder: (builder) {
           return StatefulBuilder(
             builder: (BuildContext context, setState) {
@@ -491,7 +493,7 @@ class AgoraService {
                         children: [
                           Text(
                             "Feedback",
-                            style: appTheme.black16Bold
+                            style: appTheme?.black16Bold
                                 .copyWith(fontSize: getFontSize(25)),
                           ),
                           Spacer(),
@@ -501,7 +503,7 @@ class AgoraService {
                             },
                             child: Text(
                               "Close",
-                              style: appTheme.black14SemiBold.copyWith(
+                              style: appTheme?.black14SemiBold.copyWith(
                                   fontSize: getFontSize(18),
                                   color: ColorConstants.red),
                             ),
@@ -522,9 +524,9 @@ class AgoraService {
                                 active: false,
                                 pressEnabled: true,
                                 activeColor: fromHex("#FFDFDF"),
-                                title: provider.tagsList[index]?.tag ?? "",
+                                title: provider.tagsList[index].tag ?? "",
                                 index: index,
-                                textStyle: appTheme.black12Normal
+                                textStyle: appTheme!.black12Normal
                                     .copyWith(fontWeight: FontWeight.w500),
                                 textColor: Colors.black,
                                 textActiveColor: ColorConstants.red,
@@ -537,14 +539,14 @@ class AgoraService {
                                     bottom: getSize(7)),
                                 onPressed: (item) {
                                   if (selectedTags.contains(provider
-                                      .tagsList[item.index].id
+                                      .tagsList[item.index ?? 0].id
                                       .toString())) {
                                     selectedTags.remove(provider
-                                        .tagsList[item.index].id
+                                        .tagsList[item.index ?? 0].id
                                         .toString());
                                   } else {
                                     selectedTags.add(provider
-                                        .tagsList[item.index].id
+                                        .tagsList[item.index ?? 0].id
                                         .toString());
                                   }
                                 },

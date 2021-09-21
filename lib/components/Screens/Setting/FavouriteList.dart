@@ -11,7 +11,7 @@ import 'package:video_chat/components/Model/Favourite/FavouriteListModel.dart';
 import 'package:video_chat/provider/favourite_provider.dart';
 
 class FavouriteList extends StatefulWidget {
-  FavouriteList({Key key}) : super(key: key);
+  FavouriteList({Key? key}) : super(key: key);
 
   @override
   _FavouriteListState createState() => _FavouriteListState();
@@ -21,7 +21,7 @@ class _FavouriteListState extends State<FavouriteList> {
   @override
   void initState() {
     super.initState();
-    WidgetsBinding.instance.addPostFrameCallback((_) {
+    WidgetsBinding.instance?.addPostFrameCallback((_) {
       Provider.of<FavouriteProvider>(context, listen: false)
           .getFavouriteList(context);
     });
@@ -39,43 +39,42 @@ class _FavouriteListState extends State<FavouriteList> {
 
   getList() {
     return Consumer<FavouriteProvider>(
-      builder: (context, favourite, child) =>
-          (favourite?.favouriteList?.isEmpty ?? true)
-              ? Center(
-                  child: Text(
-                    "No Favourite Found! ",
-                    style: appTheme.black14Normal.copyWith(
-                        fontSize: getFontSize(16), fontWeight: FontWeight.w700),
-                  ),
-                )
-              : ListView.separated(
-                  padding: EdgeInsets.only(
-                      top: getSize(20), left: getSize(25), right: getSize(25)),
-                  itemCount: favourite.favouriteList.length,
-                  itemBuilder: (BuildContext context, int index) {
-                    return LazyLoadingList(
-                        initialSizeOfItems: 20,
-                        index: index,
-                        hasMore: true,
-                        loadMore: () {
-                          // page++;
-                          // print(
-                          //     "--------========================= Lazy Loading $page ==========================---------");
+      builder: (context, favourite, child) => (favourite.favouriteList.isEmpty)
+          ? Center(
+              child: Text(
+                "No Favourite Found! ",
+                style: appTheme?.black14Normal.copyWith(
+                    fontSize: getFontSize(16), fontWeight: FontWeight.w700),
+              ),
+            )
+          : ListView.separated(
+              padding: EdgeInsets.only(
+                  top: getSize(20), left: getSize(25), right: getSize(25)),
+              itemCount: favourite.favouriteList.length,
+              itemBuilder: (BuildContext context, int index) {
+                return LazyLoadingList(
+                    initialSizeOfItems: 20,
+                    index: index,
+                    hasMore: true,
+                    loadMore: () {
+                      // page++;
+                      // print(
+                      //     "--------========================= Lazy Loading $page ==========================---------");
 
-                          // Provider.of<ReportAndBlockProvider>(context,
-                          //         listen: false)
-                          //     .getBlockList(page, context);
-                        },
-                        child: InkWell(
-                            onTap: () {},
-                            child: cellItem(favourite.favouriteList[index])));
-                  },
-                  separatorBuilder: (BuildContext context, int index) {
-                    return SizedBox(
-                      height: getSize(15),
-                    );
-                  },
-                ),
+                      // Provider.of<ReportAndBlockProvider>(context,
+                      //         listen: false)
+                      //     .getBlockList(page, context);
+                    },
+                    child: InkWell(
+                        onTap: () {},
+                        child: cellItem(favourite.favouriteList[index])));
+              },
+              separatorBuilder: (BuildContext context, int index) {
+                return SizedBox(
+                  height: getSize(15),
+                );
+              },
+            ),
     );
   }
 
@@ -104,7 +103,7 @@ class _FavouriteListState extends State<FavouriteList> {
             ClipRRect(
                 borderRadius: BorderRadius.circular(10),
                 child: CachedNetworkImage(
-                  imageUrl: model?.photoUrl ?? "",
+                  imageUrl: model.photoUrl ?? "",
                   height: getSize(48),
                   width: getSize(51),
                   fit: BoxFit.cover,
@@ -122,8 +121,8 @@ class _FavouriteListState extends State<FavouriteList> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  model?.providerDisplayName ?? "",
-                  style: appTheme.black14Normal.copyWith(
+                  model.providerDisplayName ?? "",
+                  style: appTheme?.black14Normal.copyWith(
                       fontSize: getFontSize(16), fontWeight: FontWeight.w700),
                 ),
                 SizedBox(
@@ -146,8 +145,8 @@ class _FavouriteListState extends State<FavouriteList> {
                     //   width: getSize(6),
                     // ),
                     Text(
-                      model?.countryIp ?? "",
-                      style: appTheme.black14Normal
+                      model.countryIp ?? "",
+                      style: appTheme?.black14Normal
                           .copyWith(fontWeight: FontWeight.w500),
                     ),
                   ],

@@ -6,14 +6,14 @@ List<GiftModel> giftModelFromJson(String str) =>
 String giftModelToJson(GiftModel data) => json.encode(data.toJson());
 
 class GiftModel {
-  int id;
-  String giftName;
-  String detail;
-  String imageUrl;
-  String price;
-  String actualPrice;
-  String currency;
-  bool isActive;
+  int? id;
+  String? giftName;
+  String? detail;
+  String? imageUrl;
+  String? price;
+  String? actualPrice;
+  String? currency;
+  bool? isActive;
 
   GiftModel(
       {this.id,

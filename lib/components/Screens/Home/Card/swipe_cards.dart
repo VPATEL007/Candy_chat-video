@@ -6,12 +6,15 @@ import 'package:video_chat/components/Screens/Home/Card/profile_card.dart';
 import 'draggable_card.dart';
 
 class SwipeCards extends StatefulWidget {
-  final IndexedWidgetBuilder itemBuilder;
-  final MatchEngine matchEngine;
-  final Function onStackFinished;
+  late IndexedWidgetBuilder itemBuilder;
+  late MatchEngine matchEngine;
+  late Function onStackFinished;
 
-  const SwipeCards(
-      {Key key, this.matchEngine, this.onStackFinished, this.itemBuilder})
+  SwipeCards(
+      {Key? key,
+      required this.matchEngine,
+      required this.onStackFinished,
+      required this.itemBuilder})
       : super(key: key);
 
   @override
@@ -19,16 +22,16 @@ class SwipeCards extends StatefulWidget {
 }
 
 class _SwipeCardsState extends State<SwipeCards> {
-  Key _frontCard;
-  SwipeItem _currentItem;
-  double _nextCardScale = 1.0;
-  SlideRegion slideRegion;
+  late Key _frontCard;
+  SwipeItem? _currentItem;
+  double? _nextCardScale = 1.0;
+  SlideRegion? slideRegion;
 
   @override
   void initState() {
     widget.matchEngine.addListener(_onMatchEngineChange);
     _currentItem = widget.matchEngine.currentItem;
-    _currentItem.addListener(_onMatchChange);
+    _currentItem?.addListener(_onMatchChange);
     _frontCard = Key(widget.matchEngine._currentItemIndex.toString());
     super.initState();
   }
@@ -36,7 +39,7 @@ class _SwipeCardsState extends State<SwipeCards> {
   @override
   void dispose() {
     if (_currentItem != null) {
-      _currentItem.removeListener(_onMatchChange);
+      _currentItem?.removeListener(_onMatchChange);
     }
     widget.matchEngine.removeListener(_onMatchEngineChange);
     super.dispose();
@@ -50,22 +53,22 @@ class _SwipeCardsState extends State<SwipeCards> {
       widget.matchEngine.addListener(_onMatchEngineChange);
     }
     if (_currentItem != null) {
-      _currentItem.removeListener(_onMatchChange);
+      _currentItem?.removeListener(_onMatchChange);
     }
     _currentItem = widget.matchEngine.currentItem;
     if (_currentItem != null) {
-      _currentItem.addListener(_onMatchChange);
+      _currentItem?.addListener(_onMatchChange);
     }
   }
 
   void _onMatchEngineChange() {
     setState(() {
       if (_currentItem != null) {
-        _currentItem.removeListener(_onMatchChange);
+        _currentItem?.removeListener(_onMatchChange);
       }
       _currentItem = widget.matchEngine.currentItem;
       if (_currentItem != null) {
-        _currentItem.addListener(_onMatchChange);
+        _currentItem?.addListener(_onMatchChange);
       }
       _frontCard = Key(widget.matchEngine._currentItemIndex.toString());
     });
@@ -79,7 +82,8 @@ class _SwipeCardsState extends State<SwipeCards> {
 
   Widget _buildFrontCard() {
     return ProfileCard(
-      child: widget.itemBuilder(context, widget.matchEngine._currentItemIndex),
+      child: widget.itemBuilder(
+          context, widget.matchEngine._currentItemIndex ?? 0),
       key: _frontCard,
     );
   }
@@ -89,7 +93,8 @@ class _SwipeCardsState extends State<SwipeCards> {
       transform: Matrix4.identity()..scale(_nextCardScale, _nextCardScale),
       alignment: Alignment.center,
       child: ProfileCard(
-        child: widget.itemBuilder(context, widget.matchEngine._nextItemIndex),
+        child:
+            widget.itemBuilder(context, widget.matchEngine._nextItemIndex ?? 0),
       ),
     );
   }
@@ -103,23 +108,24 @@ class _SwipeCardsState extends State<SwipeCards> {
   void _onSlideRegion(SlideRegion region) {
     setState(() {
       slideRegion = region;
-      SwipeItem currentMatch = widget.matchEngine.currentItem;
+      SwipeItem? currentMatch = widget.matchEngine.currentItem;
 
-      currentMatch.onSlideUpdate(region, widget.matchEngine._currentItemIndex);
+      currentMatch?.onSlideUpdate(
+          region, widget.matchEngine._currentItemIndex ?? 0);
     });
   }
 
   void _onSlideOutComplete(SlideDirection direction) {
-    SwipeItem currentMatch = widget.matchEngine.currentItem;
+    SwipeItem? currentMatch = widget.matchEngine.currentItem;
     switch (direction) {
       case SlideDirection.left:
-        currentMatch.nope(widget.matchEngine._currentItemIndex);
+        currentMatch?.nope(widget.matchEngine._currentItemIndex ?? 0);
         break;
       case SlideDirection.right:
-        currentMatch.like(widget.matchEngine._currentItemIndex);
+        currentMatch?.like(widget.matchEngine._currentItemIndex ?? 0);
         break;
       case SlideDirection.up:
-        currentMatch.superLike(widget.matchEngine._currentItemIndex);
+        currentMatch?.superLike(widget.matchEngine._currentItemIndex ?? 0);
         break;
     }
 
@@ -129,8 +135,8 @@ class _SwipeCardsState extends State<SwipeCards> {
     }
   }
 
-  SlideDirection _desiredSlideOutDirection() {
-    switch (widget.matchEngine.currentItem.decision) {
+  SlideDirection? _desiredSlideOutDirection() {
+    switch (widget.matchEngine.currentItem?.decision) {
       case Decision.nope:
         return SlideDirection.left;
       case Decision.like:
@@ -150,6 +156,10 @@ class _SwipeCardsState extends State<SwipeCards> {
           DraggableCard(
             isDraggable: false,
             card: _buildBackCard(),
+            onSlideOutComplete: (SlideDirection direction) {},
+            onSlideRegionUpdate: (SlideRegion slideRegion) {},
+            onSlideUpdate: (double distance) {},
+            slideTo: null,
           ),
         if (widget.matchEngine.currentItem != null)
           DraggableCard(
@@ -165,39 +175,40 @@ class _SwipeCardsState extends State<SwipeCards> {
 }
 
 class MatchEngine extends ChangeNotifier {
-  final List<SwipeItem> _swipeItems;
-  int _currentItemIndex;
-  int _nextItemIndex;
+  late List<SwipeItem> _swipeItems;
+  int? _currentItemIndex;
+  int? _nextItemIndex;
 
   MatchEngine({
-    List<SwipeItem> swipeItems,
-  }) : _swipeItems = swipeItems {
+    List<SwipeItem>? swipeItems,
+  }) : _swipeItems = swipeItems ?? [] {
     _currentItemIndex = 0;
     _nextItemIndex = 1;
   }
 
-  SwipeItem get currentItem => _currentItemIndex < _swipeItems.length
-      ? _swipeItems[_currentItemIndex]
+  SwipeItem? get currentItem => (_currentItemIndex ?? 0) < _swipeItems.length
+      ? _swipeItems[_currentItemIndex ?? 0]
       : null;
 
-  SwipeItem get nextItem =>
-      _nextItemIndex < _swipeItems.length ? _swipeItems[_nextItemIndex] : null;
+  SwipeItem? get nextItem => (_nextItemIndex ?? 0) < _swipeItems.length
+      ? _swipeItems[_nextItemIndex ?? 0]
+      : null;
 
   void cycleMatch() {
-    if (currentItem.decision != Decision.undecided) {
-      currentItem.resetMatch();
+    if (currentItem?.decision != Decision.undecided) {
+      currentItem?.resetMatch();
       _currentItemIndex = _nextItemIndex;
-      _nextItemIndex = _nextItemIndex + 1;
+      _nextItemIndex = (_nextItemIndex ?? 0) + 1;
       notifyListeners();
     }
   }
 
   void rewindMatch() {
     if (_currentItemIndex != 0) {
-      currentItem.resetMatch();
+      currentItem?.resetMatch();
       _nextItemIndex = _currentItemIndex;
-      _currentItemIndex = _currentItemIndex - 1;
-      currentItem.resetMatch();
+      _currentItemIndex = (_currentItemIndex ?? 0) - 1;
+      currentItem?.resetMatch();
       notifyListeners();
     }
   }
@@ -205,10 +216,10 @@ class MatchEngine extends ChangeNotifier {
 
 class SwipeItem extends ChangeNotifier {
   final dynamic content;
-  final Function(int) likeAction;
-  final Function(int) superlikeAction;
-  final Function(int) nopeAction;
-  final Function(SlideRegion, int) onSlideUpdateAction;
+  final Function(int)? likeAction;
+  final Function(int)? superlikeAction;
+  final Function(int)? nopeAction;
+  final Function(SlideRegion, int)? onSlideUpdateAction;
   Decision decision = Decision.undecided;
 
   SwipeItem(
@@ -222,7 +233,7 @@ class SwipeItem extends ChangeNotifier {
     if (decision == Decision.undecided) {
       decision = Decision.like;
       try {
-        likeAction(index);
+        likeAction!(index);
       } catch (e) {}
       notifyListeners();
     }
@@ -232,7 +243,7 @@ class SwipeItem extends ChangeNotifier {
     if (decision == Decision.undecided) {
       decision = Decision.nope;
       try {
-        nopeAction(index);
+        nopeAction!(index);
       } catch (e) {}
       notifyListeners();
     }
@@ -242,7 +253,7 @@ class SwipeItem extends ChangeNotifier {
     if (decision == Decision.undecided) {
       decision = Decision.superLike;
       try {
-        superlikeAction(index);
+        superlikeAction!(index);
       } catch (e) {}
       notifyListeners();
     }
@@ -257,7 +268,7 @@ class SwipeItem extends ChangeNotifier {
 
   void onSlideUpdate(SlideRegion region, int index) {
     try {
-      onSlideUpdateAction(region, index);
+      onSlideUpdateAction!(region, index);
     } catch (e) {}
     notifyListeners();
   }

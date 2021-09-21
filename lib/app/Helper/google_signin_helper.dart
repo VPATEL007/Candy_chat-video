@@ -16,10 +16,10 @@ class GoogleSignInHelper with ChangeNotifier {
   Future<void> handleSignIn(
       BuildContext context, Map<String, dynamic> req) async {
     try {
-      GoogleSignInAccount signInAccount = await _googleSignIn.signIn();
+      GoogleSignInAccount? signInAccount = await _googleSignIn.signIn();
       if (signInAccount == null) return;
-      GoogleSignInAuthentication googleSignInAuthentication =
-          await signInAccount?.authentication;
+      GoogleSignInAuthentication? googleSignInAuthentication =
+          await signInAccount.authentication;
 
       req["provider"] = google;
       req["token"] = googleSignInAuthentication.accessToken;

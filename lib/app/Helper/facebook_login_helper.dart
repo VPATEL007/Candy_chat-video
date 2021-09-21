@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_facebook_auth/flutter_facebook_auth.dart';
+// import 'package:flutter_facebook_auth/flutter_facebook_auth.dart';
 import 'package:video_chat/app/Helper/CommonApiHelper.dart';
 import 'package:video_chat/app/app.export.dart';
 
@@ -18,26 +19,15 @@ class FacebookLoginHelper {
       CommonApiHelper.shared.callLoginApi(req, context, () {}, () {});
     } else {
       try {
-        AccessToken accessToken = await FacebookAuth.instance
+        LoginResult loginresult = await FacebookAuth.instance
             .login(); // by the fault we request the email and the public profile
 
         // final userData = await FacebookAuth.instance.getUserData();
+        if (loginresult.accessToken != null) {
+          req["provider"] = faceBook;
+          req["token"] = loginresult.accessToken?.token;
 
-        req["provider"] = faceBook;
-        req["token"] = accessToken.token;
-
-        CommonApiHelper.shared.callLoginApi(req, context, () {}, () {});
-      } on FacebookAuthException catch (e) {
-        switch (e.errorCode) {
-          case FacebookAuthErrorCode.OPERATION_IN_PROGRESS:
-            print("You have a previous login operation in progress");
-            break;
-          case FacebookAuthErrorCode.CANCELLED:
-            print("login cancelled");
-            break;
-          case FacebookAuthErrorCode.FAILED:
-            print("login failed");
-            break;
+          CommonApiHelper.shared.callLoginApi(req, context, () {}, () {});
         }
       } catch (e, s) {
         print(e);

@@ -2,10 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:multi_image_picker2/multi_image_picker2.dart';
 import 'package:provider/provider.dart';
 import 'package:video_chat/app/app.export.dart';
+import 'package:video_chat/components/Model/settings/feedback.dart';
 import 'package:video_chat/provider/feedback_provider.dart';
 
 class FeedbackScreen extends StatefulWidget {
-  const FeedbackScreen({Key key}) : super(key: key);
+  const FeedbackScreen({Key? key}) : super(key: key);
 
   @override
   _FeedbackScreenState createState() => _FeedbackScreenState();
@@ -40,16 +41,17 @@ class _FeedbackScreenState extends State<FeedbackScreen> {
         bottomSheet: Padding(
           padding: const EdgeInsets.all(15.0),
           child: getBottomButton(context, "Submit", () {
-            int categoryId = feedbackProvider?.feedBackList?.firstWhere(
+            int? categoryId = feedbackProvider.feedBackList.firstWhere(
                 // ignore: missing_return
                 (element) => element.isSelected == true, orElse: () {
               View.showMessage(context, "Please select any reason");
-            })?.id;
+              return FeedBackModel();
+            }).id;
             if (categoryId == null) {
               return;
             }
             feedbackProvider.submitFeedBack(
-                context, categoryId, images, textEditingController?.text ?? "");
+                context, categoryId, images, textEditingController.text);
             Navigator.of(context).pop();
           }),
         ),
@@ -63,7 +65,7 @@ class _FeedbackScreenState extends State<FeedbackScreen> {
                 SizedBox(height: 15),
                 Text(
                   "Feedback",
-                  style: appTheme.black14Normal
+                  style: appTheme?.black14Normal
                       .copyWith(fontWeight: FontWeight.w500),
                 ),
                 SizedBox(height: 10),
@@ -73,7 +75,7 @@ class _FeedbackScreenState extends State<FeedbackScreen> {
                   itemBuilder: (context, index) => Padding(
                     padding: const EdgeInsets.only(bottom: 15),
                     child: getRadioButton(
-                        feedbackProvider.feedBackList[index]?.category ?? "",
+                        feedbackProvider.feedBackList[index].category ?? "",
                         feedbackProvider,
                         index),
                   ),
@@ -89,7 +91,7 @@ class _FeedbackScreenState extends State<FeedbackScreen> {
                 SizedBox(height: 20),
                 Text(
                   "Upload Pictures",
-                  style: appTheme.black14Normal
+                  style: appTheme?.black14Normal
                       .copyWith(fontWeight: FontWeight.w500),
                 ),
                 SizedBox(height: 10),
@@ -99,7 +101,7 @@ class _FeedbackScreenState extends State<FeedbackScreen> {
                   mainAxisSpacing: 15,
                   physics: NeverScrollableScrollPhysics(),
                   shrinkWrap: true,
-                  children: (images?.isEmpty ?? true)
+                  children: (images.isEmpty)
                       ? List.generate(2, (index) {
                           return InkWell(
                             highlightColor: Colors.transparent,
@@ -200,7 +202,7 @@ class _FeedbackScreenState extends State<FeedbackScreen> {
           }
         });
         reportProvider.feedBackList[index].isSelected =
-            !reportProvider.feedBackList[index].isSelected;
+            reportProvider.feedBackList[index].isSelected;
       },
       child: Container(
         width: MathUtilities.screenWidth(context),
@@ -218,12 +220,12 @@ class _FeedbackScreenState extends State<FeedbackScreen> {
                 Expanded(
                   child: Text(
                     text,
-                    style: appTheme.black14Normal
+                    style: appTheme?.black14Normal
                         .copyWith(fontWeight: FontWeight.w500),
                   ),
                 ),
                 Image.asset(
-                  reportProvider.feedBackList[index].isSelected
+                  reportProvider.feedBackList[index].isSelected ?? false
                       ? radioSelected
                       : radio,
                   height: getSize(18),

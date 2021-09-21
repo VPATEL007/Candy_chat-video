@@ -4,7 +4,7 @@ import 'package:video_chat/app/app.export.dart';
 import 'package:video_chat/app/utils/CommonWidgets.dart';
 
 class VipStore extends StatefulWidget {
-  VipStore({Key key}) : super(key: key);
+  VipStore({Key? key}) : super(key: key);
 
   @override
   _VipStoreState createState() => _VipStoreState();
@@ -101,21 +101,21 @@ class _VipStoreState extends State<VipStore> {
           SizedBox(height: getSize(50)),
           Text(
             "Become Dating App VIP",
-            style: appTheme.black16Bold,
+            style: appTheme?.black16Bold,
           ),
           SizedBox(
             height: getSize(16),
           ),
           Text(
             "Unlimited chat",
-            style: appTheme.black16Bold.copyWith(fontSize: getFontSize(20)),
+            style: appTheme?.black16Bold.copyWith(fontSize: getFontSize(20)),
           ),
           SizedBox(
             height: getSize(13),
           ),
           Text(
             "Chat with anyone you want to know",
-            style: appTheme.black14Normal.copyWith(fontSize: getFontSize(16)),
+            style: appTheme?.black14Normal.copyWith(fontSize: getFontSize(16)),
           ),
           Spacer(),
           Container(
@@ -136,7 +136,7 @@ class _VipStoreState extends State<VipStore> {
                 ),
                 Text(
                   "Contiune",
-                  style: appTheme.white16Normal
+                  style: appTheme?.white16Normal
                       .copyWith(fontWeight: FontWeight.bold),
                 ),
                 SizedBox(
@@ -144,7 +144,7 @@ class _VipStoreState extends State<VipStore> {
                 ),
                 Text(
                   "\$130.00/Month",
-                  style: appTheme.white16Normal
+                  style: appTheme?.white16Normal
                       .copyWith(fontWeight: FontWeight.normal),
                 ),
                 SizedBox(
@@ -156,7 +156,7 @@ class _VipStoreState extends State<VipStore> {
           Spacer(),
           Text(
             "Recurring billing. cancel anytime",
-            style: appTheme.black14Normal.copyWith(fontSize: getFontSize(16)),
+            style: appTheme?.black14Normal.copyWith(fontSize: getFontSize(16)),
           ),
           SizedBox(
             height: getSize(13),
@@ -166,7 +166,8 @@ class _VipStoreState extends State<VipStore> {
             child: Text(
               "Lorem Ipsum is simply dummy text of the printing and ",
               textAlign: TextAlign.center,
-              style: appTheme.black14Normal.copyWith(fontSize: getFontSize(16)),
+              style:
+                  appTheme?.black14Normal.copyWith(fontSize: getFontSize(16)),
             ),
           ),
           Spacer(),

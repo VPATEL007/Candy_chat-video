@@ -18,29 +18,35 @@ class View {
       {String title = "Alert!",
       DisplayType type = DisplayType.SNACKBAR,
       DisplayMode mode = DisplayMode.ERROR,
-      List<DialogAction> actions}) {
+      List<DialogAction>? actions}) {
     switch (type) {
       case DisplayType.ALERT:
-        showDialog(
-            context: context,
-            builder: (context) {
-              return CustomMessageDialog(
-                  title: title, message: message, mode: mode, actions: actions);
-            });
+        // showDialog(
+        //     context: context,
+        //     builder: (context) {
+        //       return CustomMessageDialog(
+        //           title: title,
+        //           message: message,
+        //           mode: mode,
+        //           actions: actions ?? []);
+        //     });
         break;
       case DisplayType.SNACKBAR:
         flushbarService.show(message: message, type: getFromType(mode));
         break;
       case DisplayType.BOTTOM_SHEET:
-        showModalBottomSheet(
-          context: context,
-          shape: RoundedRectangleBorder(
-            borderRadius: const BorderRadius.only(
-                topLeft: Radius.circular(20), topRight: Radius.circular(20)),
-          ),
-          builder: (context) => BottomSheetWidget(
-              title: title, message: message, mode: mode, actions: actions),
-        );
+        // showModalBottomSheet(
+        //   context: context,
+        //   shape: RoundedRectangleBorder(
+        //     borderRadius: const BorderRadius.only(
+        //         topLeft: Radius.circular(20), topRight: Radius.circular(20)),
+        //   ),
+        //   builder: (context) => BottomSheetWidget(
+        //       title: title,
+        //       message: message,
+        //       mode: mode,
+        //       actions: actions ?? []),
+        // );
         break;
     }
   }
@@ -74,10 +80,10 @@ class CustomMessageDialog extends StatefulWidget {
   });
 
   /// The name of the feature.
-  final String title;
-  final String message;
-  final DisplayMode mode;
-  final List<DialogAction> actions;
+  final String? title;
+  final String? message;
+  final DisplayMode? mode;
+  final List<DialogAction>? actions;
 
   @override
   _CustomMessageDialogState createState() => _CustomMessageDialogState();
@@ -87,16 +93,16 @@ class _CustomMessageDialogState extends State<CustomMessageDialog> {
   @override
   Widget build(BuildContext context) {
     return CustomDialog(
-      title: widget.title,
+      title: widget.title ?? "",
       body: Column(
         children: <Widget>[
           Text(
-            widget.message,
+            widget.message ?? "",
           ),
           const SizedBox(height: 12),
         ],
       ),
-      actions: widget.actions,
+      actions: widget.actions ?? [],
     );
   }
 }
@@ -110,10 +116,10 @@ class BottomSheetWidget extends StatefulWidget {
   });
 
   /// The name of the feature.
-  final String title;
-  final String message;
-  final DisplayMode mode;
-  final List<DialogAction> actions;
+  final String? title;
+  final String? message;
+  final DisplayMode? mode;
+  final List<DialogAction>? actions;
 
   @override
   _BottomSheetWidgetState createState() => _BottomSheetWidgetState();
@@ -125,11 +131,12 @@ class _BottomSheetWidgetState extends State<BottomSheetWidget> {
   List<Widget> _buildContent(TextTheme textTheme) {
     return <Widget>[
       if (widget.title != null) ...[
-        Text(widget.title, style: textTheme.title, textAlign: TextAlign.center),
+        Text(widget.title ?? "",
+            style: textTheme.headline6, textAlign: TextAlign.center),
         const SizedBox(height: 12),
       ],
       if (widget.message != null) ...[
-        Text(widget.message,
+        Text(widget.message ?? "",
             style: textTheme.subtitle, textAlign: TextAlign.center),
         const SizedBox(height: 12),
       ],
@@ -138,16 +145,16 @@ class _BottomSheetWidgetState extends State<BottomSheetWidget> {
   }
 
   Widget _buildActions() {
-    if (widget.actions.length > 1) {
+    if ((widget.actions?.length ?? 0) > 1) {
       return SizedBox(
         width: double.infinity,
         child: Wrap(
           alignment: WrapAlignment.spaceAround,
-          children: widget.actions,
+          children: widget.actions ?? [],
         ),
       );
-    } else if (widget.actions.length == 1) {
-      return widget.actions.first;
+    } else if (widget.actions?.length == 1) {
+      return widget.actions!.first;
     } else {
       return Container();
     }
@@ -165,7 +172,7 @@ class _BottomSheetWidgetState extends State<BottomSheetWidget> {
             children: <Widget>[
               Padding(
                 padding: const EdgeInsets.all(20.0),
-                child: Text(widget.title),
+                child: Text(widget.title ?? ""),
               )
             ],
           ),

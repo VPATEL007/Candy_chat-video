@@ -12,8 +12,8 @@ import 'package:video_chat/components/Screens/Profile/Profile.dart';
 import 'package:video_chat/provider/followes_provider.dart';
 
 class TabBarWidget extends StatefulWidget {
-  TabType screen = TabType.Home;
-  TabBarWidget({Key key, this.screen}) : super(key: key);
+  TabType? screen = TabType.Home;
+  TabBarWidget({Key? key, this.screen}) : super(key: key);
 
   @override
   _TabBarWidgetState createState() => _TabBarWidgetState();
@@ -68,12 +68,12 @@ class _TabBarWidgetState extends State<TabBarWidget> {
             Consumer<FollowesProvider>(
               builder: (context, mutedProvider, child) => InkWell(
                   onTap: () async {
-                    UserModel userModel = mutedProvider.userModel;
+                    UserModel? userModel = mutedProvider.userModel;
                     if (userModel == null) {
                       await mutedProvider.fetchMyProfile(context);
                     }
                     setState(() {});
-                    NavigationUtilities.key.currentState
+                    NavigationUtilities.key.currentState!
                         .pushReplacement(FadeRoute(
                       builder: (context) => Profile(),
                     ));
@@ -83,9 +83,9 @@ class _TabBarWidgetState extends State<TabBarWidget> {
                       (mutedProvider.userModel?.userImages?.isEmpty ?? true)
                           ? ""
                           : (mutedProvider
-                                  .userModel?.userImages?.first?.photoUrl ??
+                                  .userModel?.userImages?.first.photoUrl ??
                               ""),
-                      mutedProvider?.userModel?.gender ?? "")),
+                      mutedProvider.userModel?.gender ?? "")),
             ),
           ],
         ),
@@ -110,7 +110,7 @@ class _TabBarWidgetState extends State<TabBarWidget> {
                   )),
               child: ClipRRect(
                 borderRadius: BorderRadius.circular(18),
-                child: (image?.isEmpty ?? true)
+                child: (image.isEmpty)
                     ? Image.asset(
                         getUserPlaceHolder(gender),
                         height: 18,
@@ -138,7 +138,7 @@ class _TabBarWidgetState extends State<TabBarWidget> {
         ),
         Text(
           "Profile",
-          style: appTheme.white12Normal.copyWith(
+          style: appTheme?.white12Normal.copyWith(
               fontWeight: FontWeight.w500,
               color:
                   isSelected ? Colors.white : Colors.white.withOpacity(0.36)),
@@ -166,7 +166,7 @@ class _TabBarWidgetState extends State<TabBarWidget> {
         ),
         Text(
           title,
-          style: appTheme.white12Normal.copyWith(
+          style: appTheme?.white12Normal.copyWith(
               fontWeight: FontWeight.w500,
               color:
                   isSelected ? Colors.white : Colors.white.withOpacity(0.36)),

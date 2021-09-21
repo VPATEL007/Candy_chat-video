@@ -11,7 +11,7 @@ import 'package:video_chat/provider/followes_provider.dart';
 
 class Gender extends StatefulWidget {
   final bool isFromPreGender;
-  Gender({Key key, this.isFromPreGender = false}) : super(key: key);
+  Gender({Key? key, this.isFromPreGender = false}) : super(key: key);
 
   @override
   _GenderState createState() => _GenderState();
@@ -26,12 +26,13 @@ class _GenderState extends State<Gender> {
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: getAppBar(
-          context,
-          widget.isFromPreGender
-              ? "Select Preferred Gender"
-              : "Select Your Gender",
-          leadingButton: widget.isFromPreGender ? getBackButton(context) : null,
-          isWhite: true),
+        context,
+        widget.isFromPreGender
+            ? "Select Preferred Gender"
+            : "Select Your Gender",
+        leadingButton: widget.isFromPreGender ? getBackButton(context) : null,
+        isWhite: true,
+      ),
       body: SafeArea(
         child: Padding(
           padding: EdgeInsets.only(left: getSize(35), right: getSize(35)),
@@ -113,7 +114,7 @@ class _GenderState extends State<Gender> {
                   widget.isFromPreGender
                       ? "Select preferred opposite gender"
                       : "Choose your gender",
-                  style: appTheme.black14Normal,
+                  style: appTheme?.black14Normal,
                 ),
                 Spacer(),
                 getPopBottomButton(context, "Next", () async {

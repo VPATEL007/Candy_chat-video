@@ -12,7 +12,7 @@ import 'package:video_chat/components/Model/BlockList/blocklistModel.dart';
 import 'package:video_chat/provider/report_and_block_provider.dart';
 
 class BlockList extends StatefulWidget {
-  BlockList({Key key}) : super(key: key);
+  BlockList({Key? key}) : super(key: key);
 
   @override
   _BlockListState createState() => _BlockListState();
@@ -23,7 +23,7 @@ class _BlockListState extends State<BlockList> {
   @override
   void initState() {
     super.initState();
-    WidgetsBinding.instance.addPostFrameCallback((_) {
+    WidgetsBinding.instance?.addPostFrameCallback((_) {
       Provider.of<ReportAndBlockProvider>(context, listen: false)
           .getBlockList(1, context);
     });
@@ -42,11 +42,11 @@ class _BlockListState extends State<BlockList> {
   getList() {
     return Consumer<ReportAndBlockProvider>(
       builder: (context, blockHistory, child) =>
-          (blockHistory?.blockList?.isEmpty ?? true)
+          (blockHistory.blockList.isEmpty)
               ? Center(
                   child: Text(
                     "No Block List Found! ",
-                    style: appTheme.black14Normal.copyWith(
+                    style: appTheme?.black14Normal.copyWith(
                         fontSize: getFontSize(16), fontWeight: FontWeight.w700),
                   ),
                 )
@@ -106,7 +106,7 @@ class _BlockListState extends State<BlockList> {
             ClipRRect(
                 borderRadius: BorderRadius.circular(10),
                 child: CachedNetworkImage(
-                  imageUrl: model?.user?.photoUrl ?? "",
+                  imageUrl: model.user?.photoUrl ?? "",
                   height: getSize(48),
                   width: getSize(51),
                   fit: BoxFit.cover,
@@ -126,7 +126,7 @@ class _BlockListState extends State<BlockList> {
                 children: [
                   Text(
                     model.user?.userName ?? "",
-                    style: appTheme.black14Normal.copyWith(
+                    style: appTheme?.black14Normal.copyWith(
                         fontSize: getFontSize(16), fontWeight: FontWeight.w700),
                   ),
                   SizedBox(
@@ -150,7 +150,7 @@ class _BlockListState extends State<BlockList> {
                       // ),
                       Text(
                         model.user?.countryIp ?? "",
-                        style: appTheme.black14Normal
+                        style: appTheme?.black14Normal
                             .copyWith(fontWeight: FontWeight.w500),
                       ),
                     ],
@@ -162,11 +162,11 @@ class _BlockListState extends State<BlockList> {
             InkWell(
               onTap: () {
                 Provider.of<ReportAndBlockProvider>(context, listen: false)
-                    .unBlockUser(model.user.id, context);
+                    .unBlockUser(model.user?.id ?? 0, context);
               },
               child: Text(
                 "Unblock",
-                style: appTheme.black12Normal.copyWith(
+                style: appTheme?.black12Normal.copyWith(
                     color: ColorConstants.redText, fontWeight: FontWeight.w700),
               ),
             )

@@ -29,7 +29,7 @@ Widget getBottomButton(
           child: Center(
             child: Text(text,
                 style:
-                    appTheme.whiteBold32.copyWith(fontSize: getFontSize(18))),
+                    appTheme?.whiteBold32.copyWith(fontSize: getFontSize(18))),
           )),
     ),
   );
@@ -56,7 +56,7 @@ getPopBottomButton(BuildContext context, String text, VoidCallback onPressed) {
           child: Center(
             child: Text(text,
                 style:
-                    appTheme.whiteBold32.copyWith(fontSize: getFontSize(18))),
+                    appTheme?.whiteBold32.copyWith(fontSize: getFontSize(18))),
           )),
     ),
   );
@@ -83,7 +83,7 @@ getBarButton(
   String imageName,
   VoidCallback onPressed, {
   bool isBlack = false,
-  GlobalKey navigation_key,
+  GlobalKey? navigation_key,
 }) {
   return IconButton(
     key: navigation_key,
@@ -113,7 +113,7 @@ getBarButtonText(
       ),
       child: Text(
         title,
-        style: appTheme.black_Medium_16Text,
+        style: appTheme?.black_Medium_16Text,
       ),
     ),
   );
@@ -136,15 +136,15 @@ getDrawerButton(BuildContext context, bool isBlack) {
 }
 
 getCommonIconWidget({
-  String imageName,
-  VoidCallback onTap,
+  String? imageName,
+  VoidCallback? onTap,
 }) {
   return InkWell(
     onTap: onTap,
     child: Align(
       alignment: Alignment.center,
       child: Image.asset(
-        imageName,
+        imageName ?? "",
         width: getSize(18),
         height: getSize(18),
       ),
@@ -166,7 +166,7 @@ getClearDataButton(VoidCallback onClick) {
             ),
             child: Text(
               "Reset Filters",
-              style: appTheme.black_Medium_16Text,
+              style: appTheme?.black_Medium_16Text,
             )),
       ),
     ),
@@ -188,7 +188,7 @@ getBarButtonWithColor(
             height: getSize(30),
             width: getSize(30),
             decoration: BoxDecoration(
-              color: appTheme.colorPrimary,
+              color: appTheme?.colorPrimary,
               borderRadius: BorderRadius.all(Radius.circular(getSize(3))),
             ),
             child: InkWell(
@@ -207,7 +207,7 @@ getBarButtonWithColor(
           title.length > 0
               ? Text(
                   title,
-                  style: appTheme.black_Medium_16Text,
+                  style: appTheme?.black_Medium_16Text,
                 )
               : SizedBox()
         ],
@@ -239,7 +239,7 @@ pushToWebview(BuildContext context, String text, String url) {
 List<BoxShadow> getBoxShadow(BuildContext context) {
   return [
     BoxShadow(
-      color: appTheme.colorPrimaryLight,
+      color: appTheme?.colorPrimaryLight ?? Colors.white,
       offset: Offset(0, 3),
       blurRadius: 6,
     ),
@@ -255,14 +255,14 @@ Widget getPreferdSizeTitle(BuildContext context, String title) {
       child: Text(
         title,
         textAlign: TextAlign.left,
-        style: AppTheme.of(context).theme.textTheme.subhead.copyWith(
-            fontWeight: FontWeight.w600, color: appTheme.colorPrimary),
+        style: AppTheme.of(context).theme.textTheme.subtitle1!.copyWith(
+            fontWeight: FontWeight.w600, color: appTheme?.colorPrimary),
       ),
     ),
   );
 }
 
-getCommonAuthToolBar(@required BuildContext context, String text) {
+getCommonAuthToolBar(BuildContext context, String text) {
   return Column(
     crossAxisAlignment: CrossAxisAlignment.start,
     children: [
@@ -290,7 +290,7 @@ getCommonAuthToolBar(@required BuildContext context, String text) {
             ),
             child: Text(
               text,
-              style: appTheme.black_Heavy_24Text,
+              style: appTheme?.black_Heavy_24Text,
             ),
           ),
           Container(
@@ -317,14 +317,14 @@ Widget getPreferdSizeTitleForPayment(
           Text(
             title,
             // textAlign: TextAlign.left,
-            style: AppTheme.of(context).theme.textTheme.subhead.copyWith(
-                fontWeight: FontWeight.w600, color: appTheme.colorPrimary),
+            style: AppTheme.of(context).theme.textTheme.subtitle1?.copyWith(
+                fontWeight: FontWeight.w600, color: appTheme?.colorPrimary),
           ),
           Text(
             titleAmount,
             // textAlign: TextAlign.left,
-            style: AppTheme.of(context).theme.textTheme.subhead.copyWith(
-                fontWeight: FontWeight.w600, color: appTheme.colorPrimary),
+            style: AppTheme.of(context).theme.textTheme.subtitle1?.copyWith(
+                fontWeight: FontWeight.w600, color: appTheme?.colorPrimary),
           ),
         ],
       ),
@@ -332,37 +332,37 @@ Widget getPreferdSizeTitleForPayment(
   );
 }
 
-Widget getAppBar(BuildContext context, String title,
-    {Widget leadingButton,
-    Brightness brightness,
-    List<Widget> actionItems,
+AppBar getAppBar(BuildContext context, String title,
+    {Widget? leadingButton,
+    Brightness? brightness,
+    List<Widget>? actionItems,
     bool isWhite = false,
     bool isTitleShow = true,
-    TextAlign textalign,
-    PreferredSize widget,
-    bool centerTitle}) {
+    TextAlign? textalign,
+    PreferredSize? widget,
+    bool? centerTitle}) {
   //Status//(darken(AppTheme.of(context).accentColor,0.2));
 
   return AppBar(
     brightness: Brightness.light,
     iconTheme: IconThemeData(
       color: isWhite == true
-          ? AppTheme.of(context).theme.textTheme.title.color
-          : appTheme.whiteColor,
+          ? AppTheme.of(context).theme.textTheme.headline6?.color
+          : appTheme?.whiteColor,
     ),
     centerTitle: centerTitle ?? true,
     elevation: 0,
     title: isTitleShow
         ? Text(
             title,
-            style: appTheme.black16Bold.copyWith(fontSize: getFontSize(18)),
+            style: appTheme?.black16Bold.copyWith(fontSize: getFontSize(18)),
             textAlign: textalign ?? TextAlign.center,
           )
         : Container(),
     textTheme: getNavigationTheme(context),
     leading: leadingButton ??= null,
     automaticallyImplyLeading: leadingButton != null,
-    backgroundColor: isWhite == true ? Colors.white : appTheme.colorPrimary,
+    backgroundColor: isWhite == true ? Colors.white : appTheme?.colorPrimary,
     actions: actionItems == null ? null : actionItems,
     bottom: widget,
   );
@@ -375,15 +375,15 @@ addPrefixZero(int value) {
 getTitleText(
   BuildContext context,
   String text, {
-  Color color,
-  double fontSize,
-  TextAlign alignment = TextAlign.left,
-  FontWeight fontweight,
-  Overflow overflow,
+  Color? color,
+  double? fontSize,
+  TextAlign? alignment = TextAlign.left,
+  FontWeight? fontweight,
+  Overflow? overflow,
 }) {
   return Text(
     text,
-    style: AppTheme.of(context).theme.textTheme.display2.copyWith(
+    style: AppTheme.of(context).theme.textTheme.headline3?.copyWith(
           color: color,
           fontFamily: 'CerebriSans',
           fontSize: fontSize == null ? getSize(16) : fontSize,
@@ -396,15 +396,15 @@ getTitleText(
 getSubTitleText(
   BuildContext context,
   String text, {
-  Color color,
-  double fontSize,
-  TextAlign alignment = TextAlign.left,
-  FontWeight fontweight,
-  Overflow overflow,
+  Color? color,
+  double? fontSize,
+  TextAlign? alignment = TextAlign.left,
+  FontWeight? fontweight,
+  Overflow? overflow,
 }) {
   return Text(
     text,
-    style: AppTheme.of(context).theme.textTheme.display2.copyWith(
+    style: AppTheme.of(context).theme.textTheme.headline3?.copyWith(
           color: color,
           fontSize: fontSize == null ? getSize(16) : fontSize,
           fontWeight: fontweight == null ? FontWeight.bold : fontweight,
@@ -414,17 +414,17 @@ getSubTitleText(
 }
 
 Text getBodyText(BuildContext context, String text,
-    {Color color,
-    double fontSize,
-    double letterSpacing,
+    {Color? color,
+    double? fontSize,
+    double? letterSpacing,
     bool underline = false,
     alignment: TextAlign.center,
-    FontWeight fontweight,
-    TextOverflow textoverflow,
+    FontWeight? fontweight,
+    TextOverflow? textoverflow,
     int maxLines = 1}) {
   return Text(
     text,
-    style: AppTheme.of(context).theme.textTheme.body2.copyWith(
+    style: AppTheme.of(context).theme.textTheme.bodyText1?.copyWith(
         color: color,
         fontSize: fontSize == null ? getSize(14) : fontSize,
         decoration: underline ? TextDecoration.underline : TextDecoration.none,
@@ -473,8 +473,8 @@ class CustomAppBar extends StatefulWidget implements PreferredSizeWidget {
   final AppBar appBar;
 
   CustomAppBar({
-    Key key,
-    @required this.appBar,
+    Key? key,
+    required this.appBar,
   })  : preferredSize = Size.fromHeight(130),
         super(key: key);
 
@@ -578,16 +578,16 @@ Widget getCoinItem(
                 ),
                 SizedBox(height: getSize(8)),
                 Text(
-                  (title?.length ?? 0) > 2
+                  (title.length) > 2
                       ? (title[0] + " " + title[1])
                       : product.title,
                   style:
-                      appTheme.black16Bold.copyWith(fontSize: getFontSize(18)),
+                      appTheme?.black16Bold.copyWith(fontSize: getFontSize(18)),
                 ),
                 SizedBox(height: getSize(4)),
                 Text(
                   product.price,
-                  style: appTheme.black14Normal
+                  style: appTheme?.black14Normal
                       .copyWith(fontWeight: FontWeight.w500),
                 ),
                 // SizedBox(height: getSize(!isSelected ? 4 : 0)),
@@ -619,7 +619,7 @@ Widget getCoinItem(
                     child: Center(
                       child: Text(
                         "Save -38%",
-                        style: appTheme.white14Bold
+                        style: appTheme?.white14Bold
                             .copyWith(fontSize: getFontSize(12)),
                       ),
                     ),

@@ -7,7 +7,7 @@ import 'package:flutter/material.dart';
 class HeroDialogRoute<T> extends PageRoute<T> {
   HeroDialogRoute({@required this.builder}) : super();
 
-  final WidgetBuilder builder;
+  final WidgetBuilder? builder;
 
   @override
   bool get opaque => false;
@@ -16,7 +16,7 @@ class HeroDialogRoute<T> extends PageRoute<T> {
   bool get barrierDismissible => true;
 
   @override
-  String get barrierLabel => null;
+  String? get barrierLabel => null;
 
   @override
   Duration get transitionDuration => const Duration(milliseconds: 300);
@@ -46,7 +46,7 @@ class HeroDialogRoute<T> extends PageRoute<T> {
     Animation<double> animation,
     Animation<double> secondaryAnimation,
   ) {
-    return builder(context);
+    return builder!(context);
   }
 }
 
@@ -54,18 +54,18 @@ class HeroDialogRoute<T> extends PageRoute<T> {
 class FadeRoute<T> extends PageRoute<T> {
   FadeRoute({
     @required this.builder,
-    RouteSettings settings,
+    RouteSettings? settings,
     this.duration = const Duration(milliseconds: 300),
   }) : super(settings: settings);
 
-  final WidgetBuilder builder;
+  final WidgetBuilder? builder;
   final Duration duration;
 
   @override
-  Color get barrierColor => null;
+  Color? get barrierColor => null;
 
   @override
-  String get barrierLabel => null;
+  String? get barrierLabel => null;
 
   @override
   bool get maintainState => true;
@@ -79,7 +79,7 @@ class FadeRoute<T> extends PageRoute<T> {
     Animation<double> animation,
     Animation<double> secondaryAnimation,
   ) {
-    return builder(context);
+    return builder!(context);
   }
 
   @override

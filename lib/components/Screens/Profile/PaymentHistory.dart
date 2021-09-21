@@ -8,13 +8,13 @@ import 'package:video_chat/app/constant/ColorConstant.dart';
 import 'package:video_chat/app/constant/ImageConstant.dart';
 import 'package:video_chat/app/utils/CommonWidgets.dart';
 import 'package:video_chat/app/utils/date_utils.dart';
-import 'package:video_chat/app/utils/json_utils.dart';
 import 'package:video_chat/app/utils/math_utils.dart';
+import 'package:video_chat/app/utils/price_utility.dart';
 import 'package:video_chat/components/Model/payment_history_model.dart';
 import 'package:video_chat/provider/payment_history.dart';
 
 class PaymentHistory extends StatefulWidget {
-  PaymentHistory({Key key}) : super(key: key);
+  PaymentHistory({Key? key}) : super(key: key);
 
   @override
   _PaymentHistoryState createState() => _PaymentHistoryState();
@@ -31,14 +31,12 @@ class _PaymentHistoryState extends State<PaymentHistory> {
 
   resetPagination() {
     page = 1;
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-        Provider.of<PaymentHistoryProvider>(context, listen: false)
-            .fetchPaymentHistory(
-                context,
-                DateUtilities().getFormattedDateString(_selectedDate,
-                    formatter: DateUtilities.yyyy_mm_dd));
-      });
+    WidgetsBinding.instance?.addPostFrameCallback((timeStamp) {
+      Provider.of<PaymentHistoryProvider>(context, listen: false)
+          .fetchPaymentHistory(
+              context,
+              DateUtilities().getFormattedDateString(_selectedDate,
+                  formatter: DateUtilities.yyyy_mm_dd));
     });
   }
 
@@ -64,7 +62,7 @@ class _PaymentHistoryState extends State<PaymentHistory> {
                       left: 16, right: 16, top: 10, bottom: 10),
                   child: Text(
                     DateFormat.yMMMd().format(_selectedDate),
-                    style: appTheme.black16Medium
+                    style: appTheme?.black16Medium
                         .copyWith(fontSize: getFontSize(20)),
                   ),
                 )),
@@ -80,7 +78,7 @@ class _PaymentHistoryState extends State<PaymentHistory> {
   getList() {
     return Consumer<PaymentHistoryProvider>(
       builder: (context, payemntHistory, child) =>
-          (payemntHistory?.paymentHistory?.isEmpty ?? true)
+          (payemntHistory.paymentHistory.isEmpty)
               ? Center(
                   child: Text("No Payment History found!"),
                 )
@@ -154,23 +152,24 @@ class _PaymentHistoryState extends State<PaymentHistory> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  paymentHistory?.data?.packageName ?? "",
+                  paymentHistory.data?.packageName ?? "",
                   style:
-                      appTheme.black16Bold.copyWith(fontSize: getFontSize(18)),
+                      appTheme?.black16Bold.copyWith(fontSize: getFontSize(18)),
                 ),
                 SizedBox(
                   height: getSize(3),
                 ),
                 Text(
-                  DateFormat.yMMMd().format(paymentHistory.purchasedOn),
-                  style: appTheme.black12Normal,
+                  DateFormat.yMMMd()
+                      .format(paymentHistory.purchasedOn ?? DateTime.now()),
+                  style: appTheme?.black12Normal,
                 ),
               ],
             ),
             Spacer(),
             Text(
-              "${simpleCurrencySymbols[paymentHistory.currency]}${paymentHistory?.paidAmount}",
-              style: appTheme.black14SemiBold,
+              "${simpleCurrencySymbols[paymentHistory.currency]}${paymentHistory.paidAmount}",
+              style: appTheme?.black14SemiBold,
             )
           ],
         ),
@@ -179,13 +178,13 @@ class _PaymentHistoryState extends State<PaymentHistory> {
   }
 
   _selectDate() async {
-    DateTime newSelectedDate = await showDatePicker(
+    DateTime? newSelectedDate = await showDatePicker(
         context: context,
         initialDate: _selectedDate != null ? _selectedDate : DateTime.now(),
         firstDate: DateTime(1900),
         lastDate: DateTime.now(),
-        builder: (BuildContext context, Widget child) {
-          return child;
+        builder: (BuildContext? context, Widget? child) {
+          return child ?? Container();
         });
 
     if (newSelectedDate != null) {

@@ -10,7 +10,7 @@ import 'package:video_chat/components/Model/Visitor/VisitorModel.dart';
 import 'package:video_chat/provider/visitor_provider.dart';
 
 class Visitor extends StatefulWidget {
-  Visitor({Key key}) : super(key: key);
+  Visitor({Key? key}) : super(key: key);
 
   @override
   _VisitorState createState() => _VisitorState();
@@ -21,7 +21,7 @@ class _VisitorState extends State<Visitor> {
   @override
   void initState() {
     super.initState();
-    WidgetsBinding.instance.addPostFrameCallback((_) {
+    WidgetsBinding.instance?.addPostFrameCallback((_) {
       Provider.of<VisitorProvider>(context, listen: false)
           .getVisitorList(1, context);
     });
@@ -41,45 +41,44 @@ class _VisitorState extends State<Visitor> {
 
   Widget getList() {
     return Consumer<VisitorProvider>(
-      builder: (context, visitor, child) =>
-          (visitor?.visitorList?.isEmpty ?? true)
-              ? Center(
-                  child: Text(
-                    "No Visitor List Found! ",
-                    style: appTheme.black14Normal.copyWith(
-                        fontSize: getFontSize(16), fontWeight: FontWeight.w700),
-                  ),
-                )
-              : ListView.separated(
-                  padding: EdgeInsets.only(
-                      top: getSize(16),
-                      left: getSize(25),
-                      right: getSize(25),
-                      bottom: getSize(28)),
-                  itemCount: visitor.visitorList.length,
-                  itemBuilder: (BuildContext context, int index) {
-                    return LazyLoadingList(
-                        initialSizeOfItems: 20,
-                        index: index,
-                        hasMore: true,
-                        loadMore: () {
-                          page++;
-                          print(
-                              "--------========================= Lazy Loading $page ==========================---------");
+      builder: (context, visitor, child) => (visitor.visitorList.isEmpty)
+          ? Center(
+              child: Text(
+                "No Visitor List Found! ",
+                style: appTheme?.black14Normal.copyWith(
+                    fontSize: getFontSize(16), fontWeight: FontWeight.w700),
+              ),
+            )
+          : ListView.separated(
+              padding: EdgeInsets.only(
+                  top: getSize(16),
+                  left: getSize(25),
+                  right: getSize(25),
+                  bottom: getSize(28)),
+              itemCount: visitor.visitorList.length,
+              itemBuilder: (BuildContext context, int index) {
+                return LazyLoadingList(
+                    initialSizeOfItems: 20,
+                    index: index,
+                    hasMore: true,
+                    loadMore: () {
+                      page++;
+                      print(
+                          "--------========================= Lazy Loading $page ==========================---------");
 
-                          Provider.of<VisitorProvider>(context, listen: false)
-                              .getVisitorList(page, context);
-                        },
-                        child: InkWell(
-                            onTap: () {},
-                            child: visitorItem(visitor.visitorList[index])));
-                  },
-                  separatorBuilder: (BuildContext context, int index) {
-                    return SizedBox(
-                      height: getSize(15),
-                    );
-                  },
-                ),
+                      Provider.of<VisitorProvider>(context, listen: false)
+                          .getVisitorList(page, context);
+                    },
+                    child: InkWell(
+                        onTap: () {},
+                        child: visitorItem(visitor.visitorList[index])));
+              },
+              separatorBuilder: (BuildContext context, int index) {
+                return SizedBox(
+                  height: getSize(15),
+                );
+              },
+            ),
     );
   }
 
@@ -108,7 +107,7 @@ class _VisitorState extends State<Visitor> {
             ClipRRect(
                 borderRadius: BorderRadius.circular(10),
                 child: CachedNetworkImage(
-                  imageUrl: model?.getUserImage(),
+                  imageUrl: model.getUserImage(),
                   height: getSize(48),
                   width: getSize(51),
                   fit: BoxFit.cover,
@@ -127,8 +126,8 @@ class _VisitorState extends State<Visitor> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    model?.userName ?? "",
-                    style: appTheme.black14Normal.copyWith(
+                    model.userName ?? "",
+                    style: appTheme?.black14Normal.copyWith(
                         fontSize: getFontSize(16), fontWeight: FontWeight.w700),
                   ),
                   SizedBox(
@@ -151,8 +150,8 @@ class _VisitorState extends State<Visitor> {
                       //   width: getSize(6),
                       // ),
                       Text(
-                        model?.country ?? "",
-                        style: appTheme.black14Normal
+                        model.country ?? "",
+                        style: appTheme?.black14Normal
                             .copyWith(fontWeight: FontWeight.w500),
                       ),
                     ],
@@ -162,8 +161,8 @@ class _VisitorState extends State<Visitor> {
             ),
             Spacer(),
             Text(
-              model?.time ?? "",
-              style: appTheme.black12Normal.copyWith(
+              model.time ?? "",
+              style: appTheme?.black12Normal.copyWith(
                   color: fromHex("#C4C4C4"), fontWeight: FontWeight.w700),
             )
           ],

@@ -6,7 +6,7 @@ class CustomButton extends StatelessWidget {
   // CustomButton({@required this.onPressed, @required this.text});
 
   CustomButton({
-    Key key,
+    Key? key,
     this.topPadding = 0,
     this.bottomPadding = 0,
     this.rightPadding = 0,
@@ -16,8 +16,8 @@ class CustomButton extends StatelessWidget {
     @required this.text,
   }) : super(key: key);
 
-  final GestureTapCallback onPressed;
-  final String text;
+  final GestureTapCallback? onPressed;
+  final String? text;
   final double topPadding;
   final double rightPadding;
   final double leftPadding;
@@ -41,20 +41,20 @@ class CustomButton extends StatelessWidget {
               borderRadius: new BorderRadius.circular(getSize(4)),
             ),
             fillColor: isButtonEnabled == true
-                ? appTheme.colorPrimary
+                ? appTheme?.colorPrimary
                 : AppTheme.of(context).theme.disabledColor,
             child: Padding(
               padding: EdgeInsets.all(10.0),
               child: Row(
                 mainAxisSize: MainAxisSize.min,
                 children: <Widget>[
-                  Text(text,
+                  Text(text ?? "",
                       maxLines: 1,
                       style: TextStyle(
                           fontWeight: FontWeight.bold,
                           fontSize: getSize(20),
                           color: isButtonEnabled
-                              ? appTheme.colorPrimary
+                              ? appTheme?.colorPrimary
                               : AppTheme.of(context).theme.buttonColor)),
                 ],
               ),

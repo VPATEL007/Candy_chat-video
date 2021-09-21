@@ -1,5 +1,6 @@
-import 'package:flushbar/flushbar.dart';
-import 'package:flushbar/flushbar_route.dart' as route;
+// import 'package:flushbar/flushbar.dart';
+// import 'package:flushbar/flushbar_route.dart' as route;
+import 'package:another_flushbar/flushbar.dart';
 import 'package:flutter/material.dart';
 import 'package:logging/logging.dart';
 
@@ -52,15 +53,15 @@ class FlushbarService {
   ///
   /// The [type] determines the icon and color.
   void show({
-    String message,
-    Widget child,
+    String? message,
+    Widget? child,
     FlushbarType type = FlushbarType.info,
   }) {
     _log.fine("showing flushbar message: $message");
 
     final navigator = NavigationUtilities.key.currentState;
 
-    final appTheme = AppTheme.of(navigator.context);
+    final appTheme = AppTheme.of(navigator!.context);
 
     Color color;
     IconData icon;
@@ -89,20 +90,20 @@ class FlushbarService {
         break;
     }
 
-    final flushbar = Flushbar(
-      backgroundColor: appTheme.backgroundColors.first,
+    Flushbar(
+      backgroundColor: appTheme.backgroundColors?.first ?? Colors.white,
       icon: Icon(icon, color: color),
-      messageText:
-          child ?? Text(message, style: appTheme.theme.textTheme.subhead),
+      messageText: child ??
+          Text(message ?? "", style: appTheme.theme.textTheme.subtitle1),
       duration: duration,
       leftBarIndicatorColor: color,
       animationDuration: const Duration(milliseconds: 600),
       forwardAnimationCurve: Curves.easeOutCirc,
-    );
+    ).show(navigator.context);
 
-    navigator.push(route.showFlushbar(
-      context: navigator.context,
-      flushbar: flushbar,
-    ));
+    // navigator.push(route.showFlushbar(
+    //   context: navigator.context,
+    //   flushbar: flushbar,
+    // ));
   }
 }

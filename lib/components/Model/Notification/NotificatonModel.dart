@@ -1,6 +1,6 @@
 class NotificationModel {
-  String userId;
-  String type;
+  String? userId;
+  String? type;
 
   NotificationModel({this.userId, this.type});
 

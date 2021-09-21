@@ -8,8 +8,8 @@ import 'package:video_chat/components/Screens/Auth/Login.dart';
 
 class OnBoarding extends StatefulWidget {
   static const route = "OnBoarding";
-  List<OnboardingModel> list;
-  OnBoarding({Key key, this.list}) : super(key: key);
+  List<OnboardingModel>? list;
+  OnBoarding({Key? key, this.list}) : super(key: key);
 
   @override
   _OnBoardingState createState() => _OnBoardingState();
@@ -36,17 +36,19 @@ class _OnBoardingState extends State<OnBoarding> {
           isWhite: true,
           leadingButton: getBackButton(context),
           actionItems: [
-            getBarButtonText(
-                context, currentIndex == (widget.list.length - 1) ? "" : "Skip",
+            getBarButtonText(context,
+                currentIndex == ((widget.list?.length ?? 0) - 1) ? "" : "Skip",
                 () {
               NavigationUtilities.pushReplacementNamed(Login.route,
                   type: RouteType.fade);
             })
           ]),
-      bottomSheet: getBottomButton(context,
-          currentIndex == (widget.list.length - 1) ? "Get Started" : "Next",
-          () {
-        if (currentIndex == (widget.list.length - 1)) {
+      bottomSheet: getBottomButton(
+          context,
+          currentIndex == ((widget.list?.length ?? 0) - 1)
+              ? "Get Started"
+              : "Next", () {
+        if (currentIndex == ((widget.list?.length ?? 0) - 1)) {
           NavigationUtilities.pushReplacementNamed(Login.route,
               type: RouteType.fade);
         } else {
@@ -66,19 +68,19 @@ class _OnBoardingState extends State<OnBoarding> {
                 setState(() {});
               },
               children: [
-                for (var item in widget.list) getPageViewItem(item),
+                for (var item in (widget.list ?? [])) getPageViewItem(item),
               ],
             ),
           ),
           Positioned(
             top: getSize(360),
             left: (MathUtilities.screenWidth(context) / 2) -
-                getSize(((widget.list.length / 2) * 21).toDouble()),
+                getSize((((widget.list?.length ?? 0) / 2) * 21).toDouble()),
             child: Container(
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  for (var i = 0; i < widget.list.length; i++)
+                  for (var i = 0; i < (widget.list?.length ?? 0); i++)
                     pageIndexIndicator(currentIndex == i ? true : false),
                 ],
               ),
@@ -89,15 +91,15 @@ class _OnBoardingState extends State<OnBoarding> {
     );
   }
 
-  getPageViewItem(OnboardingModel model) {
+  getPageViewItem(OnboardingModel? model) {
     return Container(
       child: Column(
         children: [
-          getImageView(model.imageUrl,
+          getImageView(model?.imageUrl ?? "",
               height: getSize(320),
               width: MathUtilities.screenWidth(context) - getSize(120)),
           Spacer(),
-          getTextPageItem(model.title, model.introText),
+          getTextPageItem(model?.title ?? "", model?.introText ?? ""),
           Spacer(),
         ],
       ),
@@ -138,7 +140,7 @@ class _OnBoardingState extends State<OnBoarding> {
           Padding(
             padding: EdgeInsets.only(left: getSize(16), right: getSize(16)),
             child: Text(desc,
-                textAlign: TextAlign.center, style: appTheme.black12Normal),
+                textAlign: TextAlign.center, style: appTheme?.black12Normal),
           )
         ],
       ),

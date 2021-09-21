@@ -6,9 +6,9 @@ import 'package:video_chat/app/app.export.dart';
 class ThemeHelper {
   static StreamController<String> controller = StreamController<String>();
 
-  static BaseTheme theme() => _getDefaultTheme();
+  static BaseTheme? theme() => _getDefaultTheme();
 
-  static String _appTheme;
+  static String? _appTheme;
 
   static Stream<String> appthemeString = controller.stream;
 
@@ -17,7 +17,7 @@ class ThemeHelper {
     "dark": DarkTheme(),
   };
 
-  static BaseTheme _getDefaultTheme() {
+  static BaseTheme? _getDefaultTheme() {
     //return default strings if locale is not set
 
     if (_appTheme == null) return BaseTheme();
@@ -408,4 +408,4 @@ class DarkTheme extends BaseTheme {
       TextStyle(fontSize: 10, fontWeight: FontWeight.w400, color: textColor);
 }
 
-BaseTheme get appTheme => ThemeHelper.theme();
+BaseTheme? get appTheme => ThemeHelper.theme();

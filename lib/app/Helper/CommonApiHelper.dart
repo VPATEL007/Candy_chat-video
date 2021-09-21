@@ -47,23 +47,23 @@ class CommonApiHelper {
           UserModel model = UserModel.fromJson(response["userData"]);
           app.resolve<PrefUtils>().saveUser(model, isLoggedIn: true);
 
-          NetworkClient.getInstance
-              .showLoader(NavigationUtilities.key.currentState.overlay.context);
+          NetworkClient.getInstance.showLoader(
+              NavigationUtilities.key.currentState!.overlay!.context);
 
           var profileProvider = Provider.of<FollowesProvider>(
-              NavigationUtilities.key.currentState.overlay.context,
+              NavigationUtilities.key.currentState!.overlay!.context,
               listen: false);
           await profileProvider.fetchMyProfile(
-              NavigationUtilities.key.currentState.overlay.context);
+              NavigationUtilities.key.currentState!.overlay!.context);
 
           NetworkClient.getInstance.hideProgressDialog();
 
-          if (profileProvider.userModel?.gender?.isEmpty ?? true) {
-            NavigationUtilities.key.currentState.pushReplacement(FadeRoute(
+          if (profileProvider.userModel?.gender?.isEmpty == true) {
+            NavigationUtilities.key.currentState!.pushReplacement(FadeRoute(
               builder: (context) => Gender(),
             ));
           } else {
-            NavigationUtilities.key.currentState.pushReplacement(FadeRoute(
+            NavigationUtilities.key.currentState!.pushReplacement(FadeRoute(
               builder: (context) => Gender(
                 isFromPreGender: true,
               ),
@@ -230,7 +230,7 @@ class CommonApiHelper {
               .resolve<PrefUtils>()
               .saveRefereshToken(response["tokenData"]["refreshToken"]);
         }
-        NavigationUtilities.key.currentState.pushReplacement(FadeRoute(
+        NavigationUtilities.key.currentState!.pushReplacement(FadeRoute(
           builder: (context) => Gender(),
         ));
 
@@ -256,7 +256,9 @@ class CommonApiHelper {
         if (response["RTMToken"] != null) {
           AgoraService.instance.login(
               token: response["RTMToken"].toString(),
-              userId: app.resolve<PrefUtils>().getUserDetails().id.toString());
+              userId:
+                  app.resolve<PrefUtils>().getUserDetails()?.id.toString() ??
+                      "");
         }
       },
       failureCallback: (code, message) {},
@@ -266,7 +268,7 @@ class CommonApiHelper {
   //App Start
   appStart() {
     NetworkClient.getInstance.callApi(
-      context: NavigationUtilities.key.currentState.overlay.context,
+      context: NavigationUtilities.key.currentState!.overlay!.context,
       baseUrl: ApiConstants.apiUrl,
       command: ApiConstants.startApp,
       headers: NetworkClient.getInstance.getAuthHeaders(),
@@ -284,7 +286,7 @@ class CommonApiHelper {
 
     if (token.length == 0) return;
 
-    var userId = app.resolve<PrefUtils>().getUserDetails().id;
+    var userId = app.resolve<PrefUtils>().getUserDetails()?.id;
 
     Map<String, dynamic> req = {};
     req["fcm_id"] = token;
@@ -292,7 +294,7 @@ class CommonApiHelper {
 
     NetworkClient.getInstance.callApi(
       params: req,
-      context: NavigationUtilities.key.currentState.overlay.context,
+      context: NavigationUtilities.key.currentState!.overlay!.context,
       baseUrl: ApiConstants.apiUrl,
       command: ApiConstants.updateFCMToken,
       headers: NetworkClient.getInstance.getAuthHeaders(),
@@ -305,7 +307,7 @@ class CommonApiHelper {
   //Logout
   logout() {
     NetworkClient.getInstance.callApi(
-      context: NavigationUtilities.key.currentState.overlay.context,
+      context: NavigationUtilities.key.currentState!.overlay!.context,
       baseUrl: ApiConstants.apiUrl,
       command: ApiConstants.logout,
       headers: NetworkClient.getInstance.getAuthHeaders(),

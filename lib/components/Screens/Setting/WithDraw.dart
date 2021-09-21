@@ -8,7 +8,7 @@ import 'package:video_chat/provider/followes_provider.dart';
 import 'package:video_chat/provider/withdraw_provider.dart';
 
 class WithDraw extends StatefulWidget {
-  WithDraw({Key key}) : super(key: key);
+  WithDraw({Key? key}) : super(key: key);
 
   @override
   _WithDrawState createState() => _WithDrawState();
@@ -18,9 +18,9 @@ class _WithDrawState extends State<WithDraw> {
   TextEditingController coinsController = TextEditingController();
   TextEditingController mobileController = TextEditingController();
   TextEditingController emailController = TextEditingController();
-  WithDrawProvider withDrawProvider;
+  WithDrawProvider? withDrawProvider;
 
-  String paymentType;
+  String? paymentType;
 
   @override
   void initState() {
@@ -30,7 +30,7 @@ class _WithDrawState extends State<WithDraw> {
 
   getPaymentMethod() async {
     withDrawProvider = Provider.of<WithDrawProvider>(context, listen: false);
-    await withDrawProvider.getPaymentMethod(context);
+    await withDrawProvider?.getPaymentMethod(context);
     setState(() {});
   }
 
@@ -66,7 +66,7 @@ class _WithDrawState extends State<WithDraw> {
                           ?.coinsEarned
                           ?.toStringAsFixed(0) ??
                       "",
-                  style: appTheme.black16Bold.copyWith(
+                  style: appTheme?.black16Bold.copyWith(
                       fontSize: getFontSize(80), color: ColorConstants.redText),
                 ),
               ),
@@ -76,7 +76,7 @@ class _WithDrawState extends State<WithDraw> {
               Center(
                 child: Text(
                   "Earned Coins",
-                  style: appTheme.black16Medium,
+                  style: appTheme?.black16Medium,
                 ),
               ),
               SizedBox(
@@ -84,7 +84,7 @@ class _WithDrawState extends State<WithDraw> {
               ),
               Text(
                 "Coins",
-                style: appTheme.black16Medium,
+                style: appTheme?.black16Medium,
               ),
               SizedBox(
                 height: getSize(12),
@@ -101,7 +101,7 @@ class _WithDrawState extends State<WithDraw> {
               ),
               Text(
                 "Payment types",
-                style: appTheme.black16Medium,
+                style: appTheme?.black16Medium,
               ),
               SizedBox(
                 height: getSize(12),
@@ -122,19 +122,19 @@ class _WithDrawState extends State<WithDraw> {
                     ),
                     iconSize: 0,
                     elevation: 16,
-                    style: appTheme.black14Normal,
+                    style: appTheme?.black14Normal,
                     underline: Container(
                       height: 0,
                       color: Colors.white,
                     ),
-                    onChanged: (String newValue) {
+                    onChanged: (String? newValue) {
                       paymentType = newValue;
                       setState(() {});
                     },
-                    items: ((withDrawProvider?.paymentMethod?.length ?? 0) > 0
-                            ? withDrawProvider.paymentMethod
+                    items: ((withDrawProvider?.paymentMethod.length ?? 0) > 0
+                            ? withDrawProvider?.paymentMethod
                                 .map((e) => e.name ?? "")
-                            : <String>[])
+                            : <String>[])!
                         .map<DropdownMenuItem<String>>((String value) {
                       return DropdownMenuItem<String>(
                         value: value,
@@ -153,7 +153,7 @@ class _WithDrawState extends State<WithDraw> {
                       children: [
                         Text(
                           "Mobile no",
-                          style: appTheme.black16Medium,
+                          style: appTheme?.black16Medium,
                         ),
                         SizedBox(
                           height: getSize(12),
@@ -173,7 +173,7 @@ class _WithDrawState extends State<WithDraw> {
                           children: [
                             Text(
                               "Email",
-                              style: appTheme.black16Medium,
+                              style: appTheme?.black16Medium,
                             ),
                             SizedBox(
                               height: getSize(12),
@@ -197,10 +197,10 @@ class _WithDrawState extends State<WithDraw> {
   callApiForWithdraw() {
     Map<String, dynamic> req = {};
     req["coins"] = int.parse(coinsController.text);
-    req["payment_method"] = withDrawProvider.paymentMethod
+    req["payment_method"] = withDrawProvider?.paymentMethod
         .firstWhere((element) => element.name == paymentType)
-        ?.id;
-    if (paymentType.toLowerCase() == "paytm") {
+        .id;
+    if (paymentType?.toLowerCase() == "paytm") {
       req["payment_id"] = mobileController.text;
     } else {
       req["payment_id"] = emailController.text;
@@ -208,7 +208,7 @@ class _WithDrawState extends State<WithDraw> {
 
     NetworkClient.getInstance.showLoader(context);
     NetworkClient.getInstance.callApi(
-      context: NavigationUtilities.key.currentState.overlay.context,
+      context: NavigationUtilities.key.currentState!.overlay!.context,
       params: req,
       baseUrl: ApiConstants.apiUrl,
       command: ApiConstants.withDrawRequest,
@@ -240,23 +240,24 @@ class _WithDrawState extends State<WithDraw> {
       return false;
     }
 
-    if (paymentType.toLowerCase() == "paytm" && mobileController.text.isEmpty) {
+    if (paymentType?.toLowerCase() == "paytm" &&
+        mobileController.text.isEmpty) {
       View.showMessage(context, "Please enter mobile no.");
       return false;
     }
 
-    if (paymentType.toLowerCase() == "paytm" &&
+    if (paymentType?.toLowerCase() == "paytm" &&
         !validateMobile(mobileController.text)) {
       View.showMessage(context, "Please enter valid mobile no.");
       return false;
     }
 
-    if (paymentType.toLowerCase() != "paytm" && emailController.text.isEmpty) {
+    if (paymentType?.toLowerCase() != "paytm" && emailController.text.isEmpty) {
       View.showMessage(context, "Please enter email.");
       return false;
     }
 
-    if (paymentType.toLowerCase() != "paytm" &&
+    if (paymentType?.toLowerCase() != "paytm" &&
         !validateEmail(emailController.text)) {
       View.showMessage(context, "Please enter valid email.");
       return false;
