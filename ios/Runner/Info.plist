@@ -75,5 +75,7 @@
 	</array>
 	<key>UIViewControllerBasedStatusBarAppearance</key>
 	<false/>
+	<key>CFBundleName</key>
+	<string>Random video chat</string>
 </dict>
 </plist>

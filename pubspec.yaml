@@ -50,9 +50,8 @@ dependencies:
   rate_my_app: ^1.1.1
   package_info: ^2.0.2
   google_sign_in: ^5.1.0
-  # keyboard_visibility: ^0.5.6
+  flutter_keyboard_visibility: ^5.0.3
   device_info: ^2.0.2
-  # screen: ^0.0.5
   socket_io_client: ^1.0.1
   firebase_performance: ^0.7.0+9
 
@@ -67,9 +66,6 @@ dependencies:
   flutter_absolute_path:
     path: ./flutter_absolute_path
   
- 
-
-
 
 dev_dependencies:
   flutter_test:

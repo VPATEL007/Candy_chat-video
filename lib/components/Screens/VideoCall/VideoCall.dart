@@ -5,6 +5,7 @@ import 'package:agora_rtm/agora_rtm.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
+// import 'package:flutter_screen/screen.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:provider/provider.dart';
 import 'package:video_chat/app/app.export.dart';
@@ -19,6 +20,7 @@ import 'package:video_chat/provider/chat_provider.dart';
 import 'package:video_chat/provider/followes_provider.dart';
 import 'package:video_chat/provider/gift_provider.dart';
 import 'package:video_chat/provider/matching_profile_provider.dart';
+import 'package:flutter_keyboard_visibility/flutter_keyboard_visibility.dart';
 // import 'package:screen/screen.dart';
 
 class VideoCall extends StatefulWidget {
@@ -55,6 +57,7 @@ class VideoCallState extends State<VideoCall> {
   bool isKeyboardOpen = false;
   UserModel? toUser;
   UserModel? fromUser;
+  var keyboardVisibilityController = KeyboardVisibilityController();
   @override
   void initState() {
     super.initState();
@@ -86,11 +89,17 @@ class VideoCallState extends State<VideoCall> {
       }
     }
 
+    keyboardVisibilityController.onChange.listen((bool visible) {
+      setState(() {
+        isKeyboardOpen = visible;
+      });
+    });
+
     // KeyboardVisibilityNotification().addNewListener(
     //   onChange: (bool visible) {
-    //     setState(() {
-    //       isKeyboardOpen = visible;
-    //     });
+    // setState(() {
+    //   isKeyboardOpen = visible;
+    // });
     //   },
     // );
   }

@@ -8,6 +8,7 @@ import 'package:video_chat/app/app.export.dart';
 import 'package:video_chat/app/utils/CommonWidgets.dart';
 import 'package:video_chat/components/Screens/Home/MatchProfile.dart';
 import 'package:video_chat/components/widgets/TabBar/Tabbar.dart';
+import 'package:video_chat/components/widgets/count_animation.dart';
 import 'package:video_chat/provider/discover_provider.dart';
 import 'package:video_chat/provider/followes_provider.dart';
 import 'package:video_chat/provider/matching_profile_provider.dart';
@@ -21,11 +22,11 @@ class Home extends StatefulWidget {
 }
 
 class _HomeState extends State<Home> {
-  String get getRandomNumberString {
+  double get getRandomNumberString {
     Random rnd = new Random();
-    int number = rnd.nextInt(9999);
+    int number = rnd.nextInt(2000);
 
-    return number.toString();
+    return number.toDouble();
   }
 
   @override
@@ -92,12 +93,20 @@ class _HomeState extends State<Home> {
                     ),
                   ),
                   child: Center(
-                    child: Text(
-                      getRandomNumberString,
-                      style: appTheme?.white14Bold
-                          .copyWith(fontSize: getFontSize(25)),
-                    ),
-                  ),
+                      child: Countup(
+                    begin: 0,
+                    end: getRandomNumberString,
+                    duration: Duration(seconds: 3),
+                    separator: '',
+                    style: appTheme?.white14Bold
+                        .copyWith(fontSize: getFontSize(25)),
+                  )
+                      // Text(
+                      //   getRandomNumberString,
+                      //   style: appTheme?.white14Bold
+                      //       .copyWith(fontSize: getFontSize(25)),
+                      // )
+                      ),
                 ),
               ),
             ),

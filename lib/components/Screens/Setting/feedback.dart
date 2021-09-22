@@ -195,14 +195,14 @@ class _FeedbackScreenState extends State<FeedbackScreen> {
       highlightColor: Colors.transparent,
       splashColor: Colors.transparent,
       onTap: () {
-        if (mounted) setState(() {});
-        reportProvider.feedBackList.forEach((element) {
-          if (element.isSelected == true) {
-            element.isSelected = false;
-          }
-        });
-        reportProvider.feedBackList[index].isSelected =
-            reportProvider.feedBackList[index].isSelected;
+        if (mounted)
+          reportProvider.feedBackList.forEach((element) {
+            if (element.isSelected == true) {
+              element.isSelected = false;
+            }
+          });
+        reportProvider.feedBackList[index].isSelected = true;
+        setState(() {});
       },
       child: Container(
         width: MathUtilities.screenWidth(context),

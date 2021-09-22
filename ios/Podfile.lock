@@ -124,6 +124,8 @@ PODS:
     - Mantle
     - SDWebImage
     - SDWebImageWebPCoder
+  - flutter_keyboard_visibility (0.0.1):
+    - Flutter
   - flutter_local_notifications (0.0.1):
     - Flutter
   - FMDB (2.7.5):
@@ -225,6 +227,7 @@ DEPENDENCIES:
   - flutter_absolute_path (from `.symlinks/plugins/flutter_absolute_path/ios`)
   - flutter_facebook_auth (from `.symlinks/plugins/flutter_facebook_auth/ios`)
   - flutter_image_compress (from `.symlinks/plugins/flutter_image_compress/ios`)
+  - flutter_keyboard_visibility (from `.symlinks/plugins/flutter_keyboard_visibility/ios`)
   - flutter_local_notifications (from `.symlinks/plugins/flutter_local_notifications/ios`)
   - google_sign_in (from `.symlinks/plugins/google_sign_in/ios`)
   - in_app_purchase_ios (from `.symlinks/plugins/in_app_purchase_ios/ios`)
@@ -299,6 +302,8 @@ EXTERNAL SOURCES:
     :path: ".symlinks/plugins/flutter_facebook_auth/ios"
   flutter_image_compress:
     :path: ".symlinks/plugins/flutter_image_compress/ios"
+  flutter_keyboard_visibility:
+    :path: ".symlinks/plugins/flutter_keyboard_visibility/ios"
   flutter_local_notifications:
     :path: ".symlinks/plugins/flutter_local_notifications/ios"
   google_sign_in:
@@ -354,6 +359,7 @@ SPEC CHECKSUMS:
   flutter_absolute_path: 5adb13678c88f0bdfba527f3851f9543d01dde66
   flutter_facebook_auth: 528d51ea1324741b366fa87fa5dfd41016422364
   flutter_image_compress: fd2b476345226e1a10ea352fa306af95704642c1
+  flutter_keyboard_visibility: 0339d06371254c3eb25eeb90ba8d17dca8f9c069
   flutter_local_notifications: 0c0b1ae97e741e1521e4c1629a459d04b9aec743
   FMDB: 2ce00b547f966261cd18927a3ddb07cb6f3db82a
   google_sign_in: de494e5e993986afae63e22a32441e30c35c9823

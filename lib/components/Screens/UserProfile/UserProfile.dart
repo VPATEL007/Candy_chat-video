@@ -613,7 +613,7 @@ class _UserProfileState extends State<UserProfile> {
                                 if (widget.userModel?.userFollowers != null) {
                                   widget.userModel?.isFollowing = false;
                                   widget.userModel?.userFollowers =
-                                      (widget.userModel?.userFollowers ?? 0) +
+                                      (widget.userModel?.userFollowers ?? 0) -
                                           1;
                                 }
                               });
