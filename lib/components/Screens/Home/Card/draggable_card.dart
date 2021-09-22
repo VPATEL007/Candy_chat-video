@@ -90,7 +90,7 @@ class _DraggableCardState extends State<DraggableCard>
             widget.onSlideUpdate!(cardOffset.distance);
           }
 
-          if (null != widget.onSlideRegionUpdate) {
+          if (null != widget.onSlideRegionUpdate && null != slideRegion) {
             widget.onSlideRegionUpdate!(slideRegion!);
           }
         });
@@ -244,7 +244,7 @@ class _DraggableCardState extends State<DraggableCard>
       }
 
       slideRegion = null;
-      if (null != widget.onSlideRegionUpdate) {
+      if (null != widget.onSlideRegionUpdate && null != slideRegion) {
         widget.onSlideRegionUpdate!(slideRegion!);
       }
     });
