@@ -755,7 +755,8 @@ class _UserProfileState extends State<UserProfile> {
           onChanged: (String? newValue) {
             NavigationUtilities.push(ReportBlock(
               userId: widget.userModel?.id ?? 0,
-              reportImageURl: widget.userModel?.photoUrl ?? "",
+              reportImageURl:
+                  widget.userModel?.userImages?.first.photoUrl ?? "",
               gender: widget.userModel?.gender ?? "",
             ));
           },

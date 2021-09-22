@@ -328,7 +328,8 @@ class AgoraService {
     setCallStatus(model);
 
     if (model.isLike == true) {
-      Flushbar(
+      Flushbar? flush;
+      flush = Flushbar(
         padding: EdgeInsets.only(top: 16, bottom: 16, left: 16, right: 16),
         flushbarPosition: FlushbarPosition.TOP,
         backgroundColor: ColorConstants.button,
@@ -339,6 +340,7 @@ class AgoraService {
         ),
         mainButton: InkWell(
           onTap: () {
+            flush?.dismiss();
             sendReverseLikeMessage(model.userId.toString(),
                 NavigationUtilities.key.currentState!.overlay!.context);
           },
@@ -348,7 +350,8 @@ class AgoraService {
           ),
         ),
         duration: Duration(seconds: 20),
-      )..show(NavigationUtilities.key.currentState!.overlay!.context);
+      );
+      flush.show(NavigationUtilities.key.currentState!.overlay!.context);
     } else if (model.isReverseLike == true) {
       Navigator.pop(NavigationUtilities.key.currentState!.overlay!.context);
       NavigationUtilities.push(CallMessage(
@@ -513,6 +516,57 @@ class AgoraService {
                       SizedBox(
                         height: getSize(18),
                       ),
+                      GridView.builder(
+                          gridDelegate:
+                              new SliverGridDelegateWithFixedCrossAxisCount(
+                                  crossAxisCount: 4, childAspectRatio: 2.5),
+                          shrinkWrap: true,
+                          physics: NeverScrollableScrollPhysics(),
+                          itemCount: provider.tagsList.length,
+                          itemBuilder: (BuildContext context, int index) {
+                            return InkWell(
+                              onTap: () {
+                                if (selectedTags.contains(
+                                    provider.tagsList[index].id.toString())) {
+                                  selectedTags.remove(
+                                      provider.tagsList[index].id.toString());
+                                } else {
+                                  selectedTags.add(
+                                      provider.tagsList[index].id.toString());
+                                }
+                                setState(() {});
+                              },
+                              child: Container(
+                                  margin: EdgeInsets.only(left: 6, bottom: 6),
+                                  decoration: BoxDecoration(
+                                      border: Border.all(
+                                          color: selectedTags.contains(provider
+                                                  .tagsList[index].id
+                                                  .toString())
+                                              ? ColorConstants.red
+                                              : Colors.white,
+                                          width: 1),
+                                      color: selectedTags.contains(provider
+                                              .tagsList[index].id
+                                              .toString())
+                                          ? fromHex("#FFDFDF")
+                                          : fromHex("#F1F1F1"),
+                                      borderRadius: BorderRadius.circular(14)),
+                                  child: Center(
+                                    child: Text(
+                                      provider.tagsList[index].tag ?? "",
+                                      style: appTheme!.black12Normal.copyWith(
+                                          fontWeight: FontWeight.w500,
+                                          color: selectedTags.contains(provider
+                                                  .tagsList[index].id
+                                                  .toString())
+                                              ? ColorConstants.red
+                                              : Colors.black),
+                                    ),
+                                  )),
+                            );
+                            // return getCoinItem(index == 0, context);
+                          }),
                       // Container(
                       //   child: Tags(
                       //       itemCount: provider.tagsList.length,
@@ -538,17 +592,17 @@ class AgoraService {
                       //               top: getSize(7),
                       //               bottom: getSize(7)),
                       //           onPressed: (item) {
-                      //             if (selectedTags.contains(provider
-                      //                 .tagsList[item.index ?? 0].id
-                      //                 .toString())) {
-                      //               selectedTags.remove(provider
-                      //                   .tagsList[item.index ?? 0].id
-                      //                   .toString());
-                      //             } else {
-                      //               selectedTags.add(provider
-                      //                   .tagsList[item.index ?? 0].id
-                      //                   .toString());
-                      //             }
+                      // if (selectedTags.contains(provider
+                      //     .tagsList[item.index ?? 0].id
+                      //     .toString())) {
+                      //   selectedTags.remove(provider
+                      //       .tagsList[item.index ?? 0].id
+                      //       .toString());
+                      // } else {
+                      //   selectedTags.add(provider
+                      //       .tagsList[item.index ?? 0].id
+                      //       .toString());
+                      // }
                       //           },
                       //         );
                       //       }),

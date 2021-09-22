@@ -668,70 +668,50 @@ class _MathProfileState extends State<MathProfile> {
                         height: getSize(15),
                       ),
                       Container(
-                          child: SimpleTags(
-                        content: provider.arrList
-                            .map((e) => e.languageName ?? "")
-                            .toList(),
-                        wrapSpacing: getSize(6),
-                        wrapRunSpacing: getSize(20),
-                        onTagPress: (tag) {
-                          selectedLanguage = provider.arrList
-                                  .firstWhere(
-                                      (element) => element.languageName == tag)
-                                  .id ??
-                              0;
-                        },
-                        onTagLongPress: (tag) {},
-                        onTagDoubleTap: (tag) {},
-                        tagContainerPadding: EdgeInsets.all(10),
-                        tagTextStyle: appTheme!.black12Normal.copyWith(
-                            fontWeight: FontWeight.w500,
-                            color: ColorConstants.red),
-
-                        tagContainerDecoration: BoxDecoration(
-                          color: fromHex("#FFDFDF"),
-                          borderRadius: BorderRadius.all(
-                            Radius.circular(6),
-                          ),
-                        ), // This trailing comma makes auto-formatting nicer for build methods.
-                      )
-                          // Tags(
-                          //     itemCount: provider.arrList.length,
-                          //     spacing: getSize(8),
-                          //     runSpacing: getSize(20),
-                          //     alignment: WrapAlignment.center,
-                          //     itemBuilder: (int index) {
-                          //       return ItemTags(
-                          //         active: false,
-                          //         pressEnabled: true,
-                          //         activeColor: fromHex("#FFDFDF"),
-                          //         title:
-                          //             provider.arrList[index].languageName ?? "",
-                          //         index: index,
-                          //         textStyle: appTheme!.black12Normal
-                          //             .copyWith(fontWeight: FontWeight.w500),
-                          //         textColor: Colors.black,
-                          //         textActiveColor: ColorConstants.red,
-                          //         color: fromHex("#F1F1F1"),
-                          //         elevation: 0,
-                          //         padding: EdgeInsets.only(
-                          //             left: getSize(16),
-                          //             right: getSize(16),
-                          //             top: getSize(7),
-                          //             bottom: getSize(7)),
-                          //         onPressed: (item) {
-                          //           // if (selectedLanguage ==
-                          //           //     provider.arrList[item.index].id) {
-                          //           //   selectedLanguage = null;
-                          //           // } else {
-                          //           selectedLanguage =
-                          //               provider.arrList[item.index ?? 0].id;
-                          //           setState(() {});
-                          //           // }
-                          //         },
-                          //       );
-                          //     }),
-                          ),
+                        child: GridView.builder(
+                            gridDelegate:
+                                new SliverGridDelegateWithFixedCrossAxisCount(
+                                    crossAxisCount: 4, childAspectRatio: 2.5),
+                            shrinkWrap: true,
+                            physics: NeverScrollableScrollPhysics(),
+                            itemCount: provider.arrList.length,
+                            itemBuilder: (BuildContext context, int index) {
+                              return InkWell(
+                                onTap: () {
+                                  selectedLanguage = provider.arrList[index].id;
+                                  setState(() {});
+                                },
+                                child: Container(
+                                    margin: EdgeInsets.only(left: 6, bottom: 6),
+                                    decoration: BoxDecoration(
+                                        border: Border.all(
+                                            color: selectedLanguage ==
+                                                    provider.arrList[index].id
+                                                ? ColorConstants.red
+                                                : Colors.white,
+                                            width: 1),
+                                        color: selectedLanguage ==
+                                                provider.arrList[index].id
+                                            ? fromHex("#FFDFDF")
+                                            : fromHex("#F1F1F1"),
+                                        borderRadius:
+                                            BorderRadius.circular(14)),
+                                    child: Center(
+                                      child: Text(
+                                        provider.arrList[index].languageName ??
+                                            "",
+                                        style: appTheme!.black12Normal.copyWith(
+                                            fontWeight: FontWeight.w500,
+                                            color: selectedLanguage ==
+                                                    provider.arrList[index].id
+                                                ? ColorConstants.red
+                                                : Colors.black),
+                                      ),
+                                    )),
+                              );
+                              // return getCoinItem(index == 0, context);
+                            }),
+                      ),
                       SizedBox(
                         height: getSize(35),
                       ),

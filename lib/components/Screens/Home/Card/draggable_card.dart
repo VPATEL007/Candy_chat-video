@@ -211,7 +211,7 @@ class _DraggableCardState extends State<DraggableCard>
         widget.onSlideUpdate!(cardOffset.distance);
       }
 
-      if (null != widget.onSlideRegionUpdate) {
+      if (null != widget.onSlideRegionUpdate && null != slideRegion) {
         widget.onSlideRegionUpdate!(slideRegion!);
       }
     });
@@ -250,7 +250,10 @@ class _DraggableCardState extends State<DraggableCard>
     });
   }
 
-  double _rotation(Rect dragBounds) {
+  double _rotation(Rect? dragBounds) {
+    if (dragBounds == null) {
+      return 0;
+    }
     if (dragStart != null) {
       final rotationCornerMultiplier =
           dragStart!.dy >= dragBounds.top + (dragBounds.height / 2) ? -1 : 1;
@@ -262,8 +265,8 @@ class _DraggableCardState extends State<DraggableCard>
     }
   }
 
-  Offset _rotationOrigin(Rect dragBounds) {
-    if (dragStart != null) {
+  Offset _rotationOrigin(Rect? dragBounds) {
+    if (dragStart != null && dragBounds != null) {
       return dragStart! - dragBounds.topLeft;
     } else {
       return const Offset(0.0, 0.0);
@@ -278,8 +281,8 @@ class _DraggableCardState extends State<DraggableCard>
 
     return Transform(
       transform: Matrix4.translationValues(cardOffset.dx, cardOffset.dy, 0.0)
-        ..rotateZ(_rotation(anchorBounds!)),
-      origin: _rotationOrigin(anchorBounds!),
+        ..rotateZ(_rotation(anchorBounds)),
+      origin: _rotationOrigin(anchorBounds),
       child: Container(
         key: profileCardKey,
         width: anchorBounds?.width,
