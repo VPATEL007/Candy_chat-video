@@ -4,6 +4,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:video_chat/app/Helper/CommonApiHelper.dart';
+import 'package:video_chat/app/Helper/inAppPurchase_service.dart';
 import 'package:video_chat/app/app.export.dart';
 import 'package:video_chat/app/utils/CommonWidgets.dart';
 import 'package:video_chat/components/Screens/Home/MatchProfile.dart';
@@ -162,15 +163,16 @@ class _HomeState extends State<Home> {
   getMatchButton() {
     return InkWell(
       onTap: () async {
-        await Provider.of<MatchingProfileProvider>(context, listen: false)
-            .fetchMatchProfileList(context,
-                fromAge: app
-                    .resolve<PrefUtils>()
-                    .getInt(app.resolve<PrefUtils>().keyIsFromAge),
-                toAge: app
-                    .resolve<PrefUtils>()
-                    .getInt(app.resolve<PrefUtils>().keyIsToAge));
-        NavigationUtilities.push(MathProfile());
+        InAppPurchaseHelper.instance.openCoinPurchasePopUp();
+        // await Provider.of<MatchingProfileProvider>(context, listen: false)
+        //     .fetchMatchProfileList(context,
+        //         fromAge: app
+        //             .resolve<PrefUtils>()
+        //             .getInt(app.resolve<PrefUtils>().keyIsFromAge),
+        //         toAge: app
+        //             .resolve<PrefUtils>()
+        //             .getInt(app.resolve<PrefUtils>().keyIsToAge));
+        // NavigationUtilities.push(MathProfile());
       },
       child: Container(
         height: getSize(50),

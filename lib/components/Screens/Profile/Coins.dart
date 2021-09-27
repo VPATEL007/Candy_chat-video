@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:in_app_purchase/in_app_purchase.dart';
+import 'package:flutter_inapp_purchase/modules.dart';
+// import 'package:in_app_purchase/in_app_purchase.dart';
 import 'package:provider/provider.dart';
 import 'package:video_chat/app/Helper/inAppPurchase_service.dart';
 import 'package:video_chat/app/app.export.dart';
@@ -19,7 +20,8 @@ class Coins extends StatefulWidget {
 class _CoinsState extends State<Coins> {
   InAppPurchaseHelper purchase = InAppPurchaseHelper.instance;
 
-  List<ProductDetails> _products = [];
+  // List<ProductDetails> _products = [];
+  List<IAPItem> _products = [];
 
   @override
   void initState() {

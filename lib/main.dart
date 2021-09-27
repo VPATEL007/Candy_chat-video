@@ -1,4 +1,3 @@
-import 'dart:io' as io;
 import 'dart:io';
 
 import 'package:firebase_core/firebase_core.dart';
@@ -10,7 +9,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
-import 'package:in_app_purchase/in_app_purchase.dart';
+// import 'package:in_app_purchase/in_app_purchase.dart';
 import 'package:kiwi/kiwi.dart';
 import 'package:provider/provider.dart';
 import 'package:video_chat/app/app.export.dart';
@@ -43,7 +42,7 @@ import 'app/utils/navigator.dart';
 import 'app/utils/pref_utils.dart';
 import 'app/utils/route_observer.dart';
 import 'components/Screens/UserProfile/UserProfile.dart';
-import 'package:in_app_purchase_android/in_app_purchase_android.dart';
+// import 'package:in_app_purchase_android/in_app_purchase_android.dart';
 
 late KiwiContainer app;
 FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
@@ -52,16 +51,8 @@ FirebasePerformance _performance = FirebasePerformance.instance;
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  if (io.Platform.isAndroid) {
-    InAppPurchaseAndroidPlatformAddition.enablePendingPurchases();
-  }
 
   app = KiwiContainer();
-
-  // if (kDebugMode) {
-  //   HttpProxy httpProxy = await HttpProxy.createHttpProxy();
-  //   HttpOverrides.global = httpProxy;
-  // }
 
   SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp])
       .then((value) async {

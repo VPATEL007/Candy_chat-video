@@ -2,7 +2,9 @@ import 'dart:async';
 import 'dart:io';
 
 import 'package:flutter/material.dart';
-import 'package:in_app_purchase/in_app_purchase.dart';
+import 'package:flutter/services.dart';
+import 'package:flutter_inapp_purchase/flutter_inapp_purchase.dart';
+// import 'package:in_app_purchase/in_app_purchase.dart';
 import 'package:provider/provider.dart';
 import 'package:video_chat/app/constant/ApiConstants.dart';
 import 'package:video_chat/app/constant/ColorConstant.dart';
@@ -23,113 +25,88 @@ class InAppPurchaseHelper {
   InAppPurchaseHelper._();
 
   static InAppPurchaseHelper instance = InAppPurchaseHelper._();
-  final InAppPurchase _connection = InAppPurchase.instance;
-  late StreamSubscription<List<PurchaseDetails>> subscription;
+  late StreamSubscription _purchaseUpdatedSubscription;
+  late StreamSubscription _purchaseErrorSubscription;
+  late StreamSubscription _conectionSubscription;
+
   List<String> _kProductIds = <String>[
     "com.randomvideochat.videochat.30",
     "com.randomvideochat.videochat.203"
   ];
-  List<ProductDetails> listProducts = [];
+  List<IAPItem> listProducts = [];
 
 //Get Product
-  Future<List<ProductDetails>> getProducts() async {
-    intialConfig();
-
-    // final bool isAvailable = await _connection.isAvailable();
-    // if (!isAvailable) {
-    //   return [];
-    // }
-
-    List<ProductDetails> products = [];
+  Future<List<IAPItem>> getProducts() async {
+    await intialConfig();
 
     NetworkClient.getInstance
         .showLoader(NavigationUtilities.key.currentContext!);
-    ProductDetailsResponse productDetailResponse =
-        await _connection.queryProductDetails(_kProductIds.toSet());
-
-    if (productDetailResponse.productDetails != null) {
-      products = productDetailResponse.productDetails;
-      products.sort((a, b) {
-        return a.rawPrice.compareTo(b.rawPrice);
-      });
-      listProducts = products;
-    } else {
-      products = [];
-    }
+    try {
+      List<IAPItem> items =
+          await FlutterInappPurchase.instance.getProducts(_kProductIds);
+      if (items != null) {
+        items.sort((a, b) {
+          return double.parse(a.price ?? "0")
+              .compareTo(double.parse(b.price ?? "0"));
+        });
+        listProducts = items;
+      }
+    } catch (e) {}
 
     NetworkClient.getInstance.hideProgressDialog();
-    completeTransaction();
-
-    return products;
+    return listProducts;
   }
 
-  intialConfig() {
-    final Stream<List<PurchaseDetails>> purchaseUpdated =
-        InAppPurchase.instance.purchaseStream;
-    subscription = purchaseUpdated.listen((purchaseDetailsList) {
-      listenToPurchaseUpdated(purchaseDetailsList);
-    }, onDone: () {
-      subscription.cancel();
-    }, onError: (error) {
-      // handle error here.
+  intialConfig() async {
+    try {
+      await FlutterInappPurchase.instance.platformVersion;
+    } on PlatformException {}
+
+    await FlutterInappPurchase.instance.initConnection;
+
+    // refresh items for android
+    try {
+      String msg = await FlutterInappPurchase.instance.consumeAllItems;
+      print('consumeAllItems: $msg');
+    } catch (err) {
+      print('consumeAllItems error: $err');
+    }
+
+    _conectionSubscription =
+        FlutterInappPurchase.connectionUpdated.listen((connected) {
+      print('connected: $connected');
     });
-  }
 
-//Listen Purchase
-  Future<void> listenToPurchaseUpdated(
-      List<PurchaseDetails> purchaseDetailsList) async {
-    purchaseDetailsList.forEach((PurchaseDetails purchaseDetails) async {
-      if (purchaseDetails.status == PurchaseStatus.purchased) {
-        InAppPurchase.instance.completePurchase(purchaseDetails);
-        await verifyPurchase(
-            purchaseDetails, NavigationUtilities.key.currentContext!);
-        completeTransaction();
+    _purchaseUpdatedSubscription =
+        FlutterInappPurchase.purchaseUpdated.listen((productItem) {
+      print('purchase-updated: $productItem');
+      if (productItem != null) {
+        verifyPurchase(productItem, NavigationUtilities.key.currentContext!);
       }
     });
-  }
 
-  //Complete Transaction
-  Future<void> completeTransaction() async {
-    // if (io.Platform.isIOS) {
-    //   var transactions = await SKPaymentQueueWrapper().transactions();
-    //   transactions.forEach((skPaymentTransactionWrapper) {
-    //     SKPaymentQueueWrapper().finishTransaction(skPaymentTransactionWrapper);
-    //   });
-    // }
+    _purchaseErrorSubscription =
+        FlutterInappPurchase.purchaseError.listen((purchaseError) {
+      print('purchase-error: $purchaseError');
+    });
   }
 
   //Purchase
-  purchaseProduct(ProductDetails product) {
-    if (Platform.isAndroid) {
-      PurchaseParam purchaseParam = PurchaseParam(
-        productDetails: product,
-        applicationUserName:
-            app.resolve<PrefUtils>().getUserDetails()?.userName,
-      );
-      _connection.buyConsumable(
-          purchaseParam: purchaseParam, autoConsume: true);
-    } else {
-      PurchaseParam purchaseParam = PurchaseParam(
-        productDetails: product,
-        applicationUserName:
-            app.resolve<PrefUtils>().getUserDetails()?.userName,
-      );
-      _connection.buyConsumable(purchaseParam: purchaseParam);
-    }
+  purchaseProduct(IAPItem product) {
+    FlutterInappPurchase.instance.requestPurchase(product.productId ?? "");
   }
 
 //Verify Purchase
   Future<bool> verifyPurchase(
-      PurchaseDetails purchaseDetails, BuildContext context) async {
+      PurchasedItem purchaseDetails, BuildContext context) async {
     if (Platform.isAndroid) {
       return Future<bool>.value(true);
     }
     var isSuccess = false;
     Map<String, dynamic> req = {};
 
-    req["receipt-data"] =
-        purchaseDetails.verificationData.serverVerificationData;
-    // NetworkClient.getInstance.showLoader(context);
+    req["receipt-data"] = purchaseDetails.transactionReceipt;
+
     await NetworkClient.getInstance.callApi(
       context: context,
       baseUrl: ApiConstants.inAppVerfiySandBoxURL,
@@ -138,12 +115,10 @@ class InAppPurchaseHelper {
       headers: NetworkClient.getInstance.getAuthHeaders(),
       method: MethodType.Post,
       successCallback: (response, message) async {
-        // NetworkClient.getInstance.hideProgressDialog();
         creditCoin(purchaseDetails);
         isSuccess = true;
       },
       failureCallback: (code, message) {
-        // NetworkClient.getInstance.hideProgressDialog();
         View.showMessage(context, message);
         isSuccess = false;
       },
@@ -153,20 +128,18 @@ class InAppPurchaseHelper {
   }
 
 //Credit Coin
-  creditCoin(PurchaseDetails purchaseDetails) async {
-    var product = listProducts
-        .firstWhere((element) => element.id == purchaseDetails.productID);
+  creditCoin(PurchasedItem purchaseDetails) async {
+    var product = listProducts.firstWhere(
+        (element) => element.productId == purchaseDetails.productId);
 
     Map<String, dynamic> req = {};
     req["gateway"] = "apple";
-    req["package_id"] = purchaseDetails.productID;
-    req["transaction_id"] = purchaseDetails.purchaseID;
+    req["package_id"] = purchaseDetails.productId;
+    req["transaction_id"] = purchaseDetails.transactionId;
     req["package_name"] = product.title;
-    req["paid_amount"] = product.rawPrice;
-    req["currency"] = product.currencyCode;
+    req["paid_amount"] = product.price;
+    req["currency"] = product.currency;
 
-    // NetworkClient.getInstance
-    //     .showLoader(NavigationUtilities.key.currentContext);
     await NetworkClient.getInstance.callApi(
       context: NavigationUtilities.key.currentContext!,
       baseUrl: ApiConstants.apiUrl,
@@ -175,8 +148,6 @@ class InAppPurchaseHelper {
       method: MethodType.Post,
       params: req,
       successCallback: (response, message) async {
-        // NetworkClient.getInstance.hideProgressDialog();
-
         Provider.of<FollowesProvider>(
                 NavigationUtilities.key.currentState!.overlay!.context,
                 listen: false)
@@ -187,7 +158,6 @@ class InAppPurchaseHelper {
             mode: DisplayMode.SUCCESS);
       },
       failureCallback: (code, message) {
-        // NetworkClient.getInstance.hideProgressDialog();
         View.showMessage(NavigationUtilities.key.currentContext!, message);
       },
     );

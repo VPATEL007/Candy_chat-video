@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
-import 'package:in_app_purchase/in_app_purchase.dart';
+import 'package:flutter_inapp_purchase/modules.dart';
+// import 'package:in_app_purchase/in_app_purchase.dart';
 // import 'package:flutter_statusbarcolor/flutter_statusbarcolor.dart';
 
 import '../app.export.dart';
@@ -539,9 +540,9 @@ Widget getColorText(String text, Color color, {double fontSize = 25}) {
           fontWeight: FontWeight.w800));
 }
 
-Widget getCoinItem(
-    ProductDetails product, bool isSelected, BuildContext context) {
-  var title = product.title.split(" ");
+Widget getCoinItem(IAPItem product, bool isSelected, BuildContext context) {
+  var title = product.title!.split(" ");
+  // var title = [];
   return Padding(
     padding: EdgeInsets.only(right: getSize(10), bottom: getSize(10)),
     child: Stack(
@@ -578,15 +579,18 @@ Widget getCoinItem(
                 ),
                 SizedBox(height: getSize(8)),
                 Text(
-                  (title.length) > 2
-                      ? (title[0] + " " + title[1])
-                      : product.title,
+                  title.length > 0
+                      ? title.first + " " + title[1]
+                      : product.title ?? "",
+                  // (title.length) > 2
+                  //     ? ((title[0]) + " " + title[1])
+                  //     : product.title,
                   style:
                       appTheme?.black16Bold.copyWith(fontSize: getFontSize(18)),
                 ),
                 SizedBox(height: getSize(4)),
                 Text(
-                  product.price,
+                  product.localizedPrice ?? "",
                   style: appTheme?.black14Normal
                       .copyWith(fontWeight: FontWeight.w500),
                 ),

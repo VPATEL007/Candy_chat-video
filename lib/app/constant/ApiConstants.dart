@@ -1,5 +1,5 @@
 class ApiConstants {
-  static const String PROXY_URL = "PROXY 192.168.29.62:8888";
+  static const String PROXY_URL = "PROXY 192.168.29.63:8888";
 
   static const String baseURL =
       "http://video-chat-dev-1463852847.ap-south-1.elb.amazonaws.com";
