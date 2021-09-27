@@ -163,16 +163,15 @@ class _HomeState extends State<Home> {
   getMatchButton() {
     return InkWell(
       onTap: () async {
-        InAppPurchaseHelper.instance.openCoinPurchasePopUp();
-        // await Provider.of<MatchingProfileProvider>(context, listen: false)
-        //     .fetchMatchProfileList(context,
-        //         fromAge: app
-        //             .resolve<PrefUtils>()
-        //             .getInt(app.resolve<PrefUtils>().keyIsFromAge),
-        //         toAge: app
-        //             .resolve<PrefUtils>()
-        //             .getInt(app.resolve<PrefUtils>().keyIsToAge));
-        // NavigationUtilities.push(MathProfile());
+        await Provider.of<MatchingProfileProvider>(context, listen: false)
+            .fetchMatchProfileList(context,
+                fromAge: app
+                    .resolve<PrefUtils>()
+                    .getInt(app.resolve<PrefUtils>().keyIsFromAge),
+                toAge: app
+                    .resolve<PrefUtils>()
+                    .getInt(app.resolve<PrefUtils>().keyIsToAge));
+        NavigationUtilities.push(MathProfile());
       },
       child: Container(
         height: getSize(50),
