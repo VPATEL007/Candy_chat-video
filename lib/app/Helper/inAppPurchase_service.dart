@@ -4,7 +4,6 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_inapp_purchase/flutter_inapp_purchase.dart';
-// import 'package:in_app_purchase/in_app_purchase.dart';
 import 'package:provider/provider.dart';
 import 'package:video_chat/app/constant/ApiConstants.dart';
 import 'package:video_chat/app/constant/ColorConstant.dart';
@@ -14,12 +13,8 @@ import 'package:video_chat/app/network/NetworkClient.dart';
 import 'package:video_chat/app/utils/CommonWidgets.dart';
 import 'package:video_chat/app/utils/math_utils.dart';
 import 'package:video_chat/app/utils/navigator.dart';
-import 'package:video_chat/app/utils/pref_utils.dart';
 import 'package:video_chat/provider/followes_provider.dart';
-
-import '../../main.dart';
 import 'Themehelper.dart';
-import 'dart:io' as io;
 
 class InAppPurchaseHelper {
   InAppPurchaseHelper._();
@@ -100,6 +95,7 @@ class InAppPurchaseHelper {
   Future<bool> verifyPurchase(
       PurchasedItem purchaseDetails, BuildContext context) async {
     if (Platform.isAndroid) {
+      creditCoin(purchaseDetails);
       return Future<bool>.value(true);
     }
     var isSuccess = false;
@@ -133,7 +129,12 @@ class InAppPurchaseHelper {
         (element) => element.productId == purchaseDetails.productId);
 
     Map<String, dynamic> req = {};
-    req["gateway"] = "apple";
+    if (Platform.isAndroid) {
+      req["gateway"] = "android";
+    } else {
+      req["gateway"] = "apple";
+    }
+
     req["package_id"] = purchaseDetails.productId;
     req["transaction_id"] = purchaseDetails.transactionId;
     req["package_name"] = product.title;
