@@ -53,9 +53,11 @@ class _ChatState extends State<Chat> {
   }
 
   getToUserDetail() async {
-    // Provider.of<ChatProvider>(context, listen: false).getChatHistory(context);
     toUser = await Provider.of<ChatProvider>(context, listen: false)
         .getUserProfile(widget.toUserId, context);
+    _chatsList = await Provider.of<ChatProvider>(context, listen: false)
+        .getChatMessageHistory(context, widget.channelId);
+
     setState(() {});
   }
 
@@ -76,7 +78,7 @@ class _ChatState extends State<Chat> {
 
       _chatsList.add(_chat);
       if (mounted) setState(() {});
-      print("Channel msg: " + member.userId + ", msg: " + (message.text ?? ""));
+      print("Channel msg: " + member.userId + ", msg: " + (message.text));
     });
   }
 

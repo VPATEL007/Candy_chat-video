@@ -30,15 +30,16 @@ class AgoraService {
 
   AgoraRtmChannel? _channel;
   bool isOngoingCall = false;
+  String? RTMToken;
 
   Future<void> initialize(String appId) async {
     try {
       if (appId.isEmpty) throw "APP_ID missing, please provide your APP_ID";
       _client = await AgoraRtmClient.createInstance(appId);
 
-      // Directory appDocDir = await getApplicationDocumentsDirectory();
+      Directory appDocDir = await getApplicationDocumentsDirectory();
 
-      // _client?.setLog(1, 524288, appDocDir.path);
+      _client?.setLog(1, 524288, appDocDir.path);
       _client?.onConnectionStateChanged = (int state, int reason) {
         debugPrint('Connection state changed: ' +
             state.toString() +
@@ -50,10 +51,10 @@ class AgoraService {
         }
       };
       _client?.onMessageReceived = (AgoraRtmMessage message, String peerId) {
-        debugPrint("Peer msg: " + peerId + ", msg: " + (message.text ?? ""));
+        debugPrint("Peer msg: " + peerId + ", msg: " + (message.text));
         StartVideoCallModel videoCallModel =
-            startVideoCallModelFromJson((message.text ?? ""));
-        if (videoCallModel == null) return;
+            startVideoCallModelFromJson((message.text));
+
         handleVideoCallEvent(videoCallModel, peerId);
       };
     } on AgoraRtmClientException catch (e) {
@@ -88,6 +89,7 @@ class AgoraService {
     try {
       // await _client.logout();
 
+      RTMToken = token;
       print(token + "," + userId);
       await _client?.login(token, userId);
       debugPrint('Login success: ' + userId);

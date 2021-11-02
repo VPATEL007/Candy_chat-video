@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:io';
 
 import 'package:dio/adapter.dart';
@@ -97,6 +98,7 @@ class NetworkClient {
     required String method,
     Map<String, dynamic>? params,
     Map<String, dynamic>? headers,
+    bool isAgora = false,
     required Function(dynamic response, String message) successCallback,
     required Function(String message, String statusCode) failureCallback,
   }) async {
@@ -135,9 +137,15 @@ class NetworkClient {
       case MethodType.Post:
         try {
           Response response = await dio.post(baseUrl + command, data: params);
-          parseResponse(context, response,
-              successCallback: successCallback,
-              failureCallback: failureCallback);
+          if (isAgora) {
+            parseAgoraResponse(context, response,
+                successCallback: successCallback,
+                failureCallback: failureCallback);
+          } else {
+            parseResponse(context, response,
+                successCallback: successCallback,
+                failureCallback: failureCallback);
+          }
         } on DioError catch (e) {
           if (e.message.toString().toLowerCase() ==
               "Connecting timed out [1ms]".toLowerCase()) {
@@ -155,9 +163,16 @@ class NetworkClient {
         try {
           Response response =
               await dio.get(baseUrl + command, queryParameters: params);
-          parseResponse(context, response,
-              successCallback: successCallback,
-              failureCallback: failureCallback);
+
+          if (isAgora) {
+            parseAgoraResponse(context, response,
+                successCallback: successCallback,
+                failureCallback: failureCallback);
+          } else {
+            parseResponse(context, response,
+                successCallback: successCallback,
+                failureCallback: failureCallback);
+          }
         } on DioError catch (e) {
           if (e.message.toString().toLowerCase() ==
               "Connecting timed out [1ms]".toLowerCase()) {
@@ -235,10 +250,39 @@ class NetworkClient {
     }
   }
 
+  parseAgoraResponse(BuildContext context, Response response,
+      {required Function(dynamic response, String message) successCallback,
+      required Function(String statusCode, String message) failureCallback}) {
+    if (response.data is Map<String, dynamic>) {
+      String? statusCode = response.data?["result"].toString();
+
+      if (statusCode == "success") {
+        successCallback(response.data["messages"], "");
+        return;
+      }
+
+      failureCallback("$statusCode", "");
+    }
+    Map? valueMap = json.decode(response.data);
+    String? statusCode = valueMap?["result"].toString();
+
+    if (statusCode == "success") {
+      successCallback(valueMap, "");
+      return;
+    }
+
+    failureCallback("$statusCode", "");
+    return;
+  }
+
   parseResponse(BuildContext context, Response response,
       {required Function(dynamic response, String message) successCallback,
       required Function(String statusCode, String message) failureCallback}) {
-    String statusCode = response.data['status'].toString();
+    // if (response.data["status"]?.toString().isEmpty == true) {
+    //   print("fdfdgdfg");
+    // }
+    String? statusCode = response.data['status']?.toString();
+
     String? message = response.data['message'];
 
     if (statusCode == "0") {
@@ -261,7 +305,12 @@ class NetworkClient {
         successCallback(response.data["data"], message ?? "");
         return;
       } else {
-        successCallback(response.data["data"], message ?? "");
+        if (response.data["data"] != null) {
+          successCallback(response.data["data"], message ?? "");
+        } else {
+          successCallback(response.data, message ?? "");
+        }
+
         // failureCallback("$statusCode", message);
         return;
       }

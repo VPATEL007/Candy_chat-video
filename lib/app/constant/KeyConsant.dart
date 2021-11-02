@@ -1,1 +1,2 @@
 const AGORA_APPID = "a8a459f76c8e48dc85adb554bb94d8b8";
+const AGORA_SECRET = "05c158b57a604bf2a694f83e0f93296e";
