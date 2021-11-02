@@ -134,7 +134,7 @@ class ChatProvider with ChangeNotifier {
 
   Future<String?> getChatQuesryId(
       BuildContext context, String channelId) async {
-    Map<String, dynamic> _parms = {"limit": 10, "order": "asc"};
+    Map<String, dynamic> _parms = {"limit": 10, "order": "desc"};
     Map<String, dynamic> _filter = {
       "destination": channelId,
       "start_time":
@@ -204,7 +204,7 @@ class ChatProvider with ChangeNotifier {
       },
     );
 
-    return messages;
+    return messages.reversed.toList();
   }
 
   Map<String, dynamic> getAuthHeaders() {
