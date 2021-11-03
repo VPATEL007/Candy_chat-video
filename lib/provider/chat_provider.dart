@@ -133,13 +133,14 @@ class ChatProvider with ChangeNotifier {
   }
 
   Future<String?> getChatQuesryId(
-      BuildContext context, String channelId) async {
+      BuildContext context, String channelId, String endDate) async {
     Map<String, dynamic> _parms = {"limit": 10, "order": "desc"};
     Map<String, dynamic> _filter = {
       "destination": channelId,
       "start_time":
           DateTime.now().subtract(Duration(days: 6)).toUtc().toIso8601String(),
-      "end_time": DateTime.now().toUtc().toIso8601String()
+      "end_time": endDate
+      // "end_time": DateTime.now().toUtc().toIso8601String()
     };
     _parms["filter"] = _filter;
 
@@ -166,8 +167,8 @@ class ChatProvider with ChangeNotifier {
   }
 
   Future<List<MessageObj>> getChatMessageHistory(
-      BuildContext context, String channelId) async {
-    String? query = await getChatQuesryId(context, channelId);
+      BuildContext context, String channelId, String endDate) async {
+    String? query = await getChatQuesryId(context, channelId, endDate);
 
     if (query == null) {
       return [];

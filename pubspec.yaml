@@ -33,7 +33,7 @@ dependencies:
   permission_handler: ^8.1.6
   flutter_spinkit: ^5.1.0
   another_flushbar: ^1.10.24
- 
+
   flutter_facebook_auth: ^3.5.1
   sign_in_with_apple: ^3.0.0
   # http_proxy: ^1.1.0
@@ -45,7 +45,7 @@ dependencies:
   # in_app_purchase: ^1.0.8
   flutter_inapp_purchase: ^5.0.3
   multi_image_picker2: ^5.0.02
- 
+
   flutter_image_compress: ^1.1.0
   country_picker: ^2.0.8
   rate_my_app: ^1.1.1
@@ -58,23 +58,21 @@ dependencies:
 
   firebase_messaging: ^10.0.7
   firebase_core: ^1.6.0
-  flutter_local_notifications : ^8.2.0
+  flutter_local_notifications: ^8.2.0
   circular_countdown_timer: ^0.2.0
   assets_audio_player: ^3.0.3+6
   dio: ^4.0.0
   simple_tags: ^0.0.4
   firebase_crashlytics: ^2.2.1
+  pull_to_refresh: ^2.0.0
   flutter_absolute_path:
     path: ./flutter_absolute_path
-  
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
   kiwi_generator: ^3.0.0-nullsafety-generator.1
   build_runner: any
-  
-
 
 # The following section is specific to Flutter.
 flutter:

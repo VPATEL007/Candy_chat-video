@@ -1,9 +1,13 @@
+import 'dart:async';
+
 import 'package:agora_rtm/agora_rtm.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
+import 'package:pull_to_refresh/pull_to_refresh.dart';
+
 import 'package:sticky_headers/sticky_headers.dart';
 import 'package:video_chat/app/Helper/inAppPurchase_service.dart';
 import 'package:video_chat/components/Model/Match%20Profile/call_status.dart';
@@ -40,8 +44,11 @@ class _ChatState extends State<Chat> {
   AgoraService agoraService = AgoraService.instance;
   List<MessageObj> _chatsList = [];
   ScrollController messageListScrollController = ScrollController();
+
   String? userId = app.resolve<PrefUtils>().getUserDetails()?.id.toString();
   UserModel? toUser;
+  RefreshController _refreshController =
+      RefreshController(initialRefresh: false);
 
   @override
   void initState() {
@@ -55,10 +62,30 @@ class _ChatState extends State<Chat> {
   getToUserDetail() async {
     toUser = await Provider.of<ChatProvider>(context, listen: false)
         .getUserProfile(widget.toUserId, context);
-    _chatsList = await Provider.of<ChatProvider>(context, listen: false)
-        .getChatMessageHistory(context, widget.channelId);
-
+    List<MessageObj> chatsList =
+        await Provider.of<ChatProvider>(context, listen: false)
+            .getChatMessageHistory(context, widget.channelId,
+                DateTime.now().toUtc().toIso8601String());
+    _chatsList.addAll(chatsList);
     setState(() {});
+  }
+
+  getMessages() async {
+    String endDate = DateTime.now().toUtc().toIso8601String();
+
+    if (_chatsList.length > 0) {
+      endDate = _chatsList.last.chatDate?.toUtc().toIso8601String() ?? "";
+    }
+
+    List<MessageObj> chatsList =
+        await Provider.of<ChatProvider>(context, listen: false)
+            .getChatMessageHistory(context, widget.channelId, endDate);
+
+    setState(() {
+      _refreshController.loadComplete();
+
+      _chatsList.addAll(chatsList);
+    });
   }
 
   Future<void> init() async {
@@ -85,8 +112,8 @@ class _ChatState extends State<Chat> {
   @override
   void dispose() {
     super.dispose();
+
     agoraService.leaveChannel();
-    // agoraService?.logOut();
     messageListScrollController.dispose();
   }
 
@@ -244,46 +271,57 @@ class _ChatState extends State<Chat> {
           } else if (snapshot.data?.isEmpty ?? true) {
             return emptyChat();
           } else {
-            return ListView.builder(
-              reverse: true,
-              itemCount: snapshot.data?.length,
-              shrinkWrap: true,
-              padding: EdgeInsets.only(top: getSize(20), bottom: getSize(120)),
-              controller: messageListScrollController,
-              physics: AlwaysScrollableScrollPhysics(),
-              itemBuilder: (context, index) {
-                List<MessageObj>? msgObjList = [];
+            return SmartRefresher(
+              enablePullDown: false,
+              enablePullUp: true,
+              controller: _refreshController,
+              onRefresh: () async {},
+              onLoading: () async {
+                // if (mounted) setState(() {});
+                getMessages();
+              },
+              child: ListView.builder(
+                reverse: true,
+                itemCount: snapshot.data?.length,
+                shrinkWrap: true,
+                padding:
+                    EdgeInsets.only(top: getSize(20), bottom: getSize(120)),
+                controller: messageListScrollController,
+                physics: AlwaysScrollableScrollPhysics(),
+                itemBuilder: (context, index) {
+                  List<MessageObj>? msgObjList = [];
 
-                if (index != snapshot.data?.length) {
-                  msgObjList = snapshot.data?[index].messageObjList;
-                }
-                return snapshot.data?.isEmpty ?? true
-                    ? Container()
-                    : StickyHeader(
-                        // Header...
-                        header: Center(
-                          child: Container(
-                            decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(20),
-                                color: fromHex("#F1F1F1")),
-                            child: Padding(
-                              padding: EdgeInsets.only(
-                                  top: getSize(7),
-                                  bottom: getSize(7),
-                                  left: getSize(20),
-                                  right: getSize(20)),
-                              child: Text(
-                                snapshot.data?[index].getChatingDates ?? "",
-                                style: appTheme?.black12Normal,
+                  if (index != snapshot.data?.length) {
+                    msgObjList = snapshot.data?[index].messageObjList;
+                  }
+                  return snapshot.data?.isEmpty ?? true
+                      ? Container()
+                      : StickyHeader(
+                          // Header...
+                          header: Center(
+                            child: Container(
+                              decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(20),
+                                  color: fromHex("#F1F1F1")),
+                              child: Padding(
+                                padding: EdgeInsets.only(
+                                    top: getSize(7),
+                                    bottom: getSize(7),
+                                    left: getSize(20),
+                                    right: getSize(20)),
+                                child: Text(
+                                  snapshot.data?[index].getChatingDates ?? "",
+                                  style: appTheme?.black12Normal,
+                                ),
                               ),
                             ),
                           ),
-                        ),
-                        // Content...
-                        content: _buildChats(
-                            snapshot.data![index], msgObjList ?? []),
-                      );
-              },
+                          // Content...
+                          content: _buildChats(
+                              snapshot.data![index], msgObjList ?? []),
+                        );
+                },
+              ),
             );
           }
         });
