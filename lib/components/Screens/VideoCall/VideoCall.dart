@@ -140,7 +140,7 @@ class VideoCallState extends State<VideoCall> {
       _chatsList.insert(0, _chat);
       // _chatsList.add(_chat);
       if (mounted) setState(() {});
-      print("Channel msg: " + member.userId + ", msg: " + (message.text ?? ""));
+      print("Channel msg: " + member.userId + ", msg: " + message.text );
     });
   }
 

@@ -1,1 +1,1 @@
-const AGORA_APPID = "a8a459f76c8e48dc85adb554bb94d8b8";
+const AGORA_APPID = "3dce45aa5072427d8e96ca8120d5db9b";

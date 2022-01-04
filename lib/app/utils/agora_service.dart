@@ -50,9 +50,9 @@ class AgoraService {
         }
       };
       _client?.onMessageReceived = (AgoraRtmMessage message, String peerId) {
-        debugPrint("Peer msg: " + peerId + ", msg: " + (message.text ?? ""));
+        debugPrint("Peer msg: " + peerId + ", msg: " + message.text);
         StartVideoCallModel videoCallModel =
-            startVideoCallModelFromJson((message.text ?? ""));
+            startVideoCallModelFromJson((message.text));
         if (videoCallModel == null) return;
         handleVideoCallEvent(videoCallModel, peerId);
       };

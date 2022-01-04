@@ -27,7 +27,7 @@ class GoogleSignInHelper with ChangeNotifier {
       CommonApiHelper.shared.callLoginApi(req, context, () {}, () {});
     } on PlatformException catch (error) {
       print(error);
-      // View.showMessage(context, error.message.toString());
+      View.showMessage(context, error.message.toString());
     } catch (error) {
       print(error);
       // View.showMessage(context, error.toString());

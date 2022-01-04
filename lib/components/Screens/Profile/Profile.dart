@@ -80,9 +80,9 @@ class _ProfileState extends State<Profile> {
                       SizedBox(
                         height: getSize(16),
                       ),
-                      getListItem(icVipStore, "VIP Store", true, 0, () {
-                        NavigationUtilities.push(VipStore());
-                      }),
+                      // getListItem(icVipStore, "VIP Store", true, 0, () {
+                      //   NavigationUtilities.push(VipStore());
+                      // }),
                       getListItem(icWallet, "Coin Balance", false,
                           profie.userModel?.coinBalance ?? 0, () {}),
                       getListItem(icCoinP, "Get Coins", false, 0, () {
@@ -303,8 +303,8 @@ class _ProfileState extends State<Profile> {
             color: fromHex("#F7F7F7"), borderRadius: BorderRadius.circular(9)),
         child: Padding(
           padding: EdgeInsets.only(
-              left: getSize(22),
-              right: getSize(22),
+              left: getSize(10),
+              right: getSize(10),
               top: getSize(15),
               bottom: getSize(15)),
           child: Column(
@@ -326,7 +326,7 @@ class _ProfileState extends State<Profile> {
                 maxLines: 1,
                 overflow: TextOverflow.ellipsis,
                 style: appTheme?.black16Bold.copyWith(
-                    fontSize: getFontSize(16), fontWeight: FontWeight.w600),
+                    fontSize: getFontSize(12), fontWeight: FontWeight.w600),
               ),
             ],
           ),

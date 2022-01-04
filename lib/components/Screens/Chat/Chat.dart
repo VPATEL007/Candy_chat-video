@@ -76,7 +76,7 @@ class _ChatState extends State<Chat> {
 
       _chatsList.add(_chat);
       if (mounted) setState(() {});
-      print("Channel msg: " + member.userId + ", msg: " + (message.text ?? ""));
+      print("Channel msg: " + member.userId + ", msg: " + message.text);
     });
   }
 
