@@ -46,6 +46,9 @@ android {
         versionCode 1
         versionName '1.0'
     }
+//    flavorName {
+//        applicationId = "com.sugarcam.videochat"
+//    }
 
     signingConfigs {
         release {
