@@ -3,11 +3,11 @@
 <plist version="1.0">
 <dict>
 	<key>CLIENT_ID</key>
-	<string>154586257070-20tj6mdnhkl02mra7dkbs8mbsth746q1.apps.googleusercontent.com</string>
+	<string>154586257070-17k7hvi5ptej9buofubof5oujg5o1a9d.apps.googleusercontent.com</string>
 	<key>REVERSED_CLIENT_ID</key>
-	<string>com.googleusercontent.apps.154586257070-20tj6mdnhkl02mra7dkbs8mbsth746q1</string>
+	<string>com.googleusercontent.apps.154586257070-17k7hvi5ptej9buofubof5oujg5o1a9d</string>
 	<key>ANDROID_CLIENT_ID</key>
-	<string>154586257070-9ae09k3nrin0m9ri8r7obf91d18d5crv.apps.googleusercontent.com</string>
+	<string>154586257070-4qphcqhha8o9rfpdjuj1h4rk0lq34oa7.apps.googleusercontent.com</string>
 	<key>API_KEY</key>
 	<string>AIzaSyAyoiWD16F9erdjGICmgYKOSWt3Cc8jE0w</string>
 	<key>GCM_SENDER_ID</key>
@@ -15,7 +15,7 @@
 	<key>PLIST_VERSION</key>
 	<string>1</string>
 	<key>BUNDLE_ID</key>
-	<string>com.randomvideochat.videochat</string>
+	<string>com.sugarcam.videochat</string>
 	<key>PROJECT_ID</key>
 	<string>video-chat-1628247730520</string>
 	<key>STORAGE_BUCKET</key>
@@ -31,6 +31,6 @@
 	<key>IS_SIGNIN_ENABLED</key>
 	<true></true>
 	<key>GOOGLE_APP_ID</key>
-	<string>1:154586257070:ios:d18c9c173617dc688e3f3f</string>
+	<string>1:154586257070:ios:32f7d0ed93ba058e8e3f3f</string>
 </dict>
 </plist>

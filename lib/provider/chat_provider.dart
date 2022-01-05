@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:flutter/cupertino.dart';
+import 'package:provider/provider.dart';
 import 'package:video_chat/app/app.export.dart';
 import 'package:video_chat/app/constant/ApiConstants.dart';
 import 'package:video_chat/app/extensions/view.dart';
@@ -81,6 +82,7 @@ class ChatProvider with ChangeNotifier {
   //Chat List
 
   List<ChatListModel> _chatList = [];
+
   List<ChatListModel> get chatList => this._chatList;
 
   set chatList(List<ChatListModel> value) => this._chatList = value;
@@ -130,56 +132,90 @@ class ChatProvider with ChangeNotifier {
     }
   }
 
-  Future<void> getChatHistory(BuildContext context) async {
-    Map<String, dynamic> _parms = {"offset": 100, "limit": 10, "order": "asc"};
+  Future<String?> getChatQuesryId(
+      BuildContext context, String channelId, String endDate) async {
+    Map<String, dynamic> _parms = {"limit": 10, "order": "desc"};
     Map<String, dynamic> _filter = {
-      "destination": "81-91",
+      "destination": channelId,
       "start_time":
-          DateTime.now().subtract(Duration(days: 4)).toUtc().toIso8601String(),
-      "end_time": DateTime.now().toUtc().toIso8601String()
+          DateTime.now().subtract(Duration(days: 6)).toUtc().toIso8601String(),
+      "end_time": endDate
+      // "end_time": DateTime.now().toUtc().toIso8601String()
     };
     _parms["filter"] = _filter;
+
+    String? query;
 
     await NetworkClient.getInstance.callApi(
       context: context,
       params: _parms,
       baseUrl:
-          "https://api.agora.io/dev/v2/project/a8a459f76c8e48dc85adb554bb94d8b8/rtm/message/history/query",
+          "https://api.agora.io/dev/v2/project/$AGORA_APPID/rtm/message/history/query",
       command: "",
       headers: getAuthHeaders(),
       method: MethodType.Post,
-      successCallback: (response, message) {},
-      failureCallback: (code, message) {
-        NetworkClient.getInstance.hideProgressDialog();
-        View.showMessage(context, message);
+      isAgora: true,
+      successCallback: (response, message) {
+        if (response != null) {
+          query = response["location"].toString().split("/").last;
+        }
       },
+      failureCallback: (code, message) {},
     );
+
+    return query;
   }
 
-  Future<void> getChatMessageHistory(BuildContext context) async {
+  Future<List<MessageObj>> getChatMessageHistory(
+      BuildContext context, String channelId, String endDate) async {
+    String? query = await getChatQuesryId(context, channelId, endDate);
+
+    if (query == null) {
+      return [];
+    }
+
+    List<MessageObj> messages = [];
+    String? userId = app.resolve<PrefUtils>().getUserDetails()?.id.toString();
+
     await NetworkClient.getInstance.callApi(
       context: context,
       baseUrl:
-          "https://api.agora.io/dev/v2/project/a8a459f76c8e48dc85adb554bb94d8b8/rtm/message/history/query/MjIzMDA2OjY4MjI0NzAx",
+          "https://api.agora.io/dev/v2/project/$AGORA_APPID/rtm/message/history/query/$query",
       command: "",
       headers: getAuthHeaders(),
       method: MethodType.Get,
-      successCallback: (response, message) {},
+      isAgora: true,
+      successCallback: (response, message) {
+        if (response is List<dynamic>) {
+          for (var item in response) {
+            MessageObj message = MessageObj();
+            message.message = item["payload"].toString();
+            message.sendBy = item["src"].toString();
+            message.isSendByMe = userId == message.sendBy;
+
+            DateTime dateTime =
+                DateTime.fromMillisecondsSinceEpoch(item["ms"]).toLocal();
+            message.chatDate = dateTime;
+            messages.add(message);
+          }
+        }
+      },
       failureCallback: (code, message) {
         NetworkClient.getInstance.hideProgressDialog();
-        View.showMessage(context, message);
       },
     );
+
+    return messages.reversed.toList();
   }
 
   Map<String, dynamic> getAuthHeaders() {
     Map<String, dynamic> authHeaders = Map<String, dynamic>();
 
     authHeaders["Accept"] = "application/json";
-    authHeaders["api_secret"] = "05c158b57a604bf2a694f83e0f93296e";
-    authHeaders["x-agora-uid"] = "91";
-    authHeaders["x-agora-token"] =
-        "006a8a459f76c8e48dc85adb554bb94d8b8IAApo5bWDvdfKEAx9tIBt/G/ipx2x41wlh/sPlSBTCYOAn+fgx4AAAAAEAAMgtbr7n84YQEA6AN+PDdh";
+    authHeaders["api_secret"] = AGORA_SECRET;
+    authHeaders["x-agora-uid"] =
+        app.resolve<PrefUtils>().getUserDetails()?.id.toString();
+    authHeaders["x-agora-token"] = AgoraService.instance.RTMToken;
 
     return authHeaders;
   }
