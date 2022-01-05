@@ -14,6 +14,58 @@
       },
       "oauth_client": [
         {
+          "client_id": "154586257070-9ae09k3nrin0m9ri8r7obf91d18d5crv.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.randomvideochat.videochat",
+            "certificate_hash": "6121c4a2afdd86ea126e81ad648cfddeede27c27"
+          }
+        },
+        {
+          "client_id": "154586257070-ibouib811l3r9mouge5vecp764hsv83m.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.randomvideochat.videochat",
+            "certificate_hash": "2c1816b1530ab15e1ee9c4fe2e7c75ec5e1994cf"
+          }
+        },
+        {
+          "client_id": "154586257070-elf4n30hcovc87em5490ifae4rng6qjd.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCV6Q4yjpGziBwt2IiatQamrTDoj4DEe7Q"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "154586257070-elf4n30hcovc87em5490ifae4rng6qjd.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "154586257070-20tj6mdnhkl02mra7dkbs8mbsth746q1.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.randomvideochat.videochat"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:154586257070:android:195549354ac13aa08e3f3f",
+        "android_client_info": {
+          "package_name": "com.sugarcam.videochat"
+        }
+      },
+      "oauth_client": [
+        {
           "client_id": "154586257070-elf4n30hcovc87em5490ifae4rng6qjd.apps.googleusercontent.com",
           "client_type": 3
         }

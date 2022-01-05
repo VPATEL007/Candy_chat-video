@@ -25,8 +25,13 @@ class InAppPurchaseHelper {
   late StreamSubscription _conectionSubscription;
 
   List<String> _kProductIds = <String>[
-    "com.randomvideochat.videochat.30",
-    "com.randomvideochat.videochat.203"
+    "com.randomvideochat.videochat.299",
+    "com.randomvideochat.videochat.499",
+    "com.randomvideochat.videochat.999",
+    "com.randomvideochat.videochat.1499",
+    "com.randomvideochat.videochat.2999",
+    "com.randomvideochat.videochat.9999",
+    "com.randomvideochat.videochat.24999"
   ];
   List<IAPItem> listProducts = [];
 

@@ -40,12 +40,13 @@ android {
 
     defaultConfig {
         // TODO: Specify your own unique Application ID (https://developer.android.com/studio/build/application-id.html).
-        applicationId "com.randomvideochat.videochat"
+        applicationId "com.sugarcam.videochat"
         minSdkVersion 21
         targetSdkVersion 30
         versionCode 1
         versionName '1.0'
     }
+
     signingConfigs {
         release {
             storeFile file('key.jks')

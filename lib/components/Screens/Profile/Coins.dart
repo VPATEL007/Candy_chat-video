@@ -78,14 +78,14 @@ class _CoinsState extends State<Coins> {
         ),
         getColorText("Coins", ColorConstants.red),
         Spacer(),
-        InkWell(
-            onTap: () {
-              creditCoin();
-            },
-            child: Text("Add Coins")),
-        SizedBox(
-          width: 20,
-        )
+        // InkWell(
+        //     onTap: () {
+        //       creditCoin();
+        //     },
+        //     child: Text("Add Coins")),
+        // SizedBox(
+        //   width: 20,
+        // )
       ],
     );
   }
