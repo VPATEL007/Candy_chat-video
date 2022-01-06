@@ -30,7 +30,7 @@
           }
         },
         {
-          "client_id": "154586257070-elf4n30hcovc87em5490ifae4rng6qjd.apps.googleusercontent.com",
+          "client_id": "154586257070-pa4takfq8luudiq6m31bvrf88s05cak1.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
@@ -47,10 +47,10 @@
               "client_type": 3
             },
             {
-              "client_id": "154586257070-20tj6mdnhkl02mra7dkbs8mbsth746q1.apps.googleusercontent.com",
+              "client_id": "154586257070-17k7hvi5ptej9buofubof5oujg5o1a9d.apps.googleusercontent.com",
               "client_type": 2,
               "ios_info": {
-                "bundle_id": "com.randomvideochat.videochat"
+                "bundle_id": "com.sugarcam.videochat"
               }
             }
           ]
@@ -66,7 +66,23 @@
       },
       "oauth_client": [
         {
-          "client_id": "154586257070-elf4n30hcovc87em5490ifae4rng6qjd.apps.googleusercontent.com",
+          "client_id": "154586257070-dan348927gfe6jalt6flv51afo8oictj.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.sugarcam.videochat",
+            "certificate_hash": "2c1816b1530ab15e1ee9c4fe2e7c75ec5e1994cf"
+          }
+        },
+        {
+          "client_id": "154586257070-vo1phhkkdva1jbmnhf4m7lju9o7ctbhj.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.sugarcam.videochat",
+            "certificate_hash": "3a7deac6aad99ebfe1dc7ed4cd85cdf78973bb65"
+          }
+        },
+        {
+          "client_id": "154586257070-pa4takfq8luudiq6m31bvrf88s05cak1.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
@@ -83,10 +99,10 @@
               "client_type": 3
             },
             {
-              "client_id": "154586257070-20tj6mdnhkl02mra7dkbs8mbsth746q1.apps.googleusercontent.com",
+              "client_id": "154586257070-17k7hvi5ptej9buofubof5oujg5o1a9d.apps.googleusercontent.com",
               "client_type": 2,
               "ios_info": {
-                "bundle_id": "com.randomvideochat.videochat"
+                "bundle_id": "com.sugarcam.videochat"
               }
             }
           ]
