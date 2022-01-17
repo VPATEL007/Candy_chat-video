@@ -137,7 +137,7 @@ class _BottomSheetWidgetState extends State<BottomSheetWidget> {
       ],
       if (widget.message != null) ...[
         Text(widget.message ?? "",
-            style: textTheme.subtitle, textAlign: TextAlign.center),
+            style: textTheme.subtitle1, textAlign: TextAlign.center),
         const SizedBox(height: 12),
       ],
       const SizedBox(height: 12),

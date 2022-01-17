@@ -43,7 +43,8 @@ dependencies:
   intl: ^0.17.0
   lazy_loading_list: ^1.0.1
   # in_app_purchase: ^1.0.8
-  flutter_inapp_purchase: ^5.0.3
+  flutter_inapp_purchase: any
+  in_app_purchase: any
   multi_image_picker2: ^5.0.02
 
   flutter_image_compress: ^1.1.0
@@ -60,13 +61,14 @@ dependencies:
   firebase_core: ^1.6.0
   flutter_local_notifications: ^8.2.0
   circular_countdown_timer: ^0.2.0
-  assets_audio_player: ^3.0.3+6
+  assets_audio_player: any
   dio: ^4.0.0
   simple_tags: ^0.0.4
   firebase_crashlytics: ^2.2.1
   pull_to_refresh: ^2.0.0
   flutter_absolute_path:
     path: ./flutter_absolute_path
+  # in_app_purchase_android: ^0.2.2+1
 
 dev_dependencies:
   flutter_test:

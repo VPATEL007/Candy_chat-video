@@ -217,7 +217,7 @@ getBarButtonWithColor(
 
 getNavigationTheme(BuildContext context) {
   return TextTheme(
-    title: TextStyle(
+    subtitle1: TextStyle(
         color: AppTheme.of(context).buttonTextColor,
         fontFamily: "Gilroy",
         fontWeight: FontWeight.w700,

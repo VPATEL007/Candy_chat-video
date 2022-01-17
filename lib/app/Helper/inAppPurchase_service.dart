@@ -25,14 +25,15 @@ class InAppPurchaseHelper {
   late StreamSubscription _conectionSubscription;
 
   List<String> _kProductIds = <String>[
-    "com.sugarcam.videochat.299",
-    "com.sugarcam.videochat.499",
-    "com.sugarcam.videochat.999",
-    "com.sugarcam.videochat.1499",
-    "com.sugarcam.videochat.2999",
-    "com.sugarcam.videochat.9999",
-    "com.sugarcam.videochat.24999"
+    "com.randomvideochat.videochat.299",
+    "com.randomvideochat.videochat.499",
+    "com.randomvideochat.videochat.999",
+    "com.randomvideochat.videochat.1499",
+    "com.randomvideochat.videochat.2999",
+    "com.randomvideochat.videochat.9999",
+    "com.randomvideochat.videochat.24999"
   ];
+
   List<IAPItem> listProducts = [];
 
 //Get Product
@@ -51,7 +52,9 @@ class InAppPurchaseHelper {
         });
         listProducts = items;
       }
-    } catch (e) {}
+    } catch (e) {
+      print(e.toString());
+    }
 
     NetworkClient.getInstance.hideProgressDialog();
     return listProducts;
@@ -60,17 +63,19 @@ class InAppPurchaseHelper {
   intialConfig() async {
     try {
       await FlutterInappPurchase.instance.platformVersion;
-    } on PlatformException {}
+    } on PlatformException {
+      print("sdfsdf");
+    }
 
     await FlutterInappPurchase.instance.initConnection;
 
     // refresh items for android
-    try {
-      String msg = await FlutterInappPurchase.instance.consumeAllItems;
-      print('consumeAllItems: $msg');
-    } catch (err) {
-      print('consumeAllItems error: $err');
-    }
+    // try {
+    //   String msg = await FlutterInappPurchase.instance.consumeAllItems;
+    //   print('consumeAllItems: $msg');
+    // } catch (err) {
+    //   print('consumeAllItems error: $err');
+    // }
 
     _conectionSubscription =
         FlutterInappPurchase.connectionUpdated.listen((connected) {

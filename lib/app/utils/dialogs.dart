@@ -40,12 +40,13 @@ class CustomDialog extends StatelessWidget {
   List<Widget> _buildContent(TextTheme textTheme) {
     return <Widget>[
       if (title != null) ...[
-        Text(title ?? "", style: textTheme.title, textAlign: TextAlign.center),
+        Text(title ?? "",
+            style: textTheme.subtitle1, textAlign: TextAlign.center),
         const SizedBox(height: 12),
       ],
       if (text != null) ...[
         Text(text ?? "",
-            style: textTheme.subtitle, textAlign: TextAlign.center),
+            style: textTheme.subtitle2, textAlign: TextAlign.center),
         const SizedBox(height: 12),
       ],
       if (body != null) ...[
@@ -350,7 +351,7 @@ class _AppUpdateDialogState extends State<AppUpdateDialog> {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
 
-    final style = theme.textTheme.subtitle;
+    final style = theme.textTheme.subtitle1;
 
     final linkStyle = style?.copyWith(
       color: theme.accentColor,
@@ -436,7 +437,7 @@ class _AppExitDialogState extends State<AppExitDialog> {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
 
-    final style = theme.textTheme.subtitle;
+    final style = theme.textTheme.subtitle1;
 
     final linkStyle = style?.copyWith(
       color: theme.accentColor,

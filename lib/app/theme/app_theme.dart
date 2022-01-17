@@ -101,20 +101,20 @@ class AppTheme {
 
     return Typography.englishLike2018.apply(fontFamily: displayFont).copyWith(
           // title
-          title: TextStyle(
+          subtitle1: TextStyle(
             fontSize: getFontSize(46),
             fontFamily: displayFont,
             fontWeight: FontWeight.w600,
             color: titleTextColor,
           ),
 
-          subtitle: TextStyle(
+          subtitle2: TextStyle(
             fontSize: getFontSize(30),
             fontFamily: displayFont,
             fontWeight: FontWeight.w600,
             color: titleTextColor,
           ),
-          subhead: TextStyle(
+          headline2: TextStyle(
             fontSize: getFontSize(20),
             fontFamily: displayFont,
             fontWeight: FontWeight.w600,
@@ -122,14 +122,14 @@ class AppTheme {
           ),
 
           // body
-          body1: TextStyle(
+          bodyText1: TextStyle(
             fontSize: getFontSize(20),
             fontWeight: FontWeight.w500,
             fontFamily: displayFont,
             color: bodyTextColor,
           ),
 
-          body2: TextStyle(
+          bodyText2: TextStyle(
             fontSize: getFontSize(18),
             fontFamily: displayFont,
             fontWeight: FontWeight.w500,
@@ -143,31 +143,31 @@ class AppTheme {
             color: bodyTextColor,
           ),
 
-          display1: TextStyle(
+          caption: TextStyle(
             fontSize: getFontSize(16),
             fontFamily: displayFont,
             fontWeight: FontWeight.w400,
             color: titleTextColor,
           ),
-          display2: TextStyle(
-            fontSize: getFontSize(14),
-            fontFamily: displayFont,
-            fontWeight: FontWeight.w400,
-            color: bodyTextColor,
-          ),
-          display3: TextStyle(
-            fontSize: getFontSize(12),
-            fontFamily: displayFont,
-            fontWeight: FontWeight.w400,
-            color: titleTextColor,
-          ),
-          // display
-          display4: TextStyle(
-            fontSize: getFontSize(12),
-            fontFamily: displayFont,
-            fontWeight: FontWeight.w400,
-            color: bodyTextColor,
-          ),
+          // display2: TextStyle(
+          //   fontSize: getFontSize(14),
+          //   fontFamily: displayFont,
+          //   fontWeight: FontWeight.w400,
+          //   color: bodyTextColor,
+          // ),
+          // display3: TextStyle(
+          //   fontSize: getFontSize(12),
+          //   fontFamily: displayFont,
+          //   fontWeight: FontWeight.w400,
+          //   color: titleTextColor,
+          // ),
+          // // display
+          // display4: TextStyle(
+          //   fontSize: getFontSize(12),
+          //   fontFamily: displayFont,
+          //   fontWeight: FontWeight.w400,
+          //   color: bodyTextColor,
+          // ),
         );
   }
 
