@@ -56,12 +56,12 @@ class _MatchedProfileState extends State<MatchedProfile> {
 
   startRing() {
     var status =
-        Provider.of<VideoCallStatusProvider>(context, listen: false).callStatus;
+        Provider.of<VideoCallStatusProvider>(context, listen: false).callStatus; 
 
-    if (status == CallStatus.None) {
-      assetsAudioPlayer.open(Audio("assets/Audio/incommingcall.mp3"),
-          showNotification: false, autoStart: true);
-    }
+    // if (status == CallStatus.None) {
+    assetsAudioPlayer.open(Audio("assets/Audio/instrumental.mp3"),
+        showNotification: false, autoStart: true);
+    // }
 
     if (status == CallStatus.Start) {
       timer =

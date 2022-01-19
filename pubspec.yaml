@@ -65,10 +65,11 @@ dependencies:
   dio: ^4.0.0
   simple_tags: ^0.0.4
   firebase_crashlytics: ^2.2.1
+  firebase_analytics: any
   pull_to_refresh: ^2.0.0
+  url_launcher: any
   flutter_absolute_path:
     path: ./flutter_absolute_path
-  # in_app_purchase_android: ^0.2.2+1
 
 dev_dependencies:
   flutter_test:

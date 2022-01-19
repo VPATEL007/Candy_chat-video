@@ -93,11 +93,12 @@ class _CoinsState extends State<Coins> {
   creditCoin() {
     Map<String, dynamic> req = {};
     req["gateway"] = "apple";
-    req["package_id"] = "com.sugarcam.videochat.30";
+    req["package_id"] = "com.randomvideochat.videochat.299";
     req["transaction_id"] = "12346579";
     req["package_name"] = "30 Coins ";
     req["paid_amount"] = 89.0;
     req["currency"] = "INR";
+    req["user_id"] = app.resolve<PrefUtils>().getUserDetails()?.id.toString();
 
     NetworkClient.getInstance
         .showLoader(NavigationUtilities.key.currentContext!);

@@ -7,12 +7,7 @@ import 'package:video_chat/app/app.export.dart';
 class GoogleSignInHelper with ChangeNotifier {
   GoogleSignInHelper._();
   static GoogleSignInHelper instance = GoogleSignInHelper._();
-  GoogleSignIn _googleSignIn = GoogleSignIn(
-    scopes: [
-      'email',
-      'https://www.googleapis.com/auth/contacts.readonly',
-    ],
-  );
+  GoogleSignIn _googleSignIn = GoogleSignIn();
   Future<void> handleSignIn(
       BuildContext context, Map<String, dynamic> req) async {
     try {
@@ -26,7 +21,6 @@ class GoogleSignInHelper with ChangeNotifier {
 
       CommonApiHelper.shared.callLoginApi(req, context, () {}, () {});
     } on PlatformException catch (error) {
-      print(error);
       View.showMessage(context, error.message.toString());
     } catch (error) {
       print(error);

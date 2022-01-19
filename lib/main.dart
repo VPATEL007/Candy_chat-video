@@ -1,5 +1,8 @@
 import 'dart:io';
 
+import 'package:firebase_analytics/firebase_analytics.dart';
+import 'package:firebase_analytics/observer.dart';
+
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 // import 'package:firebase_crashlytics/firebase_crashlytics.dart';
@@ -48,6 +51,9 @@ late KiwiContainer app;
 FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
     FlutterLocalNotificationsPlugin();
 FirebasePerformance _performance = FirebasePerformance.instance;
+FirebaseAnalytics analytics = FirebaseAnalytics();
+FirebaseAnalyticsObserver observer =
+    FirebaseAnalyticsObserver(analytics: analytics);
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -80,6 +86,7 @@ Future<void> main() async {
 
 Future<void> setupFCM() async {
   await Firebase.initializeApp();
+  analytics.setAnalyticsCollectionEnabled(true);
   FlutterError.onError = FirebaseCrashlytics.instance.recordFlutterError;
   _performance.setPerformanceCollectionEnabled(true);
   final FirebaseMessaging _firebaseMessaging = FirebaseMessaging.instance;
@@ -122,9 +129,7 @@ void configLocalNotification() {
 
 void showNotification(RemoteNotification? message) async {
   var androidPlatformChannelSpecifics = new AndroidNotificationDetails(
-    Platform.isAndroid
-        ? 'high_importance_channel'
-        : 'com.sugarcam.videochat',
+    Platform.isAndroid ? 'high_importance_channel' : 'com.sugarcam.videochat',
     'This channel is used for important notifications.',
     '',
     playSound: true,
@@ -177,6 +182,7 @@ class _BaseState extends State<Base> {
   @override
   Widget build(BuildContext context) {
     app.resolve<PrefUtils>().saveDeviceId();
+
     return MultiProvider(
       providers: [
         ChangeNotifierProvider.value(
@@ -228,9 +234,7 @@ class _BaseState extends State<Base> {
         title: APPNAME,
         navigatorKey: NavigationUtilities.key,
         onGenerateRoute: onGenerateRoute,
-        navigatorObservers: [
-          routeObserver,
-        ],
+        navigatorObservers: [routeObserver, observer],
         theme: ThemeData(
           // Define the default brightness and colors.
           brightness: Brightness.light,

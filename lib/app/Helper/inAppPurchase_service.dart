@@ -13,7 +13,9 @@ import 'package:video_chat/app/network/NetworkClient.dart';
 import 'package:video_chat/app/utils/CommonWidgets.dart';
 import 'package:video_chat/app/utils/math_utils.dart';
 import 'package:video_chat/app/utils/navigator.dart';
+import 'package:video_chat/app/utils/pref_utils.dart';
 import 'package:video_chat/provider/followes_provider.dart';
+import '../../main.dart';
 import 'Themehelper.dart';
 
 class InAppPurchaseHelper {
@@ -68,14 +70,6 @@ class InAppPurchaseHelper {
     }
 
     await FlutterInappPurchase.instance.initConnection;
-
-    // refresh items for android
-    // try {
-    //   String msg = await FlutterInappPurchase.instance.consumeAllItems;
-    //   print('consumeAllItems: $msg');
-    // } catch (err) {
-    //   print('consumeAllItems error: $err');
-    // }
 
     _conectionSubscription =
         FlutterInappPurchase.connectionUpdated.listen((connected) {
@@ -150,6 +144,7 @@ class InAppPurchaseHelper {
     req["package_name"] = product.title;
     req["paid_amount"] = product.price;
     req["currency"] = product.currency;
+    req["user_id"] = app.resolve<PrefUtils>().getUserDetails()?.id.toString();
 
     await NetworkClient.getInstance.callApi(
       context: NavigationUtilities.key.currentContext!,

@@ -6,6 +6,7 @@ import 'package:intl/intl.dart';
 import 'package:multi_image_picker2/multi_image_picker2.dart';
 import 'package:provider/provider.dart';
 import 'package:video_chat/app/AppConfiguration/AppNavigation.dart';
+import 'package:video_chat/app/Helper/CommonApiHelper.dart';
 import 'package:video_chat/app/app.export.dart';
 import 'package:video_chat/components/Model/User/UserModel.dart';
 import 'package:video_chat/components/Screens/Home/Home.dart';
@@ -100,6 +101,24 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
         backgroundColor: Colors.white,
         elevation: 0,
         centerTitle: true,
+        actions: [
+          InkWell(
+            onTap: () {
+              app.resolve<PrefUtils>().clearPreferenceAndDB();
+              AppNavigation.shared.logOut();
+              CommonApiHelper.shared.logout();
+            },
+            child: Container(
+                child: Padding(
+              padding: EdgeInsets.only(right: 12),
+              child: Image.asset(
+                icLogout,
+                height: 20,
+                width: 20,
+              ),
+            )),
+          )
+        ],
         leading:
             widget.isFromSignUp == false ? getBackButton(context) : SizedBox(),
         title: Row(

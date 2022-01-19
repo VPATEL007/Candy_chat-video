@@ -4,6 +4,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:rate_my_app/rate_my_app.dart';
+import 'package:url_launcher/url_launcher.dart';
 import 'package:video_chat/app/Helper/Themehelper.dart';
 import 'package:video_chat/app/app.export.dart';
 import 'package:video_chat/app/constant/ImageConstant.dart';
@@ -116,11 +117,15 @@ class _SettingState extends State<Setting> {
                         .laterButtonPressed), // Called when the user dismissed the dialog (either by taping outside or by pressing the "back" button).
                   );
                 }),
-                getListItem("Privacy Policy", () {}),
+                getListItem("Privacy Policy", () async {
+                  await launch("https://mjmedia.live/privacy-policy/");
+                }),
                 getListItem("Feedback", () {
                   NavigationUtilities.push(FeedbackScreen());
                 }),
-                getListItem("About Us", () {}),
+                getListItem("About Us", () async {
+                  await launch("https://mjmedia.live");
+                }),
               ],
             ),
           ),

@@ -160,7 +160,9 @@ class ChatProvider with ChangeNotifier {
           query = response["location"].toString().split("/").last;
         }
       },
-      failureCallback: (code, message) {},
+      failureCallback: (code, message) {
+        print("sdfsdfsf");
+      },
     );
 
     return query;
