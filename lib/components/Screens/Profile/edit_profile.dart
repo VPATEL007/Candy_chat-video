@@ -102,22 +102,24 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
         elevation: 0,
         centerTitle: true,
         actions: [
-          InkWell(
-            onTap: () {
-              app.resolve<PrefUtils>().clearPreferenceAndDB();
-              AppNavigation.shared.logOut();
-              CommonApiHelper.shared.logout();
-            },
-            child: Container(
-                child: Padding(
-              padding: EdgeInsets.only(right: 12),
-              child: Image.asset(
-                icLogout,
-                height: 20,
-                width: 20,
-              ),
-            )),
-          )
+          widget.isFromSignUp == true
+              ? InkWell(
+                  onTap: () {
+                    app.resolve<PrefUtils>().clearPreferenceAndDB();
+                    AppNavigation.shared.logOut();
+                    CommonApiHelper.shared.logout();
+                  },
+                  child: Container(
+                      child: Padding(
+                    padding: EdgeInsets.only(right: 12),
+                    child: Image.asset(
+                      icLogout,
+                      height: 20,
+                      width: 20,
+                    ),
+                  )),
+                )
+              : SizedBox()
         ],
         leading:
             widget.isFromSignUp == false ? getBackButton(context) : SizedBox(),

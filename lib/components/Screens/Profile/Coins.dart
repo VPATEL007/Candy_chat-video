@@ -98,7 +98,7 @@ class _CoinsState extends State<Coins> {
     req["package_name"] = "30 Coins ";
     req["paid_amount"] = 89.0;
     req["currency"] = "INR";
-    req["user_id"] = app.resolve<PrefUtils>().getUserDetails()?.id.toString();
+    req["user_id"] = "131";
 
     NetworkClient.getInstance
         .showLoader(NavigationUtilities.key.currentContext!);

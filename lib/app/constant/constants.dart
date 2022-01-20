@@ -10,7 +10,7 @@ const FAIL = 2;
 
 const IMAGE_FILE_SIZE = 10.0;
 
-const APPNAME = "Random Video Chat";
+const APPNAME = "Sugarcam";
 
 const CODE_CREATED = 201;
 const CODE_OK = "OK";

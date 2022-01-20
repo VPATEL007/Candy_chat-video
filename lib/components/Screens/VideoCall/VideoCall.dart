@@ -140,7 +140,7 @@ class VideoCallState extends State<VideoCall> {
       _chatsList.insert(0, _chat);
       // _chatsList.add(_chat);
       if (mounted) setState(() {});
-      print("Channel msg: " + member.userId + ", msg: " + message.text );
+      print("Channel msg: " + member.userId + ", msg: " + message.text);
     });
   }
 
@@ -357,8 +357,10 @@ class VideoCallState extends State<VideoCall> {
   Widget giftButton() {
     return InkWell(
       onTap: () {
+        // Provider.of<GiftProvider>(context, listen: false)
+        //     .openGiftPopUp(int.parse(widget.toUserId));
         Provider.of<GiftProvider>(context, listen: false)
-            .openGiftPopUp(int.parse(widget.toUserId));
+            .openGiftPopUp(int.parse(widget.toUserId), (url) => () {});
       },
       child: Container(
         decoration: BoxDecoration(

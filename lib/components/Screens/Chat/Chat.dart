@@ -355,32 +355,52 @@ class _ChatState extends State<Chat> {
               ? CrossAxisAlignment.start
               : CrossAxisAlignment.end,
           children: [
-            Container(
-              constraints: BoxConstraints(minWidth: 0, maxWidth: getSize(260)),
-              decoration: BoxDecoration(
-                  borderRadius: BorderRadius.only(
-                      topRight: Radius.circular(
-                          getSize(!messageList.isSendByMe ? 16 : 0)),
-                      topLeft: Radius.circular(
-                          getSize(messageList.isSendByMe ? 16 : 0)),
-                      bottomLeft: Radius.circular(getSize(16)),
-                      bottomRight: Radius.circular(getSize(16))),
-                  gradient: LinearGradient(
-                    begin: Alignment.topLeft,
-                    end: Alignment.bottomRight,
-                    colors: messageList.isSendByMe
-                        ? [ColorConstants.gradiantStart, ColorConstants.red]
-                        : [fromHex("#F1F1F1"), fromHex("#F1F1F1")],
-                  )),
-              padding: EdgeInsets.all(16),
-              child: Text(
-                messageList.message ?? "",
-                style: appTheme?.black12Normal.copyWith(
-                    fontWeight: FontWeight.w500,
-                    color:
-                        messageList.isSendByMe ? Colors.white : Colors.black),
-              ),
-            ),
+            messageList.isGiftMessage() == true
+                ? Container(
+                    child: CachedNetworkImage(
+                      imageUrl: messageList.giftUlr ?? "",
+                      width: getSize(45),
+                      height: getSize(45),
+                      fit: BoxFit.cover,
+                      errorWidget: (context, url, error) => Image.asset(
+                        noAttachment,
+                        fit: BoxFit.cover,
+                        height: getSize(45),
+                        width: getSize(45),
+                      ),
+                    ),
+                  )
+                : Container(
+                    constraints:
+                        BoxConstraints(minWidth: 0, maxWidth: getSize(260)),
+                    decoration: BoxDecoration(
+                        borderRadius: BorderRadius.only(
+                            topRight: Radius.circular(
+                                getSize(!messageList.isSendByMe ? 16 : 0)),
+                            topLeft: Radius.circular(
+                                getSize(messageList.isSendByMe ? 16 : 0)),
+                            bottomLeft: Radius.circular(getSize(16)),
+                            bottomRight: Radius.circular(getSize(16))),
+                        gradient: LinearGradient(
+                          begin: Alignment.topLeft,
+                          end: Alignment.bottomRight,
+                          colors: messageList.isSendByMe
+                              ? [
+                                  ColorConstants.gradiantStart,
+                                  ColorConstants.red
+                                ]
+                              : [fromHex("#F1F1F1"), fromHex("#F1F1F1")],
+                        )),
+                    padding: EdgeInsets.all(16),
+                    child: Text(
+                      messageList.message ?? "",
+                      style: appTheme?.black12Normal.copyWith(
+                          fontWeight: FontWeight.w500,
+                          color: messageList.isSendByMe
+                              ? Colors.white
+                              : Colors.black),
+                    ),
+                  ),
             SizedBox(
               height: getSize(6),
             ),
@@ -503,8 +523,27 @@ class _ChatState extends State<Chat> {
                     bottom: getSize(26), left: getSize(20), right: getSize(20)),
                 child: InkWell(
                   onTap: () {
+                    // Provider.of<GiftProvider>(context, listen: false)
+                    //     .openGiftPopUp(widget.toUserId);
+
                     Provider.of<GiftProvider>(context, listen: false)
-                        .openGiftPopUp(widget.toUserId);
+                        .openGiftPopUp(widget.toUserId, (url) async {
+                      //Gift Purchase
+                      MessageObj _chat = MessageObj(
+                          chatDate: DateTime.now(),
+                          message: "isGift~$url",
+                          isSendByMe: true,
+                          sendBy: userId);
+
+                      _chatsList.add(_chat);
+                      if (mounted) setState(() {});
+                      await agoraService.sendMessage("isGift~$url");
+
+                      _chatController.clear();
+                      if (_chatsList.isNotEmpty)
+                        messageListScrollController.jumpTo(0.0);
+                      if (mounted) setState(() {});
+                    });
                   },
                   child: Image.asset(
                     icGift,

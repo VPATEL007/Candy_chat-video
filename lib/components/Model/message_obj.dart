@@ -16,6 +16,7 @@ class MessageObj {
   String? message;
   int? type;
   DateTime? chatDate;
+  String? giftUlr;
 
   bool isSendByMe;
 
@@ -25,6 +26,7 @@ class MessageObj {
       this.message,
       this.type,
       this.chatDate,
+      this.giftUlr,
       this.isSendByMe = true});
 
   factory MessageObj.fromJson(Map<String, dynamic> json) => MessageObj(
@@ -44,4 +46,15 @@ class MessageObj {
 
   String get getChatDate =>
       DateFormat("hh:mm a").format(chatDate ?? DateTime.now());
+
+  bool isGiftMessage() {
+    if (message?.contains("isGift") == true) {
+      var split = message?.split("~");
+      if (split?.length == 2) {
+        giftUlr = split?.last;
+        return true;
+      }
+    }
+    return false;
+  }
 }

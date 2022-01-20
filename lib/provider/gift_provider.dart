@@ -54,7 +54,8 @@ class GiftProvider with ChangeNotifier {
   }
 
 //Buy Gift
-  Future<void> buyGift(BuildContext context, int userId, int giftId) async {
+  Future<void> buyGift(BuildContext context, int userId, int giftId,
+      VoidCallback giftPurchase) async {
     try {
       Map<String, dynamic> req = {};
 
@@ -70,6 +71,7 @@ class GiftProvider with ChangeNotifier {
         method: MethodType.Post,
         successCallback: (response, message) {
           NetworkClient.getInstance.hideProgressDialog();
+          giftPurchase();
           View.showMessage(context, message, mode: DisplayMode.SUCCESS);
           notifyListeners();
         },
@@ -117,7 +119,7 @@ class GiftProvider with ChangeNotifier {
   }
 
 //Open Gift Pop Up
-  openGiftPopUp(int userId) async {
+  openGiftPopUp(int userId, Function(String url) giftPurchase) async {
     int page = 1;
     await fetchGift(
         NavigationUtilities.key.currentState!.overlay!.context, page);
@@ -190,13 +192,23 @@ class GiftProvider with ChangeNotifier {
                                     index: index,
                                     hasMore: true,
                                     child: InkWell(
-                                      onTap: () {
+                                      onTap: () async {
                                         Navigator.pop(context);
+                                        // await buyGift(
+                                        //     context,
+                                        //     userId,
+                                        //     giftProvider.giftList[index].id ??
+                                        //         0);
+
                                         buyGift(
                                             context,
                                             userId,
                                             giftProvider.giftList[index].id ??
-                                                0);
+                                                0, () {
+                                          giftPurchase(giftProvider
+                                                  .giftList[index].imageUrl ??
+                                              "");
+                                        });
                                       },
                                       child: Column(
                                         children: [

@@ -29,8 +29,8 @@ class _SplashState extends State<Splash> {
   }
 
   goToNext() async {
-    await AgoraService.instance.initialize(AGORA_APPID);
-    AppNavigation.shared.goNextFromSplash();
+    // await AgoraService.instance.initialize(AGORA_APPID);
+    // AppNavigation.shared.goNextFromSplash();
     // FirebaseCrashlytics.instance.crash();
   }
 
@@ -57,21 +57,21 @@ class _SplashState extends State<Splash> {
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  getColorText("Random", ColorConstants.red, fontSize: 35),
+                  getColorText("SugarCam", ColorConstants.red, fontSize: 35),
                   SizedBox(
                     width: getSize(8),
                   ),
-                  getColorText("video", ColorConstants.black, fontSize: 35),
+                  getColorText("Random", ColorConstants.black, fontSize: 35),
                 ],
               ),
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  getColorText("chat", ColorConstants.black, fontSize: 35),
+                  getColorText("Video", ColorConstants.black, fontSize: 35),
                   SizedBox(
                     width: getSize(8),
                   ),
-                  getColorText("app", ColorConstants.red, fontSize: 35),
+                  getColorText("Chat", ColorConstants.red, fontSize: 35),
                 ],
               ),
             ],

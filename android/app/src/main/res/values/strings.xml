@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-  <string name="app_name">Random Video Chat</string>
+  <string name="app_name">SugarCam Chat</string>
   <string name="facebook_app_id">234543204337461</string>
   <string name="fb_login_protocol_scheme">fb234543204337461</string>
 </resources>
