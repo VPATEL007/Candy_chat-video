@@ -15,6 +15,8 @@ const String splashBottom = "assets/Splash/splashBottom.png";
 const String appIcon = "assets/Splash/appIcon.png";
 
 const String loginBg = "assets/Login/LoginBg.png";
+
+const String loginBgNew = "assets/Login/loginBgNew.jpg";
 const String loginLogo = "assets/Login/LoginLogo.png";
 const String icApple = "assets/Login/icApple.png";
 const String icFacebook = "assets/Login/icFacebook.png";

@@ -43,7 +43,7 @@ class _LoginState extends State<Login> {
         width: MathUtilities.screenWidth(context),
         decoration: BoxDecoration(
           image: DecorationImage(
-            image: AssetImage(loginBg),
+            image: AssetImage(loginBgNew),
             fit: BoxFit.cover,
           ),
         ),

@@ -237,8 +237,23 @@ class _WithDrawState extends State<WithDraw> {
 
   bool isValid() {
     FocusScope.of(context).unfocus();
+
+    if ((Provider.of<FollowesProvider>(context, listen: false)
+                .userModel
+                ?.coinsEarned ??
+            0) >
+        10000) {
+      View.showMessage(context, "Minimum 10,000 coin required.");
+      return false;
+    }
+
     if (coinsController.text.isEmpty) {
       View.showMessage(context, "Please enter coins.");
+      return false;
+    }
+
+    if (int.parse(coinsController.text) > 10000) {
+      View.showMessage(context, "Minimum withdraw 10,000 coin.");
       return false;
     }
 
