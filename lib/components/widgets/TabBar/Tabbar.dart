@@ -44,13 +44,13 @@ class _TabBarWidgetState extends State<TabBarWidget> {
         ),
         child: Row(
           children: [
-            InkWell(
-              onTap: () {
-                NavigationUtilities.pushReplacementNamed(Home.route);
-              },
-              child:
-                  getTabItem(widget.screen == TabType.Home, "tabHome", "Home"),
-            ),
+            // InkWell(
+            //   onTap: () {
+            //     NavigationUtilities.pushReplacementNamed(Home.route);
+            //   },
+            //   child:
+            //       getTabItem(widget.screen == TabType.Home, "tabHome", "Home"),
+            // ),
             InkWell(
               onTap: () {
                 NavigationUtilities.pushReplacementNamed(Discover.route);
@@ -65,6 +65,7 @@ class _TabBarWidgetState extends State<TabBarWidget> {
               child: getTabItem(
                   widget.screen == TabType.Chat, "tabChat", "Messages"),
             ),
+
             Consumer<FollowesProvider>(
               builder: (context, mutedProvider, child) => InkWell(
                   onTap: () async {
@@ -98,7 +99,7 @@ class _TabBarWidgetState extends State<TabBarWidget> {
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
         Container(
-          width: (MathUtilities.screenWidth(context) - getSize(72)) / 4,
+          width: (MathUtilities.screenWidth(context) - getSize(72)) / 3,
           child: Center(
             child: Container(
               decoration: BoxDecoration(
@@ -133,9 +134,6 @@ class _TabBarWidgetState extends State<TabBarWidget> {
             ),
           ),
         ),
-        SizedBox(
-          height: getSize(6),
-        ),
         Text(
           "Profile",
           style: appTheme?.white12Normal.copyWith(
@@ -152,7 +150,7 @@ class _TabBarWidgetState extends State<TabBarWidget> {
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
         Container(
-          width: (MathUtilities.screenWidth(context) - getSize(72)) / 4,
+          width: (MathUtilities.screenWidth(context) - getSize(72)) / 3,
           child: Center(
             child: Image.asset(
               "assets/Tab/$icon" + (isSelected ? "Selected.png" : ".png"),
