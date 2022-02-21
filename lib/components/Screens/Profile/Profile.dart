@@ -17,7 +17,6 @@ import 'package:video_chat/components/Screens/Profile/VipStore.dart';
 import 'package:video_chat/components/Screens/Profile/Visitor.dart';
 import 'package:video_chat/components/Screens/Profile/edit_profile.dart';
 import 'package:video_chat/components/Screens/Setting/Setting.dart';
-import 'package:video_chat/components/Screens/Splash/Splash.dart';
 import 'package:video_chat/components/widgets/ProfileSlider.dart';
 import 'package:video_chat/components/widgets/TabBar/Tabbar.dart';
 import 'package:video_chat/provider/feedback_provider.dart';
@@ -83,15 +82,15 @@ class _ProfileState extends State<Profile> {
                       // getListItem(icVipStore, "VIP Store", true, 0, () {
                       //   NavigationUtilities.push(VipStore());
                       // }),
-                      getListItem(icWallet, "Coin Balance", false,
-                          profie.userModel?.coinBalance ?? 0, () {}),
-                      getListItem(icCoinP, "Get Coins", false, 0, () {
-                        NavigationUtilities.push(Coins());
-                      }),
-                      getListItem(
-                          icPaymentHistory, "Payment History ", false, 0, () {
-                        NavigationUtilities.push(PaymentHistory());
-                      }),
+                      // getListItem(icWallet, "Coin Balance", false,
+                      //     profie.userModel?.coinBalance ?? 0, () {}),
+                      // getListItem(icCoinP, "Get Coins", false, 0, () {
+                      //   NavigationUtilities.push(Coins());
+                      // }),
+                      // getListItem(
+                      //     icPaymentHistory, "Payment History ", false, 0, () {
+                      //   NavigationUtilities.push(PaymentHistory());
+                      // }),
                       getListItem(icLanguage, "Language", false, 0, () {
                         NavigationUtilities.push(LanguageSelection(
                           isChange: true,
