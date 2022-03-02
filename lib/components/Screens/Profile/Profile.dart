@@ -13,11 +13,9 @@ import 'package:video_chat/components/Screens/Language%20Selection/Language.dart
 import 'package:video_chat/components/Screens/Profile/Coins.dart';
 import 'package:video_chat/components/Screens/Profile/FollowUp.dart';
 import 'package:video_chat/components/Screens/Profile/PaymentHistory.dart';
-import 'package:video_chat/components/Screens/Profile/VipStore.dart';
 import 'package:video_chat/components/Screens/Profile/Visitor.dart';
 import 'package:video_chat/components/Screens/Profile/edit_profile.dart';
 import 'package:video_chat/components/Screens/Setting/Setting.dart';
-import 'package:video_chat/components/Screens/Splash/Splash.dart';
 import 'package:video_chat/components/widgets/ProfileSlider.dart';
 import 'package:video_chat/components/widgets/TabBar/Tabbar.dart';
 import 'package:video_chat/provider/feedback_provider.dart';
