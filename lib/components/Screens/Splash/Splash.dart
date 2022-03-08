@@ -5,6 +5,7 @@ import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:video_chat/app/AppConfiguration/AppNavigation.dart';
+import 'package:video_chat/app/Helper/socket_helper.dart';
 import 'package:video_chat/app/app.export.dart';
 import 'package:video_chat/app/utils/CommonWidgets.dart';
 
@@ -31,6 +32,7 @@ class _SplashState extends State<Splash> {
   goToNext() async {
     await AgoraService.instance.initialize(AGORA_APPID);
     AppNavigation.shared.goNextFromSplash();
+    SocketHealper.shared.connect();
     // FirebaseCrashlytics.instance.crash();
   }
 

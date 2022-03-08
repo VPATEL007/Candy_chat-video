@@ -32,6 +32,7 @@ class SocketHealper {
       print('Socket error $data');
     });
 
+    // socket = Socket.fromUpgradedSocket(socket, serverSide: false);
     socket?.connect();
   }
 

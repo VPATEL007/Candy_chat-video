@@ -253,7 +253,7 @@ class _UserProfileState extends State<UserProfile> {
                           : SizedBox(),
                       (model?.isInfluencer ?? false) == false
                           ? Text(
-                              "${widget.userModel?.callRate ?? 0} Token/minute",
+                              "${widget.userModel?.callRate ?? 0} Coins/minute",
                               style: appTheme?.white16Normal
                                   .copyWith(fontWeight: FontWeight.w600),
                             )
@@ -396,37 +396,37 @@ class _UserProfileState extends State<UserProfile> {
             SizedBox(
               width: getSize(8),
             ),
-            (widget.userModel?.callRate != null &&
-                    (widget.userModel?.callRate ?? 0) > 0)
-                ? Container(
-                    decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(10),
-                        color: fromHex("#FFC1C1")),
-                    child: Padding(
-                      padding: EdgeInsets.only(
-                          left: getSize(6),
-                          top: getSize(6),
-                          bottom: getSize(6),
-                          right: getSize(6)),
-                      child: Row(
-                        children: [
-                          Image.asset(
-                            icCall,
-                            height: 16,
-                          ),
-                          SizedBox(
-                            width: getSize(6),
-                          ),
-                          Text(
-                            widget.userModel?.callRate?.toString() ?? "",
-                            style: appTheme?.black12Normal
-                                .copyWith(color: ColorConstants.redText),
-                          )
-                        ],
-                      ),
-                    ),
-                  )
-                : SizedBox()
+            // (widget.userModel?.callRate != null &&
+            //         (widget.userModel?.callRate ?? 0) > 0)
+            //     ? Container(
+            //         decoration: BoxDecoration(
+            //             borderRadius: BorderRadius.circular(10),
+            //             color: fromHex("#FFC1C1")),
+            //         child: Padding(
+            //           padding: EdgeInsets.only(
+            //               left: getSize(6),
+            //               top: getSize(6),
+            //               bottom: getSize(6),
+            //               right: getSize(6)),
+            //           child: Row(
+            //             children: [
+            //               Image.asset(
+            //                 icCall,
+            //                 height: 16,
+            //               ),
+            //               SizedBox(
+            //                 width: getSize(6),
+            //               ),
+            //               Text(
+            //                 widget.userModel?.callRate?.toString() ?? "",
+            //                 style: appTheme?.black12Normal
+            //                     .copyWith(color: ColorConstants.redText),
+            //               )
+            //             ],
+            //           ),
+            //         ),
+            //       )
+            //     : SizedBox()
           ],
         ),
         SizedBox(
@@ -580,9 +580,9 @@ class _UserProfileState extends State<UserProfile> {
             )),
         Positioned(
             bottom: 0,
-            left: getSize(62),
+            left: getSize(120),
             child: Container(
-              width: getSize(220),
+              width: getSize(110),
               child: Row(
                 children: [
                   InkWell(
@@ -626,29 +626,29 @@ class _UserProfileState extends State<UserProfile> {
                                   (widget.userModel?.isFollowing == true))
                               ? "assets/Profile/remove_user.png"
                               : icFollow)),
-                  Spacer(),
-                  Container(
-                    // height: getSize(72),
-                    // width: getSize(72),
-                    decoration: BoxDecoration(
-                        boxShadow: [
-                          BoxShadow(
-                              color: Colors.grey.shade100,
-                              blurRadius: 0,
-                              spreadRadius: 2,
-                              offset: Offset(0, 3)),
-                        ],
-                        borderRadius: BorderRadius.circular(getSize(22)),
-                        color: Colors.white),
-                    child: Padding(
-                      padding: EdgeInsets.all(getSize(20)),
-                      child: Image.asset(
-                        icHeartProfile,
-                        width: getSize(36),
-                        height: getSize(36),
-                      ),
-                    ),
-                  ),
+                  // Spacer(),
+                  // Container(
+                  //   // height: getSize(72),
+                  //   // width: getSize(72),
+                  //   decoration: BoxDecoration(
+                  //       boxShadow: [
+                  //         BoxShadow(
+                  //             color: Colors.grey.shade100,
+                  //             blurRadius: 0,
+                  //             spreadRadius: 2,
+                  //             offset: Offset(0, 3)),
+                  //       ],
+                  //       borderRadius: BorderRadius.circular(getSize(22)),
+                  //       color: Colors.white),
+                  //   child: Padding(
+                  //     padding: EdgeInsets.all(getSize(20)),
+                  //     child: Image.asset(
+                  //       icHeartProfile,
+                  //       width: getSize(36),
+                  //       height: getSize(36),
+                  //     ),
+                  //   ),
+                  // ),
                   Spacer(),
                   InkWell(
                       onTap: () {

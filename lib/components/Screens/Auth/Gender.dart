@@ -1,13 +1,9 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 import 'package:video_chat/app/AppConfiguration/AppNavigation.dart';
 import 'package:video_chat/app/app.export.dart';
 import 'package:video_chat/app/utils/CommonWidgets.dart';
-import 'package:video_chat/components/Screens/Home/Home.dart';
-import 'package:video_chat/components/Screens/Profile/edit_profile.dart';
-import 'package:video_chat/provider/followes_provider.dart';
 
 class Gender extends StatefulWidget {
   final bool isFromPreGender;
@@ -21,6 +17,16 @@ enum Genders { Male, Female, None }
 
 class _GenderState extends State<Gender> {
   Genders _genders = Genders.Male;
+
+  @override
+  void initState() {
+    super.initState();
+
+    if (widget.isFromPreGender == true) {
+      _genders = Genders.Female;
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
