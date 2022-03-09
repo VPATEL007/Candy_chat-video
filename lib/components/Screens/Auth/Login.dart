@@ -144,7 +144,7 @@ class _LoginState extends State<Login> {
                 print(req);
                 await CommonApiHelper.shared
                     .callGuestLogintApi(context, req, () {}, () {});
-                NavigationUtilities.push(Gender());
+                NavigationUtilities.pushReplacementNamed(Gender.route);
               }),
               SizedBox(
                 height: getSize(12),

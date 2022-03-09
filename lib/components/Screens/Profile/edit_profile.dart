@@ -31,7 +31,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
   TextEditingController _dobController = TextEditingController();
   TextEditingController _nationController = TextEditingController();
   TextEditingController _aboutController = TextEditingController();
-  Gender _gender = Gender.Male;
+  GenderType _gender = GenderType.Male;
   bool isImage = false;
 
   UserModel? _userInfo;
@@ -65,11 +65,11 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
     _aboutController.text = _userInfo?.about ?? "";
     contactController.text = _userInfo?.phone ?? "";
 
-    _gender = _userInfo?.gender == describeEnum(Gender.Female).toLowerCase()
-        ? Gender.Female
-        : _userInfo?.gender == describeEnum(Gender.Male).toLowerCase()
-            ? Gender.Male
-            : Gender.Other;
+    _gender = _userInfo?.gender == describeEnum(GenderType.Female).toLowerCase()
+        ? GenderType.Female
+        : _userInfo?.gender == describeEnum(GenderType.Male).toLowerCase()
+            ? GenderType.Male
+            : GenderType.Other;
     genderController.text = describeEnum(_gender);
     _dobController.text = _userInfo?.dob ?? "";
     _nationController.text = _userInfo?.region?.regionName ?? "";
@@ -306,12 +306,12 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                               builder: (context, setState) => Column(
                                 mainAxisSize: MainAxisSize.min,
                                 children: List.generate(
-                                    Gender.values.length,
-                                    (index) => RadioListTile<Gender>(
-                                        value: Gender.values[index],
+                                    GenderType.values.length,
+                                    (index) => RadioListTile<GenderType>(
+                                        value: GenderType.values[index],
                                         groupValue: _gender,
-                                        title: Text(
-                                            describeEnum(Gender.values[index])),
+                                        title: Text(describeEnum(
+                                            GenderType.values[index])),
                                         onChanged: (gender) {
                                           setState(() {
                                             _gender = gender!;
@@ -556,4 +556,4 @@ class AlwaysDisabledFocusNode extends FocusNode {
   bool get hasFocus => false;
 }
 
-enum Gender { Male, Female, Other }
+enum GenderType { Male, Female, Other }

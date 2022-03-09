@@ -55,7 +55,7 @@ class _LanguageSelectionState extends State<LanguageSelection> {
             List<OnboardingModel> arrList =
                 list.map((obj) => OnboardingModel.fromJson(obj)).toList();
             print(arrList);
-            NavigationUtilities.push(OnBoarding(
+            NavigationUtilities.pushReplacement(OnBoarding(
               list: arrList,
             ));
           }

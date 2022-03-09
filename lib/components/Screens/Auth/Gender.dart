@@ -6,6 +6,7 @@ import 'package:video_chat/app/app.export.dart';
 import 'package:video_chat/app/utils/CommonWidgets.dart';
 
 class Gender extends StatefulWidget {
+  static const route = "Gender";
   final bool isFromPreGender;
   Gender({Key? key, this.isFromPreGender = false}) : super(key: key);
 

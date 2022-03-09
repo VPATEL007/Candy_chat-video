@@ -9,11 +9,12 @@ import android.util.Log
 import io.flutter.embedding.android.FlutterActivity
 import java.security.MessageDigest
 import java.security.NoSuchAlgorithmException
+import android.view.WindowManager.LayoutParams
 
 class MainActivity: FlutterActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
+        window.addFlags(LayoutParams.FLAG_SECURE)
 //        printHashKey(this@MainActivity)
     }
     fun printHashKey(pContext: Context) {
