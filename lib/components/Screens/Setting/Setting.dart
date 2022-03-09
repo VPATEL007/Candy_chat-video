@@ -47,14 +47,14 @@ class _SettingState extends State<Setting> {
           child: SingleChildScrollView(
             child: Column(
               children: [
-                Provider.of<FollowesProvider>(context, listen: false)
-                            .userModel
-                            ?.isInfluencer ==
-                        true
-                    ? getListItem("Withdraw", () {
-                        NavigationUtilities.push(WithDraw());
-                      })
-                    : SizedBox(),
+                // Provider.of<FollowesProvider>(context, listen: false)
+                //             .userModel
+                //             ?.isInfluencer ==
+                //         true
+                //     ? getListItem("Withdraw", () {
+                //         NavigationUtilities.push(WithDraw());
+                //       })
+                //     : SizedBox(),
                 Provider.of<FollowesProvider>(context, listen: false)
                             .userModel
                             ?.isInfluencer ==

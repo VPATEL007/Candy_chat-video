@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:agora_rtc_engine/rtc_engine.dart';
 import 'package:agora_rtm/agora_rtm.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
@@ -292,7 +293,7 @@ class VideoCallState extends State<VideoCall> {
                           textCallback: (text) {},
                         )),
                         Visibility(
-                          visible: !isKeyboardOpen,
+                          visible: true,
                           child: Row(
                             children: [
                               SizedBox(
@@ -428,36 +429,51 @@ class VideoCallState extends State<VideoCall> {
             mainAxisSize: MainAxisSize.min,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Container(
-                decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(20),
-                    color: fromHex("#F1F1F1")),
-                child: Padding(
-                  padding: EdgeInsets.all(getSize(10)),
-                  child: Column(
-                    mainAxisSize: MainAxisSize.min,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        messageList[contentIndex].isSendByMe == true
-                            ? (fromUser?.userName ?? "")
-                            : (toUser?.userName ?? ""),
-                        textAlign: TextAlign.left,
-                        style:
-                            appTheme?.black14Normal.copyWith(color: Colors.red),
+              messageList[contentIndex].isGiftMessage() == true
+                  ? Container(
+                      child: CachedNetworkImage(
+                        imageUrl: messageList[contentIndex].giftUlr ?? "",
+                        width: getSize(45),
+                        height: getSize(45),
+                        fit: BoxFit.cover,
+                        errorWidget: (context, url, error) => Image.asset(
+                          noAttachment,
+                          fit: BoxFit.cover,
+                          height: getSize(45),
+                          width: getSize(45),
+                        ),
                       ),
-                      SizedBox(
-                        height: 6,
+                    )
+                  : Container(
+                      decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(20),
+                          color: fromHex("#F1F1F1")),
+                      child: Padding(
+                        padding: EdgeInsets.all(getSize(10)),
+                        child: Column(
+                          mainAxisSize: MainAxisSize.min,
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              messageList[contentIndex].isSendByMe == true
+                                  ? (fromUser?.userName ?? "")
+                                  : (toUser?.userName ?? ""),
+                              textAlign: TextAlign.left,
+                              style: appTheme?.black14Normal
+                                  .copyWith(color: Colors.red),
+                            ),
+                            SizedBox(
+                              height: 6,
+                            ),
+                            Text(
+                              messageList[contentIndex].message ?? "",
+                              style: appTheme?.black16Medium
+                                  .copyWith(fontSize: getSize(16)),
+                            )
+                          ],
+                        ),
                       ),
-                      Text(
-                        messageList[contentIndex].message ?? "",
-                        style: appTheme?.black16Medium
-                            .copyWith(fontSize: getSize(16)),
-                      )
-                    ],
-                  ),
-                ),
-              ),
+                    ),
               SizedBox(
                 height: 10,
               )
