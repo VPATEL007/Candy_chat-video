@@ -142,7 +142,7 @@ class InAppPurchaseHelper {
 
     req["package_id"] = purchaseDetails.productId;
     req["transaction_id"] = purchaseDetails.transactionId;
-    req["package_name"] = product.title;
+    req["package_name"] = "com.sugarcam.videochat";
     req["paid_amount"] = product.price;
     req["currency"] = product.currency;
     req["user_id"] = app.resolve<PrefUtils>().getUserDetails()?.id.toString();
