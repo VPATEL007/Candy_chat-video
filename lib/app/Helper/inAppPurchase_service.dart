@@ -135,6 +135,7 @@ class InAppPurchaseHelper {
     Map<String, dynamic> req = {};
     if (Platform.isAndroid) {
       req["gateway"] = "android";
+      req["purchaseToken"] = purchaseDetails.purchaseToken;
     } else {
       req["gateway"] = "apple";
     }
