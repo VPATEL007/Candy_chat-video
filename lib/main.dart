@@ -18,6 +18,7 @@ import 'package:provider/provider.dart';
 import 'package:video_chat/app/app.export.dart';
 import 'package:video_chat/components/Model/Notification/NotificatonModel.dart';
 import 'package:video_chat/components/Model/User/UserModel.dart';
+import 'package:video_chat/components/Screens/Leaderboard/Leaderboard.dart';
 import 'package:video_chat/components/Screens/Splash/Splash.dart';
 
 import 'package:video_chat/provider/chat_provider.dart';

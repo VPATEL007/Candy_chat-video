@@ -8,11 +8,12 @@ import 'package:video_chat/components/Model/User/UserModel.dart';
 import 'package:video_chat/components/Screens/Chat/ChatList.dart';
 import 'package:video_chat/components/Screens/Discover/Discover.dart';
 import 'package:video_chat/components/Screens/Home/Home.dart';
+import 'package:video_chat/components/Screens/Leaderboard/Leaderboard.dart';
 import 'package:video_chat/components/Screens/Profile/Profile.dart';
 import 'package:video_chat/provider/followes_provider.dart';
 
 class TabBarWidget extends StatefulWidget {
-  TabType? screen = TabType.Home;
+  TabType? screen = TabType.LeaderBoard;
   TabBarWidget({Key? key, this.screen}) : super(key: key);
 
   @override
@@ -44,13 +45,13 @@ class _TabBarWidgetState extends State<TabBarWidget> {
         ),
         child: Row(
           children: [
-            // InkWell(
-            //   onTap: () {
-            //     NavigationUtilities.pushReplacementNamed(Home.route);
-            //   },
-            //   child:
-            //       getTabItem(widget.screen == TabType.Home, "tabHome", "Home"),
-            // ),
+            InkWell(
+              onTap: () {
+                NavigationUtilities.pushReplacementNamed(LeaderBoard.route);
+              },
+              child: getTabItem(
+                  widget.screen == TabType.LeaderBoard, "tabHome", "Ranking"),
+            ),
             InkWell(
               onTap: () {
                 NavigationUtilities.pushReplacementNamed(Discover.route);
@@ -65,7 +66,6 @@ class _TabBarWidgetState extends State<TabBarWidget> {
               child: getTabItem(
                   widget.screen == TabType.Chat, "tabChat", "Messages"),
             ),
-
             Consumer<FollowesProvider>(
               builder: (context, mutedProvider, child) => InkWell(
                   onTap: () async {
@@ -99,7 +99,7 @@ class _TabBarWidgetState extends State<TabBarWidget> {
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
         Container(
-          width: (MathUtilities.screenWidth(context) - getSize(72)) / 3,
+          width: (MathUtilities.screenWidth(context) - getSize(72)) / 4,
           child: Center(
             child: Container(
               decoration: BoxDecoration(
@@ -150,7 +150,7 @@ class _TabBarWidgetState extends State<TabBarWidget> {
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
         Container(
-          width: (MathUtilities.screenWidth(context) - getSize(72)) / 3,
+          width: (MathUtilities.screenWidth(context) - getSize(72)) / 4,
           child: Center(
             child: Image.asset(
               "assets/Tab/$icon" + (isSelected ? "Selected.png" : ".png"),
