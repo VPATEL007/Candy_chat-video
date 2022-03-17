@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:video_chat/app/Helper/Themehelper.dart';
@@ -8,6 +10,8 @@ import 'package:video_chat/app/extensions/view.dart';
 import 'package:video_chat/app/network/NetworkClient.dart';
 import 'package:video_chat/app/utils/CommonWidgets.dart';
 import 'package:video_chat/app/utils/math_utils.dart';
+import 'package:video_chat/components/Model/Leaderboard/LeaderBoardModel.dart';
+import 'package:video_chat/components/Model/User/report_reason_model.dart';
 import 'package:video_chat/components/widgets/TabBar/Tabbar.dart';
 
 class LeaderBoard extends StatefulWidget {
@@ -21,6 +25,9 @@ class LeaderBoard extends StatefulWidget {
 class _LeaderBoardState extends State<LeaderBoard> {
   PageController pageController = new PageController(initialPage: 0);
   int currentIndex = 0;
+  List<LeaderBoardModel> callDuration = [];
+  List<LeaderBoardModel> giftCoins = [];
+  bool isCall = true;
 
   @override
   void initState() {
@@ -33,7 +40,7 @@ class _LeaderBoardState extends State<LeaderBoard> {
 
   getCallDuration() {
     Map<String, dynamic> req = {};
-    req["callType"] = "gift";
+    req["callType"] = isCall == true ? "call" : "gift";
     req["agency_id"] = 10;
 
     NetworkClient.getInstance.showLoader(context);
@@ -48,9 +55,15 @@ class _LeaderBoardState extends State<LeaderBoard> {
         NetworkClient.getInstance.hideProgressDialog();
 
         if (response != null) {
-          // List<ReportReasonModel> arrList =
-          //     reportReasonModelFromJson(jsonEncode(response));
+          if (isCall) {
+            callDuration =
+                leaderBoardModelFromJson(jsonEncode(response["queryResult"]));
+          } else {
+            giftCoins =
+                leaderBoardModelFromJson(jsonEncode(response["queryResult"]));
+          }
 
+          setState(() {});
         }
       },
       failureCallback: (code, message) {
@@ -77,8 +90,26 @@ class _LeaderBoardState extends State<LeaderBoard> {
           Positioned(
             child: Row(
               children: [
-                getTabItem('Total call duration', true),
-                getTabItem('Gift coins', false)
+                InkWell(
+                    onTap: () {
+                      isCall = true;
+                      setState(() {});
+
+                      if (callDuration.length == 0) {
+                        getCallDuration();
+                      }
+                    },
+                    child: getTabItem('Total call duration', isCall)),
+                InkWell(
+                    onTap: () {
+                      isCall = false;
+                      setState(() {});
+
+                      if (giftCoins.length == 0) {
+                        getCallDuration();
+                      }
+                    },
+                    child: getTabItem('Gift coins', !isCall))
               ],
             ),
           ),
@@ -140,18 +171,20 @@ class _LeaderBoardState extends State<LeaderBoard> {
           height: getSize(384),
           child: ListView.separated(
               itemBuilder: (BuildContext context, int index) {
-                return getListRow();
+                return getListRow(
+                    isCall == true ? callDuration[index] : giftCoins[index]);
               },
               separatorBuilder: (BuildContext context, int index) {
                 return Container(height: 1, color: ColorConstants.borderColor);
               },
-              itemCount: 25),
+              itemCount:
+                  isCall == true ? callDuration.length : giftCoins.length),
         )
       ],
     );
   }
 
-  getListRow() {
+  getListRow(LeaderBoardModel item) {
     return Container(
       child: Padding(
         padding: EdgeInsets.all(8.0),
@@ -161,7 +194,10 @@ class _LeaderBoardState extends State<LeaderBoard> {
               width: (MathUtilities.screenWidth(context) - 34) / 3,
               child: Center(
                 child: Text(
-                  "Bonus +120",
+                  "Bonus +" +
+                      (isCall == true
+                          ? item.coins.toString()
+                          : item.giftCoins.toString()),
                   style: appTheme?.black14SemiBold.copyWith(
                       fontSize: getFontSize(12), color: ColorConstants.red),
                 ),
@@ -171,7 +207,7 @@ class _LeaderBoardState extends State<LeaderBoard> {
               width: (MathUtilities.screenWidth(context) - 34) / 3,
               child: Center(
                 child: Text(
-                  "Gima",
+                  item.name ?? "",
                   style: appTheme?.black14SemiBold
                       .copyWith(fontSize: getFontSize(12), color: Colors.black),
                 ),
@@ -181,7 +217,7 @@ class _LeaderBoardState extends State<LeaderBoard> {
               width: (MathUtilities.screenWidth(context) - 35) / 3,
               child: Center(
                 child: Text(
-                  "4622 mins",
+                  item.callDuration.toString() + " mins",
                   style: appTheme?.black14SemiBold
                       .copyWith(fontSize: getFontSize(12), color: Colors.black),
                 ),
@@ -212,7 +248,7 @@ class _LeaderBoardState extends State<LeaderBoard> {
   }
 
 //Get Tab Item
-  getTabItem(String title, bool isCurrent) {
+  Widget getTabItem(String title, bool isCurrent) {
     return Container(
       width: MathUtilities.screenWidth(context) / 2,
       child: Column(
