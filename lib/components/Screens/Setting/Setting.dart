@@ -13,6 +13,7 @@ import 'package:video_chat/app/utils/CommonWidgets.dart';
 import 'package:video_chat/app/utils/math_utils.dart';
 import 'package:video_chat/components/Screens/Profile/PaymentHistory.dart';
 import 'package:video_chat/components/Screens/Setting/BlockList.dart';
+import 'package:video_chat/components/Screens/Setting/EarnHistory.dart';
 import 'package:video_chat/components/Screens/Setting/FavouriteList.dart';
 import 'package:video_chat/components/Screens/Setting/WithDraw.dart';
 import 'package:video_chat/components/Screens/Setting/feedback.dart';
@@ -47,6 +48,14 @@ class _SettingState extends State<Setting> {
           child: SingleChildScrollView(
             child: Column(
               children: [
+                Provider.of<FollowesProvider>(context, listen: false)
+                            .userModel
+                            ?.isInfluencer ==
+                        true
+                    ? getListItem("Earn History", () {
+                        NavigationUtilities.push(EarnHistory());
+                      })
+                    : SizedBox(),
                 // Provider.of<FollowesProvider>(context, listen: false)
                 //             .userModel
                 //             ?.isInfluencer ==

@@ -27,7 +27,8 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
   TextEditingController userNameController = TextEditingController();
   TextEditingController contactController = TextEditingController();
   TextEditingController genderController = TextEditingController();
-  DateTime _selectedDate = DateTime.now();
+  DateTime _selectedDate = DateTime(
+      DateTime.now().year - 18, DateTime.now().month, DateTime.now().day);
   TextEditingController _dobController = TextEditingController();
   TextEditingController _nationController = TextEditingController();
   TextEditingController _aboutController = TextEditingController();
@@ -416,9 +417,12 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
   }
 
   _selectDate(BuildContext context) async {
+    final currentDat = DateTime.now();
     DateTime? newSelectedDate = await showDatePicker(
         context: context,
-        initialDate: _selectedDate != null ? _selectedDate : DateTime.now(),
+        initialDate: _selectedDate != null
+            ? _selectedDate
+            : DateTime(currentDat.year - 18, currentDat.month, currentDat.day),
         firstDate: DateTime(1900),
         lastDate: DateTime.now(),
         builder: (BuildContext? context, Widget? child) {
