@@ -39,11 +39,11 @@ class _SplashState extends State<Splash> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        backgroundColor: ColorConstants.colorPrimary,
-        bottomSheet: Image.asset(
-          splashBottom,
-          width: MathUtilities.screenWidth(context),
-        ),
+        backgroundColor: ColorConstants.mainBgColor,
+        // bottomSheet: Image.asset(
+        //   splashBottom,
+        //   width: MathUtilities.screenWidth(context),
+        // ),
         body: Center(
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
@@ -59,11 +59,11 @@ class _SplashState extends State<Splash> {
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  getColorText("SugarCam", ColorConstants.red, fontSize: 35),
+                  getColorText("Storm", ColorConstants.red, fontSize: 35),
                   SizedBox(
                     width: getSize(8),
                   ),
-                  getColorText("Random", ColorConstants.black, fontSize: 35),
+                  // getColorText("Random", ColorConstants.black, fontSize: 35),
                 ],
               ),
               Row(

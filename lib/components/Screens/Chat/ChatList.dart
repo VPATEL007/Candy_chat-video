@@ -33,7 +33,7 @@ class _ChatListState extends State<ChatList> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: ColorConstants.mainBgColor,
       bottomNavigationBar: TabBarWidget(
         screen: TabType.Chat,
       ),
@@ -70,7 +70,9 @@ class _ChatListState extends State<ChatList> {
           Text(
             "No Message, yet",
             style: appTheme?.black14Normal.copyWith(
-                fontWeight: FontWeight.w600, fontSize: getFontSize(18)),
+                fontWeight: FontWeight.w600,
+                fontSize: getFontSize(18),
+                color: ColorConstants.redText),
           ),
           SizedBox(
             height: 12,
@@ -80,8 +82,8 @@ class _ChatListState extends State<ChatList> {
             child: Text(
               "No message in your inbox yet! Start chatting with your Randome video chat.",
               textAlign: TextAlign.center,
-              style:
-                  appTheme?.black14Normal.copyWith(fontWeight: FontWeight.w500),
+              style: appTheme?.black14Normal.copyWith(
+                  fontWeight: FontWeight.w500, color: ColorConstants.redText),
             ),
           )
         ],
@@ -137,101 +139,109 @@ class _ChatListState extends State<ChatList> {
   }
 
   Widget getChatItem(ChatListModel model) {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.start,
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Stack(
-          children: [
-            ClipRRect(
-                borderRadius: BorderRadius.circular(52),
-                child: CachedNetworkImage(
-                  imageUrl: model.withUser?.getUserImage() ?? "",
-                  height: getSize(52),
-                  width: getSize(52),
-                  fit: BoxFit.cover,
-                  errorWidget: (context, url, error) => Image.asset(
-                    "assets/Profile/no_image.png",
-                    height: getSize(48),
-                    width: getSize(51),
-                  ),
-                )),
-            Positioned(
-              right: getSize(0),
-              bottom: getSize(4),
-              child: Container(
-                height: getSize(10),
-                width: getSize(10),
-                decoration: BoxDecoration(
-                  color: (model.withUser?.onlineStatus ?? offline) == online
-                      ? fromHex("#50F5C3")
-                      : fromHex("#F55050"),
-                  border: Border.all(color: Colors.white, width: 1),
-                  borderRadius: BorderRadius.circular(
-                    getSize(10),
-                  ),
-                ),
-              ),
-            ),
-          ],
-        ),
-        SizedBox(
-          width: getSize(11),
-        ),
-        Column(
+    return Container(
+      decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(12), color: fromHex('#121212')),
+      child: Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: Row(
           mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            SizedBox(height: getSize(2)),
-            Text(
-              model.withUser?.userName ?? "",
-              maxLines: 1,
-              overflow: TextOverflow.ellipsis,
-              style: appTheme?.black16Bold.copyWith(fontSize: getFontSize(14)),
-            ),
-            // SizedBox(height: getSize(6)),
-            // Text(
-            //   "Hi, how are you ? May i get",
-            //   style: appTheme.black14Normal,
-            //   overflow: TextOverflow.ellipsis,
-            // )
-          ],
-        ),
-        Spacer(),
-        Column(
-          children: [
-            SizedBox(height: getSize(2)),
-            Text(
-              DateUtilities().convertServerDateToFormatterString(
-                  model.updatedOn ?? "",
-                  formatter: DateUtilities.h_mm_a),
-              style: appTheme?.black12Normal,
+            Stack(
+              children: [
+                ClipRRect(
+                    borderRadius: BorderRadius.circular(52),
+                    child: CachedNetworkImage(
+                      imageUrl: model.withUser?.getUserImage() ?? "",
+                      height: getSize(52),
+                      width: getSize(52),
+                      fit: BoxFit.cover,
+                      errorWidget: (context, url, error) => Image.asset(
+                        "assets/Profile/no_image.png",
+                        height: getSize(48),
+                        width: getSize(51),
+                      ),
+                    )),
+                Positioned(
+                  right: getSize(0),
+                  bottom: getSize(4),
+                  child: Container(
+                    height: getSize(10),
+                    width: getSize(10),
+                    decoration: BoxDecoration(
+                      color: (model.withUser?.onlineStatus ?? offline) == online
+                          ? fromHex("#50F5C3")
+                          : fromHex("#F55050"),
+                      border: Border.all(color: Colors.white, width: 1),
+                      borderRadius: BorderRadius.circular(
+                        getSize(10),
+                      ),
+                    ),
+                  ),
+                ),
+              ],
             ),
             SizedBox(
-              height: getSize(8),
+              width: getSize(11),
             ),
-            Container(
-              decoration: BoxDecoration(
-                color: ColorConstants.red,
-                borderRadius: BorderRadius.circular(
-                  getSize(22),
+            Column(
+              mainAxisAlignment: MainAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                SizedBox(height: getSize(2)),
+                Text(
+                  model.withUser?.userName ?? "",
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                  style: appTheme?.black16Bold
+                      .copyWith(fontSize: getFontSize(14), color: Colors.white),
                 ),
-              ),
-              child: Padding(
-                padding: EdgeInsets.only(
-                    left: getSize(8),
-                    right: getSize(8),
-                    top: getSize(2),
-                    bottom: getSize(2)),
-                child: Text(
-                  "0",
-                  style: appTheme?.white12Normal,
+                // SizedBox(height: getSize(6)),
+                // Text(
+                //   "Hi, how are you ? May i get",
+                //   style: appTheme.black14Normal,
+                //   overflow: TextOverflow.ellipsis,
+                // )
+              ],
+            ),
+            Spacer(),
+            Column(
+              children: [
+                SizedBox(height: getSize(2)),
+                Text(
+                  DateUtilities().convertServerDateToFormatterString(
+                      model.updatedOn ?? "",
+                      formatter: DateUtilities.h_mm_a),
+                  style: appTheme?.black12Normal.copyWith(color: Colors.white),
                 ),
-              ),
+                SizedBox(
+                  height: getSize(8),
+                ),
+                Container(
+                  decoration: BoxDecoration(
+                    color: ColorConstants.red,
+                    borderRadius: BorderRadius.circular(
+                      getSize(22),
+                    ),
+                  ),
+                  child: Padding(
+                    padding: EdgeInsets.only(
+                        left: getSize(8),
+                        right: getSize(8),
+                        top: getSize(2),
+                        bottom: getSize(2)),
+                    child: Text(
+                      "0",
+                      style: appTheme?.white12Normal,
+                    ),
+                  ),
+                )
+              ],
             )
           ],
-        )
-      ],
+        ),
+      ),
     );
   }
 }

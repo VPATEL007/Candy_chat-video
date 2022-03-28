@@ -130,7 +130,7 @@ class _ChatState extends State<Chat> {
         }
       },
       child: Scaffold(
-        backgroundColor: Colors.white,
+        backgroundColor: ColorConstants.mainBgColor,
         bottomSheet: chatTextFiled(),
         body: SafeArea(
           child: Column(
@@ -140,8 +140,8 @@ class _ChatState extends State<Chat> {
                   children: [
                     getBackButton(context),
                     Text(toUser?.userName ?? "",
-                        style: appTheme?.black_Medium_16Text
-                            .copyWith(fontWeight: FontWeight.bold)),
+                        style: appTheme?.black_Medium_16Text.copyWith(
+                            fontWeight: FontWeight.bold, color: Colors.white)),
                     SizedBox(
                       width: 8,
                     ),
@@ -149,7 +149,7 @@ class _ChatState extends State<Chat> {
                         style: appTheme?.black_Medium_16Text.copyWith(
                             color: (toUser?.onlineStatus ?? offline) == online
                                 ? fromHex("#00DE9B")
-                                : fromHex("#F55050"))),
+                                : ColorConstants.red)),
                     Spacer(),
                     getBarButton(context, icCall, () async {
                       if (toUser == null) return;

@@ -10,28 +10,31 @@ import '../theme/app_theme.dart';
 
 Widget getBottomButton(
     BuildContext context, String text, VoidCallback onPressed) {
-  return InkWell(
-    onTap: onPressed,
-    child: Padding(
-      padding: EdgeInsets.fromLTRB(getSize(16), getSize(0), getSize(16),
-          MathUtilities.safeAreaBottomHeight(context) + getSize(16)),
-      child: Container(
-          height: getSize(50),
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(
-              getSize(16),
+  return Container(
+    color: ColorConstants.mainBgColor,
+    child: InkWell(
+      onTap: onPressed,
+      child: Padding(
+        padding: EdgeInsets.fromLTRB(getSize(16), getSize(0), getSize(16),
+            MathUtilities.safeAreaBottomHeight(context) + getSize(16)),
+        child: Container(
+            height: getSize(50),
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(
+                getSize(16),
+              ),
+              gradient: LinearGradient(
+                begin: Alignment.topLeft,
+                end: Alignment.bottomRight,
+                colors: [ColorConstants.gradiantStart, ColorConstants.red],
+              ),
             ),
-            gradient: LinearGradient(
-              begin: Alignment.topLeft,
-              end: Alignment.bottomRight,
-              colors: [ColorConstants.gradiantStart, ColorConstants.red],
-            ),
-          ),
-          child: Center(
-            child: Text(text,
-                style:
-                    appTheme?.whiteBold32.copyWith(fontSize: getFontSize(18))),
-          )),
+            child: Center(
+              child: Text(text,
+                  style: appTheme?.whiteBold32
+                      .copyWith(fontSize: getFontSize(18))),
+            )),
+      ),
     ),
   );
 }
@@ -71,7 +74,7 @@ getBackButton(BuildContext context, {bool isWhite = false}) {
       },
       icon: Image.asset(
         back,
-        color: isWhite == true ? Colors.white : Colors.black,
+        color: isWhite == true ? Colors.white : Colors.white,
         width: getSize(18),
         height: getSize(18),
       ),
@@ -114,7 +117,7 @@ getBarButtonText(
       ),
       child: Text(
         title,
-        style: appTheme?.black_Medium_16Text,
+        style: appTheme?.black_Medium_16Text.copyWith(color: Colors.white),
       ),
     ),
   );
@@ -347,23 +350,24 @@ AppBar getAppBar(BuildContext context, String title,
   return AppBar(
     brightness: Brightness.light,
     iconTheme: IconThemeData(
-      color: isWhite == true
-          ? AppTheme.of(context).theme.textTheme.headline6?.color
-          : appTheme?.whiteColor,
-    ),
+        color: isWhite == true
+            ? AppTheme.of(context).theme.textTheme.headline6?.color
+            : Colors.white),
     centerTitle: centerTitle ?? true,
     elevation: 0,
     title: isTitleShow
         ? Text(
             title,
-            style: appTheme?.black16Bold.copyWith(fontSize: getFontSize(18)),
+            style: appTheme?.black16Bold
+                .copyWith(fontSize: getFontSize(18), color: Colors.white),
             textAlign: textalign ?? TextAlign.center,
           )
         : Container(),
     textTheme: getNavigationTheme(context),
     leading: leadingButton ??= null,
     automaticallyImplyLeading: leadingButton != null,
-    backgroundColor: isWhite == true ? Colors.white : appTheme?.colorPrimary,
+    backgroundColor:
+        isWhite == true ? Colors.white : ColorConstants.mainBgColor,
     actions: actionItems == null ? null : actionItems,
     bottom: widget,
   );

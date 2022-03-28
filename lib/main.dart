@@ -239,10 +239,11 @@ class _BaseState extends State<Base> {
         theme: ThemeData(
           // Define the default brightness and colors.
           brightness: Brightness.light,
-          primaryColor: appTheme?.colorPrimary,
+          primaryColor: ColorConstants.mainBgColor,
           splashColor: Colors.transparent,
           highlightColor: Colors.transparent,
           fontFamily: 'Montserrat',
+          bottomSheetTheme: BottomSheetThemeData(backgroundColor: Colors.black),
         ),
         home: Splash(),
         // routes: <String, WidgetBuilder>{

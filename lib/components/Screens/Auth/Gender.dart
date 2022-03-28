@@ -30,14 +30,14 @@ class _GenderState extends State<Gender> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: ColorConstants.mainBgColor,
       appBar: getAppBar(
         context,
         widget.isFromPreGender
             ? "Select Preferred Gender"
             : "Select Your Gender",
         leadingButton: widget.isFromPreGender ? getBackButton(context) : null,
-        isWhite: true,
+        isWhite: false,
       ),
       body: SafeArea(
         child: Padding(
@@ -106,7 +106,7 @@ class _GenderState extends State<Gender> {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    getColorText("Which", Colors.black),
+                    getColorText("Which", Colors.white),
                     SizedBox(
                       width: getSize(6),
                     ),

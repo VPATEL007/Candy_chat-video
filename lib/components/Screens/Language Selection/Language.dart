@@ -82,7 +82,7 @@ class _LanguageSelectionState extends State<LanguageSelection> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: ColorConstants.colorPrimary,
+      backgroundColor: ColorConstants.mainBgColor,
       bottomSheet: getBottomButton(
           context, widget.isChange == null ? "Next" : "Change", () {
         goToNext(context);

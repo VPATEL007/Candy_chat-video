@@ -53,7 +53,7 @@ class _ProfileState extends State<Profile> {
       bottomNavigationBar: TabBarWidget(
         screen: TabType.Profile,
       ),
-      backgroundColor: Colors.white,
+      backgroundColor: ColorConstants.mainBgColor,
       body: Consumer<FollowesProvider>(
         builder: (context, profie, child) => SafeArea(
           child: Padding(
@@ -166,7 +166,10 @@ class _ProfileState extends State<Profile> {
               end: Alignment.bottomRight,
               colors: isColor
                   ? [ColorConstants.gradiantStart, ColorConstants.red]
-                  : [fromHex("#F7F7F7"), fromHex("#F7F7F7")],
+                  : [
+                      ColorConstants.grayBackGround,
+                      ColorConstants.grayBackGround
+                    ],
             ),
           ),
           child: Padding(
@@ -182,6 +185,7 @@ class _ProfileState extends State<Profile> {
                   icon,
                   height: getSize(26),
                   width: getSize(26),
+                  color: ColorConstants.red,
                 ),
                 SizedBox(
                   width: getSize(23),
@@ -190,7 +194,7 @@ class _ProfileState extends State<Profile> {
                   title,
                   style: appTheme?.white16Normal.copyWith(
                       fontWeight: FontWeight.w600,
-                      color: isColor ? Colors.white : Colors.black),
+                      color: isColor ? Colors.white : Colors.white),
                 ),
                 Spacer(),
                 title == "Logout" || title == "Coin Balance"
@@ -258,6 +262,7 @@ class _ProfileState extends State<Profile> {
           icEdit,
           height: getSize(26),
           width: getSize(26),
+          color: ColorConstants.red,
         ),
       ),
     ]);
@@ -299,7 +304,8 @@ class _ProfileState extends State<Profile> {
       },
       child: Container(
         decoration: BoxDecoration(
-            color: fromHex("#F7F7F7"), borderRadius: BorderRadius.circular(9)),
+            color: ColorConstants.grayBackGround,
+            borderRadius: BorderRadius.circular(9)),
         child: Padding(
           padding: EdgeInsets.only(
               left: getSize(10),
@@ -325,7 +331,9 @@ class _ProfileState extends State<Profile> {
                 maxLines: 1,
                 overflow: TextOverflow.ellipsis,
                 style: appTheme?.black16Bold.copyWith(
-                    fontSize: getFontSize(12), fontWeight: FontWeight.w600),
+                    fontSize: getFontSize(12),
+                    fontWeight: FontWeight.w600,
+                    color: Colors.white),
               ),
             ],
           ),

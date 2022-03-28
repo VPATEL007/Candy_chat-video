@@ -27,6 +27,15 @@ class _EarnHistoryState extends State<EarnHistory> {
   List<LeaderBoardModel> giftCoins = [];
   bool isCall = true;
 
+  @override
+  void initState() {
+    super.initState();
+
+    WidgetsBinding.instance?.addPostFrameCallback((timeStamp) {
+      getCallDuration();
+    });
+  }
+
   getCallDuration() {
     Map<String, dynamic> req = {};
     req["callType"] = isCall == true ? "call" : "gift";
@@ -65,9 +74,9 @@ class _EarnHistoryState extends State<EarnHistory> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: ColorConstants.colorPrimary,
+      backgroundColor: ColorConstants.mainBgColor,
       appBar: getAppBar(context, "Ranking",
-          isWhite: true, leadingButton: getBackButton(context)),
+          isWhite: false, leadingButton: getBackButton(context)),
       body: Stack(
         children: [
           Positioned(
@@ -192,7 +201,7 @@ class _EarnHistoryState extends State<EarnHistory> {
                 child: Text(
                   item.name ?? "",
                   style: appTheme?.black14SemiBold
-                      .copyWith(fontSize: getFontSize(12), color: Colors.black),
+                      .copyWith(fontSize: getFontSize(12), color: Colors.white),
                 ),
               ),
             ),
@@ -202,7 +211,7 @@ class _EarnHistoryState extends State<EarnHistory> {
                 child: Text(
                   item.callDuration.toString() + " mins",
                   style: appTheme?.black14SemiBold
-                      .copyWith(fontSize: getFontSize(12), color: Colors.black),
+                      .copyWith(fontSize: getFontSize(12), color: Colors.white),
                 ),
               ),
             )
@@ -241,7 +250,7 @@ class _EarnHistoryState extends State<EarnHistory> {
             style: appTheme?.black14SemiBold.copyWith(
                 fontSize: getFontSize(16),
                 color:
-                    isCurrent == true ? ColorConstants.redText : Colors.black),
+                    isCurrent == true ? ColorConstants.redText : Colors.white),
           ),
           SizedBox(
             height: getSize(12),

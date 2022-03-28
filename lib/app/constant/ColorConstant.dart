@@ -10,12 +10,14 @@ class ColorConstants {
   static Color placeholderColor = fromHex("#7B7E84");
   static Color bgColor = fromHex("#FFFFFF");
   static Color introgrey = fromHex("#999999");
-  static Color black = fromHex("#000000");
-  static Color red = fromHex("#F55050");
+  static Color black = fromHex("#FFFFFF");
+  static Color red = fromHex("#EAA11B");
   static Color button = fromHex("#FF013E");
   static Color facebook = fromHex("#1877F2");
-  static Color gradiantStart = fromHex("#FF1A43");
-  static Color redText = fromHex("#F93E3E");
+  static Color gradiantStart = fromHex("#EAA11B");
+  static Color redText = fromHex("#fcbd2b");
+  static Color grayBackGround = fromHex("#303030");
+  static Color mainBgColor = fromHex("#000000");
 
   //Error border and Text color
   static Color errorColor = fromHex("#FF4B4B");

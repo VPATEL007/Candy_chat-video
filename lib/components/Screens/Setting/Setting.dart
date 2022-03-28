@@ -38,9 +38,9 @@ class _SettingState extends State<Setting> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        backgroundColor: Colors.white,
+        backgroundColor: ColorConstants.mainBgColor,
         appBar: getAppBar(context, "Settings",
-            isWhite: true, leadingButton: getBackButton(context)),
+            isWhite: false, leadingButton: getBackButton(context)),
         body: SafeArea(
             child: Padding(
           padding: EdgeInsets.only(
@@ -151,7 +151,7 @@ class _SettingState extends State<Setting> {
         child: Container(
           width: MathUtilities.screenWidth(context),
           decoration: BoxDecoration(
-            color: fromHex("#F6F6F6"),
+            color: ColorConstants.grayBackGround,
             borderRadius: BorderRadius.circular(
               getSize(10),
             ),
@@ -164,14 +164,15 @@ class _SettingState extends State<Setting> {
                   Expanded(
                     child: Text(
                       text,
-                      style: appTheme?.black14Normal
-                          .copyWith(fontWeight: FontWeight.w500),
+                      style: appTheme?.black14Normal.copyWith(
+                          fontWeight: FontWeight.w500, color: Colors.white),
                     ),
                   ),
                   Image.asset(
                     icDetail,
                     height: getSize(18),
                     width: getSize(18),
+                    color: Colors.white,
                   )
                 ],
               )),

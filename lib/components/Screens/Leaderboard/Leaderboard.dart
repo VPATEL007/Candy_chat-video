@@ -76,14 +76,14 @@ class _LeaderBoardState extends State<LeaderBoard> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: ColorConstants.colorPrimary,
+      backgroundColor: ColorConstants.mainBgColor,
       bottomNavigationBar: TabBarWidget(
         screen: TabType.LeaderBoard,
       ),
       appBar: getAppBar(
         context,
         "Ranking",
-        isWhite: true,
+        isWhite: false,
       ),
       body: Stack(
         children: [
@@ -209,7 +209,7 @@ class _LeaderBoardState extends State<LeaderBoard> {
                 child: Text(
                   item.name ?? "",
                   style: appTheme?.black14SemiBold
-                      .copyWith(fontSize: getFontSize(12), color: Colors.black),
+                      .copyWith(fontSize: getFontSize(12), color: Colors.white),
                 ),
               ),
             ),
@@ -219,7 +219,7 @@ class _LeaderBoardState extends State<LeaderBoard> {
                 child: Text(
                   item.callDuration.toString() + " mins",
                   style: appTheme?.black14SemiBold
-                      .copyWith(fontSize: getFontSize(12), color: Colors.black),
+                      .copyWith(fontSize: getFontSize(12), color: Colors.white),
                 ),
               ),
             )
@@ -258,7 +258,7 @@ class _LeaderBoardState extends State<LeaderBoard> {
             style: appTheme?.black14SemiBold.copyWith(
                 fontSize: getFontSize(16),
                 color:
-                    isCurrent == true ? ColorConstants.redText : Colors.black),
+                    isCurrent == true ? ColorConstants.redText : Colors.white),
           ),
           SizedBox(
             height: getSize(12),

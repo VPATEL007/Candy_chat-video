@@ -30,9 +30,9 @@ class _FavouriteListState extends State<FavouriteList> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: ColorConstants.mainBgColor,
       appBar: getAppBar(context, "Favourite",
-          isWhite: true, leadingButton: getBackButton(context)),
+          isWhite: false, leadingButton: getBackButton(context)),
       body: SafeArea(child: getList()),
     );
   }
@@ -44,7 +44,9 @@ class _FavouriteListState extends State<FavouriteList> {
               child: Text(
                 "No Favourite Found! ",
                 style: appTheme?.black14Normal.copyWith(
-                    fontSize: getFontSize(16), fontWeight: FontWeight.w700),
+                    fontSize: getFontSize(16),
+                    fontWeight: FontWeight.w700,
+                    color: Colors.white),
               ),
             )
           : ListView.separated(

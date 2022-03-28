@@ -13,7 +13,7 @@ import 'package:video_chat/components/Screens/Profile/Profile.dart';
 import 'package:video_chat/provider/followes_provider.dart';
 
 class TabBarWidget extends StatefulWidget {
-  TabType? screen = TabType.LeaderBoard;
+  TabType? screen = TabType.Home;
   TabBarWidget({Key? key, this.screen}) : super(key: key);
 
   @override
@@ -23,72 +23,78 @@ class TabBarWidget extends StatefulWidget {
 class _TabBarWidgetState extends State<TabBarWidget> {
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: EdgeInsets.only(
-          left: getSize(35),
-          right: getSize(35),
-          bottom: MathUtilities.safeAreaBottomHeight(context) > 20
-              ? getSize(26)
-              : getSize(16),
-          top: getSize(21)),
-      child: Container(
-        height: getSize(74),
-        decoration: BoxDecoration(
-          gradient: LinearGradient(
-            begin: Alignment.topLeft,
-            end: Alignment.bottomRight,
-            colors: [ColorConstants.gradiantStart, ColorConstants.red],
+    return Container(
+      color: ColorConstants.mainBgColor,
+      child: Padding(
+        padding: EdgeInsets.only(
+            left: getSize(35),
+            right: getSize(35),
+            bottom: MathUtilities.safeAreaBottomHeight(context) > 20
+                ? getSize(26)
+                : getSize(16),
+            top: getSize(21)),
+        child: Container(
+          height: getSize(74),
+          decoration: BoxDecoration(
+            gradient: LinearGradient(
+              begin: Alignment.topLeft,
+              end: Alignment.bottomRight,
+              colors: [
+                ColorConstants.grayBackGround,
+                ColorConstants.grayBackGround
+              ],
+            ),
+            borderRadius: BorderRadius.circular(
+              getSize(18),
+            ),
           ),
-          borderRadius: BorderRadius.circular(
-            getSize(18),
+          child: Row(
+            children: [
+              InkWell(
+                onTap: () {
+                  NavigationUtilities.pushReplacementNamed(LeaderBoard.route);
+                },
+                child: getTabItem(
+                    widget.screen == TabType.LeaderBoard, "tabHome", "Ranking"),
+              ),
+              InkWell(
+                onTap: () {
+                  NavigationUtilities.pushReplacementNamed(Discover.route);
+                },
+                child: getTabItem(
+                    widget.screen == TabType.Discover, "tablike", "Discovery"),
+              ),
+              InkWell(
+                onTap: () {
+                  NavigationUtilities.pushReplacementNamed(ChatList.route);
+                },
+                child: getTabItem(
+                    widget.screen == TabType.Chat, "tabChat", "Messages"),
+              ),
+              Consumer<FollowesProvider>(
+                builder: (context, mutedProvider, child) => InkWell(
+                    onTap: () async {
+                      UserModel? userModel = mutedProvider.userModel;
+                      if (userModel == null) {
+                        await mutedProvider.fetchMyProfile(context);
+                      }
+                      setState(() {});
+                      NavigationUtilities.key.currentState!
+                          .pushReplacement(FadeRoute(
+                        builder: (context) => Profile(),
+                      ));
+                    },
+                    child: getTabProfileItem(
+                        widget.screen == TabType.Profile,
+                        (mutedProvider.userModel?.userImages?.isEmpty ?? true)
+                            ? ""
+                            : (mutedProvider
+                                    .userModel?.userImages?.first.photoUrl ??
+                                ""),
+                        mutedProvider.userModel?.gender ?? "")),
+              ),
+            ],
           ),
-        ),
-        child: Row(
-          children: [
-            InkWell(
-              onTap: () {
-                NavigationUtilities.pushReplacementNamed(LeaderBoard.route);
-              },
-              child: getTabItem(
-                  widget.screen == TabType.LeaderBoard, "tabHome", "Ranking"),
-            ),
-            InkWell(
-              onTap: () {
-                NavigationUtilities.pushReplacementNamed(Discover.route);
-              },
-              child: getTabItem(
-                  widget.screen == TabType.Discover, "tablike", "Discovery"),
-            ),
-            InkWell(
-              onTap: () {
-                NavigationUtilities.pushReplacementNamed(ChatList.route);
-              },
-              child: getTabItem(
-                  widget.screen == TabType.Chat, "tabChat", "Messages"),
-            ),
-            Consumer<FollowesProvider>(
-              builder: (context, mutedProvider, child) => InkWell(
-                  onTap: () async {
-                    UserModel? userModel = mutedProvider.userModel;
-                    if (userModel == null) {
-                      await mutedProvider.fetchMyProfile(context);
-                    }
-                    setState(() {});
-                    NavigationUtilities.key.currentState!
-                        .pushReplacement(FadeRoute(
-                      builder: (context) => Profile(),
-                    ));
-                  },
-                  child: getTabProfileItem(
-                      widget.screen == TabType.Profile,
-                      (mutedProvider.userModel?.userImages?.isEmpty ?? true)
-                          ? ""
-                          : (mutedProvider
-                                  .userModel?.userImages?.first.photoUrl ??
-                              ""),
-                      mutedProvider.userModel?.gender ?? "")),
-            ),
-          ],
         ),
       ),
     );
@@ -134,6 +140,9 @@ class _TabBarWidgetState extends State<TabBarWidget> {
             ),
           ),
         ),
+        SizedBox(
+          height: getSize(6),
+        ),
         Text(
           "Profile",
           style: appTheme?.white12Normal.copyWith(
@@ -153,10 +162,10 @@ class _TabBarWidgetState extends State<TabBarWidget> {
           width: (MathUtilities.screenWidth(context) - getSize(72)) / 4,
           child: Center(
             child: Image.asset(
-              "assets/Tab/$icon" + (isSelected ? "Selected.png" : ".png"),
-              height: getSize(18),
-              width: getSize(18),
-            ),
+                "assets/Tab/$icon" + (isSelected ? "Selected.png" : ".png"),
+                height: getSize(18),
+                width: getSize(18),
+                color: isSelected ? ColorConstants.red : Colors.white),
           ),
         ),
         SizedBox(
@@ -166,8 +175,9 @@ class _TabBarWidgetState extends State<TabBarWidget> {
           title,
           style: appTheme?.white12Normal.copyWith(
               fontWeight: FontWeight.w500,
-              color:
-                  isSelected ? Colors.white : Colors.white.withOpacity(0.36)),
+              color: isSelected
+                  ? ColorConstants.red
+                  : Colors.white.withOpacity(0.36)),
         )
       ],
     );

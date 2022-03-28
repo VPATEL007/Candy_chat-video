@@ -31,11 +31,23 @@ class _DiscoverState extends State<Discover> {
   List<SortBy> tab = SortBy.values;
   int selectedIndex = 0;
   int page = 1;
+  // List<MatchProfileModel> arrList = [];
+
+  @override
+  void initState() {
+    super.initState();
+
+    // MatchProfileModel model = MatchProfileModel();
+    // model.id = 123;
+    // model.userName = "Mayur";
+    // model.age = 14;
+    // arrList.add(model);
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: ColorConstants.mainBgColor,
       bottomNavigationBar: TabBarWidget(
         screen: TabType.Discover,
       ),
@@ -49,6 +61,7 @@ class _DiscoverState extends State<Discover> {
               height: getSize(10),
             ),
             getUserList(discover.discoverProfileList, discover),
+            // getUserList(arrList, discover),
             // getMatchButton()
           ],
         )),
@@ -166,6 +179,7 @@ class _DiscoverState extends State<Discover> {
       child: ClipRRect(
           borderRadius: BorderRadius.circular(14),
           child: Container(
+            color: Colors.white,
             height: 200,
             child: Stack(
               fit: StackFit.expand,
@@ -243,22 +257,45 @@ class _DiscoverState extends State<Discover> {
                   alignment: Alignment.topLeft,
                   child: Padding(
                     padding: EdgeInsets.only(top: 8, left: 8),
-                    child: Container(
-                      decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(16),
-                          color: Colors.black.withOpacity(0.5)),
-                      child: Padding(
-                        padding: EdgeInsets.only(
-                            left: 4, right: 4, top: 2, bottom: 4),
-                        child: Text(
-                          "• ${discover.onlineStatus ?? ""}",
-                          style: appTheme?.black16Bold.copyWith(
-                              fontSize: getSize(10),
-                              color: discover.onlineStatus == online
-                                  ? fromHex("#00DE9B")
-                                  : fromHex("#F55050")),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Container(
+                          decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(16),
+                              color: Colors.black.withOpacity(0.5)),
+                          child: Padding(
+                            padding: EdgeInsets.only(
+                                left: 4, right: 4, top: 2, bottom: 4),
+                            child: Text(
+                              "• ${discover.onlineStatus ?? ""}",
+                              style: appTheme?.black16Bold.copyWith(
+                                  fontSize: getSize(10),
+                                  color: discover.onlineStatus == online
+                                      ? fromHex("#00DE9B")
+                                      : fromHex("#F55050")),
+                            ),
+                          ),
                         ),
-                      ),
+                        SizedBox(
+                          height: 10,
+                        ),
+                        Container(
+                          decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(16),
+                              color: Colors.black.withOpacity(0.5)),
+                          child: Padding(
+                            padding: EdgeInsets.only(
+                                left: 4, right: 4, top: 2, bottom: 4),
+                            child: Text(
+                              "${discover.callRate ?? 0} Coins/minute",
+                              style: appTheme?.black16Bold.copyWith(
+                                  fontSize: getSize(10),
+                                  color: ColorConstants.redText),
+                            ),
+                          ),
+                        ),
+                      ],
                     ),
                   ),
                 ),
@@ -392,7 +429,7 @@ class _DiscoverState extends State<Discover> {
                             : FontWeight.w600,
                         color: index == selectedIndex
                             ? ColorConstants.redText
-                            : Colors.black),
+                            : Colors.white),
                   ),
                 ),
               ),

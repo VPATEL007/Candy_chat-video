@@ -31,9 +31,9 @@ class _OnBoardingState extends State<OnBoarding> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: ColorConstants.colorPrimary,
+      backgroundColor: ColorConstants.mainBgColor,
       appBar: getAppBar(context, "",
-          isWhite: true,
+          isWhite: false,
           leadingButton: getBackButton(context),
           actionItems: [
             getBarButtonText(context,
@@ -122,7 +122,7 @@ class _OnBoardingState extends State<OnBoarding> {
                         style: new TextStyle(
                             fontSize: getFontSize(25),
                             color: i % 2 == 0
-                                ? Colors.black
+                                ? Colors.white
                                 : ColorConstants.redText,
                             fontWeight: FontWeight.w800)),
                 ],
