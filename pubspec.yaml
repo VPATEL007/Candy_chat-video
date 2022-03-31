@@ -92,6 +92,7 @@ flutter:
     - assets/Vip/
     - assets/Video/
     - assets/Audio/
+    - assets/Onboarding/
 
   fonts:
     - family: Montserrat

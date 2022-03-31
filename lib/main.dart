@@ -45,6 +45,7 @@ import 'app/theme/settings_models_provider.dart';
 import 'app/utils/navigator.dart';
 import 'app/utils/pref_utils.dart';
 import 'app/utils/route_observer.dart';
+import 'components/Screens/OnboardingVerfication/VerificationInvitation.dart';
 import 'components/Screens/UserProfile/UserProfile.dart';
 // import 'package:in_app_purchase_android/in_app_purchase_android.dart';
 
@@ -244,7 +245,7 @@ class _BaseState extends State<Base> {
           highlightColor: Colors.transparent,
           fontFamily: 'Montserrat',
         ),
-        home: Splash(),
+        home: VerficationInvitation(),
         // routes: <String, WidgetBuilder>{
         //   '/ThemeSetting': (BuildContext context) => ThemeSetting(),
         // },

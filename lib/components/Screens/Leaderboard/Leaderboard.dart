@@ -10,9 +10,11 @@ import 'package:video_chat/app/extensions/view.dart';
 import 'package:video_chat/app/network/NetworkClient.dart';
 import 'package:video_chat/app/utils/CommonWidgets.dart';
 import 'package:video_chat/app/utils/math_utils.dart';
+import 'package:video_chat/app/utils/pref_utils.dart';
 import 'package:video_chat/components/Model/Leaderboard/LeaderBoardModel.dart';
 import 'package:video_chat/components/Model/User/report_reason_model.dart';
 import 'package:video_chat/components/widgets/TabBar/Tabbar.dart';
+import 'package:video_chat/main.dart';
 
 class LeaderBoard extends StatefulWidget {
   static const route = "LeaderBoard";
@@ -41,7 +43,7 @@ class _LeaderBoardState extends State<LeaderBoard> {
   getCallDuration() {
     Map<String, dynamic> req = {};
     req["callType"] = isCall == true ? "call" : "gift";
-    req["agency_id"] = 10;
+    req["agency_id"] = app.resolve<PrefUtils>().getUserDetails()?.agencyId ?? 0;
 
     NetworkClient.getInstance.showLoader(context);
     NetworkClient.getInstance.callApi(

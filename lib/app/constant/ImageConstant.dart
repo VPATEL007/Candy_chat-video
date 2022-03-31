@@ -77,6 +77,7 @@ const String icEmptyChatList = "assets/Chat/emptyChatList.png";
 
 const String icPlaceWoman = "assets/Common/woman.png";
 const String icPlaceMan = "assets/Common/man.png";
+const String icInviteCode = "assets/Onboarding/inviteCode.png";
 
 String getUserPlaceHolder(String gender) {
   if (gender.toLowerCase() == "female") {
