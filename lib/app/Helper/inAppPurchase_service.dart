@@ -4,6 +4,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_inapp_purchase/flutter_inapp_purchase.dart';
+import 'package:in_app_purchase/in_app_purchase.dart';
 import 'package:provider/provider.dart';
 import 'package:video_chat/app/constant/ApiConstants.dart';
 import 'package:video_chat/app/constant/ColorConstant.dart';
@@ -99,6 +100,11 @@ class InAppPurchaseHelper {
   Future<bool> verifyPurchase(
       PurchasedItem purchaseDetails, BuildContext context) async {
     if (Platform.isAndroid) {
+      // await FlutterInappPurchase.instance.validateReceiptAndroid(
+      //     packageName: "com.sugarcam.videochat",
+      //     productId: purchaseDetails.productId ?? "",
+      //     productToken: purchaseDetails.purchaseToken ?? "",
+      //     accessToken: accessToken);
       creditCoin(purchaseDetails);
       return Future<bool>.value(true);
     }
