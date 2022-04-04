@@ -34,9 +34,8 @@ class _SplashState extends State<Splash> {
 
   goToNext() async {
     await AgoraService.instance.initialize(AGORA_APPID);
-    // AppNavigation.shared.goNextFromSplash();
-    NavigationUtilities.pushReplacementNamed(VerficationInvitation.route,
-        type: RouteType.fade);
+    AppNavigation.shared.goNextFromSplash();
+    
     SocketHealper.shared.connect();
     // FirebaseCrashlytics.instance.crash();
   }
