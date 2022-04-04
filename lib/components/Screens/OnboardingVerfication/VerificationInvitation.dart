@@ -6,6 +6,7 @@ import 'package:video_chat/app/utils/CommonWidgets.dart';
 import 'package:video_chat/components/Screens/OnboardingVerfication/VerificationProfile.dart';
 
 class VerficationInvitation extends StatefulWidget {
+  static const route = "VerficationInvitation";
   VerficationInvitation({Key? key}) : super(key: key);
 
   @override

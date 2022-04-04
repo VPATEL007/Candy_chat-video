@@ -68,6 +68,7 @@ dependencies:
   firebase_analytics: any
   pull_to_refresh: ^2.0.0
   url_launcher: any
+  camera: any
   flutter_absolute_path:
     path: ./flutter_absolute_path
 
@@ -93,6 +94,7 @@ flutter:
     - assets/Video/
     - assets/Audio/
     - assets/Onboarding/
+    - assets/Verification/
 
   fonts:
     - family: Montserrat

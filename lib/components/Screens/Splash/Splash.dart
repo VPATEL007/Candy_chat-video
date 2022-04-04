@@ -8,6 +8,9 @@ import 'package:video_chat/app/AppConfiguration/AppNavigation.dart';
 import 'package:video_chat/app/Helper/socket_helper.dart';
 import 'package:video_chat/app/app.export.dart';
 import 'package:video_chat/app/utils/CommonWidgets.dart';
+import 'package:video_chat/components/Screens/OnboardingVerfication/VerificationCamera.dart';
+import 'package:video_chat/components/Screens/OnboardingVerfication/VerificationInvitation.dart';
+import 'package:video_chat/components/Screens/OnboardingVerfication/VerificationProfile.dart';
 
 class Splash extends StatefulWidget {
   Splash({Key? key}) : super(key: key);
@@ -31,7 +34,9 @@ class _SplashState extends State<Splash> {
 
   goToNext() async {
     await AgoraService.instance.initialize(AGORA_APPID);
-    AppNavigation.shared.goNextFromSplash();
+    // AppNavigation.shared.goNextFromSplash();
+    NavigationUtilities.pushReplacementNamed(VerficationInvitation.route,
+        type: RouteType.fade);
     SocketHealper.shared.connect();
     // FirebaseCrashlytics.instance.crash();
   }

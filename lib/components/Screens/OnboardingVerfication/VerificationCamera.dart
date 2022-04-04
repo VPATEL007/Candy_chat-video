@@ -1,6 +1,11 @@
+import 'package:camera/camera.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
+import 'package:video_chat/app/constant/ImageConstant.dart';
+import 'package:video_chat/app/utils/math_utils.dart';
 
 class VerificationCamera extends StatefulWidget {
+  static const route = "VerificationCamera";
   VerificationCamera({Key? key}) : super(key: key);
 
   @override
@@ -8,8 +13,93 @@ class VerificationCamera extends StatefulWidget {
 }
 
 class _VerificationCameraState extends State<VerificationCamera> {
+  CameraController? controller;
+  List<CameraDescription> cameras = [];
+
+  @override
+  void initState() {
+    super.initState();
+    intialiseCamera();
+  }
+
+  intialiseCamera() async {
+    cameras = await availableCameras();
+
+    controller = CameraController(cameras[0], ResolutionPreset.max);
+
+    // controller?.initialize().then((_) {
+    //   if (!mounted) {
+    //     return;
+    //   }
+    //   setState(() {});
+    // });
+  }
+
   @override
   Widget build(BuildContext context) {
-    return Container();
+    return Scaffold(
+      body: Container(
+        color: Colors.grey,
+        child: SafeArea(
+          child: Stack(
+            children: [
+              controller?.value.isInitialized == true
+                  ? CameraPreview(controller!)
+                  : Container(),
+              Align(
+                alignment: Alignment.topRight,
+                child: Padding(
+                  padding: EdgeInsets.all(getSize(16)),
+                  child: Container(
+                    child: Image.asset(icVerificationExam),
+                  ),
+                ),
+              ),
+              Align(
+                alignment: Alignment.topLeft,
+                child: InkWell(
+                  onTap: () {
+                    Navigator.pop(context);
+                  },
+                  child: Padding(
+                    padding: EdgeInsets.all(getSize(16)),
+                    child: Container(
+                      child: Image.asset(icClose),
+                    ),
+                  ),
+                ),
+              ),
+              Align(
+                alignment: Alignment.center,
+                child: Image.asset(
+                  icVerification,
+                  height: MathUtilities.screenWidth(context) - getSize(60),
+                ),
+              ),
+              Align(
+                alignment: Alignment.bottomCenter,
+                child: InkWell(
+                  onTap: () {},
+                  child: InkWell(
+                    onTap: () {
+                      controller?.takePicture().then((XFile? file) {
+                        if (mounted) {
+                          setState(() {
+                            // imageFile = file;
+                          });
+                        }
+                      });
+                    },
+                    child: Container(
+                      child: Image.asset(icCapture),
+                    ),
+                  ),
+                ),
+              )
+            ],
+          ),
+        ),
+      ),
+    );
   }
 }

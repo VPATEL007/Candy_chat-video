@@ -3,12 +3,18 @@ import 'dart:ui';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:provider/provider.dart';
 import 'package:video_chat/app/app.export.dart';
 import 'package:video_chat/app/constant/ColorConstant.dart';
 import 'package:video_chat/app/utils/CommonWidgets.dart';
+import 'package:video_chat/components/Model/User/UserModel.dart';
 import 'package:video_chat/components/Screens/Profile/edit_profile.dart';
+import 'package:video_chat/provider/followes_provider.dart';
+
+import 'VerificationFace.dart';
 
 class VerificationProfile extends StatefulWidget {
+  static const route = "VerificationProfile";
   VerificationProfile({Key? key}) : super(key: key);
 
   @override
@@ -20,6 +26,52 @@ class _VerificationProfileState extends State<VerificationProfile> {
   TextEditingController _dobController = TextEditingController();
   DateTime _selectedDate = DateTime(
       DateTime.now().year - 18, DateTime.now().month, DateTime.now().day);
+  UserModel? _userInfo;
+
+  @override
+  void initState() {
+    super.initState();
+    getUserinfo();
+  }
+
+  getUserinfo() async {
+    await Provider.of<FollowesProvider>(context, listen: false)
+        .fetchMyProfile(context);
+    _userInfo = Provider.of<FollowesProvider>(context, listen: false)
+        .userModel!
+        .toCloneInfo;
+
+    if (mounted) setState(() {});
+
+    nickNameController.text = _userInfo?.userName ?? "";
+    _dobController.text = _userInfo?.dob ?? "";
+    setState(() {});
+  }
+
+  bool isValid() {
+    if (nickNameController.text.isEmpty) {
+      View.showMessage(context, "Please enter Nickname.");
+      return false;
+    }
+
+    if (_dobController.text.isEmpty) {
+      View.showMessage(context, "Please select Date of Birth.");
+      return false;
+    }
+    return true;
+  }
+
+  callApiForUpdateProfile() async {
+    if (isValid()) {
+      _userInfo?.userName = nickNameController.text;
+      _userInfo?.dob = _dobController.text;
+
+      await Provider.of<FollowesProvider>(context, listen: false)
+          .saveMyProfile(context, _userInfo, []);
+
+      NavigationUtilities.push(VerificationFace());
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -27,7 +79,9 @@ class _VerificationProfileState extends State<VerificationProfile> {
       backgroundColor: ColorConstants.colorPrimary,
       appBar: getAppBar(context, "Upload profile",
           isWhite: true, leadingButton: getBackButton(context)),
-      bottomSheet: getBottomButton(context, "Next", () {}),
+      bottomSheet: getBottomButton(context, "Next", () {
+        callApiForUpdateProfile();
+      }),
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
