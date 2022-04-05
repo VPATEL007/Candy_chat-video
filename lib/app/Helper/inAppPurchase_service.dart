@@ -4,6 +4,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_inapp_purchase/flutter_inapp_purchase.dart';
+import 'package:in_app_purchase/in_app_purchase.dart';
 import 'package:provider/provider.dart';
 import 'package:video_chat/app/constant/ApiConstants.dart';
 import 'package:video_chat/app/constant/ColorConstant.dart';
@@ -101,6 +102,8 @@ class InAppPurchaseHelper {
     if (Platform.isAndroid) {
       creditCoin(purchaseDetails);
       return Future<bool>.value(true);
+    } else {
+      
     }
     var isSuccess = false;
     Map<String, dynamic> req = {};
