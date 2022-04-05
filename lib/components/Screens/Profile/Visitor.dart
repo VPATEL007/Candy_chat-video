@@ -10,6 +10,7 @@ import 'package:video_chat/components/Model/Visitor/VisitorModel.dart';
 import 'package:video_chat/provider/visitor_provider.dart';
 
 class Visitor extends StatefulWidget {
+  
   Visitor({Key? key}) : super(key: key);
 
   @override

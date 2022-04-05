@@ -1,5 +1,7 @@
+import 'dart:io';
 import 'dart:ui';
 
+import 'package:camera/camera.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:video_chat/app/app.export.dart';
@@ -11,6 +13,7 @@ import 'package:video_chat/app/utils/math_utils.dart';
 import 'VerificationCamera.dart';
 
 class VerificationFace extends StatefulWidget {
+  static const route = "VerificationFace";
   VerificationFace({Key? key}) : super(key: key);
 
   @override
@@ -18,6 +21,49 @@ class VerificationFace extends StatefulWidget {
 }
 
 class _VerificationFaceState extends State<VerificationFace> {
+  XFile? imageFile;
+
+  uploadImage() async {
+    NetworkClient.getInstance.showLoader(context);
+    await NetworkClient.getInstance.uploadImages(
+      context: context,
+      baseUrl: ApiConstants.apiUrl,
+      command: "app-home-screen/upload-image",
+      headers: NetworkClient.getInstance.getAuthHeaders(),
+      image: imageFile!.path,
+      successCallback: (response, message) {
+        if (response != null) {
+          verifyProfile(response.toString());
+        }
+      },
+      failureCallback: (code, message) {
+        View.showMessage(context, message);
+      },
+    );
+  }
+
+  verifyProfile(String url) async {
+    Map<String, dynamic> req = {};
+    req["user_id"] = app.resolve<PrefUtils>().getUserDetails()?.id;
+    req["photo_url"] = url;
+
+    await NetworkClient.getInstance.callApi(
+      context: context,
+      baseUrl: ApiConstants.apiUrl,
+      command: ApiConstants.verifyFace,
+      method: MethodType.Post,
+      params: req,
+      successCallback: (response, message) async {
+        print(response);
+        NetworkClient.getInstance.hideProgressDialog();
+      },
+      failureCallback: (code, message) {
+        NetworkClient.getInstance.hideProgressDialog();
+        View.showMessage(context, message);
+      },
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -25,7 +71,17 @@ class _VerificationFaceState extends State<VerificationFace> {
       appBar: getAppBar(context, "Face Verification",
           isWhite: true, leadingButton: getBackButton(context)),
       bottomSheet: getBottomButton(context, "Verify now", () {
-        NavigationUtilities.push(VerificationCamera());
+        if (imageFile != null) {
+          uploadImage();
+        } else {
+          NavigationUtilities.push(VerificationCamera(
+            imageCapture: (image) {
+              setState(() {
+                imageFile = image;
+              });
+            },
+          ));
+        }
       }),
       body: Padding(
         padding: EdgeInsets.all(getSize(16)),
@@ -57,12 +113,24 @@ class _VerificationFaceState extends State<VerificationFace> {
                   child: Stack(
                 children: [
                   Align(
+                      alignment: Alignment.center,
+                      child: imageFile == null
+                          ? Container()
+                          : Image.file(
+                              File(imageFile!.path),
+                              fit: BoxFit.cover,
+                              height: MathUtilities.screenWidth(context) -
+                                  getSize(20),
+                              width: MathUtilities.screenWidth(context) -
+                                  getSize(20),
+                            )),
+                  Align(
                     alignment: Alignment.bottomCenter,
                     child: Image.asset(
                       icVerification,
                       height: MathUtilities.screenWidth(context) - getSize(60),
                     ),
-                  )
+                  ),
                 ],
               )),
             )
