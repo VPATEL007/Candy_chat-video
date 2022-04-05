@@ -100,6 +100,11 @@ class InAppPurchaseHelper {
   Future<bool> verifyPurchase(
       PurchasedItem purchaseDetails, BuildContext context) async {
     if (Platform.isAndroid) {
+      // await FlutterInappPurchase.instance.validateReceiptAndroid(
+      //     packageName: "com.sugarcam.videochat",
+      //     productId: purchaseDetails.productId ?? "",
+      //     productToken: purchaseDetails.purchaseToken ?? "",
+      //     accessToken: accessToken);
       creditCoin(purchaseDetails);
       return Future<bool>.value(true);
     } else {
