@@ -27,16 +27,25 @@ class _EarnHistoryState extends State<EarnHistory> {
   List<LeaderBoardModel> giftCoins = [];
   bool isCall = true;
 
+  @override
+  void initState() {
+    super.initState();
+
+    WidgetsBinding.instance?.addPostFrameCallback((timeStamp) {
+      getCallDuration();
+    });
+  }
+
   getCallDuration() {
     Map<String, dynamic> req = {};
-    req["callType"] = isCall == true ? "call" : "gift";
-    req["agency_id"] = 10;
+    // req["callType"] = isCall == true ? "call" : "gift";
+    // req["agency_id"] = 10;
 
     NetworkClient.getInstance.showLoader(context);
     NetworkClient.getInstance.callApi(
       context: context,
       baseUrl: ApiConstants.apiUrl,
-      command: ApiConstants.influeencerLeaderboard,
+      command: ApiConstants.influeencerEarningReport,
       params: req,
       headers: NetworkClient.getInstance.getAuthHeaders(),
       method: MethodType.Post,

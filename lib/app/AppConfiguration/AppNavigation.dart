@@ -5,6 +5,7 @@ import 'package:video_chat/components/Screens/Auth/Login.dart';
 import 'package:video_chat/components/Screens/Home/Home.dart';
 import 'package:video_chat/components/Screens/Language%20Selection/Language.dart';
 import 'package:video_chat/components/Screens/Leaderboard/Leaderboard.dart';
+import 'package:video_chat/components/Screens/OnboardingVerfication/VerificationInvitation.dart';
 import 'package:video_chat/components/Screens/Profile/edit_profile.dart';
 import 'package:video_chat/provider/followes_provider.dart';
 
@@ -61,7 +62,9 @@ class AppNavigation {
           type: RouteType.fade);
     } else {
       SocketHealper.shared.connect();
-      NavigationUtilities.pushReplacementNamed(LeaderBoard.route,
+      // NavigationUtilities.pushReplacementNamed(LeaderBoard.route,
+      //     type: RouteType.fade);
+      NavigationUtilities.pushReplacementNamed(VerficationInvitation.route,
           type: RouteType.fade);
       CommonApiHelper.shared.appStart();
       CommonApiHelper.shared.updateFCMToken();
