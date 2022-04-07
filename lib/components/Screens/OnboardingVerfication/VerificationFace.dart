@@ -13,6 +13,7 @@ import 'package:video_chat/app/utils/math_utils.dart';
 import 'VerificationCamera.dart';
 
 class VerificationFace extends StatefulWidget {
+  static const route = "VerificationFace";
   VerificationFace({Key? key}) : super(key: key);
 
   @override
@@ -123,16 +124,13 @@ class _VerificationFaceState extends State<VerificationFace> {
                               width: MathUtilities.screenWidth(context) -
                                   getSize(20),
                             )),
-                  imageFile == null
-                      ? Align(
-                          alignment: Alignment.bottomCenter,
-                          child: Image.asset(
-                            icVerification,
-                            height: MathUtilities.screenWidth(context) -
-                                getSize(60),
-                          ),
-                        )
-                      : Container()
+                  Align(
+                    alignment: Alignment.bottomCenter,
+                    child: Image.asset(
+                      icVerification,
+                      height: MathUtilities.screenWidth(context) - getSize(60),
+                    ),
+                  ),
                 ],
               )),
             )

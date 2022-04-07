@@ -22,13 +22,16 @@ class _VerificationCameraState extends State<VerificationCamera> {
   @override
   void initState() {
     super.initState();
+
     intialiseCamera();
   }
 
   intialiseCamera() async {
     await [Permission.camera].request();
     cameras = await availableCameras();
+
     controller = CameraController(cameras[1], ResolutionPreset.max);
+
     controller?.initialize().then((_) {
       if (!mounted) {
         return;
@@ -86,11 +89,9 @@ class _VerificationCameraState extends State<VerificationCamera> {
                     onTap: () {
                       controller?.takePicture().then((XFile? file) {
                         if (mounted) {
-                          setState(() {
-                            imageFile = file;
-                            widget.imageCapture!(imageFile!);
-                            Navigator.pop(context);
-                          });
+                          imageFile = file;
+                          widget.imageCapture!(imageFile!);
+                          Navigator.pop(context);
                         }
                       });
                     },

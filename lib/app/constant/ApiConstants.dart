@@ -62,6 +62,8 @@ class ApiConstants {
   static const String paymentMethod = "payment-method/get-all";
   static const String withDrawRequestList =
       "transaction/app-withdrawal-requests";
+       static const String verifyFace =
+      "profile/face-verification";
 
   static const String invitationVerification = "profile/verify-invitation";
 

@@ -82,6 +82,7 @@ const String icVerification = "assets/Verification/showthrough.png";
 const String icVerificationExam = "assets/Verification/verificationExample.png";
 const String icClose = "assets/Verification/close.png";
 const String icCapture = "assets/Verification/capture.png";
+const String icVerficationDemo = "assets/Verification/VerificationDemo.png";
 
 String getUserPlaceHolder(String gender) {
   if (gender.toLowerCase() == "female") {

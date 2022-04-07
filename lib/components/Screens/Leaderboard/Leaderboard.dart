@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:video_chat/app/Helper/Themehelper.dart';
+import 'package:video_chat/app/app.export.dart';
 import 'package:video_chat/app/constant/ApiConstants.dart';
 import 'package:video_chat/app/constant/ColorConstant.dart';
 import 'package:video_chat/app/constant/EnumConstant.dart';
@@ -37,8 +38,8 @@ class _LeaderBoardState extends State<LeaderBoard> {
   void initState() {
     super.initState();
 
-    WidgetsBinding.instance?.addPostFrameCallback((timeStamp) async {
-     await openVerificationPopUp();
+    WidgetsBinding.instance?.addPostFrameCallback((timeStamp) {
+      openVerificationPopUp();
       getCallDuration();
     });
   }
