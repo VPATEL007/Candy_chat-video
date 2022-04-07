@@ -34,6 +34,7 @@ class UserModel {
       this.countryIp,
       this.coinBalance,
       this.coinsEarned,
+      this.isFacVerify,
       this.agencyId});
 
   String? userName;
@@ -62,6 +63,7 @@ class UserModel {
   num? coinBalance;
   num? coinsEarned;
   num? agencyId;
+  bool? isFacVerify;
 
   factory UserModel.fromJson(Map<String, dynamic> json) => UserModel(
       userName: json["user_name"],
@@ -104,6 +106,7 @@ class UserModel {
       countryIp: json["country_ip"],
       coinsEarned: json["coins_earned"],
       isFollowing: json["is_following"] == 1 ? true : false,
+      isFacVerify: json["is_face_verify"],
       isFavourite: json["is_favourite"] == 1 ? true : false);
 
   Map<String, dynamic> toJson() => {

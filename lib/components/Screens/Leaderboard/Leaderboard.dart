@@ -45,6 +45,10 @@ class _LeaderBoardState extends State<LeaderBoard> {
   }
 
   openVerificationPopUp() {
+    if (app.resolve<PrefUtils>().getUserDetails()?.isFacVerify == true) {
+      return true;
+    }
+
     showModalBottomSheet(
         isDismissible: false,
         isScrollControlled: false,
@@ -54,101 +58,111 @@ class _LeaderBoardState extends State<LeaderBoard> {
         ),
         context: context,
         builder: (builder) {
-          return StatefulBuilder(
-            builder: (BuildContext context, setState) {
-              return SafeArea(
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Container(
-                      decoration: BoxDecoration(
-                        borderRadius: const BorderRadius.only(
-                          topLeft: Radius.circular(20.0),
-                          topRight: Radius.circular(20.0),
+          return WillPopScope(
+            onWillPop: () async {
+              return false;
+            },
+            child: StatefulBuilder(
+              builder: (BuildContext context, setState) {
+                return SafeArea(
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Container(
+                        decoration: BoxDecoration(
+                          borderRadius: const BorderRadius.only(
+                            topLeft: Radius.circular(20.0),
+                            topRight: Radius.circular(20.0),
+                          ),
+                          color: ColorConstants.red,
                         ),
-                        color: ColorConstants.red,
+                        child: Padding(
+                          padding: EdgeInsets.all(getSize(16)),
+                          child: Text(
+                              "Two Must-do before you become an official anchor",
+                              textAlign: TextAlign.center,
+                              style: TextStyle(
+                                  fontSize: getFontSize(18),
+                                  color: Colors.white,
+                                  fontWeight: FontWeight.w800)),
+                        ),
                       ),
-                      child: Padding(
+                      Padding(
                         padding: EdgeInsets.all(getSize(16)),
-                        child: Text(
-                            "Two Must-do before you become an official anchor",
-                            textAlign: TextAlign.center,
-                            style: TextStyle(
-                                fontSize: getFontSize(18),
-                                color: Colors.white,
-                                fontWeight: FontWeight.w800)),
-                      ),
-                    ),
-                    Padding(
-                      padding: EdgeInsets.all(getSize(16)),
-                      child: InkWell(
-                        onTap: () {
-                          NavigationUtilities.push(VerficationInvitation());
-                        },
-                        child: Container(
-                          decoration: BoxDecoration(
-                              border: Border.all(
-                                  width: 1,
-                                  color: ColorConstants.red,
-                                  style: BorderStyle.solid),
-                              borderRadius: BorderRadius.circular(16)),
-                          child: Padding(
-                            padding: EdgeInsets.all(getSize(16)),
-                            child: Row(
-                              children: [
-                                Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Text(
-                                        "Submit full profile and\nget approved",
-                                        maxLines: 2,
-                                        textAlign: TextAlign.start,
-                                        style: TextStyle(
-                                            fontSize: getFontSize(16),
-                                            color: Colors.black,
-                                            fontWeight: FontWeight.w600)),
-                                    SizedBox(
-                                      height: getSize(8),
-                                    ),
-                                    Text("Unsubmitted",
-                                        textAlign: TextAlign.start,
-                                        style: TextStyle(
-                                            fontSize: getFontSize(14),
-                                            color: ColorConstants.red,
-                                            fontWeight: FontWeight.w500))
-                                  ],
-                                ),
-                                Spacer(),
-                                Container(
-                                  decoration: BoxDecoration(
-                                      color: ColorConstants.red,
-                                      borderRadius: BorderRadius.circular(12)),
-                                  child: Padding(
-                                    padding: EdgeInsets.only(
-                                        left: 16, right: 16, top: 6, bottom: 6),
-                                    child: Row(
-                                      children: [
-                                        Text("Next",
-                                            textAlign: TextAlign.center,
-                                            style: TextStyle(
-                                                fontSize: getFontSize(14),
-                                                color: Colors.white,
-                                                fontWeight: FontWeight.w500))
-                                      ],
-                                    ),
+                        child: InkWell(
+                          onTap: () {
+                            NavigationUtilities.push(VerficationInvitation());
+                          },
+                          child: Container(
+                            decoration: BoxDecoration(
+                                border: Border.all(
+                                    width: 1,
+                                    color: ColorConstants.red,
+                                    style: BorderStyle.solid),
+                                borderRadius: BorderRadius.circular(16)),
+                            child: Padding(
+                              padding: EdgeInsets.all(getSize(16)),
+                              child: Row(
+                                children: [
+                                  Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      Text(
+                                          "Submit full profile and\nget approved",
+                                          maxLines: 2,
+                                          textAlign: TextAlign.start,
+                                          style: TextStyle(
+                                              fontSize: getFontSize(16),
+                                              color: Colors.black,
+                                              fontWeight: FontWeight.w600)),
+                                      SizedBox(
+                                        height: getSize(8),
+                                      ),
+                                      Text("Unsubmitted",
+                                          textAlign: TextAlign.start,
+                                          style: TextStyle(
+                                              fontSize: getFontSize(14),
+                                              color: ColorConstants.red,
+                                              fontWeight: FontWeight.w500))
+                                    ],
                                   ),
-                                )
-                              ],
+                                  Spacer(),
+                                  Container(
+                                    decoration: BoxDecoration(
+                                        color: ColorConstants.red,
+                                        borderRadius:
+                                            BorderRadius.circular(12)),
+                                    child: Padding(
+                                      padding: EdgeInsets.only(
+                                          left: 16,
+                                          right: 16,
+                                          top: 6,
+                                          bottom: 6),
+                                      child: Row(
+                                        children: [
+                                          Text("Next",
+                                              textAlign: TextAlign.center,
+                                              style: TextStyle(
+                                                  fontSize: getFontSize(14),
+                                                  color: Colors.white,
+                                                  fontWeight: FontWeight.w500))
+                                        ],
+                                      ),
+                                    ),
+                                  )
+                                ],
+                              ),
                             ),
                           ),
                         ),
-                      ),
-                    )
-                  ],
-                ),
-              );
-            },
+                      )
+                    ],
+                  ),
+                );
+              },
+            ),
           );
           ;
         });
