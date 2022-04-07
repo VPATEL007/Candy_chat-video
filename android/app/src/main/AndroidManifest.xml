@@ -17,7 +17,7 @@
     <uses-feature android:name="android.hardware.camera.flash" />
 
    <application
-        android:label="SugarCam"
+        android:label="Storm Video Chat"
         android:usesCleartextTraffic="true"
         android:icon="@mipmap/launcher_icon">
 

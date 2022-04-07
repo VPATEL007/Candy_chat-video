@@ -5,7 +5,7 @@
 	<key>CFBundleDevelopmentRegion</key>
 	<string>$(DEVELOPMENT_LANGUAGE)</string>
 	<key>CFBundleDisplayName</key>
-	<string>SugarCam</string>
+	<string>Storm Video Chat</string>
 	<key>CFBundleExecutable</key>
 	<string>$(EXECUTABLE_NAME)</string>
 	<key>CFBundleIdentifier</key>
@@ -13,7 +13,7 @@
 	<key>CFBundleInfoDictionaryVersion</key>
 	<string>6.0</string>
 	<key>CFBundleName</key>
-	<string>SugarCam</string>
+	<string>Storm Video Chat</string>
 	<key>CFBundlePackageType</key>
 	<string>APPL</string>
 	<key>CFBundleShortVersionString</key>
@@ -37,7 +37,7 @@
 	<key>FacebookAppID</key>
 	<string>234543204337461</string>
 	<key>FacebookDisplayName</key>
-	<string>SugarCam</string>
+	<string>Storm Video Chat</string>
 	<key>LSApplicationQueriesSchemes</key>
 	<array>
 		<string>itms</string>

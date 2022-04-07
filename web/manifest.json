@@ -1,6 +1,6 @@
 {
-    "name": "SugarCam",
-    "short_name": "SugarCam",
+    "name": "Storm Video Chat",
+    "short_name": "Storm Video Chat",
     "start_url": ".",
     "display": "standalone",
     "background_color": "#0175C2",

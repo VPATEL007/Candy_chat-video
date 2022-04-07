@@ -10,7 +10,7 @@ const FAIL = 2;
 
 const IMAGE_FILE_SIZE = 10.0;
 
-const APPNAME = "Sugarcam";
+const APPNAME = "Storm Video Chat";
 
 const CODE_CREATED = 201;
 const CODE_OK = "OK";
