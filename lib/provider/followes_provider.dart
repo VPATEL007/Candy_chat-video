@@ -187,7 +187,7 @@ class FollowesProvider with ChangeNotifier {
       method: MethodType.Get,
       successCallback: (response, message) {
         userModel = userModelFromJson(jsonEncode(response));
-        UserModel model = UserModel.fromJson(response["userData"]);
+        UserModel model = userModelFromJson(jsonEncode(response));
         app.resolve<PrefUtils>().saveUser(model, isLoggedIn: true);
         notifyListeners();
       },

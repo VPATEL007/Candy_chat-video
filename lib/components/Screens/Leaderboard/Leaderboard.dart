@@ -50,6 +50,7 @@ class _LeaderBoardState extends State<LeaderBoard> {
     }
 
     showModalBottomSheet(
+        enableDrag: false,
         isDismissible: false,
         isScrollControlled: false,
         shape: RoundedRectangleBorder(
