@@ -125,13 +125,16 @@ class _VerificationFaceState extends State<VerificationFace> {
                               width: MathUtilities.screenWidth(context) -
                                   getSize(20),
                             )),
-                  Align(
-                    alignment: Alignment.bottomCenter,
-                    child: Image.asset(
-                      icVerification,
-                      height: MathUtilities.screenWidth(context) - getSize(60),
-                    ),
-                  ),
+                  imageFile == null
+                      ? Align(
+                          alignment: Alignment.bottomCenter,
+                          child: Image.asset(
+                            icVerification,
+                            height: MathUtilities.screenWidth(context) -
+                                getSize(60),
+                          ),
+                        )
+                      : SizedBox(),
                 ],
               )),
             )
