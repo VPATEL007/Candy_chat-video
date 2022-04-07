@@ -6,6 +6,10 @@ import 'package:video_chat/components/Screens/Home/Home.dart';
 import 'package:video_chat/components/Screens/Language%20Selection/Language.dart';
 import 'package:video_chat/components/Screens/Leaderboard/Leaderboard.dart';
 import 'package:video_chat/components/Screens/Onboarding/Onboarding.dart';
+import 'package:video_chat/components/Screens/OnboardingVerfication/VerificationCamera.dart';
+import 'package:video_chat/components/Screens/OnboardingVerfication/VerificationFace.dart';
+import 'package:video_chat/components/Screens/OnboardingVerfication/VerificationInvitation.dart';
+import 'package:video_chat/components/Screens/OnboardingVerfication/VerificationProfile.dart';
 import 'package:video_chat/components/Screens/Profile/edit_profile.dart';
 
 import 'fade_route.dart';
@@ -114,6 +118,18 @@ Route<dynamic> onGenerateRoute(RouteSettings settings) {
       screen = EditProfileScreen(
         isFromSignUp: true,
       );
+      break;
+    case VerificationProfile.route:
+      screen = VerificationProfile();
+      break;
+    case VerificationCamera.route:
+      screen = VerificationCamera();
+      break;
+    case VerficationInvitation.route:
+      screen = VerficationInvitation();
+      break;
+    case VerificationFace.route:
+      screen = VerificationFace();
       break;
   }
 

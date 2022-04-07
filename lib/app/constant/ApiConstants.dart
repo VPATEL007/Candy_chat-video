@@ -62,6 +62,12 @@ class ApiConstants {
   static const String paymentMethod = "payment-method/get-all";
   static const String withDrawRequestList =
       "transaction/app-withdrawal-requests";
+  static const String verifyFace = "profile/face-verification";
 
-  static const String influeencerLeaderboard = "dashboard/get-top-weekly-infulencer";
+  static const String invitationVerification = "profile/verify-invitation";
+
+  static const String influeencerLeaderboard =
+      "dashboard/get-top-weekly-infulencer";
+  static const String influeencerEarningReport =
+      "dashboard/get-earning-report-infulencer";
 }

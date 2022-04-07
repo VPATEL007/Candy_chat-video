@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:video_chat/app/Helper/Themehelper.dart';
+import 'package:video_chat/app/app.export.dart';
 import 'package:video_chat/app/constant/ApiConstants.dart';
 import 'package:video_chat/app/constant/ColorConstant.dart';
 import 'package:video_chat/app/constant/EnumConstant.dart';
@@ -10,9 +11,13 @@ import 'package:video_chat/app/extensions/view.dart';
 import 'package:video_chat/app/network/NetworkClient.dart';
 import 'package:video_chat/app/utils/CommonWidgets.dart';
 import 'package:video_chat/app/utils/math_utils.dart';
+import 'package:video_chat/app/utils/navigator.dart';
+import 'package:video_chat/app/utils/pref_utils.dart';
 import 'package:video_chat/components/Model/Leaderboard/LeaderBoardModel.dart';
 import 'package:video_chat/components/Model/User/report_reason_model.dart';
+import 'package:video_chat/components/Screens/OnboardingVerfication/VerificationInvitation.dart';
 import 'package:video_chat/components/widgets/TabBar/Tabbar.dart';
+import 'package:video_chat/main.dart';
 
 class LeaderBoard extends StatefulWidget {
   static const route = "LeaderBoard";
@@ -34,14 +39,139 @@ class _LeaderBoardState extends State<LeaderBoard> {
     super.initState();
 
     WidgetsBinding.instance?.addPostFrameCallback((timeStamp) {
+      openVerificationPopUp();
       getCallDuration();
     });
+  }
+
+  openVerificationPopUp() {
+    if (app.resolve<PrefUtils>().getUserDetails()?.isFacVerify == true) {
+      return true;
+    }
+
+    showModalBottomSheet(
+        isDismissible: false,
+        isScrollControlled: false,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.only(
+              topLeft: Radius.circular(20.0), topRight: Radius.circular(20.0)),
+        ),
+        context: context,
+        builder: (builder) {
+          return WillPopScope(
+            onWillPop: () async {
+              return false;
+            },
+            child: StatefulBuilder(
+              builder: (BuildContext context, setState) {
+                return SafeArea(
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Container(
+                        decoration: BoxDecoration(
+                          borderRadius: const BorderRadius.only(
+                            topLeft: Radius.circular(20.0),
+                            topRight: Radius.circular(20.0),
+                          ),
+                          color: ColorConstants.red,
+                        ),
+                        child: Padding(
+                          padding: EdgeInsets.all(getSize(16)),
+                          child: Text(
+                              "Two Must-do before you become an official anchor",
+                              textAlign: TextAlign.center,
+                              style: TextStyle(
+                                  fontSize: getFontSize(18),
+                                  color: Colors.white,
+                                  fontWeight: FontWeight.w800)),
+                        ),
+                      ),
+                      Padding(
+                        padding: EdgeInsets.all(getSize(16)),
+                        child: InkWell(
+                          onTap: () {
+                            NavigationUtilities.push(VerficationInvitation());
+                          },
+                          child: Container(
+                            decoration: BoxDecoration(
+                                border: Border.all(
+                                    width: 1,
+                                    color: ColorConstants.red,
+                                    style: BorderStyle.solid),
+                                borderRadius: BorderRadius.circular(16)),
+                            child: Padding(
+                              padding: EdgeInsets.all(getSize(16)),
+                              child: Row(
+                                children: [
+                                  Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      Text(
+                                          "Submit full profile and\nget approved",
+                                          maxLines: 2,
+                                          textAlign: TextAlign.start,
+                                          style: TextStyle(
+                                              fontSize: getFontSize(16),
+                                              color: Colors.black,
+                                              fontWeight: FontWeight.w600)),
+                                      SizedBox(
+                                        height: getSize(8),
+                                      ),
+                                      Text("Unsubmitted",
+                                          textAlign: TextAlign.start,
+                                          style: TextStyle(
+                                              fontSize: getFontSize(14),
+                                              color: ColorConstants.red,
+                                              fontWeight: FontWeight.w500))
+                                    ],
+                                  ),
+                                  Spacer(),
+                                  Container(
+                                    decoration: BoxDecoration(
+                                        color: ColorConstants.red,
+                                        borderRadius:
+                                            BorderRadius.circular(12)),
+                                    child: Padding(
+                                      padding: EdgeInsets.only(
+                                          left: 16,
+                                          right: 16,
+                                          top: 6,
+                                          bottom: 6),
+                                      child: Row(
+                                        children: [
+                                          Text("Next",
+                                              textAlign: TextAlign.center,
+                                              style: TextStyle(
+                                                  fontSize: getFontSize(14),
+                                                  color: Colors.white,
+                                                  fontWeight: FontWeight.w500))
+                                        ],
+                                      ),
+                                    ),
+                                  )
+                                ],
+                              ),
+                            ),
+                          ),
+                        ),
+                      )
+                    ],
+                  ),
+                );
+              },
+            ),
+          );
+          ;
+        });
   }
 
   getCallDuration() {
     Map<String, dynamic> req = {};
     req["callType"] = isCall == true ? "call" : "gift";
-    req["agency_id"] = 10;
+    req["agency_id"] = app.resolve<PrefUtils>().getUserDetails()?.agencyId ?? 0;
 
     NetworkClient.getInstance.showLoader(context);
     NetworkClient.getInstance.callApi(

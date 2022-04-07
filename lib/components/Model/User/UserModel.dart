@@ -33,7 +33,9 @@ class UserModel {
       this.totalPoint,
       this.countryIp,
       this.coinBalance,
-      this.coinsEarned});
+      this.coinsEarned,
+      this.isFacVerify,
+      this.agencyId});
 
   String? userName;
   String? email;
@@ -60,6 +62,8 @@ class UserModel {
   String? countryIp;
   num? coinBalance;
   num? coinsEarned;
+  num? agencyId;
+  bool? isFacVerify;
 
   factory UserModel.fromJson(Map<String, dynamic> json) => UserModel(
       userName: json["user_name"],
@@ -95,12 +99,14 @@ class UserModel {
           json["language"] == null ? null : Language.fromJson(json["language"]),
       totalPoint: json["total_point"],
       onlineStatus: json["online_status"],
+      agencyId: json["agency_id"],
       userVisiteds: json["visitorCount"] == null
           ? json["visitor_count"]
           : json["visitorCount"],
       countryIp: json["country_ip"],
       coinsEarned: json["coins_earned"],
       isFollowing: json["is_following"] == 1 ? true : false,
+      isFacVerify: json["is_face_verify"],
       isFavourite: json["is_favourite"] == 1 ? true : false);
 
   Map<String, dynamic> toJson() => {
@@ -124,6 +130,7 @@ class UserModel {
         "country_ip": countryIp,
         "coin_balance": coinBalance,
         "coins_earned": coinsEarned,
+        "agency_id": agencyId,
         "user_images": List<dynamic>.from(userImages!.map((x) => x.toJson())),
       };
 
