@@ -1,12 +1,14 @@
 import 'package:camera/camera.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:permission_handler/permission_handler.dart';
 import 'package:video_chat/app/constant/ImageConstant.dart';
 import 'package:video_chat/app/utils/math_utils.dart';
 
 class VerificationCamera extends StatefulWidget {
   static const route = "VerificationCamera";
-  VerificationCamera({Key? key}) : super(key: key);
+  final Function(XFile)? imageCapture;
+  VerificationCamera({Key? key, this.imageCapture}) : super(key: key);
 
   @override
   State<VerificationCamera> createState() => _VerificationCameraState();
@@ -15,6 +17,7 @@ class VerificationCamera extends StatefulWidget {
 class _VerificationCameraState extends State<VerificationCamera> {
   CameraController? controller;
   List<CameraDescription> cameras = [];
+  XFile? imageFile;
 
   @override
   void initState() {
@@ -23,16 +26,15 @@ class _VerificationCameraState extends State<VerificationCamera> {
   }
 
   intialiseCamera() async {
+    await [Permission.camera].request();
     cameras = await availableCameras();
-
-    controller = CameraController(cameras[0], ResolutionPreset.max);
-
-    // controller?.initialize().then((_) {
-    //   if (!mounted) {
-    //     return;
-    //   }
-    //   setState(() {});
-    // });
+    controller = CameraController(cameras[1], ResolutionPreset.max);
+    controller?.initialize().then((_) {
+      if (!mounted) {
+        return;
+      }
+      setState(() {});
+    });
   }
 
   @override
@@ -85,7 +87,9 @@ class _VerificationCameraState extends State<VerificationCamera> {
                       controller?.takePicture().then((XFile? file) {
                         if (mounted) {
                           setState(() {
-                            // imageFile = file;
+                            imageFile = file;
+                            widget.imageCapture!(imageFile!);
+                            Navigator.pop(context);
                           });
                         }
                       });

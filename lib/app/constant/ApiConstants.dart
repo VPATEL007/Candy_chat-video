@@ -69,4 +69,5 @@ class ApiConstants {
       "dashboard/get-top-weekly-infulencer";
   static const String influeencerEarningReport =
       "dashboard/get-earning-report-infulencer";
+  static const String verifyFace = "profile/face-verification";
 }

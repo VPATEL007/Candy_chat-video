@@ -62,10 +62,10 @@ class AppNavigation {
           type: RouteType.fade);
     } else {
       SocketHealper.shared.connect();
-      // NavigationUtilities.pushReplacementNamed(LeaderBoard.route,
-      //     type: RouteType.fade);
-      NavigationUtilities.pushReplacementNamed(VerficationInvitation.route,
+      NavigationUtilities.pushReplacementNamed(LeaderBoard.route,
           type: RouteType.fade);
+      // NavigationUtilities.pushReplacementNamed(VerficationInvitation.route,
+      //     type: RouteType.fade);
       CommonApiHelper.shared.appStart();
       CommonApiHelper.shared.updateFCMToken();
     }
