@@ -76,134 +76,136 @@ class _VerificationProfileState extends State<VerificationProfile> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: ColorConstants.colorPrimary,
+      backgroundColor: ColorConstants.mainBgColor,
       appBar: getAppBar(context, "Upload profile",
-          isWhite: true, leadingButton: getBackButton(context)),
+          isWhite: false, leadingButton: getBackButton(context)),
       bottomSheet: getBottomButton(context, "Next", () {
         callApiForUpdateProfile();
       }),
-      body: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          SizedBox(
-            height: 16,
-          ),
-          Padding(
-            padding: EdgeInsets.only(left: getSize(16), bottom: getSize(16)),
-            child: Row(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                getCircle(true),
-                getTopLine(true),
-                getCircle(true),
-                getTopLine(true),
-                getCircle(false)
-              ],
+      body: SingleChildScrollView(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            SizedBox(
+              height: 16,
             ),
-          ),
-          Padding(
-            padding: EdgeInsets.all(16),
-            child: Row(
-              children: [
-                Text("Invitation code",
-                    textAlign: TextAlign.start,
-                    style: TextStyle(
-                        fontSize: getFontSize(14),
-                        color: ColorConstants.red,
-                        fontWeight: FontWeight.w600)),
-                SizedBox(
-                  width: getSize(28),
-                ),
-                Text("Upload profile",
-                    textAlign: TextAlign.start,
-                    style: TextStyle(
-                        fontSize: getFontSize(14),
-                        color: Colors.grey,
-                        fontWeight: FontWeight.w600)),
-                SizedBox(
-                  width: getSize(65),
-                ),
-                Text("Complete",
-                    textAlign: TextAlign.start,
-                    style: TextStyle(
-                        fontSize: getFontSize(14),
-                        color: Colors.grey,
-                        fontWeight: FontWeight.w600)),
-              ],
-            ),
-          ),
-          SizedBox(height: getSize(60)),
-          Center(
-            child: Container(
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(75),
-                border: Border.all(
-                    width: 2, color: Colors.grey, style: BorderStyle.solid),
-              ),
-              child: ClipRRect(
-                borderRadius: BorderRadius.circular(75),
-                child: Image.asset(
-                  icPlaceWoman,
-                  fit: BoxFit.contain,
-                  height: 150,
-                  width: 150,
-                ),
+            Padding(
+              padding: EdgeInsets.only(left: getSize(16), bottom: getSize(16)),
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  getCircle(true),
+                  getTopLine(true),
+                  getCircle(true),
+                  getTopLine(true),
+                  getCircle(false)
+                ],
               ),
             ),
-          ),
-          SizedBox(
-            height: getSize(24),
-          ),
-          Padding(
-            padding: EdgeInsets.only(left: getSize(16)),
-            child: Text("Nickname",
-                textAlign: TextAlign.start,
-                style: TextStyle(
-                    fontSize: getFontSize(14),
-                    color: Colors.black,
-                    fontWeight: FontWeight.w600)),
-          ),
-          Padding(
-            padding: EdgeInsets.all(getSize(16)),
-            child: CommonTextfield(
-              textOption: TextFieldOption(
-                  hintText: "Enter Nickname",
-                  inputController: nickNameController),
-              textCallback: (text) {},
+            Padding(
+              padding: EdgeInsets.all(16),
+              child: Row(
+                children: [
+                  Text("Invitation code",
+                      textAlign: TextAlign.start,
+                      style: TextStyle(
+                          fontSize: getFontSize(14),
+                          color: ColorConstants.red,
+                          fontWeight: FontWeight.w600)),
+                  SizedBox(
+                    width: getSize(28),
+                  ),
+                  Text("Upload profile",
+                      textAlign: TextAlign.start,
+                      style: TextStyle(
+                          fontSize: getFontSize(14),
+                          color: Colors.grey,
+                          fontWeight: FontWeight.w600)),
+                  SizedBox(
+                    width: getSize(65),
+                  ),
+                  Text("Complete",
+                      textAlign: TextAlign.start,
+                      style: TextStyle(
+                          fontSize: getFontSize(14),
+                          color: Colors.grey,
+                          fontWeight: FontWeight.w600)),
+                ],
+              ),
             ),
-          ),
-          Padding(
-            padding: EdgeInsets.only(left: getSize(16)),
-            child: Text("Birthday",
-                textAlign: TextAlign.start,
-                style: TextStyle(
-                    fontSize: getFontSize(14),
-                    color: Colors.black,
-                    fontWeight: FontWeight.w600)),
-          ),
-          Padding(
-            padding: EdgeInsets.all(getSize(16)),
-            child: CommonTextfield(
-              focusNode: AlwaysDisabledFocusNode(),
-              textOption: TextFieldOption(
-                postfixWid: Padding(
-                  padding: const EdgeInsets.all(12.0),
+            SizedBox(height: getSize(40)),
+            Center(
+              child: Container(
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(75),
+                  border: Border.all(
+                      width: 2, color: Colors.grey, style: BorderStyle.solid),
+                ),
+                child: ClipRRect(
+                  borderRadius: BorderRadius.circular(75),
                   child: Image.asset(
-                    "assets/Profile/calendar.png",
-                    height: 10,
-                    width: 10,
+                    icPlaceWoman,
+                    fit: BoxFit.contain,
+                    height: getSize(120),
+                    width: getSize(120),
                   ),
                 ),
-                hintText: "Date of Birth",
-                inputController: _dobController,
               ),
-              tapCallback: () {
-                _selectDate(context);
-              },
-              textCallback: (String text) {},
             ),
-          ),
-        ],
+            SizedBox(
+              height: getSize(24),
+            ),
+            Padding(
+              padding: EdgeInsets.only(left: getSize(16)),
+              child: Text("Nickname",
+                  textAlign: TextAlign.start,
+                  style: TextStyle(
+                      fontSize: getFontSize(14),
+                      color: Colors.white,
+                      fontWeight: FontWeight.w600)),
+            ),
+            Padding(
+              padding: EdgeInsets.all(getSize(16)),
+              child: CommonTextfield(
+                textOption: TextFieldOption(
+                    hintText: "Enter Nickname",
+                    inputController: nickNameController),
+                textCallback: (text) {},
+              ),
+            ),
+            Padding(
+              padding: EdgeInsets.only(left: getSize(16)),
+              child: Text("Birthday",
+                  textAlign: TextAlign.start,
+                  style: TextStyle(
+                      fontSize: getFontSize(14),
+                      color: Colors.white,
+                      fontWeight: FontWeight.w600)),
+            ),
+            Padding(
+              padding: EdgeInsets.all(getSize(16)),
+              child: CommonTextfield(
+                focusNode: AlwaysDisabledFocusNode(),
+                textOption: TextFieldOption(
+                  postfixWid: Padding(
+                    padding: const EdgeInsets.all(12.0),
+                    child: Image.asset(
+                      "assets/Profile/calendar.png",
+                      height: 10,
+                      width: 10,
+                    ),
+                  ),
+                  hintText: "Date of Birth",
+                  inputController: _dobController,
+                ),
+                tapCallback: () {
+                  _selectDate(context);
+                },
+                textCallback: (String text) {},
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }
