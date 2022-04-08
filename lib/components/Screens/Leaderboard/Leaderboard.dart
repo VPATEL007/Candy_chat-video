@@ -45,8 +45,18 @@ class _LeaderBoardState extends State<LeaderBoard> {
   }
 
   openVerificationPopUp() {
-    if (app.resolve<PrefUtils>().getUserDetails()?.isFacVerify == true) {
+    var status = app.resolve<PrefUtils>().getUserDetails()?.isFacVerify;
+    if (status == faceVerified) {
       return true;
+    }
+
+    String sStatus = "Unsubmitted";
+    if (status == faceNotSubmitted) {
+      sStatus = "Unsubmitted";
+    } else if (status == facePandingApproval) {
+      sStatus = "Pending For Approval";
+    } else if (status == faceRejected) {
+      sStatus = "Rejected";
     }
 
     showModalBottomSheet(
@@ -83,7 +93,7 @@ class _LeaderBoardState extends State<LeaderBoard> {
                           child: Padding(
                             padding: EdgeInsets.all(getSize(16)),
                             child: Text(
-                                "Two Must-do before you become an official anchor",
+                                "You need to submit your profile to be an Anchor",
                                 textAlign: TextAlign.center,
                                 style: TextStyle(
                                     fontSize: getFontSize(18),
@@ -95,7 +105,11 @@ class _LeaderBoardState extends State<LeaderBoard> {
                           padding: EdgeInsets.all(getSize(16)),
                           child: InkWell(
                             onTap: () {
-                              NavigationUtilities.push(VerficationInvitation());
+                              if (status == faceNotSubmitted ||
+                                  status == faceRejected) {
+                                NavigationUtilities.push(
+                                    VerficationInvitation());
+                              }
                             },
                             child: Container(
                               decoration: BoxDecoration(
@@ -123,11 +137,14 @@ class _LeaderBoardState extends State<LeaderBoard> {
                                         SizedBox(
                                           height: getSize(8),
                                         ),
-                                        Text("Unsubmitted",
+                                        Text("Status : " + sStatus,
                                             textAlign: TextAlign.start,
                                             style: TextStyle(
                                                 fontSize: getFontSize(14),
-                                                color: ColorConstants.red,
+                                                color: status ==
+                                                        facePandingApproval
+                                                    ? Colors.red
+                                                    : ColorConstants.red,
                                                 fontWeight: FontWeight.w500))
                                       ],
                                     ),
@@ -295,9 +312,9 @@ class _LeaderBoardState extends State<LeaderBoard> {
             padding: const EdgeInsets.all(8.0),
             child: Row(
               children: [
-                getInfoTabItem("Ranking & Bonus"),
                 getInfoTabItem("Nickname"),
-                getInfoTabItem("Performance"),
+                isCall == true ? getInfoTabItem("Mins") : SizedBox(),
+                getInfoTabItem("Coins"),
               ],
             ),
           ),
@@ -326,20 +343,9 @@ class _LeaderBoardState extends State<LeaderBoard> {
         child: Row(
           children: [
             Container(
-              width: (MathUtilities.screenWidth(context) - 34) / 3,
-              child: Center(
-                child: Text(
-                  "Bonus +" +
-                      (isCall == true
-                          ? item.coins.toString()
-                          : item.giftCoins.toString()),
-                  style: appTheme?.black14SemiBold.copyWith(
-                      fontSize: getFontSize(12), color: ColorConstants.red),
-                ),
-              ),
-            ),
-            Container(
-              width: (MathUtilities.screenWidth(context) - 34) / 3,
+              width: isCall == true
+                  ? (MathUtilities.screenWidth(context) - 34) / 3
+                  : (MathUtilities.screenWidth(context) - 34) / 2,
               child: Center(
                 child: Text(
                   item.name ?? "",
@@ -348,16 +354,33 @@ class _LeaderBoardState extends State<LeaderBoard> {
                 ),
               ),
             ),
+            isCall == true
+                ? Container(
+                    width: (MathUtilities.screenWidth(context) - 34) / 3,
+                    child: Center(
+                      child: Text(
+                        item.callDuration.toString() + " mins",
+                        style: appTheme?.black14SemiBold.copyWith(
+                            fontSize: getFontSize(12), color: Colors.white),
+                      ),
+                    ),
+                  )
+                : Container(),
             Container(
-              width: (MathUtilities.screenWidth(context) - 35) / 3,
+              width: isCall == true
+                  ? (MathUtilities.screenWidth(context) - 34) / 3
+                  : (MathUtilities.screenWidth(context) - 34) / 2,
               child: Center(
                 child: Text(
-                  item.callDuration.toString() + " mins",
-                  style: appTheme?.black14SemiBold
-                      .copyWith(fontSize: getFontSize(12), color: Colors.white),
+                  (isCall == true
+                          ? item.coins.toString()
+                          : item.giftCoins.toString()) +
+                      " Coins",
+                  style: appTheme?.black14SemiBold.copyWith(
+                      fontSize: getFontSize(12), color: ColorConstants.red),
                 ),
               ),
-            )
+            ),
           ],
         ),
       ),
@@ -367,7 +390,9 @@ class _LeaderBoardState extends State<LeaderBoard> {
   //Get Tab Item
   getInfoTabItem(String title) {
     return Container(
-      width: (MathUtilities.screenWidth(context) - 34) / 3,
+      width: isCall == true
+          ? (MathUtilities.screenWidth(context) - 34) / 3
+          : (MathUtilities.screenWidth(context) - 34) / 2,
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         crossAxisAlignment: CrossAxisAlignment.center,

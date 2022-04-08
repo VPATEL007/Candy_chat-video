@@ -65,3 +65,9 @@ const apple = "apple";
 //User Status
 const online = "online";
 const offline = "offline";
+
+//User FaceVerification Status
+const faceNotSubmitted = 0;
+const faceVerified = 1;
+const facePandingApproval = 2;
+const faceRejected = 3;

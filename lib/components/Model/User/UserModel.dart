@@ -63,7 +63,7 @@ class UserModel {
   num? coinBalance;
   num? coinsEarned;
   num? agencyId;
-  bool? isFacVerify;
+  num? isFacVerify;
 
   factory UserModel.fromJson(Map<String, dynamic> json) => UserModel(
       userName: json["user_name"],
@@ -131,6 +131,7 @@ class UserModel {
         "coin_balance": coinBalance,
         "coins_earned": coinsEarned,
         "agency_id": agencyId,
+        "is_face_verify": isFacVerify,
         "user_images": List<dynamic>.from(userImages!.map((x) => x.toJson())),
       };
 
