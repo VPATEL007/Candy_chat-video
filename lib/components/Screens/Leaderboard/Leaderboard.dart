@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:video_chat/app/Helper/CommonApiHelper.dart';
 import 'package:video_chat/app/Helper/Themehelper.dart';
 import 'package:video_chat/app/app.export.dart';
 import 'package:video_chat/app/constant/ApiConstants.dart';
@@ -39,7 +40,8 @@ class _LeaderBoardState extends State<LeaderBoard> {
     super.initState();
 
     WidgetsBinding.instance?.addPostFrameCallback((timeStamp) {
-      // openVerificationPopUp();
+      CommonApiHelper.shared.getRTMToken(context);
+      openVerificationPopUp();
       getCallDuration();
     });
   }

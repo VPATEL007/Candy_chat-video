@@ -33,10 +33,10 @@ class _FollowUpState extends State<FollowUp> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: ColorConstants.mainBgColor,
       appBar: getAppBar(
           context, widget.isFromFollowing ? "Following" : "Followers",
-          isWhite: true, leadingButton: getBackButton(context)),
+          isWhite: false, leadingButton: getBackButton(context)),
       body: SafeArea(
         child: list(),
       ),
@@ -57,7 +57,9 @@ class _FollowUpState extends State<FollowUp> {
               child: Text(
                 noContentLabel,
                 style: appTheme?.black14Normal.copyWith(
-                    fontSize: getFontSize(16), fontWeight: FontWeight.w700),
+                    fontSize: getFontSize(16),
+                    fontWeight: FontWeight.w700,
+                    color: Colors.white),
               ),
             )
           : ListView.separated(
@@ -100,13 +102,13 @@ class _FollowUpState extends State<FollowUp> {
       decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(12),
           boxShadow: [
-            BoxShadow(
-                color: Colors.grey.shade100,
-                blurRadius: 7,
-                spreadRadius: 5,
-                offset: Offset(0, 3)),
+            // BoxShadow(
+            //     color: Colors.grey.shade100,
+            //     blurRadius: 7,
+            //     spreadRadius: 5,
+            //     offset: Offset(0, 3)),
           ],
-          color: Colors.white),
+          color: ColorConstants.grayBackGround),
       child: Padding(
         padding: EdgeInsets.only(
             top: getSize(8),
@@ -143,7 +145,9 @@ class _FollowUpState extends State<FollowUp> {
                 Text(
                   followes.byUser?.providerDisplayName ?? "",
                   style: appTheme?.black14Normal.copyWith(
-                      fontSize: getFontSize(16), fontWeight: FontWeight.w700),
+                      color: Colors.white,
+                      fontSize: getFontSize(16),
+                      fontWeight: FontWeight.w700),
                 ),
                 SizedBox(
                   height: getSize(5),
@@ -166,8 +170,8 @@ class _FollowUpState extends State<FollowUp> {
                     // ),
                     Text(
                       followes.byUser?.countryIp ?? "",
-                      style: appTheme?.black14Normal
-                          .copyWith(fontWeight: FontWeight.w500),
+                      style: appTheme?.black14Normal.copyWith(
+                          color: Colors.white, fontWeight: FontWeight.w500),
                     ),
                   ],
                 ),

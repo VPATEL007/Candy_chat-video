@@ -67,7 +67,7 @@ class _UserProfileState extends State<UserProfile> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: Colors.black,
       // bottomSheet: widget.isPopUp == true ? SizedBox() : getBottomButton(),
       body: SafeArea(
         child: Column(
@@ -277,7 +277,8 @@ class _UserProfileState extends State<UserProfile> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           tagsProvider.userFeedBack.length == 0
-              ? Text("Feedback not received")
+              ? Text("Feedback not received",
+                  style: TextStyle(color: Colors.white))
               : SimpleTags(
                   content: tagsProvider.userFeedBack
                       .map((e) => e.tag?.name ?? "")
@@ -342,7 +343,7 @@ class _UserProfileState extends State<UserProfile> {
         ),
         Text(
           "X" + (model.count?.toString() ?? ""),
-          style: appTheme?.black_Medium_14Text,
+          style: appTheme?.black_Medium_14Text.copyWith(color: Colors.white),
         )
       ],
     );
@@ -460,9 +461,9 @@ class _UserProfileState extends State<UserProfile> {
             Text(
               widget.userModel?.countryIp ?? "",
               style: appTheme?.black14Normal.copyWith(
-                fontSize: getSize(18),
-                fontWeight: FontWeight.w500,
-              ),
+                  fontSize: getSize(18),
+                  fontWeight: FontWeight.w500,
+                  color: Colors.white),
             ),
           ],
         ),
@@ -475,7 +476,7 @@ class _UserProfileState extends State<UserProfile> {
         ),
         Text(
           widget.userModel?.about ?? "-",
-          style: appTheme?.black_Medium_14Text,
+          style: appTheme?.black_Medium_14Text.copyWith(color: Colors.white),
         )
       ],
     );
@@ -514,7 +515,8 @@ class _UserProfileState extends State<UserProfile> {
       child: Container(
         width: getSize(110),
         decoration: BoxDecoration(
-            color: fromHex("#F7F7F7"), borderRadius: BorderRadius.circular(9)),
+            color: ColorConstants.grayBackGround,
+            borderRadius: BorderRadius.circular(9)),
         child: Padding(
           padding: EdgeInsets.only(
               // left: getSize(22),
@@ -536,7 +538,9 @@ class _UserProfileState extends State<UserProfile> {
               Text(
                 title,
                 style: appTheme?.black16Bold.copyWith(
-                    fontSize: getFontSize(16), fontWeight: FontWeight.w600),
+                    fontSize: getFontSize(16),
+                    fontWeight: FontWeight.w600,
+                    color: Colors.white),
               ),
             ],
           ),
@@ -734,7 +738,7 @@ class _UserProfileState extends State<UserProfile> {
       children: [
         getBackButton(context),
         Spacer(),
-        getColorText("User", Colors.black, fontSize: getFontSize(18)),
+        getColorText("User", Colors.white, fontSize: getFontSize(18)),
         SizedBox(
           width: getSize(6),
         ),
@@ -744,6 +748,7 @@ class _UserProfileState extends State<UserProfile> {
             icMore,
             width: getSize(18),
             height: getSize(18),
+            color: Colors.white,
           ),
           iconSize: 18,
           elevation: 16,
@@ -778,9 +783,9 @@ class _UserProfileState extends State<UserProfile> {
   Widget getHeaderTitle(String title) {
     return Text(title,
         style: appTheme?.black12Normal.copyWith(
-          fontWeight: FontWeight.w800,
-          fontSize: getFontSize(20),
-        ));
+            fontWeight: FontWeight.w800,
+            fontSize: getFontSize(20),
+            color: Colors.white));
   }
 
   openBlockConfirmation() {

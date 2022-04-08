@@ -10,7 +10,6 @@ import 'package:video_chat/components/Model/Visitor/VisitorModel.dart';
 import 'package:video_chat/provider/visitor_provider.dart';
 
 class Visitor extends StatefulWidget {
-  
   Visitor({Key? key}) : super(key: key);
 
   @override
@@ -31,9 +30,9 @@ class _VisitorState extends State<Visitor> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: Colors.black,
       appBar: getAppBar(context, "Visitor",
-          isWhite: true, leadingButton: getBackButton(context)),
+          isWhite: false, leadingButton: getBackButton(context)),
       body: SafeArea(
         child: getList(),
       ),
@@ -47,7 +46,9 @@ class _VisitorState extends State<Visitor> {
               child: Text(
                 "No Visitor List Found! ",
                 style: appTheme?.black14Normal.copyWith(
-                    fontSize: getFontSize(16), fontWeight: FontWeight.w700),
+                    color: Colors.white,
+                    fontSize: getFontSize(16),
+                    fontWeight: FontWeight.w700),
               ),
             )
           : ListView.separated(
@@ -88,13 +89,13 @@ class _VisitorState extends State<Visitor> {
       decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(12),
           boxShadow: [
-            BoxShadow(
-                color: Colors.grey.shade200,
-                blurRadius: 7,
-                spreadRadius: 5,
-                offset: Offset(0, 3)),
+            // BoxShadow(
+            //     color: Colors.grey.shade200,
+            //     blurRadius: 7,
+            //     spreadRadius: 5,
+            //     offset: Offset(0, 3)),
           ],
-          color: Colors.white),
+          color: ColorConstants.grayBackGround),
       child: Padding(
         padding: EdgeInsets.only(
             top: getSize(8),
@@ -129,7 +130,9 @@ class _VisitorState extends State<Visitor> {
                   Text(
                     model.userName ?? "",
                     style: appTheme?.black14Normal.copyWith(
-                        fontSize: getFontSize(16), fontWeight: FontWeight.w700),
+                        color: Colors.white,
+                        fontSize: getFontSize(16),
+                        fontWeight: FontWeight.w700),
                   ),
                   SizedBox(
                     height: getSize(5),
@@ -152,8 +155,8 @@ class _VisitorState extends State<Visitor> {
                       // ),
                       Text(
                         model.country ?? "",
-                        style: appTheme?.black14Normal
-                            .copyWith(fontWeight: FontWeight.w500),
+                        style: appTheme?.black14Normal.copyWith(
+                            color: Colors.white, fontWeight: FontWeight.w500),
                       ),
                     ],
                   ),

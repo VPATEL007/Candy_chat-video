@@ -56,7 +56,7 @@ class _MatchedProfileState extends State<MatchedProfile> {
 
   startRing() {
     var status =
-        Provider.of<VideoCallStatusProvider>(context, listen: false).callStatus; 
+        Provider.of<VideoCallStatusProvider>(context, listen: false).callStatus;
 
     // if (status == CallStatus.None) {
     assetsAudioPlayer.open(Audio("assets/Audio/instrumental.mp3"),
@@ -81,7 +81,7 @@ class _MatchedProfileState extends State<MatchedProfile> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        backgroundColor: ColorConstants.bgColor,
+        backgroundColor: ColorConstants.mainBgColor,
         body: Consumer<VideoCallStatusProvider>(
           builder: (context, videoCallStatus, child) => SafeArea(
             child: Container(
@@ -103,6 +103,7 @@ class _MatchedProfileState extends State<MatchedProfile> {
                     child: Text(
                       videoCallStatus.statusText,
                       style: appTheme?.black14Normal.copyWith(
+                          color: Colors.white,
                           fontWeight: FontWeight.w500,
                           fontSize: getFontSize(16)),
                     ),
@@ -134,6 +135,7 @@ class _MatchedProfileState extends State<MatchedProfile> {
                       child: Text(
                         "You are invited to a video call with ${widget.name}.",
                         style: appTheme?.black14Normal.copyWith(
+                            color: Colors.white,
                             fontWeight: FontWeight.w500,
                             fontSize: getFontSize(16)),
                         textAlign: TextAlign.center,

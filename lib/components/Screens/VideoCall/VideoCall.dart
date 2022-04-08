@@ -59,6 +59,7 @@ class VideoCallState extends State<VideoCall> {
   UserModel? toUser;
   UserModel? fromUser;
   var keyboardVisibilityController = KeyboardVisibilityController();
+  String? userId = app.resolve<PrefUtils>().getUserDetails()?.id.toString();
   @override
   void initState() {
     super.initState();
@@ -360,8 +361,25 @@ class VideoCallState extends State<VideoCall> {
       onTap: () {
         // Provider.of<GiftProvider>(context, listen: false)
         //     .openGiftPopUp(int.parse(widget.toUserId));
+        // Provider.of<GiftProvider>(context, listen: false)
+        //     .openGiftPopUp(int.parse(widget.toUserId), (url) => () {});
+
         Provider.of<GiftProvider>(context, listen: false)
-            .openGiftPopUp(int.parse(widget.toUserId), (url) => () {});
+            .openGiftPopUp(int.parse(widget.toUserId), (url) async {
+          //Gift Purchase
+          MessageObj _chat = MessageObj(
+              chatDate: DateTime.now(),
+              message: "isGift~$url",
+              isSendByMe: true,
+              sendBy: userId);
+
+          _chatsList.add(_chat);
+          if (mounted) setState(() {});
+          await agoraService.sendMessage("isGift~$url");
+
+          if (_chatsList.isNotEmpty) messageListScrollController.jumpTo(0.0);
+          if (mounted) setState(() {});
+        });
       },
       child: Container(
         decoration: BoxDecoration(
