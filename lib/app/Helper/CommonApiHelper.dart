@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:flutter/cupertino.dart';
 import 'package:provider/provider.dart';
+import 'package:video_chat/app/AppConfiguration/AppNavigation.dart';
 import 'package:video_chat/app/constant/ApiConstants.dart';
 import 'package:video_chat/app/network/NetworkClient.dart';
 import 'package:video_chat/components/Model/Language/Language.dart';
@@ -63,11 +64,12 @@ class CommonApiHelper {
               builder: (context) => Gender(),
             ));
           } else {
-            NavigationUtilities.key.currentState!.pushReplacement(FadeRoute(
-              builder: (context) => Gender(
-                isFromPreGender: true,
-              ),
-            ));
+            AppNavigation.shared.moveToHome();
+            // NavigationUtilities.key.currentState!.pushReplacement(FadeRoute(
+            //   builder: (context) => Gender(
+            //     isFromPreGender: true,
+            //   ),
+            // ));
           }
         }
 

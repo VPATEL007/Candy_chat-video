@@ -10,6 +10,7 @@ import 'package:video_chat/app/Helper/CommonApiHelper.dart';
 import 'package:video_chat/app/app.export.dart';
 import 'package:video_chat/components/Model/User/UserModel.dart';
 import 'package:video_chat/components/Screens/Home/Home.dart';
+import 'package:video_chat/components/Screens/Leaderboard/Leaderboard.dart';
 import 'package:video_chat/provider/followes_provider.dart';
 
 class EditProfileScreen extends StatefulWidget {
@@ -151,7 +152,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
               await Provider.of<FollowesProvider>(context, listen: false)
                   .saveMyProfile(context, _userInfo, removeImage);
               NetworkClient.getInstance.hideProgressDialog();
-              NavigationUtilities.pushReplacementNamed(Home.route);
+              NavigationUtilities.pushReplacementNamed(LeaderBoard.route);
             } else {
               Provider.of<FollowesProvider>(context, listen: false)
                   .saveMyProfile(context, _userInfo, removeImage);

@@ -126,10 +126,9 @@ class _ChatListState extends State<ChatList> {
               },
               separatorBuilder: (BuildContext context, int index) {
                 return Padding(
-                  padding:
-                      EdgeInsets.only(top: getSize(14), bottom: getSize(14)),
+                  padding: EdgeInsets.only(top: getSize(4), bottom: getSize(4)),
                   child: Container(
-                    height: 1,
+                    height: 0,
                     color: ColorConstants.borderColor,
                   ),
                 );

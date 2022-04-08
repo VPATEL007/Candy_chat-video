@@ -39,7 +39,7 @@ class _LeaderBoardState extends State<LeaderBoard> {
     super.initState();
 
     WidgetsBinding.instance?.addPostFrameCallback((timeStamp) {
-      openVerificationPopUp();
+      // openVerificationPopUp();
       getCallDuration();
     });
   }

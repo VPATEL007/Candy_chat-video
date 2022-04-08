@@ -10,9 +10,11 @@ String leaderBoardModelToJson(LeaderBoardModel data) =>
 class LeaderBoardModel {
   int? id;
   String? name;
+  String? date;
   int? callDuration;
   int? coins;
   int? giftCoins;
+  num? earning;
 
   LeaderBoardModel({this.id, this.name, this.callDuration, this.coins});
 
@@ -22,6 +24,8 @@ class LeaderBoardModel {
     callDuration = json['call_duration'];
     coins = json['coins'];
     giftCoins = json['gift_coins'];
+    date = json['date'];
+    earning = json['earning'];
   }
 
   Map<String, dynamic> toJson() {
@@ -31,6 +35,7 @@ class LeaderBoardModel {
     data['call_duration'] = this.callDuration;
     data['coins'] = this.coins;
     data['gift_coins'] = this.giftCoins;
+    data['date'] = this.date;
     return data;
   }
 }

@@ -54,11 +54,13 @@ class _EarnHistoryState extends State<EarnHistory> {
 
         if (response != null) {
           if (isCall) {
+            var call = response["call"];
             callDuration =
-                leaderBoardModelFromJson(jsonEncode(response["queryResult"]));
+                leaderBoardModelFromJson(jsonEncode(call["thisWeek"]));
+            print("adasdasd");
           } else {
-            giftCoins =
-                leaderBoardModelFromJson(jsonEncode(response["queryResult"]));
+            var gift = response["gift"];
+            giftCoins = leaderBoardModelFromJson(jsonEncode(gift["thisWeek"]));
           }
 
           setState(() {});
@@ -152,9 +154,9 @@ class _EarnHistoryState extends State<EarnHistory> {
             padding: const EdgeInsets.all(8.0),
             child: Row(
               children: [
-                getInfoTabItem("Ranking & Bonus"),
-                getInfoTabItem("Nickname"),
-                getInfoTabItem("Performance"),
+                getInfoTabItem("Date"),
+                isCall == true ? getInfoTabItem("Performance") : SizedBox(),
+                getInfoTabItem("Coins"),
               ],
             ),
           ),
@@ -183,38 +185,43 @@ class _EarnHistoryState extends State<EarnHistory> {
         child: Row(
           children: [
             Container(
-              width: (MathUtilities.screenWidth(context) - 34) / 3,
+              width: isCall == true
+                  ? (MathUtilities.screenWidth(context) - 34) / 3
+                  : (MathUtilities.screenWidth(context) - 34) / 2,
               child: Center(
                 child: Text(
-                  "Bonus +" +
-                      (isCall == true
-                          ? item.coins.toString()
-                          : item.giftCoins.toString()),
+                  item.date ?? "",
+                  style: appTheme?.black14SemiBold
+                      .copyWith(fontSize: getFontSize(12), color: Colors.white),
+                ),
+              ),
+            ),
+            isCall == true
+                ? Container(
+                    width: isCall == true
+                        ? (MathUtilities.screenWidth(context) - 34) / 3
+                        : (MathUtilities.screenWidth(context) - 34) / 2,
+                    child: Center(
+                      child: Text(
+                        item.callDuration.toString() + " mins",
+                        style: appTheme?.black14SemiBold.copyWith(
+                            fontSize: getFontSize(12), color: Colors.white),
+                      ),
+                    ),
+                  )
+                : SizedBox(),
+            Container(
+              width: isCall == true
+                  ? (MathUtilities.screenWidth(context) - 34) / 3
+                  : (MathUtilities.screenWidth(context) - 34) / 2,
+              child: Center(
+                child: Text(
+                  "Coins " + item.earning.toString(),
                   style: appTheme?.black14SemiBold.copyWith(
                       fontSize: getFontSize(12), color: ColorConstants.red),
                 ),
               ),
             ),
-            Container(
-              width: (MathUtilities.screenWidth(context) - 34) / 3,
-              child: Center(
-                child: Text(
-                  item.name ?? "",
-                  style: appTheme?.black14SemiBold
-                      .copyWith(fontSize: getFontSize(12), color: Colors.white),
-                ),
-              ),
-            ),
-            Container(
-              width: (MathUtilities.screenWidth(context) - 35) / 3,
-              child: Center(
-                child: Text(
-                  item.callDuration.toString() + " mins",
-                  style: appTheme?.black14SemiBold
-                      .copyWith(fontSize: getFontSize(12), color: Colors.white),
-                ),
-              ),
-            )
           ],
         ),
       ),
@@ -224,7 +231,9 @@ class _EarnHistoryState extends State<EarnHistory> {
   //Get Tab Item
   getInfoTabItem(String title) {
     return Container(
-      width: (MathUtilities.screenWidth(context) - 34) / 3,
+      width: isCall == true
+          ? (MathUtilities.screenWidth(context) - 34) / 3
+          : (MathUtilities.screenWidth(context) - 34) / 2,
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         crossAxisAlignment: CrossAxisAlignment.center,

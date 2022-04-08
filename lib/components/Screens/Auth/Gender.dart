@@ -135,50 +135,87 @@ class _GenderState extends State<Gender> {
   }
 
   callApiGender() async {
-    if (widget.isFromPreGender == false) {
-      NetworkClient.getInstance.showLoader(context);
-      await NetworkClient.getInstance.callApi(
-        context: context,
-        baseUrl: ApiConstants.apiUrl,
-        command: ApiConstants.selectGender,
-        headers: NetworkClient.getInstance.getAuthHeaders(),
-        method: MethodType.Post,
-        params: {
-          "gender": describeEnum(_genders).toLowerCase(),
-        },
-        successCallback: (response, message) {
-          NetworkClient.getInstance.hideProgressDialog();
-          View.showMessage(context, message);
-          Navigator.of(context).push(MaterialPageRoute(
-            builder: (context) => Gender(
-              isFromPreGender: true,
-            ),
-          ));
-        },
-        failureCallback: (code, message) {
-          NetworkClient.getInstance.hideProgressDialog();
-          View.showMessage(context, message);
-        },
-      );
-    } else {
-      NetworkClient.getInstance.showLoader(context);
-      await NetworkClient.getInstance.callApi(
-        context: context,
-        baseUrl: ApiConstants.apiUrl,
-        command: ApiConstants.selectGender,
-        headers: NetworkClient.getInstance.getAuthHeaders(),
-        method: MethodType.Post,
-        params: {"prefgender": describeEnum(_genders).toLowerCase()},
-        successCallback: (response, message) {
-          NetworkClient.getInstance.hideProgressDialog();
-          moveToScreen();
-        },
-        failureCallback: (code, message) {
-          NetworkClient.getInstance.hideProgressDialog();
-          View.showMessage(context, message);
-        },
-      );
-    }
+    // if (widget.isFromPreGender == false) {
+    //   NetworkClient.getInstance.showLoader(context);
+    //   await NetworkClient.getInstance.callApi(
+    //     context: context,
+    //     baseUrl: ApiConstants.apiUrl,
+    //     command: ApiConstants.selectGender,
+    //     headers: NetworkClient.getInstance.getAuthHeaders(),
+    //     method: MethodType.Post,
+    //     params: {
+    //       "gender": describeEnum(_genders).toLowerCase(),
+    //     },
+    //     successCallback: (response, message) {
+    //       NetworkClient.getInstance.hideProgressDialog();
+    //       View.showMessage(context, message);
+    //       Navigator.of(context).push(MaterialPageRoute(
+    //         builder: (context) => Gender(
+    //           isFromPreGender: true,
+    //         ),
+    //       ));
+    //     },
+    //     failureCallback: (code, message) {
+    //       NetworkClient.getInstance.hideProgressDialog();
+    //       View.showMessage(context, message);
+    //     },
+    //   );
+    // } else {
+    //   NetworkClient.getInstance.showLoader(context);
+    //   await NetworkClient.getInstance.callApi(
+    //     context: context,
+    //     baseUrl: ApiConstants.apiUrl,
+    //     command: ApiConstants.selectGender,
+    //     headers: NetworkClient.getInstance.getAuthHeaders(),
+    //     method: MethodType.Post,
+    //     params: {"prefgender": describeEnum(_genders).toLowerCase()},
+    //     successCallback: (response, message) {
+    //       NetworkClient.getInstance.hideProgressDialog();
+    //       moveToScreen();
+    //     },
+    //     failureCallback: (code, message) {
+    //       NetworkClient.getInstance.hideProgressDialog();
+    //       View.showMessage(context, message);
+    //     },
+    //   );
+    // }
+
+    //Gender
+    NetworkClient.getInstance.showLoader(context);
+    await NetworkClient.getInstance.callApi(
+      context: context,
+      baseUrl: ApiConstants.apiUrl,
+      command: ApiConstants.selectGender,
+      headers: NetworkClient.getInstance.getAuthHeaders(),
+      method: MethodType.Post,
+      params: {
+        "gender": describeEnum(_genders).toLowerCase(),
+      },
+      successCallback: (response, message) {},
+      failureCallback: (code, message) {
+        NetworkClient.getInstance.hideProgressDialog();
+        View.showMessage(context, message);
+      },
+    );
+
+    //Preferred Gender
+    // NetworkClient.getInstance.showLoader(context);
+    await NetworkClient.getInstance.callApi(
+      context: context,
+      baseUrl: ApiConstants.apiUrl,
+      command: ApiConstants.selectGender,
+      headers: NetworkClient.getInstance.getAuthHeaders(),
+      method: MethodType.Post,
+      params: {"prefgender": "male"},
+      successCallback: (response, message) {
+        NetworkClient.getInstance.hideProgressDialog();
+        moveToScreen();
+      },
+      failureCallback: (code, message) {
+        NetworkClient.getInstance.hideProgressDialog();
+        View.showMessage(context, message);
+      },
+    );
   }
 
   moveToScreen() async {
