@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:io';
 
+import 'package:check_vpn_connection/check_vpn_connection.dart';
 import 'package:dio/adapter.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/cupertino.dart';
@@ -105,6 +106,10 @@ class NetworkClient {
     var connectivityResult = await Connectivity().checkConnectivity();
     if (connectivityResult == ConnectivityResult.none) {
       failureCallback("", "No Internet Connection");
+      return null;
+    }
+
+    if (await checkVpn() == true) {
       return null;
     }
 
@@ -330,6 +335,43 @@ class NetworkClient {
 
     failureCallback("$statusCode", message ?? "");
     return;
+  }
+
+  //Check VPN
+  Future<bool> checkVpn() async {
+    if (await CheckVpnConnection.isVpnActive()) {
+      openVPNUI();
+      return true;
+    }
+    return false;
+  }
+
+  openVPNUI() {
+    return showDialog(
+      context: NavigationUtilities.key.currentState!.overlay!.context,
+      barrierDismissible: false,
+      builder: (BuildContext dialogContext) {
+        return AlertDialog(
+          shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.all(Radius.circular(16.0))),
+          backgroundColor: ColorConstants.grayBackGround,
+          title: Text("Error",
+              textAlign: TextAlign.center,
+              style: TextStyle(
+                  fontSize: getFontSize(18),
+                  color: ColorConstants.red,
+                  fontWeight: FontWeight.w800)),
+          actions: <Widget>[],
+          content: Text(
+              "You are using VPN Please remove VPN connection and open app again.",
+              textAlign: TextAlign.center,
+              style: TextStyle(
+                  fontSize: getFontSize(18),
+                  color: Colors.white,
+                  fontWeight: FontWeight.w800)),
+        );
+      },
+    );
   }
 
   Future<void> showLoader(
