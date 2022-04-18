@@ -87,7 +87,7 @@ class PrefUtils {
       if (Platform.isAndroid) {
         AndroidDeviceInfo androidInfo = await deviceInfo.androidInfo;
 
-        deviceId = androidInfo.device;
+        deviceId = androidInfo.androidId;
       } else {
         IosDeviceInfo iosInfo = await deviceInfo.iosInfo;
 

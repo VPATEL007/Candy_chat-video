@@ -68,6 +68,8 @@ dependencies:
   firebase_analytics: any
   pull_to_refresh: ^2.0.0
   url_launcher: any
+  check_vpn_connection: any
+  http_certificate_pinning: any
   flutter_absolute_path:
     path: ./flutter_absolute_path
 
