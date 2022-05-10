@@ -1,2 +1,2 @@
-enum TabType { Home, Discover, Chat, Profile, LeaderBoard }
-enum TabTrype { Home  , Discover, Chat, Profile, LeaderBoard }
+enum TabType { Home, Discover, Chat, Profile, LeaderBoard, Likes }
+enum TabTrype { Home, Discover, Chat, Profile, LeaderBoard }

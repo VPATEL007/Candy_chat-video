@@ -5,6 +5,7 @@ import 'package:video_chat/components/Screens/Discover/Discover.dart';
 import 'package:video_chat/components/Screens/Home/Home.dart';
 import 'package:video_chat/components/Screens/Language%20Selection/Language.dart';
 import 'package:video_chat/components/Screens/Leaderboard/Leaderboard.dart';
+import 'package:video_chat/components/Screens/Likes/LikesScreen.dart';
 import 'package:video_chat/components/Screens/Onboarding/Onboarding.dart';
 import 'package:video_chat/components/Screens/OnboardingVerfication/VerificationCamera.dart';
 import 'package:video_chat/components/Screens/OnboardingVerfication/VerificationFace.dart';
@@ -130,6 +131,9 @@ Route<dynamic> onGenerateRoute(RouteSettings settings) {
       break;
     case VerificationFace.route:
       screen = VerificationFace();
+      break;
+    case LikesScreen.route:
+      screen = LikesScreen();
       break;
   }
 

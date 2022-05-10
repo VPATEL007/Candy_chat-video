@@ -9,6 +9,7 @@ import 'package:video_chat/components/Screens/Chat/ChatList.dart';
 import 'package:video_chat/components/Screens/Discover/Discover.dart';
 import 'package:video_chat/components/Screens/Home/Home.dart';
 import 'package:video_chat/components/Screens/Leaderboard/Leaderboard.dart';
+import 'package:video_chat/components/Screens/Likes/LikesScreen.dart';
 import 'package:video_chat/components/Screens/Profile/Profile.dart';
 import 'package:video_chat/provider/followes_provider.dart';
 
@@ -59,6 +60,13 @@ class _TabBarWidgetState extends State<TabBarWidget> {
               ),
               InkWell(
                 onTap: () {
+                  NavigationUtilities.pushReplacementNamed(LikesScreen.route);
+                },
+                child: getTabItem(
+                    widget.screen == TabType.Likes, "tabHome", "Likes"),
+              ),
+              InkWell(
+                onTap: () {
                   NavigationUtilities.pushReplacementNamed(Discover.route);
                 },
                 child: getTabItem(
@@ -105,7 +113,7 @@ class _TabBarWidgetState extends State<TabBarWidget> {
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
         Container(
-          width: (MathUtilities.screenWidth(context) - getSize(72)) / 4,
+          width: (MathUtilities.screenWidth(context) - getSize(72)) / 5,
           child: Center(
             child: Container(
               decoration: BoxDecoration(
@@ -159,7 +167,7 @@ class _TabBarWidgetState extends State<TabBarWidget> {
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
         Container(
-          width: (MathUtilities.screenWidth(context) - getSize(72)) / 4,
+          width: (MathUtilities.screenWidth(context) - getSize(72)) / 5,
           child: Center(
             child: Image.asset(
                 "assets/Tab/$icon" + (isSelected ? "Selected.png" : ".png"),
