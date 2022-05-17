@@ -20,12 +20,16 @@ import 'package:video_chat/provider/matching_profile_provider.dart';
 import 'package:video_chat/provider/tags_provider.dart';
 import 'package:video_chat/provider/video_call_status_provider.dart';
 
+import 'apps_flyer/apps_flyer_keys.dart';
+import 'apps_flyer/apps_flyer_service.dart';
+
 class AgoraService {
   AgoraService._();
 
   static AgoraService instance = AgoraService._();
 
   AgoraRtmClient? _client;
+
   AgoraRtmClient? get client => this._client;
 
   AgoraRtmChannel? _channel;
@@ -162,6 +166,12 @@ class AgoraService {
 
     await _client?.sendMessageToPeer(
         toUserId, AgoraRtmMessage.fromText(jsonEncode(req)));
+    final Map eventValues = {
+      "from_user_id": "${user!.uid}",
+      "to_user_id": "$user"
+    };
+    AppsFlyerService.appsFlyerService
+        .logData(AppsFlyerKeys.registration, eventValues);
   }
 
 //Reject Call

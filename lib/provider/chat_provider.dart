@@ -7,6 +7,7 @@ import 'package:video_chat/app/constant/ApiConstants.dart';
 import 'package:video_chat/app/extensions/view.dart';
 import 'package:video_chat/app/network/NetworkClient.dart';
 import 'package:video_chat/components/Model/Chat/ChatList.dart';
+import 'package:video_chat/components/Model/Chat/videoChatHistoryModel.dart';
 import 'package:video_chat/components/Model/User/UserModel.dart';
 import 'package:video_chat/components/Screens/Chat/Chat.dart';
 
@@ -87,6 +88,13 @@ class ChatProvider with ChangeNotifier {
 
   set chatList(List<ChatListModel> value) => this._chatList = value;
 
+  List<VideoChatHistoryResult> _videoChatList = [];
+
+  List<VideoChatHistoryResult> get videoChatList => this._videoChatList;
+
+  set videoChatList(List<VideoChatHistoryResult> value) =>
+      this._videoChatList = value;
+
   Future<void> getChatList(int page, BuildContext context) async {
     try {
       Map<String, dynamic> _parms = {
@@ -130,6 +138,49 @@ class ChatProvider with ChangeNotifier {
       NetworkClient.getInstance.hideProgressDialog();
       View.showMessage(context, e.toString());
     }
+  }
+
+  Future<void> getVideoChatHistory(BuildContext context, {page = 1}) async {
+    Map<String, dynamic> _parms = {
+      "page": page,
+      "pageSize": 10,
+    };
+
+    // if (page == 1) {
+    //   NetworkClient.getInstance.showLoader(context);
+    // }
+
+    await NetworkClient.getInstance.callApi(
+      context: context,
+      params: _parms,
+      baseUrl: ApiConstants.apiUrl,
+      command: ApiConstants.videoChatHistory,
+      headers: NetworkClient.getInstance.getAuthHeaders(),
+      method: MethodType.Get,
+      successCallback: (response, message) {
+        // if (page == 1) {
+        //   NetworkClient.getInstance.hideProgressDialog();
+        // }
+        print('response==> $response');
+        if (response != null) {
+          print('inside response==> ${response['result']}');
+
+          List<VideoChatHistoryResult>? arrList =
+              videoChatHistoryModel(jsonEncode(response['result']));
+          if (page == 1) {
+            videoChatList = arrList;
+          } else {
+            videoChatList.addAll(arrList);
+          }
+        }
+        notifyListeners();
+      },
+      failureCallback: (code, message) {
+        print('message==> $message');
+        // NetworkClient.getInstance.hideProgressDialog();
+        View.showMessage(context, message);
+      },
+    );
   }
 
   Future<String?> getChatQuesryId(

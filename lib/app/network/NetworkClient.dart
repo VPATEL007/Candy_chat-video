@@ -22,6 +22,7 @@ class MethodType {
 
 class NetworkClient {
   NetworkClient._();
+
   static NetworkClient getInstance = NetworkClient._();
 
   final dio = Dio();

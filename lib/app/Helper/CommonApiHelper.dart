@@ -46,6 +46,7 @@ class CommonApiHelper {
         }
         if (response["userData"] != null) {
           UserModel model = UserModel.fromJson(response["userData"]);
+          print('response from callLoginApi==> ${response["userData"]}');
           app.resolve<PrefUtils>().saveUser(model, isLoggedIn: true);
 
           NetworkClient.getInstance.showLoader(
@@ -222,6 +223,7 @@ class CommonApiHelper {
         if (response["userData"] != null) {
           UserModel model = UserModel.fromJson(response["userData"]);
           app.resolve<PrefUtils>().saveUser(model, isLoggedIn: true);
+          print('response from call guest login api==> ${response["userData"]}');
         }
 
         if (response["tokenData"] != null) {

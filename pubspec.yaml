@@ -70,6 +70,8 @@ dependencies:
   url_launcher: any
   camera: any
   check_vpn_connection: any
+  appsflyer_sdk: ^6.5.2+2
+  flutter_dotenv: ^5.0.2
   flutter_absolute_path:
     path: ./flutter_absolute_path
 

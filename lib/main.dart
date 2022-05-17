@@ -16,6 +16,7 @@ import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:kiwi/kiwi.dart';
 import 'package:provider/provider.dart';
 import 'package:video_chat/app/app.export.dart';
+import 'package:video_chat/app/utils/apps_flyer/apps_flyer_keys.dart';
 import 'package:video_chat/components/Model/Notification/NotificatonModel.dart';
 import 'package:video_chat/components/Model/User/UserModel.dart';
 import 'package:video_chat/components/Screens/Leaderboard/Leaderboard.dart';
@@ -42,6 +43,7 @@ import 'app/di/app_module.dart';
 import 'app/theme/app_theme.dart';
 import 'app/theme/global_models_provider.dart';
 import 'app/theme/settings_models_provider.dart';
+import 'app/utils/apps_flyer/apps_flyer_service.dart';
 import 'app/utils/navigator.dart';
 import 'app/utils/pref_utils.dart';
 import 'app/utils/route_observer.dart';
@@ -54,13 +56,14 @@ late KiwiContainer app;
 FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
     FlutterLocalNotificationsPlugin();
 FirebasePerformance _performance = FirebasePerformance.instance;
-FirebaseAnalytics analytics = FirebaseAnalytics();
+FirebaseAnalytics analytics = FirebaseAnalytics.instance;
 FirebaseAnalyticsObserver observer =
     FirebaseAnalyticsObserver(analytics: analytics);
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
-
+  await Firebase.initializeApp();
+  await AppsFlyerService.getInstance();
   app = KiwiContainer();
 
   SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp])
@@ -88,7 +91,6 @@ Future<void> main() async {
 }
 
 Future<void> setupFCM() async {
-  await Firebase.initializeApp();
   analytics.setAnalyticsCollectionEnabled(true);
   FlutterError.onError = FirebaseCrashlytics.instance.recordFlutterError;
   _performance.setPerformanceCollectionEnabled(true);

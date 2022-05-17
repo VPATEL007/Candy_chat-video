@@ -47,6 +47,8 @@ class ApiConstants {
   static const String blockList = "report/app/block-list";
   static const String unBlockUser = "report/remove-block";
   static const String visitorList = "profile/visitor-list";
+  static const String videoChatHistory = 'call-history/get-call-logs';
+  static const String getAllByInfluencer = 'profile/getAllByInfulencer';
   static const String favouriteList = "favourite/get";
   static const String updateCallStatus = "call-history/video-call-end";
   static const String userFeedBack = "feedback/user-feedback";

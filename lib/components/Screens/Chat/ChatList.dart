@@ -11,8 +11,11 @@ import 'package:video_chat/components/Screens/Chat/Chat.dart';
 import 'package:video_chat/components/widgets/TabBar/Tabbar.dart';
 import 'package:video_chat/provider/chat_provider.dart';
 
+import '../VideoCall/video_history.dart';
+
 class ChatList extends StatefulWidget {
   static const route = "ChatList";
+
   ChatList({Key? key}) : super(key: key);
 
   @override
@@ -21,6 +24,9 @@ class ChatList extends StatefulWidget {
 
 class _ChatListState extends State<ChatList> {
   int page = 1;
+  int currentIndex = 0;
+  List<bool> isMessage = [true, false];
+  PageController pageController = new PageController(initialPage: 0);
 
   @override
   void initState() {
@@ -28,6 +34,27 @@ class _ChatListState extends State<ChatList> {
     WidgetsBinding.instance?.addPostFrameCallback((_) {
       Provider.of<ChatProvider>(context, listen: false).getChatList(1, context);
     });
+  }
+
+  resetSelectedState() {
+    isMessage = [false, false];
+  }
+
+  setIndexZero() {
+    resetSelectedState();
+    print('message selected');
+    isMessage[0] = true;
+    currentIndex = 0;
+    pageController.animateToPage(currentIndex,
+        duration: Duration(milliseconds: 600), curve: Curves.linearToEaseOut);
+  }
+
+  setIndexOne() {
+    resetSelectedState();
+    isMessage[1] = true;
+    currentIndex = 1;
+    pageController.animateToPage(currentIndex,
+        duration: Duration(milliseconds: 600), curve: Curves.linearToEaseOut);
   }
 
   @override
@@ -43,16 +70,54 @@ class _ChatListState extends State<ChatList> {
         crossAxisAlignment: CrossAxisAlignment.center,
         mainAxisSize: MainAxisSize.max,
         children: [
+          Row(
+            children: [
+              InkWell(
+                  onTap: () {
+                    setIndexZero();
+                  },
+                  child: getTabItem('Messages', 0)),
+              InkWell(
+                  onTap: () {
+                    setIndexOne();
+                  },
+                  child: getTabItem('Video History', 1)),
+            ],
+          ),
           SizedBox(
             height: getSize(10),
           ),
-          getColorText("Messages", ColorConstants.red),
-          Expanded(child: getList())
+          Expanded(
+            child: Container(
+              height: MathUtilities.screenHeight(context) / 1.3,
+              child: PageView(
+                controller: pageController,
+                onPageChanged: (val) {
+                  if (val == 0) {
+                    setIndexZero();
+                  } else {
+                    setIndexOne();
+                  }
+                  currentIndex = val;
+                  setState(() {});
+                },
+                children: [messageUi(), VideoChatHistory()],
+              ),
+            ),
+          ),
+
           // emptyChat()
         ],
       )),
     );
   }
+
+  Widget messageUi() => Column(
+        children: [
+          getColorText("Messages", ColorConstants.red),
+          Expanded(child: getList())
+        ],
+      );
 
   //Empty Chat
   Widget emptyChat() {
@@ -134,6 +199,30 @@ class _ChatListState extends State<ChatList> {
                 );
               },
             ),
+    );
+  }
+
+  Widget getTabItem(String title, index) {
+    return Container(
+      width: MathUtilities.screenWidth(context) / 2,
+      child: Column(
+        children: [
+          Text(
+            title,
+            style: appTheme?.black14SemiBold.copyWith(
+                fontSize: getFontSize(16),
+                color:
+                    isMessage[index] == true ? ColorConstants.redText : Colors.white),
+          ),
+          SizedBox(
+            height: getSize(12),
+          ),
+          Container(
+              height: 1,
+              color: isMessage[index] == true ? ColorConstants.redText : Colors.white,
+              width: MathUtilities.screenWidth(context) / 2)
+        ],
+      ),
     );
   }
 

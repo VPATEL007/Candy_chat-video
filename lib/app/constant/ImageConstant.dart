@@ -35,6 +35,7 @@ const String icHomeCurve = "assets/Home/HomeCurve.png";
 const String icDrawer = "assets/Home/icDrawer.png";
 const String icVector = "assets/Home/Vector.png";
 const String icHeart = "assets/Home/heart.png";
+const String icCallProbability = "assets/Profile/callProbability.png";
 const String icCallAccept = "assets/Home/callAccept.png";
 const String icCallEnd = "assets/Home/callEnd.png";
 const String icCoin = "assets/Home/coin.png";

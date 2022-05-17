@@ -18,6 +18,8 @@ class ColorConstants {
   static Color redText = fromHex("#fcbd2b");
   static Color grayBackGround = fromHex("#303030");
   static Color mainBgColor = fromHex("#000000");
+  static Color activeStatusColor = fromHex("#F55050");
+  static Color inActiveStatusColor = fromHex("#50F5C3");
 
   //Error border and Text color
   static Color errorColor = fromHex("#FF4B4B");

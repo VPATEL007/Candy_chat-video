@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_inapp_purchase/modules.dart';
+
 // import 'package:in_app_purchase/in_app_purchase.dart';
 // import 'package:flutter_statusbarcolor/flutter_statusbarcolor.dart';
 
@@ -65,6 +66,32 @@ getPopBottomButton(BuildContext context, String text, VoidCallback onPressed) {
     ),
   );
 }
+
+Widget activeUser() => Positioned(
+      right: 1.0,
+      bottom: 1.0,
+      child: CircleAvatar(
+        backgroundColor: Colors.white,
+        radius: 8.0,
+        child: CircleAvatar(
+          foregroundColor: ColorConstants.activeStatusColor,
+          radius: 5.0,
+        ),
+      ),
+    );
+
+Widget inActiveUser() => Positioned(
+      right: 1.0,
+      bottom: 1.0,
+      child: CircleAvatar(
+        backgroundColor: Colors.white,
+        radius: 8.0,
+        child: CircleAvatar(
+          foregroundColor: ColorConstants.inActiveStatusColor,
+          radius: 5.0,
+        ),
+      ),
+    );
 
 getBackButton(BuildContext context, {bool isWhite = false}) {
   return Container(

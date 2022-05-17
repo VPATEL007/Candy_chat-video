@@ -8,11 +8,13 @@ import 'package:video_chat/app/constant/EnumConstant.dart';
 import 'package:video_chat/app/constant/ImageConstant.dart';
 import 'package:video_chat/app/utils/math_utils.dart';
 import 'package:video_chat/components/Model/Follwers/follow_model.dart';
+import 'package:video_chat/components/Screens/Likes/search_screen.dart';
 import 'package:video_chat/components/widgets/TabBar/Tabbar.dart';
 import 'package:video_chat/provider/followes_provider.dart';
 
 class LikesScreen extends StatefulWidget {
   static const route = "LikesScreen";
+
   LikesScreen({Key? key}) : super(key: key);
 
   @override
@@ -21,9 +23,10 @@ class LikesScreen extends StatefulWidget {
 
 class _LikesScreenState extends State<LikesScreen> {
   PageController pageController = new PageController(initialPage: 0);
-  bool isILike = true;
+  List<bool> isILike = [true, false, false];
   int page = 1;
   int currentIndex = 0;
+  bool isSearch = false;
 
   @override
   void initState() {
@@ -32,6 +35,33 @@ class _LikesScreenState extends State<LikesScreen> {
         .fetchFollowes(context);
     Provider.of<FollowesProvider>(context, listen: false)
         .fetchFollowing(context);
+    Provider.of<FollowesProvider>(context, listen: false)
+        .fetchSearchUser(context);
+  }
+
+  resetSelectedState() {
+    isILike = [false, false, false];
+  }
+
+  setIndexZero() {
+    isSearch = false;
+    resetSelectedState();
+    isILike[0] = true;
+    currentIndex = 0;
+  }
+
+  setIndexOne() {
+    isSearch = false;
+    resetSelectedState();
+    isILike[1] = true;
+    currentIndex = 1;
+  }
+
+  setIndexTwo() {
+    isSearch = true;
+    resetSelectedState();
+    isILike[2] = true;
+    currentIndex = 2;
   }
 
   @override
@@ -42,44 +72,51 @@ class _LikesScreenState extends State<LikesScreen> {
         screen: TabType.Likes,
       ),
       body: SafeArea(
-        child: Stack(children: [
+        child: Column(children: [
           Row(
             children: [
               InkWell(
                   onTap: () {
-                    isILike = true;
-                    currentIndex = 0;
+                    setIndexZero();
                     pageController.animateToPage(currentIndex,
                         duration: Duration(milliseconds: 600),
                         curve: Curves.linearToEaseOut);
                   },
-                  child: getTabItem('I Like', isILike)),
+                  child: getTabItem('I Like', 0)),
               InkWell(
                   onTap: () {
-                    isILike = false;
-                    currentIndex = 1;
+                    setIndexOne();
                     pageController.animateToPage(currentIndex,
                         duration: Duration(milliseconds: 600),
                         curve: Curves.linearToEaseOut);
                   },
-                  child: getTabItem('Like me', !isILike)),
-              InkWell(onTap: () {}, child: getTabItem('Search', false)),
+                  child: getTabItem('Like me', 1)),
+              InkWell(
+                  onTap: () {
+                    setIndexTwo();
+                    pageController.animateToPage(currentIndex,
+                        duration: Duration(milliseconds: 600),
+                        curve: Curves.linearToEaseOut);
+                  },
+                  child: getTabItem('Search', 2)),
             ],
           ),
-          Positioned(
-            top: 40,
-            left: 8,
-            right: 8,
-            child: Container(
-              height: getSize(420),
-              child: PageView(
-                controller: pageController,
-                onPageChanged: (val) {
-                  currentIndex = val;
-                  setState(() {});
-                },
-                children: [list(), list()],
-              ),
+          Container(
+            height: MathUtilities.screenHeight(context) / 1.3,
+            child: PageView(
+              controller: pageController,
+              onPageChanged: (val) {
+                if (val == 0) {
+                  setIndexZero();
+                } else if (val == 1) {
+                  setIndexOne();
+                } else {
+                  setIndexTwo();
+                }
+                currentIndex = val;
+                setState(() {});
+              },
+              children: [list(), list(), SearchScreen()],
             ),
           )
         ]),
@@ -90,10 +127,14 @@ class _LikesScreenState extends State<LikesScreen> {
   Widget list() {
     return Consumer<FollowesProvider>(
         builder: (context, followesProvider, child) {
-      List<FollowesModel> _followes = isILike
+      List<FollowesModel> _followes = isILike[0] == true
           ? followesProvider.followingList
           : followesProvider.followersList;
-      String noContentLabel = isILike ? "No data Found! " : "No data Found! ";
+      String noContentLabel = isILike[0] == true
+          ? 'No data found'
+          : isILike[1] == true
+              ? 'No like me data found'
+              : 'No search data found';
       return (_followes.isEmpty)
           ? Center(
               child: Text(
@@ -120,7 +161,7 @@ class _LikesScreenState extends State<LikesScreen> {
                       page++;
                       print(
                           "--------========================= Lazy Loading $page ==========================---------");
-                      if (isILike) {
+                      if (isILike[0] == true) {
                         Provider.of<FollowesProvider>(context, listen: false)
                             .fetchFollowing(context, pageNumber: page);
                       } else {
@@ -202,7 +243,7 @@ class _LikesScreenState extends State<LikesScreen> {
               ],
             ),
             Spacer(),
-            isILike
+            isILike[0]
                 ? TextButton(
                     onPressed: () {
                       followesProvider.unfollowUser(
@@ -223,7 +264,8 @@ class _LikesScreenState extends State<LikesScreen> {
   }
 
   //Get Tab Item
-  Widget getTabItem(String title, bool isCurrent) {
+  Widget getTabItem(String title, index) {
+    print('index==> $index');
     return Container(
       width: MathUtilities.screenWidth(context) / 3,
       child: Column(
@@ -232,15 +274,18 @@ class _LikesScreenState extends State<LikesScreen> {
             title,
             style: appTheme?.black14SemiBold.copyWith(
                 fontSize: getFontSize(16),
-                color:
-                    isCurrent == true ? ColorConstants.redText : Colors.white),
+                color: isILike[index] == true
+                    ? ColorConstants.redText
+                    : Colors.white),
           ),
           SizedBox(
             height: getSize(12),
           ),
           Container(
               height: 1,
-              color: isCurrent == true ? ColorConstants.redText : Colors.white,
+              color: isILike[index] == true
+                  ? ColorConstants.redText
+                  : Colors.white,
               width: MathUtilities.screenWidth(context) / 2)
         ],
       ),

@@ -17,7 +17,12 @@ class FacebookLoginHelper {
       if (loginresult.accessToken != null) {
         req["provider"] = faceBook;
         req["token"] = loginresult.accessToken?.token;
-
+        // final Map eventValues = {
+        //   "af_email": "${signInAccount.email}",
+        //   "af_registration_type": "google"
+        // };
+        // AppsFlyerService.appsFlyerService
+        //     .logData(AppsFlyerKeys.registration, eventValues);
         CommonApiHelper.shared.callLoginApi(req, context, () {}, () {});
       }
     } catch (e, s) {

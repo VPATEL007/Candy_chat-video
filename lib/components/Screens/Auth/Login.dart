@@ -1,6 +1,8 @@
+import 'package:appsflyer_sdk/appsflyer_sdk.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:provider/provider.dart';
 import 'package:video_chat/app/Helper/CommonApiHelper.dart';
 import 'package:video_chat/app/Helper/apple_login_helper.dart';
@@ -9,6 +11,8 @@ import 'package:video_chat/app/Helper/google_signin_helper.dart';
 import 'package:video_chat/app/app.export.dart';
 import 'package:video_chat/app/constant/ColorConstant.dart';
 import 'package:video_chat/app/utils/CommonWidgets.dart';
+import 'package:video_chat/app/utils/apps_flyer/apps_flyer_keys.dart';
+import 'package:video_chat/app/utils/apps_flyer/apps_flyer_service.dart';
 import 'package:video_chat/app/utils/math_utils.dart';
 import 'package:video_chat/components/Screens/Auth/Gender.dart';
 import 'dart:io' show Platform;
@@ -17,6 +21,7 @@ import 'package:video_chat/provider/language_provider.dart';
 
 class Login extends StatefulWidget {
   static const route = "Login";
+
   Login({Key? key}) : super(key: key);
 
   @override
@@ -106,6 +111,8 @@ class _LoginState extends State<Login> {
               getButton(
                   icFacebook, "Continue with Facebook", ColorConstants.facebook,
                   () {
+                // AppsFlyerService.appsFlyerService
+                //     .logEvent(AppsFlyerKeys.registration, eventValues);
                 int? langId =
                     context.read<LanguageProvider>().selctedLanguages?.id;
                 String deviceId = app.resolve<PrefUtils>().deviceId ?? "";

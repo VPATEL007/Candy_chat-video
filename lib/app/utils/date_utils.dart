@@ -1,6 +1,11 @@
 import 'package:intl/intl.dart';
 
 class DateUtilities {
+  int calculateDifference(DateTime date) {
+    DateTime now = DateTime.now();
+    return DateTime(date.year, date.month, date.day).difference(DateTime(now.year, now.month, now.day)).inDays;
+  }
+
   String getFormattedDateString(DateTime date, {String? formatter}) {
     if (formatter == null) {
       formatter = kMainSourceFormat;

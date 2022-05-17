@@ -9,6 +9,7 @@ import 'package:path_provider/path_provider.dart';
 import 'package:provider/provider.dart';
 import 'package:video_chat/app/app.export.dart';
 import 'package:video_chat/components/Model/Follwers/follow_model.dart';
+import 'package:video_chat/components/Model/Match%20Profile/search_profile.dart';
 import 'package:video_chat/components/Model/User/UserModel.dart';
 
 import 'discover_provider.dart';
@@ -16,6 +17,7 @@ import 'discover_provider.dart';
 class FollowesProvider with ChangeNotifier {
   List<FollowesModel> _followersList = [];
   List<FollowesModel> _followingList = [];
+  List<SearchProfileData> _searchList = [];
   UserModel? userModel;
 
   List<FollowesModel> get followingList => this._followingList;
@@ -25,6 +27,10 @@ class FollowesProvider with ChangeNotifier {
   List<FollowesModel> get followersList => this._followersList;
 
   set followersList(List<FollowesModel> value) => this._followersList = value;
+
+  List<SearchProfileData> get searchList => this._searchList;
+
+  set searchList(List<SearchProfileData> value) => this._searchList = value;
 
   // Fetch followes...
   Future<void> fetchFollowes(BuildContext context,
@@ -81,6 +87,48 @@ class FollowesProvider with ChangeNotifier {
             followingList = arrList;
           } else {
             followingList.addAll(arrList);
+          }
+        }
+      },
+      failureCallback: (code, message) {
+        if (!fetchInBackground) NetworkClient.getInstance.hideProgressDialog();
+        View.showMessage(context, message);
+      },
+    );
+    notifyListeners();
+  }
+
+  Future<void> fetchSearchUser(BuildContext context,
+      {bool fetchInBackground = true,
+      int pageNumber = 1,
+      size = 20,
+      keyword = ''}) async {
+    Map<String, dynamic> _parms = {
+      "page": pageNumber,
+      "size": size,
+      "keyword": keyword
+    };
+    if (!fetchInBackground) NetworkClient.getInstance.showLoader(context);
+    await NetworkClient.getInstance.callApi(
+      context: context,
+      baseUrl: ApiConstants.apiUrl,
+      command: ApiConstants.getAllByInfluencer,
+      headers: NetworkClient.getInstance.getAuthHeaders(),
+      method: MethodType.Get,
+      params: _parms,
+      successCallback: (response, message) async {
+        if (!fetchInBackground) NetworkClient.getInstance.hideProgressDialog();
+        print(response["result"]["data"]);
+        if (response["result"]["data"] != null) {
+          print('response==> $response');
+
+          SearchProfileResult searchProfileModel =
+              SearchProfileResult.fromJson(response['result']);
+          print('searchProfileModel==> ${searchProfileModel.totalRecords}');
+          if (pageNumber == 1) {
+            searchList = searchProfileModel.data ?? [];
+          } else {
+            searchList.addAll(searchProfileModel.data ?? []);
           }
         }
       },
@@ -189,6 +237,7 @@ class FollowesProvider with ChangeNotifier {
         userModel = userModelFromJson(jsonEncode(response));
         UserModel model = userModelFromJson(jsonEncode(response));
         app.resolve<PrefUtils>().saveUser(model, isLoggedIn: true);
+        print('response fetchMyProfile==> ${response["userData"]}');
         notifyListeners();
       },
       failureCallback: (code, message) {
