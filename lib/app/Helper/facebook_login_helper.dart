@@ -1,9 +1,13 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_facebook_auth/flutter_facebook_auth.dart';
+
 // import 'package:flutter_facebook_auth/flutter_facebook_auth.dart';
 import 'package:video_chat/app/Helper/CommonApiHelper.dart';
 import 'package:video_chat/app/app.export.dart';
+
+import '../utils/apps_flyer/apps_flyer_keys.dart';
+import '../utils/apps_flyer/apps_flyer_service.dart';
 
 class FacebookLoginHelper {
   static var shared = FacebookLoginHelper();
@@ -17,12 +21,9 @@ class FacebookLoginHelper {
       if (loginresult.accessToken != null) {
         req["provider"] = faceBook;
         req["token"] = loginresult.accessToken?.token;
-        // final Map eventValues = {
-        //   "af_email": "${signInAccount.email}",
-        //   "af_registration_type": "google"
-        // };
-        // AppsFlyerService.appsFlyerService
-        //     .logData(AppsFlyerKeys.registration, eventValues);
+        final Map eventValues = {"af_registration_type": "facebook"};
+        AppsFlyerService.appsFlyerService
+            .logData(AppsFlyerKeys.registration, eventValues);
         CommonApiHelper.shared.callLoginApi(req, context, () {}, () {});
       }
     } catch (e, s) {

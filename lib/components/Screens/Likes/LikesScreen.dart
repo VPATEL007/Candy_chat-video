@@ -101,22 +101,24 @@ class _LikesScreenState extends State<LikesScreen> {
                   child: getTabItem('Search', 2)),
             ],
           ),
-          Container(
-            height: MathUtilities.screenHeight(context) / 1.3,
-            child: PageView(
-              controller: pageController,
-              onPageChanged: (val) {
-                if (val == 0) {
-                  setIndexZero();
-                } else if (val == 1) {
-                  setIndexOne();
-                } else {
-                  setIndexTwo();
-                }
-                currentIndex = val;
-                setState(() {});
-              },
-              children: [list(), list(), SearchScreen()],
+          Expanded(
+            child: Container(
+              height: MathUtilities.screenHeight(context) / 1.3,
+              child: PageView(
+                controller: pageController,
+                onPageChanged: (val) {
+                  if (val == 0) {
+                    setIndexZero();
+                  } else if (val == 1) {
+                    setIndexOne();
+                  } else {
+                    setIndexTwo();
+                  }
+                  currentIndex = val;
+                  setState(() {});
+                },
+                children: [list(), list(), SearchScreen()],
+              ),
             ),
           )
         ]),
