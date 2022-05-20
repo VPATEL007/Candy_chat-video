@@ -93,6 +93,16 @@ Widget inActiveUser() => Positioned(
       ),
     );
 
+Widget followIcon() => Image.asset(
+      icLike,
+      height: getSize(25),
+    );
+
+Widget notFollowingIcon() => Image.asset(
+      icTabHome,
+      height: getSize(25),
+    );
+
 getBackButton(BuildContext context, {bool isWhite = false}) {
   return Container(
     child: IconButton(

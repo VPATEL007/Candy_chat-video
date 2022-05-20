@@ -87,14 +87,14 @@ class _BlockListState extends State<BlockList> {
     return Container(
       decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(12),
-          boxShadow: [
-            BoxShadow(
-                color: Colors.grey.shade100,
-                blurRadius: 7,
-                spreadRadius: 5,
-                offset: Offset(0, 3)),
-          ],
-          color: Colors.white),
+          // boxShadow: [
+          //   BoxShadow(
+          //       color: Colors.grey.shade100,
+          //       blurRadius: 7,
+          //       spreadRadius: 5,
+          //       offset: Offset(0, 3)),
+          // ],
+          color: ColorConstants.grayBackGround),
       child: Padding(
         padding: EdgeInsets.only(
             top: getSize(8),

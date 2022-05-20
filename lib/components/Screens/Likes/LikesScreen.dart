@@ -12,6 +12,9 @@ import 'package:video_chat/components/Screens/Likes/search_screen.dart';
 import 'package:video_chat/components/widgets/TabBar/Tabbar.dart';
 import 'package:video_chat/provider/followes_provider.dart';
 
+import '../../../app/utils/CommonWidgets.dart';
+import '../UserProfile/UserProfile.dart';
+
 class LikesScreen extends StatefulWidget {
   static const route = "LikesScreen";
 
@@ -35,8 +38,6 @@ class _LikesScreenState extends State<LikesScreen> {
         .fetchFollowes(context);
     Provider.of<FollowesProvider>(context, listen: false)
         .fetchFollowing(context);
-    Provider.of<FollowesProvider>(context, listen: false)
-        .fetchSearchUser(context);
   }
 
   resetSelectedState() {
@@ -132,11 +133,8 @@ class _LikesScreenState extends State<LikesScreen> {
       List<FollowesModel> _followes = isILike[0] == true
           ? followesProvider.followingList
           : followesProvider.followersList;
-      String noContentLabel = isILike[0] == true
-          ? 'No data found'
-          : isILike[1] == true
-              ? 'No like me data found'
-              : 'No search data found';
+      String noContentLabel =
+          isILike[0] == true ? 'No data found' : 'No like me data found';
       return (_followes.isEmpty)
           ? Center(
               child: Text(
@@ -171,7 +169,16 @@ class _LikesScreenState extends State<LikesScreen> {
                             .fetchFollowes(context, pageNumber: page);
                       }
                     },
-                    child: cellItem(_followes[index], followesProvider));
+                    child: InkWell(
+                        onTap: () {
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (_) => UserProfile(
+                                        id: _followes[index].byUser!.id,
+                                      )));
+                        },
+                        child: cellItem(_followes[index], followesProvider)));
               },
               separatorBuilder: (BuildContext context, int index) {
                 return SizedBox(
@@ -245,6 +252,27 @@ class _LikesScreenState extends State<LikesScreen> {
               ],
             ),
             Spacer(),
+            isILike[1] == true && followes.byUser?.callProbability == true
+                ? Column(
+                    children: [
+                      Image.asset(
+                        icCallProbability,
+                        height: getSize(25),
+                      ),
+                      SizedBox(height: 5.0),
+                      Text(
+                        'Call Probability',
+                        style: TextStyle(
+                            fontSize: getFontSize(8),
+                            color: ColorConstants.textGray,
+                            fontWeight: FontWeight.normal),
+                      ),
+                    ],
+                  )
+                : Container(),
+            isILike[1] == true && followes.byUser?.isLike == true
+                ? followIcon()
+                : notFollowingIcon(),
             isILike[0]
                 ? TextButton(
                     onPressed: () {

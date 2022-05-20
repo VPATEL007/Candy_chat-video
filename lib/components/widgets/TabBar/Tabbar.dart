@@ -15,6 +15,7 @@ import 'package:video_chat/provider/followes_provider.dart';
 
 class TabBarWidget extends StatefulWidget {
   TabType? screen = TabType.Home;
+
   TabBarWidget({Key? key, this.screen}) : super(key: key);
 
   @override
@@ -53,10 +54,10 @@ class _TabBarWidgetState extends State<TabBarWidget> {
             children: [
               InkWell(
                 onTap: () {
-                  NavigationUtilities.pushReplacementNamed(LeaderBoard.route);
+                  NavigationUtilities.pushReplacementNamed(Discover.route);
                 },
                 child: getTabItem(
-                    widget.screen == TabType.LeaderBoard, "tabHome", "Ranking"),
+                    widget.screen == TabType.Discover, "tablike", "Discovery"),
               ),
               InkWell(
                 onTap: () {
@@ -67,39 +68,41 @@ class _TabBarWidgetState extends State<TabBarWidget> {
               ),
               InkWell(
                 onTap: () {
-                  NavigationUtilities.pushReplacementNamed(Discover.route);
-                },
-                child: getTabItem(
-                    widget.screen == TabType.Discover, "tablike", "Discovery"),
-              ),
-              InkWell(
-                onTap: () {
                   NavigationUtilities.pushReplacementNamed(ChatList.route);
                 },
                 child: getTabItem(
                     widget.screen == TabType.Chat, "tabChat", "Messages"),
               ),
+              InkWell(
+                onTap: () {
+                  NavigationUtilities.pushReplacementNamed(LeaderBoard.route);
+                },
+                child: getTabItem(
+                    widget.screen == TabType.LeaderBoard, "ranking", "Ranking"),
+              ),
               Consumer<FollowesProvider>(
-                builder: (context, mutedProvider, child) => InkWell(
-                    onTap: () async {
-                      UserModel? userModel = mutedProvider.userModel;
-                      if (userModel == null) {
-                        await mutedProvider.fetchMyProfile(context);
-                      }
-                      setState(() {});
-                      NavigationUtilities.key.currentState!
-                          .pushReplacement(FadeRoute(
-                        builder: (context) => Profile(),
-                      ));
-                    },
-                    child: getTabProfileItem(
-                        widget.screen == TabType.Profile,
-                        (mutedProvider.userModel?.userImages?.isEmpty ?? true)
-                            ? ""
-                            : (mutedProvider
-                                    .userModel?.userImages?.first.photoUrl ??
+                builder: (context, mutedProvider, child) =>
+                    InkWell(
+                        onTap: () async {
+                          UserModel? userModel = mutedProvider.userModel;
+                          if (userModel == null) {
+                            await mutedProvider.fetchMyProfile(context);
+                          }
+                          setState(() {});
+                          NavigationUtilities.key.currentState!
+                              .pushReplacement(FadeRoute(
+                            builder: (context) => Profile(),
+                          ));
+                        },
+                        child: getTabProfileItem(
+                            widget.screen == TabType.Profile,
+                            (mutedProvider.userModel?.userImages?.isEmpty ??
+                                true)
+                                ? ""
+                                : (mutedProvider
+                                .userModel?.userImages?.first.photoUrl ??
                                 ""),
-                        mutedProvider.userModel?.gender ?? "")),
+                            mutedProvider.userModel?.gender ?? "")),
               ),
             ],
           ),
@@ -127,23 +130,24 @@ class _TabBarWidgetState extends State<TabBarWidget> {
                 borderRadius: BorderRadius.circular(18),
                 child: (image.isEmpty)
                     ? Image.asset(
+                  getUserPlaceHolder(gender),
+                  height: 18,
+                  width: 18,
+                  fit: BoxFit.cover,
+                )
+                    : CachedNetworkImage(
+                  imageUrl: image,
+                  height: 18,
+                  width: 18,
+                  fit: BoxFit.cover,
+                  errorWidget: (context, url, error) =>
+                      Image.asset(
                         getUserPlaceHolder(gender),
                         height: 18,
                         width: 18,
                         fit: BoxFit.cover,
-                      )
-                    : CachedNetworkImage(
-                        imageUrl: image,
-                        height: 18,
-                        width: 18,
-                        fit: BoxFit.cover,
-                        errorWidget: (context, url, error) => Image.asset(
-                          getUserPlaceHolder(gender),
-                          height: 18,
-                          width: 18,
-                          fit: BoxFit.cover,
-                        ),
                       ),
+                ),
               ),
             ),
           ),
@@ -156,7 +160,7 @@ class _TabBarWidgetState extends State<TabBarWidget> {
           style: appTheme?.white12Normal.copyWith(
               fontWeight: FontWeight.w500,
               color:
-                  isSelected ? Colors.white : Colors.white.withOpacity(0.36)),
+              isSelected ? Colors.white : Colors.white.withOpacity(0.36)),
         )
       ],
     );
@@ -171,9 +175,10 @@ class _TabBarWidgetState extends State<TabBarWidget> {
           child: Center(
             child: Image.asset(
                 "assets/Tab/$icon" + (isSelected ? "Selected.png" : ".png"),
-                height: getSize(18),
-                width: getSize(18),
-                color: isSelected ? ColorConstants.red : Colors.white),
+                height: getSize(23),
+                width: getSize(23),
+                color: isSelected ? ColorConstants.red : Colors.white
+                    .withOpacity(0.36)),
           ),
         ),
         SizedBox(

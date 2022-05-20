@@ -20,6 +20,7 @@ class CommonTextfield extends StatefulWidget {
   final String lableText;
   final Function(String text)? validation;
   TextStyle? hintStyleText;
+  Color color;
 
   CommonTextfield({
     required this.textOption,
@@ -36,6 +37,7 @@ class CommonTextfield extends StatefulWidget {
     this.autoCorrect = true,
     this.hintStyleText,
     this.lableText = "",
+    this.color = Colors.white,
   });
 
   @override
@@ -96,13 +98,13 @@ class _CommonTextfieldState extends State<CommonTextfield> {
             ),
             errorMaxLines: 2,
             errorStyle: appTheme?.errorText,
-            fillColor: fromHex("#F6F6F6"),
+            fillColor: widget.color,
             filled: true,
             enabledBorder: OutlineInputBorder(
               borderRadius: BorderRadius.all(
                   Radius.circular(getSize(widget.textOption.radious ?? 10))),
               borderSide: BorderSide(
-                color: Colors.white,
+                color: widget.color,
                 width: 0,
               ),
             ),
@@ -110,7 +112,7 @@ class _CommonTextfieldState extends State<CommonTextfield> {
               borderRadius: BorderRadius.all(
                   Radius.circular(getSize(widget.textOption.radious ?? 10))),
               borderSide: BorderSide(
-                color: Colors.white,
+                color: widget.color,
                 width: 0,
               ),
             ),
@@ -118,7 +120,7 @@ class _CommonTextfieldState extends State<CommonTextfield> {
               borderRadius: BorderRadius.all(
                   Radius.circular(getSize(widget.textOption.radious ?? 10))),
               borderSide: BorderSide(
-                color: Colors.white,
+                color: widget.color,
                 width: 0,
               ),
             ),
@@ -126,7 +128,7 @@ class _CommonTextfieldState extends State<CommonTextfield> {
               borderRadius: BorderRadius.all(
                   Radius.circular(widget.textOption.radious ?? 10)),
               borderSide: BorderSide(
-                color: Colors.white,
+                color: widget.color,
                 //  width: getSize(0.5),
               ),
             ),

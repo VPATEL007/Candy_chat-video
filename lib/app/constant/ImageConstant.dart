@@ -26,6 +26,7 @@ const String icHomeRotation = "assets/Home/homeRotation.gif";
 
 const String icCircleHome = "assets/Home/homeRound.png";
 const String icTabHome = "assets/Tab/tabHome.png";
+const String icLike = "assets/Profile/icLike.png";
 const String icTabHomeSelected = "assets/Tab/tabHomeSelected.png";
 const String icTabLike = "assets/Tab/tablike.png";
 const String icTabChat = "assets/Tab/tabChat.png";

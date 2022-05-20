@@ -11,6 +11,8 @@ import 'package:video_chat/app/utils/math_utils.dart';
 import 'package:video_chat/components/Model/Follwers/follow_model.dart';
 import 'package:video_chat/provider/followes_provider.dart';
 
+import '../UserProfile/UserProfile.dart';
+
 class FollowUp extends StatefulWidget {
   bool isFromFollowing;
   FollowUp({Key? key, this.isFromFollowing = false}) : super(key: key);

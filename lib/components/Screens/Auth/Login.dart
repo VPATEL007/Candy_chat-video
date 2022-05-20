@@ -140,19 +140,23 @@ class _LoginState extends State<Login> {
               SizedBox(
                 height: getSize(12),
               ),
-              getButton(icGuest, "Continue with Guest", Colors.white, () async {
-                int? langId =
-                    context.read<LanguageProvider>().selctedLanguages?.id;
-                String deviceId = app.resolve<PrefUtils>().deviceId ?? "";
-                Map<String, dynamic> req = {
-                  "device_id": deviceId,
-                  "language_id": langId
-                };
-                print(req);
-                await CommonApiHelper.shared
-                    .callGuestLogintApi(context, req, () {}, () {});
-                NavigationUtilities.push(Gender());
-              }),
+              Visibility(
+                visible: true,
+                child: getButton(icGuest, "Continue with Guest", Colors.white,
+                    () async {
+                  int? langId =
+                      context.read<LanguageProvider>().selctedLanguages?.id;
+                  String deviceId = app.resolve<PrefUtils>().deviceId ?? "";
+                  Map<String, dynamic> req = {
+                    "device_id": deviceId,
+                    "language_id": langId
+                  };
+                  print(req);
+                  await CommonApiHelper.shared
+                      .callGuestLogintApi(context, req, () {}, () {});
+                  NavigationUtilities.push(Gender());
+                }),
+              ),
               SizedBox(
                 height: getSize(12),
               ),

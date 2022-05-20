@@ -98,9 +98,9 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: Colors.black,
       appBar: AppBar(
-        backgroundColor: Colors.white,
+        backgroundColor: Colors.black,
         elevation: 0,
         centerTitle: true,
         actions: [
@@ -181,8 +181,8 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                     return (_userInfo?.userImages?[index].photoUrl.isEmpty ??
                             true)
                         ? InkWell(
-                            highlightColor: Colors.transparent,
-                            splashColor: Colors.transparent,
+                            highlightColor: ColorConstants.grayBackGround,
+                            splashColor: ColorConstants.grayBackGround,
                             onTap: () {
                               loadAssets();
                             },
@@ -259,41 +259,44 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                 Text(
                   "Personal details",
                   style: appTheme?.settingMenu.copyWith(
-                    color: Colors.black,
+                    color: Colors.white,
                   ),
                 ),
                 SizedBox(height: 10),
                 Text(
                   "Username",
-                  style: appTheme?.black16Medium.copyWith(),
+                  style: appTheme?.black16Medium.copyWith(color: Colors.white),
                 ),
                 SizedBox(height: 5),
                 CommonTextfield(
                   textOption: TextFieldOption(
                       hintText: "Username",
-                      inputController: userNameController),
+                      inputController: userNameController,),
+                  color: ColorConstants.grayBackGround,
                   textCallback: (text) {},
                 ),
                 SizedBox(height: 10),
                 Text(
                   "Contact no",
-                  style: appTheme?.black16Medium.copyWith(),
+                  style: appTheme?.black16Medium.copyWith(color: Colors.white),
                 ),
                 SizedBox(height: 5),
                 CommonTextfield(
                   textOption: TextFieldOption(
                       keyboardType: TextInputType.phone,
                       hintText: "Contact no",
-                      inputController: contactController),
+                      inputController: contactController,),
+                  color: ColorConstants.grayBackGround,
                   textCallback: (text) {},
                 ),
                 SizedBox(height: 10),
                 Text(
                   "Gender",
-                  style: appTheme?.black16Medium.copyWith(),
+                  style: appTheme?.black16Medium.copyWith(color: Colors.white),
                 ),
                 SizedBox(height: 5),
                 CommonTextfield(
+                  color: ColorConstants.grayBackGround,
                   focusNode: AlwaysDisabledFocusNode(),
                   textOption: TextFieldOption(
                       textCapitalization: TextCapitalization.words,
@@ -332,10 +335,11 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                 SizedBox(height: 10),
                 Text(
                   "Date of Birth",
-                  style: appTheme?.black16Medium.copyWith(),
+                  style: appTheme?.black16Medium.copyWith(color: Colors.white),
                 ),
                 SizedBox(height: 5),
                 CommonTextfield(
+                  color: ColorConstants.grayBackGround,
                   focusNode: AlwaysDisabledFocusNode(),
                   textOption: TextFieldOption(
                     postfixWid: Padding(
@@ -357,10 +361,11 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                 SizedBox(height: 10),
                 Text(
                   "About me",
-                  style: appTheme?.black16Medium.copyWith(),
+                  style: appTheme?.black16Medium.copyWith(color: Colors.white),
                 ),
                 SizedBox(height: 5),
                 CommonTextfield(
+                  color: ColorConstants.grayBackGround,
                   textOption: TextFieldOption(
                       hintText: "About me",
                       maxLine: 5,

@@ -74,6 +74,7 @@ class VideoChatHistoryResult {
   String? onlineStatus;
   int? callDurationMins;
   String? startedOn;
+  String? gender;
 
   VideoChatHistoryResult(
       {this.id,
@@ -82,7 +83,8 @@ class VideoChatHistoryResult {
         this.userName,
         this.onlineStatus,
         this.callDurationMins,
-        this.startedOn});
+        this.startedOn,
+        this.gender});
 
   VideoChatHistoryResult.fromJson(Map<String, dynamic> json) {
     id = json['id'];
@@ -92,6 +94,7 @@ class VideoChatHistoryResult {
     onlineStatus = json['online_status'];
     callDurationMins = json['call_duration_mins'];
     startedOn = json['started_on'];
+    gender = json['gender'];
   }
 
   Map<String, dynamic> toJson() {
@@ -103,6 +106,7 @@ class VideoChatHistoryResult {
     data['online_status'] = this.onlineStatus;
     data['call_duration_mins'] = this.callDurationMins;
     data['started_on'] = this.startedOn;
+    data['gender'] = this.gender;
     return data;
   }
 }

@@ -4,6 +4,7 @@ import 'package:lazy_loading_list/lazy_loading_list.dart';
 import 'package:provider/provider.dart';
 import 'package:video_chat/app/app.export.dart';
 import 'package:video_chat/components/Model/Match%20Profile/search_profile.dart';
+import 'package:video_chat/components/Screens/UserProfile/UserProfile.dart';
 
 import '../../../provider/followes_provider.dart';
 
@@ -20,11 +21,10 @@ class _SearchScreenState extends State<SearchScreen> {
 
   @override
   void initState() {
-    print('init called of SearchScreen');
     // TODO: implement initState
     super.initState();
-    Provider.of<FollowesProvider>(context, listen: false)
-        .fetchSearchUser(context, pageNumber: page);
+    // Provider.of<FollowesProvider>(context, listen: false)
+    //     .fetchSearchUser(context, pageNumber: page);
   }
 
   @override
@@ -67,7 +67,8 @@ class _SearchScreenState extends State<SearchScreen> {
             } else if (value == '') {
               page = 1;
               Provider.of<FollowesProvider>(context, listen: false)
-                  .fetchSearchUser(context, pageNumber: page);
+                  .searchList
+                  .clear();
             }
           },
           controller: search,
@@ -104,7 +105,7 @@ class _SearchScreenState extends State<SearchScreen> {
     return Consumer<FollowesProvider>(
         builder: (context, followesProvider, child) {
       List<SearchProfileData> searchList = followesProvider.searchList;
-      String noContentLabel = 'No search data found';
+      String noContentLabel = 'Enter the name or id of the user to search';
       return (searchList.isEmpty)
           ? Center(
               child: InkWell(
@@ -129,7 +130,6 @@ class _SearchScreenState extends State<SearchScreen> {
                   bottom: getSize(28)),
               itemCount: searchList.length,
               itemBuilder: (BuildContext context, int index) {
-                print('inside listview');
                 return LazyLoadingList(
                     initialSizeOfItems: 20,
                     index: index,
@@ -154,138 +154,142 @@ class _SearchScreenState extends State<SearchScreen> {
 
   Widget cellItem(
       SearchProfileData searchProfileModel, FollowesProvider followesProvider) {
-    return Container(
-      decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(12),
-          boxShadow: [],
-          color: ColorConstants.grayBackGround),
-      child: Padding(
-        padding: EdgeInsets.only(
-            top: getSize(8),
-            bottom: getSize(8),
-            left: getSize(10),
-            right: getSize(10)),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.start,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            Stack(
-              children: [
-                ClipRRect(
-                  borderRadius: BorderRadius.circular(10),
-                  child: CachedNetworkImage(
-                    imageUrl: searchProfileModel.photoUrl == ''
-                        ? ""
-                        : searchProfileModel.photoUrl ?? "",
-                    height: getSize(48),
-                    width: getSize(51),
-                    fit: BoxFit.cover,
-                    errorWidget: (context, url, error) => Image.asset(
-                      getUserPlaceHolder('gender'),
+    return InkWell(
+      onTap: () {
+        Navigator.push(
+            context,
+            MaterialPageRoute(
+                builder: (_) => UserProfile(
+                      id: searchProfileModel.id,
+                    )));
+      },
+      child: Container(
+        decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(12),
+            boxShadow: [],
+            color: ColorConstants.grayBackGround),
+        child: Padding(
+          padding: EdgeInsets.only(
+              top: getSize(8),
+              bottom: getSize(8),
+              left: getSize(10),
+              right: getSize(10)),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              Stack(
+                children: [
+                  ClipRRect(
+                    borderRadius: BorderRadius.circular(10),
+                    child: CachedNetworkImage(
+                      imageUrl: (searchProfileModel.imageUrl?.isEmpty ?? true)
+                          ? ""
+                          : searchProfileModel.imageUrl?.first ?? "",
                       height: getSize(48),
                       width: getSize(51),
-                    ),
-                  ),
-                ),
-                Positioned(
-                  right: 1.0,
-                  bottom: 1.0,
-                  child: CircleAvatar(
-                    backgroundColor: Colors.white,
-                    radius: 8.0,
-                    child: CircleAvatar(
-                      foregroundColor: ColorConstants.activeStatusColor,
-                      radius: 5.0,
-                    ),
-                  ),
-                ),
-              ],
-            ),
-            SizedBox(
-              width: getSize(11),
-            ),
-            Column(
-              mainAxisAlignment: MainAxisAlignment.start,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Container(
-                  width: 120.0,
-                  child: Text(
-                    searchProfileModel.userName ?? "",
-                    overflow: TextOverflow.ellipsis,
-                    style: appTheme?.black14Normal.copyWith(
-                        color: Colors.white,
-                        fontSize: getFontSize(16),
-                        fontWeight: FontWeight.w700),
-                  ),
-                ),
-                SizedBox(
-                  height: getSize(5),
-                ),
-                Row(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  children: [
-                    Text(
-                      searchProfileModel.userLevel ?? "",
-                      style: appTheme?.black14Normal.copyWith(
-                          color: Colors.white, fontWeight: FontWeight.w500),
-                    ),
-                  ],
-                ),
-              ],
-            ),
-            Expanded(
-                child: SizedBox(
-              height: 10.0,
-            )),
-            searchProfileModel.callProbability == true
-                ? Column(
-                    children: [
-                      Image.asset(
-                        icCallProbability,
-                        height: getSize(25),
+                      fit: BoxFit.cover,
+                      errorWidget: (context, url, error) => Image.asset(
+                        getUserPlaceHolder('gender'),
+                        height: getSize(48),
+                        width: getSize(51),
                       ),
-                      SizedBox(height: 5.0),
+                    ),
+                  ),
+                  Positioned(
+                    right: 1.0,
+                    bottom: 1.0,
+                    child: CircleAvatar(
+                      backgroundColor: Colors.white,
+                      radius: 8.0,
+                      child: CircleAvatar(
+                        foregroundColor: ColorConstants.activeStatusColor,
+                        radius: 5.0,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+              SizedBox(
+                width: getSize(11),
+              ),
+              Column(
+                mainAxisAlignment: MainAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Container(
+                    width: 120.0,
+                    child: Text(
+                      searchProfileModel.userName ?? "",
+                      overflow: TextOverflow.ellipsis,
+                      style: appTheme?.black14Normal.copyWith(
+                          color: Colors.white,
+                          fontSize: getFontSize(16),
+                          fontWeight: FontWeight.w700),
+                    ),
+                  ),
+                  SizedBox(
+                    height: getSize(5),
+                  ),
+                  Row(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    children: [
                       Text(
-                        'Call Probability',
-                        style: TextStyle(
-                            fontSize: getFontSize(8),
-                            color: ColorConstants.textGray,
-                            fontWeight: FontWeight.normal),
+                        searchProfileModel.userLevel ?? "",
+                        style: appTheme?.black14Normal.copyWith(
+                            color: Colors.white, fontWeight: FontWeight.w500),
                       ),
                     ],
-                  )
-                : Container(),
-            Expanded(
-              child: SizedBox(
-                height: 10.0,
-              ),
-            ),
-            searchProfileModel.liked == true
-                ? Image.asset(
-                    icHeart,
-                    height: getSize(25),
-                  )
-                : Image.asset(
-                    icTabHome,
-                    height: getSize(25),
                   ),
-            // isILike[0]
-            //     ? TextButton(
-            //   onPressed: () {
-            //     followesProvider.unfollowUser(
-            //         context, followes.byUser?.id ?? 0);
-            //   },
-            //   child: Text(
-            //     "Remove",
-            //     style: appTheme?.black12Normal.copyWith(
-            //         color: ColorConstants.redText,
-            //         fontWeight: FontWeight.w700),
-            //   ),
-            // )
-            //     : Container()
-          ],
+                ],
+              ),
+              Expanded(
+                  child: SizedBox(
+                height: 10.0,
+              )),
+              searchProfileModel.callProbability == true
+                  ? Column(
+                      children: [
+                        Image.asset(
+                          icCallProbability,
+                          height: getSize(25),
+                        ),
+                        SizedBox(height: 5.0),
+                        Text(
+                          'Call Probability',
+                          style: TextStyle(
+                              fontSize: getFontSize(8),
+                              color: ColorConstants.textGray,
+                              fontWeight: FontWeight.normal),
+                        ),
+                      ],
+                    )
+                  : Container(),
+              Expanded(
+                child: SizedBox(
+                  height: 10.0,
+                ),
+              ),
+              searchProfileModel.liked == true
+                  ? followIcon()
+                  : notFollowingIcon(),
+              // isILike[0]
+              //     ? TextButton(
+              //   onPressed: () {
+              //     followesProvider.unfollowUser(
+              //         context, followes.byUser?.id ?? 0);
+              //   },
+              //   child: Text(
+              //     "Remove",
+              //     style: appTheme?.black12Normal.copyWith(
+              //         color: ColorConstants.redText,
+              //         fontWeight: FontWeight.w700),
+              //   ),
+              // )
+              //     : Container()
+            ],
+          ),
         ),
       ),
     );
