@@ -141,7 +141,7 @@ class _LoginState extends State<Login> {
                 height: getSize(12),
               ),
               Visibility(
-                visible: true,
+                visible: false,
                 child: getButton(icGuest, "Continue with Guest", Colors.white,
                     () async {
                   int? langId =
@@ -156,9 +156,6 @@ class _LoginState extends State<Login> {
                       .callGuestLogintApi(context, req, () {}, () {});
                   NavigationUtilities.push(Gender());
                 }),
-              ),
-              SizedBox(
-                height: getSize(12),
               ),
             ],
           ),
