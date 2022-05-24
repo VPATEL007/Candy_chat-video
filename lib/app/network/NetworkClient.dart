@@ -1,12 +1,14 @@
 import 'dart:convert';
 import 'dart:io';
 
+import 'package:check_vpn_connection/check_vpn_connection.dart';
 import 'package:dio/adapter.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
+import 'package:http_certificate_pinning/http_certificate_pinning.dart';
 import 'package:video_chat/app/constant/ApiConstants.dart';
 
 import '../app.export.dart';
@@ -23,7 +25,18 @@ class NetworkClient {
   NetworkClient._();
   static NetworkClient getInstance = NetworkClient._();
 
-  final dio = Dio();
+  // final dio = Dio();
+  Dio getClient(String baseUrl) {
+    return Dio();
+  }
+
+  // Dio getClient(String baseUrl) {
+  //   List<String> allowedSHAFingerprints = [];
+  //   var dio = Dio(BaseOptions(baseUrl: baseUrl))
+  //     ..interceptors.add(CertificatePinningInterceptor(
+  //         allowedSHAFingerprints: allowedSHAFingerprints));
+  //   return dio;
+  // }
 
   Map<String, dynamic> getAuthHeaders({bool isRefereshToken = false}) {
     Map<String, dynamic> authHeaders = Map<String, dynamic>();
@@ -62,6 +75,8 @@ class NetworkClient {
       failureCallback("", "No Internet Connection");
       return null;
     }
+
+    Dio dio = getClient(baseUrl);
 
     dio.options.validateStatus = (status) {
       return (status ?? 0) < 500;
@@ -107,6 +122,12 @@ class NetworkClient {
       failureCallback("", "No Internet Connection");
       return null;
     }
+
+    if (await checkVpn() == true) {
+      return null;
+    }
+
+    Dio dio = getClient(baseUrl);
 
     print(
         "Call Api: URL: ${baseUrl + command} Method: $method Parms: $params Headers: $headers");
@@ -372,6 +393,43 @@ class NetworkClient {
       },
       failureCallback: (code, message) {
         failure();
+      },
+    );
+  }
+
+  //Check VPN
+  Future<bool> checkVpn() async {
+    if (await CheckVpnConnection.isVpnActive()) {
+      openVPNUI();
+      return true;
+    }
+    return false;
+  }
+
+  openVPNUI() {
+    return showDialog(
+      context: NavigationUtilities.key.currentState!.overlay!.context,
+      barrierDismissible: false,
+      builder: (BuildContext dialogContext) {
+        return AlertDialog(
+          shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.all(Radius.circular(16.0))),
+          backgroundColor: Colors.white,
+          title: Text("Error",
+              textAlign: TextAlign.center,
+              style: TextStyle(
+                  fontSize: getFontSize(18),
+                  color: ColorConstants.red,
+                  fontWeight: FontWeight.w800)),
+          actions: <Widget>[],
+          content: Text(
+              "You are using VPN Please remove VPN connection and open app again.",
+              textAlign: TextAlign.center,
+              style: TextStyle(
+                  fontSize: getFontSize(18),
+                  color: Colors.white,
+                  fontWeight: FontWeight.w800)),
+        );
       },
     );
   }

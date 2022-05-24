@@ -26,6 +26,7 @@ const String icHomeRotation = "assets/Home/homeRotation.gif";
 
 const String icCircleHome = "assets/Home/homeRound.png";
 const String icTabHome = "assets/Tab/tabHome.png";
+const String icLike = "assets/Profile/icLike.png";
 const String icTabHomeSelected = "assets/Tab/tabHomeSelected.png";
 const String icTabLike = "assets/Tab/tablike.png";
 const String icTabChat = "assets/Tab/tabChat.png";
@@ -35,6 +36,7 @@ const String icHomeCurve = "assets/Home/HomeCurve.png";
 const String icDrawer = "assets/Home/icDrawer.png";
 const String icVector = "assets/Home/Vector.png";
 const String icHeart = "assets/Home/heart.png";
+const String icCallProbability = "assets/Profile/callProbability.png";
 const String icCallAccept = "assets/Home/callAccept.png";
 const String icCallEnd = "assets/Home/callEnd.png";
 const String icCoin = "assets/Home/coin.png";

@@ -1,13 +1,11 @@
 class ApiConstants {
   static const String PROXY_URL = "PROXY 192.168.29.63:8888";
 
-  static const String baseURL =
-      "http://video-chat-dev-1463852847.ap-south-1.elb.amazonaws.com";
-  static const String imageBaseURL =
-      "http://video-chat-dev-1463852847.ap-south-1.elb.amazonaws.com";
+  static const String baseURL = "https://video-chat-prod.exdevcloud.com";
+  static const String imageBaseURL = "https://video-chat-prod.exdevcloud.com";
 
-  static const String socketUrl =
-      "https://videochat-socket-dev-163916015.ap-south-1.elb.amazonaws.com";
+  static const String socketUrl = "https://vc-socket.exdevcloud.com";
+
   static const String documentUpload = apiUrl + "media/upload";
 
   static const String apiUrl = baseURL + "/dev/";
@@ -49,6 +47,7 @@ class ApiConstants {
   static const String chatList = "chat-history";
   static const String blockList = "report/app/block-list";
   static const String unBlockUser = "report/remove-block";
+  static const String videoChatHistory = 'call-history/get-call-logs';
   static const String visitorList = "profile/visitor-list";
   static const String favouriteList = "favourite/get";
   static const String updateCallStatus = "call-history/video-call-end";

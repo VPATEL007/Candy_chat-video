@@ -8,6 +8,7 @@ import 'package:video_chat/components/Screens/Onboarding/Onboarding.dart';
 import 'package:video_chat/components/Screens/Profile/edit_profile.dart';
 import 'package:video_chat/components/Screens/Auth/Gender.dart';
 
+import '../../components/Screens/Likes/LikesScreen.dart';
 import 'fade_route.dart';
 
 /// The [RouteType] determines what [PageRoute] is used for the new route.
@@ -121,6 +122,9 @@ Route<dynamic> onGenerateRoute(RouteSettings settings) {
       screen = EditProfileScreen(
         isFromSignUp: true,
       );
+      break;
+    case LikesScreen.route:
+      screen = LikesScreen();
       break;
   }
 

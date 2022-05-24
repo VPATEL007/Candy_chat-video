@@ -16,7 +16,7 @@ class FlutterFilePicker {
       {String themeColor = _themeColor,
       String foregroundColor = _backgroundColor,
       showDirectoryFilter = false,
-      List<String> mimeTypes}) async {
+      List<String>? mimeTypes}) async {
     var result = await _channel.invokeMethod<dynamic>(
       'pickAny',
       <String, dynamic>{
@@ -34,7 +34,7 @@ class FlutterFilePicker {
     // var list = fileArray.map((it) => FileModel.fromJson(it)).toList();
     // onFileSelect(list);
 
-    var finalList = List<FileModel>();
+    List<FileModel> finalList = [];
     result.forEach((v) {
       finalList.add(
         FileModel.fromJson(v),
@@ -47,7 +47,7 @@ class FlutterFilePicker {
   static Future pickImage(
       {String themeColor = _themeColor,
       String foregroundColor = _backgroundColor,
-      Function(List<FileModel>) onFileSelect}) async {
+      Function(List<FileModel>)? onFileSelect}) async {
     var result = await _channel.invokeMethod<dynamic>(
       'pickImage',
       <String, dynamic>{
@@ -63,20 +63,20 @@ class FlutterFilePicker {
     // List<dynamic> fileArray = json.decode(result);
     // var list = result.map((it) => FileModel.fromJson(it));
 
-    var finalList = List<FileModel>();
+    List<FileModel> finalList = [];
     result.forEach((v) {
       finalList.add(
         FileModel.fromJson(v),
       );
     });
 
-    onFileSelect(finalList);
+    onFileSelect!(finalList);
   }
 
   static Future pickVideo(
       {String themeColor = _themeColor,
       String foregroundColor = _backgroundColor,
-      Function(List<FileModel>) onFileSelect}) async {
+      Function(List<FileModel>)? onFileSelect}) async {
     var result = await _channel.invokeMethod<dynamic>(
       'pickVideo',
       <String, dynamic>{
@@ -90,20 +90,20 @@ class FlutterFilePicker {
     // var list = fileArray.map((it) => FileModel.fromJson(it)).toList();
     // onFileSelect(list);
 
-    var finalList = List<FileModel>();
+    List<FileModel> finalList = [];
     result.forEach((v) {
       finalList.add(
         FileModel.fromJson(v),
       );
     });
 
-    onFileSelect(finalList);
+    onFileSelect!(finalList);
   }
 
   static Future pickDocument(
       {String themeColor = _themeColor,
       String foregroundColor = _backgroundColor,
-      Function(List<FileModel>) onFileSelect}) async {
+      Function(List<FileModel>)? onFileSelect}) async {
     List<String> mipmap = ["application/pdf"];
     var result = await _channel.invokeMethod<dynamic>(
       'pickDocument',
@@ -118,27 +118,27 @@ class FlutterFilePicker {
     // var list = fileArray.map((it) => FileModel.fromJson(it)).toList();
     // onFileSelect(list);
 
-    var finalList = List<FileModel>();
+    List<FileModel> finalList = [];
     result.forEach((v) {
       finalList.add(
         FileModel.fromJson(v),
       );
     });
 
-    onFileSelect(finalList);
+    onFileSelect!(finalList);
   }
 }
 
 class FileModel {
-  String strTitle;
-  String image;
-  String fileSize;
-  String fileUrl;
-  String fileType;
-  String attachmentName;
-  String fileExtension;
-  double fileSizeDouble;
-  String filepath;
+  String? strTitle;
+  String? image;
+  String? fileSize;
+  String? fileUrl;
+  String? fileType;
+  String? attachmentName;
+  String? fileExtension;
+  double? fileSizeDouble;
+  String? filepath;
 
   FileModel(
       {this.strTitle,

@@ -8,6 +8,8 @@ import 'package:video_chat/components/Screens/Profile/edit_profile.dart';
 import 'package:video_chat/provider/followes_provider.dart';
 
 import '../app.export.dart';
+import '../utils/apps_flyer/apps_flyer_keys.dart';
+import '../utils/apps_flyer/apps_flyer_service.dart';
 
 // AppConfiguration Constant string
 
@@ -49,6 +51,13 @@ class AppNavigation {
   }
 
   isValidProfile() {
+    var userId = app.resolve<PrefUtils>().getUserDetails()?.id;
+    print('userId==> $userId');
+    var email = app.resolve<PrefUtils>().getUserDetails()?.email;
+    print('email==> $email');
+    final Map eventValues = {"af_email": "$email", "af_userid": "$userId"};
+    AppsFlyerService.appsFlyerService
+        .logData(AppsFlyerKeys.appOpen, eventValues);
     var provider = Provider.of<FollowesProvider>(
         NavigationUtilities.key.currentState!.overlay!.context,
         listen: false);

@@ -107,6 +107,8 @@ class InAppPurchaseHelper {
       //     accessToken: accessToken);
       creditCoin(purchaseDetails);
       return Future<bool>.value(true);
+    } else {
+      
     }
     var isSuccess = false;
     Map<String, dynamic> req = {};
@@ -140,6 +142,11 @@ class InAppPurchaseHelper {
 
     Map<String, dynamic> req = {};
     if (Platform.isAndroid) {
+      await FlutterInappPurchase.instance
+          .acknowledgePurchaseAndroid(purchaseDetails.purchaseToken!);
+
+      await FlutterInappPurchase.instance
+          .consumePurchaseAndroid(purchaseDetails.purchaseToken!);
       req["gateway"] = "android";
       req["purchaseToken"] = purchaseDetails.purchaseToken;
     } else {

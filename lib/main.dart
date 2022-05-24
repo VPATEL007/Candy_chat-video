@@ -51,12 +51,13 @@ late KiwiContainer app;
 FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
     FlutterLocalNotificationsPlugin();
 FirebasePerformance _performance = FirebasePerformance.instance;
-FirebaseAnalytics analytics = FirebaseAnalytics();
+FirebaseAnalytics analytics = FirebaseAnalytics.instance;
 FirebaseAnalyticsObserver observer =
     FirebaseAnalyticsObserver(analytics: analytics);
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp();
 
   app = KiwiContainer();
 

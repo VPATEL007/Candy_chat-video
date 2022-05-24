@@ -1,0 +1,305 @@
+import 'package:cached_network_image/cached_network_image.dart';
+import 'package:flutter/material.dart';
+import 'package:lazy_loading_list/lazy_loading_list.dart';
+import 'package:provider/provider.dart';
+import 'package:video_chat/app/Helper/Themehelper.dart';
+import 'package:video_chat/app/constant/ColorConstant.dart';
+import 'package:video_chat/app/constant/EnumConstant.dart';
+import 'package:video_chat/app/constant/ImageConstant.dart';
+import 'package:video_chat/app/utils/math_utils.dart';
+import 'package:video_chat/components/Model/Follwers/follow_model.dart';
+import 'package:video_chat/components/Screens/Likes/search_screen.dart';
+import 'package:video_chat/components/widgets/TabBar/Tabbar.dart';
+import 'package:video_chat/provider/followes_provider.dart';
+
+import '../../../app/theme/app_theme.dart';
+import '../../../app/utils/CommonWidgets.dart';
+import '../UserProfile/UserProfile.dart';
+
+class LikesScreen extends StatefulWidget {
+  static const route = "LikesScreen";
+
+  LikesScreen({Key? key}) : super(key: key);
+
+  @override
+  State<LikesScreen> createState() => _LikesScreenState();
+}
+
+class _LikesScreenState extends State<LikesScreen> {
+  PageController pageController = new PageController(initialPage: 0);
+  List<bool> isILike = [true, false];
+  int page = 1;
+  int currentIndex = 0;
+  bool isSearch = false;
+
+  @override
+  void initState() {
+    super.initState();
+    Provider.of<FollowesProvider>(context, listen: false)
+        .fetchFollowes(context);
+    Provider.of<FollowesProvider>(context, listen: false)
+        .fetchFollowing(context);
+  }
+
+  resetSelectedState() {
+    isILike = [false, false];
+  }
+
+  setIndexZero() {
+    isSearch = false;
+    resetSelectedState();
+    isILike[0] = true;
+    currentIndex = 0;
+  }
+
+  setIndexOne() {
+    isSearch = false;
+    resetSelectedState();
+    isILike[1] = true;
+    currentIndex = 1;
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      backgroundColor: Colors.white,
+      bottomNavigationBar: TabBarWidget(
+        screen: TabType.Likes,
+      ),
+      body: SafeArea(
+        child: Column(children: [
+          Row(
+            children: [
+              InkWell(
+                  onTap: () {
+                    setIndexZero();
+                    pageController.animateToPage(currentIndex,
+                        duration: Duration(milliseconds: 600),
+                        curve: Curves.linearToEaseOut);
+                  },
+                  child: getTabItem('I Like', 0)),
+              InkWell(
+                  onTap: () {
+                    setIndexOne();
+                    pageController.animateToPage(currentIndex,
+                        duration: Duration(milliseconds: 600),
+                        curve: Curves.linearToEaseOut);
+                  },
+                  child: getTabItem('Like me', 1)),
+            ],
+          ),
+          Expanded(
+            child: Container(
+              height: MathUtilities.screenHeight(context) / 1.3,
+              child: PageView(
+                controller: pageController,
+                onPageChanged: (val) {
+                  if (val == 0) {
+                    setIndexZero();
+                  } else {
+                    setIndexOne();
+                  }
+                  currentIndex = val;
+                  setState(() {});
+                },
+                children: [list(), list()],
+              ),
+            ),
+          )
+        ]),
+      ),
+    );
+  }
+
+  Widget list() {
+    return Consumer<FollowesProvider>(
+        builder: (context, followesProvider, child) {
+      List<FollowesModel> _followes = isILike[0] == true
+          ? followesProvider.followingList
+          : followesProvider.followersList;
+      String noContentLabel =
+          isILike[0] == true ? 'No data found' : 'No like me data found';
+      return (_followes.isEmpty)
+          ? Center(
+              child: Text(
+                noContentLabel,
+                style: appTheme?.black14Normal.copyWith(
+                    fontSize: getFontSize(16),
+                    fontWeight: FontWeight.w700),
+              ),
+            )
+          : ListView.separated(
+              padding: EdgeInsets.only(
+                  top: getSize(16),
+                  left: getSize(25),
+                  right: getSize(25),
+                  bottom: getSize(28)),
+              itemCount: _followes.length,
+              itemBuilder: (BuildContext context, int index) {
+                return LazyLoadingList(
+                    initialSizeOfItems: 20,
+                    index: index,
+                    hasMore: true,
+                    loadMore: () {
+                      page++;
+                      print(
+                          "--------========================= Lazy Loading $page ==========================---------");
+                      if (isILike[0] == true) {
+                        Provider.of<FollowesProvider>(context, listen: false)
+                            .fetchFollowing(context, pageNumber: page);
+                      } else {
+                        Provider.of<FollowesProvider>(context, listen: false)
+                            .fetchFollowes(context, pageNumber: page);
+                      }
+                    },
+                    child: InkWell(
+                        onTap: () {
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (_) => UserProfile(
+                                        id: _followes[index].byUser!.id,
+                                      )));
+                        },
+                        child: cellItem(_followes[index], followesProvider)));
+              },
+              separatorBuilder: (BuildContext context, int index) {
+                return SizedBox(
+                  height: getSize(15),
+                );
+              },
+            );
+    });
+  }
+
+  Widget cellItem(FollowesModel followes, FollowesProvider followesProvider) {
+    return Container(
+      decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(12),
+          boxShadow: [],
+          color: fromHex("#F6F6F6")),
+      child: Padding(
+        padding: EdgeInsets.only(
+            top: getSize(8),
+            bottom: getSize(8),
+            left: getSize(10),
+            right: getSize(10)),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            ClipRRect(
+              borderRadius: BorderRadius.circular(10),
+              child: CachedNetworkImage(
+                imageUrl: (followes.byUser?.userImages?.isEmpty ?? true)
+                    ? ""
+                    : followes.byUser?.userImages?.first.photoUrl ?? "",
+                height: getSize(48),
+                width: getSize(51),
+                fit: BoxFit.cover,
+                errorWidget: (context, url, error) => Image.asset(
+                  getUserPlaceHolder(followes.byUser?.gender ?? ""),
+                  height: getSize(48),
+                  width: getSize(51),
+                ),
+              ),
+            ),
+            SizedBox(
+              width: getSize(11),
+            ),
+            Column(
+              mainAxisAlignment: MainAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  followes.byUser?.providerDisplayName ?? "",
+                  style: appTheme?.black14Normal.copyWith(
+                      fontSize: getFontSize(16), fontWeight: FontWeight.w700),
+                ),
+                SizedBox(
+                  height: getSize(5),
+                ),
+                Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: [
+                    Text(
+                      followes.byUser?.countryIp ?? "",
+                      style: appTheme?.black14Normal
+                          .copyWith(fontWeight: FontWeight.w500),
+                    ),
+                  ],
+                ),
+              ],
+            ),
+            Spacer(),
+            isILike[1] == true && followes.byUser?.callProbability == true
+                ? Column(
+                    children: [
+                      Image.asset(
+                        icCallProbability,
+                        height: getSize(25),
+                      ),
+                      SizedBox(height: 5.0),
+                      Text(
+                        'Call Probability',
+                        style: TextStyle(
+                            fontSize: getFontSize(8),
+                            color: ColorConstants.textGray,
+                            fontWeight: FontWeight.normal),
+                      ),
+                    ],
+                  )
+                : Container(),
+            isILike[1] == true && followes.byUser?.isLike == true
+                ? followIcon()
+                : notFollowingIcon(),
+            isILike[0]
+                ? TextButton(
+                    onPressed: () {
+                      followesProvider.unfollowUser(
+                          context, followes.byUser?.id ?? 0);
+                    },
+                    child: Text(
+                      "Remove",
+                      style: appTheme?.black12Normal.copyWith(
+                          color: ColorConstants.redText,
+                          fontWeight: FontWeight.w700),
+                    ),
+                  )
+                : Container()
+          ],
+        ),
+      ),
+    );
+  }
+
+  //Get Tab Item
+  Widget getTabItem(String title, index) {
+    print('index==> $index');
+    return Container(
+      width: MathUtilities.screenWidth(context) / 2,
+      child: Column(
+        children: [
+          Text(
+            title,
+            style: appTheme?.black14SemiBold.copyWith(
+                fontSize: getFontSize(16),
+                color: isILike[index] == true
+                    ? ColorConstants.redText
+                    : Colors.black),
+          ),
+          SizedBox(
+            height: getSize(12),
+          ),
+          Container(
+              height: 1,
+              color: isILike[index] == true
+                  ? ColorConstants.redText
+                  : Colors.black,
+              width: MathUtilities.screenWidth(context) / 2)
+        ],
+      ),
+    );
+  }
+}
