@@ -1,4 +1,4 @@
-package com.sugarcam.videochat
+package com.randomvideochat.sugarcam
 
 import android.content.Context
 import android.content.pm.PackageInfo

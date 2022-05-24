@@ -1,5 +1,5 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.sugarcam.videochat">
+    package="com.randomvideochat.sugarcam">
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.CAMERA" />
     <uses-permission android:name="android.permission.FLASHLIGHT" />
@@ -17,7 +17,7 @@
     <uses-feature android:name="android.hardware.camera.flash" />
 
    <application
-        android:label="SugarCam"
+        android:label="Candy Chat"
         android:usesCleartextTraffic="true"
         android:icon="@mipmap/launcher_icon">
 

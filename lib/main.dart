@@ -129,7 +129,9 @@ void configLocalNotification() {
 
 void showNotification(RemoteNotification? message) async {
   var androidPlatformChannelSpecifics = new AndroidNotificationDetails(
-    Platform.isAndroid ? 'high_importance_channel' : 'com.sugarcam.videochat',
+    Platform.isAndroid
+        ? 'high_importance_channel'
+        : 'com.randomvideochat.sugarcam',
     'This channel is used for important notifications.',
     '',
     playSound: true,

@@ -28,13 +28,13 @@ class InAppPurchaseHelper {
   late StreamSubscription _conectionSubscription;
 
   List<String> _kProductIds = <String>[
-    "com.randomvideochat.videochat.299",
-    "com.randomvideochat.videochat.499",
-    "com.randomvideochat.videochat.999",
-    "com.randomvideochat.videochat.1499",
-    "com.randomvideochat.videochat.2999",
-    "com.randomvideochat.videochat.9999",
-    "com.randomvideochat.videochat.24999"
+    "com.randomvideochat.sugarcam.299",
+    "com.randomvideochat.sugarcam.499",
+    "com.randomvideochat.sugarcam.999",
+    "com.randomvideochat.sugarcam.1499",
+    "com.randomvideochat.sugarcam.2999",
+    "com.randomvideochat.sugarcam.9999",
+    "com.randomvideochat.sugarcam.24999"
   ];
 
   List<IAPItem> listProducts = [];
@@ -101,7 +101,7 @@ class InAppPurchaseHelper {
       PurchasedItem purchaseDetails, BuildContext context) async {
     if (Platform.isAndroid) {
       // await FlutterInappPurchase.instance.validateReceiptAndroid(
-      //     packageName: "com.sugarcam.videochat",
+      //     packageName: "com.randomvideochat.sugarcam",
       //     productId: purchaseDetails.productId ?? "",
       //     productToken: purchaseDetails.purchaseToken ?? "",
       //     accessToken: accessToken);
@@ -148,7 +148,7 @@ class InAppPurchaseHelper {
 
     req["package_id"] = purchaseDetails.productId;
     req["transaction_id"] = purchaseDetails.transactionId;
-    req["package_name"] = "com.sugarcam.videochat";
+    req["package_name"] = "com.randomvideochat.sugarcam";
     req["paid_amount"] = product.price;
     req["currency"] = product.currency;
     req["user_id"] = app.resolve<PrefUtils>().getUserDetails()?.id.toString();

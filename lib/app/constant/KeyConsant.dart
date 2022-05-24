@@ -1,2 +1,2 @@
-const AGORA_APPID = "5ba638f6a9c9493186f0324611d6c710";
-const AGORA_SECRET = "f385ffb5edef4df8a1abd6d7e6eb1593";
+const AGORA_APPID = "fd35adf7ce7e4bdd95989a1efedee04c";
+const AGORA_SECRET = "fd35adf7ce7e4bdd95989a1efedee04c";

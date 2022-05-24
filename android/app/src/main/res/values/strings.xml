@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-  <string name="app_name">SugarCam Chat</string>
-  <string name="facebook_app_id">234543204337461</string>
-  <string name="fb_login_protocol_scheme">fb234543204337461</string>
+  <string name="app_name">Candy Chat</string>
+  <string name="facebook_app_id">1033777484216762</string>
+  <string name="fb_login_protocol_scheme">fb1033777484216762</string>
 </resources>
