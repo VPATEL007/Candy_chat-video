@@ -39,15 +39,17 @@ class ByUser {
   String? countryIp;
   Region? region;
   List<UserImages>? userImages;
+  bool? callProbability;
+  bool? isLike;
 
   ByUser(
       {this.providerDisplayName,
-      this.photoUrl,
-      this.id,
-      this.gender,
-      this.region,
-      this.userImages,
-      this.countryIp});
+        this.photoUrl,
+        this.id,
+        this.gender,
+        this.region,
+        this.userImages,
+        this.countryIp, this.callProbability, this.isLike});
 
   ByUser.fromJson(Map<String, dynamic> json) {
     providerDisplayName = json['user_name'];
@@ -56,13 +58,15 @@ class ByUser {
     gender = json['gender'];
     countryIp = json['country_ip'];
     region =
-        json['region'] != null ? new Region.fromJson(json['region']) : null;
+    json['region'] != null ? new Region.fromJson(json['region']) : null;
     if (json['user_images'] != null) {
       userImages = [];
       json['user_images'].forEach((v) {
         userImages?.add(new UserImages.fromJson(v));
       });
     }
+    callProbability = json['call_probability'];
+    isLike = json['liked'];
   }
 
   Map<String, dynamic> toJson() {
@@ -78,6 +82,8 @@ class ByUser {
     if (this.userImages != null) {
       data['user_images'] = this.userImages?.map((v) => v.toJson()).toList();
     }
+    data['call_probability'] = this.callProbability;
+    data['liked'] = this.isLike;
     return data;
   }
 }
