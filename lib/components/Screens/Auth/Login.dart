@@ -1,7 +1,9 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:url_launcher/url_launcher.dart';
 import 'package:video_chat/app/Helper/CommonApiHelper.dart';
 import 'package:video_chat/app/Helper/apple_login_helper.dart';
 import 'package:video_chat/app/Helper/facebook_login_helper.dart';
@@ -25,6 +27,8 @@ class Login extends StatefulWidget {
 }
 
 class _LoginState extends State<Login> {
+  bool? isAccepted = true;
+
   @override
   void initState() {
     super.initState();
@@ -103,6 +107,44 @@ class _LoginState extends State<Login> {
                 }),
               SizedBox(
                 height: getSize(12),
+              ),
+              Row(
+                children: [
+                  Theme(
+                    data: Theme.of(context).copyWith(
+                      unselectedWidgetColor: Colors.white,
+                    ),
+                    child: Checkbox(
+                      activeColor: ColorConstants.facebook,
+                      value: isAccepted,
+                      onChanged: (bool? value) {
+                        setState(() {
+                          isAccepted = value;
+                        });
+                      },
+                    ),
+                  ),
+                  // ''
+                  Flexible(
+                    child: RichText(
+                      text: TextSpan(children: [
+                        TextSpan(
+                          text: 'I accept privacy policy and terms of use ',
+                          style: appTheme?.white14Normal,
+                        ),
+                        TextSpan(
+                          text: 'privacy policy and terms of use',
+                          style: appTheme?.white14Normal
+                              .copyWith(color: ColorConstants.facebook),
+                          recognizer: new TapGestureRecognizer()
+                            ..onTap = () {
+                              launch('https://mjmedia.live/privacy-policy');
+                            },
+                        ),
+                      ]),
+                    ),
+                  ),
+                ],
               ),
               getButton(
                   icFacebook, "Continue with Facebook", ColorConstants.facebook,
