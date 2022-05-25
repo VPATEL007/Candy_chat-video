@@ -93,21 +93,6 @@ class _LoginState extends State<Login> {
                     style: appTheme?.white14Normal),
               ),
               Spacer(),
-              if (Platform.isIOS)
-                getButton(icApple, "Continue with Apple", Colors.black, () {
-                  int? langId =
-                      context.read<LanguageProvider>().selctedLanguages?.id;
-                  String deviceId = app.resolve<PrefUtils>().deviceId ?? "";
-                  Map<String, dynamic> req = {
-                    "device_id": deviceId,
-                    "language_id": langId
-                  };
-                  print(req);
-                  AppleLoginHealper.shared.login(context, req, () {});
-                }),
-              SizedBox(
-                height: getSize(12),
-              ),
               Row(
                 children: [
                   Theme(
@@ -146,58 +131,120 @@ class _LoginState extends State<Login> {
                   ),
                 ],
               ),
-              getButton(
-                  icFacebook, "Continue with Facebook", ColorConstants.facebook,
-                  () {
-                int? langId =
-                    context.read<LanguageProvider>().selctedLanguages?.id;
-                String deviceId = app.resolve<PrefUtils>().deviceId ?? "";
-                Map<String, dynamic> req = {
-                  "device_id": deviceId,
-                  "language_id": langId
-                };
-                print(req);
-                FacebookLoginHelper.shared
-                    .loginWithFacebook(context, req, () {});
-              }),
+              if (Platform.isIOS)
+                getButton(
+                    icApple,
+                    "Continue with Apple",
+                    Colors.black,
+                    isAccepted == true
+                        ? () {
+                            int? langId = context
+                                .read<LanguageProvider>()
+                                .selctedLanguages
+                                ?.id;
+                            String deviceId =
+                                app.resolve<PrefUtils>().deviceId ?? "";
+                            Map<String, dynamic> req = {
+                              "device_id": deviceId,
+                              "language_id": langId
+                            };
+                            print(req);
+                            AppleLoginHealper.shared.login(context, req, () {});
+                          }
+                        : () {
+                            showLoginMessage(context);
+                          }),
               SizedBox(
                 height: getSize(12),
               ),
-              getButton(icGoogle, "Continue with Google", Colors.white, () {
-                int? langId =
-                    context.read<LanguageProvider>().selctedLanguages?.id;
-                String deviceId = app.resolve<PrefUtils>().deviceId ?? "";
-                Map<String, dynamic> req = {
-                  "device_id": deviceId,
-                  "language_id": langId
-                };
-                GoogleSignInHelper.instance.handleSignIn(context, req);
-              }),
+              getButton(
+                  icFacebook,
+                  "Continue with Facebook",
+                  ColorConstants.facebook,
+                  isAccepted == true
+                      ? () {
+                          int? langId = context
+                              .read<LanguageProvider>()
+                              .selctedLanguages
+                              ?.id;
+                          String deviceId =
+                              app.resolve<PrefUtils>().deviceId ?? "";
+                          Map<String, dynamic> req = {
+                            "device_id": deviceId,
+                            "language_id": langId
+                          };
+                          print(req);
+                          FacebookLoginHelper.shared
+                              .loginWithFacebook(context, req, () {});
+                        }
+                      : () {
+                          showLoginMessage(context);
+                        }),
+              SizedBox(
+                height: getSize(12),
+              ),
+              getButton(
+                  icGoogle,
+                  "Continue with Google",
+                  Colors.white,
+                  isAccepted == true
+                      ? () {
+                          int? langId = context
+                              .read<LanguageProvider>()
+                              .selctedLanguages
+                              ?.id;
+                          String deviceId =
+                              app.resolve<PrefUtils>().deviceId ?? "";
+                          Map<String, dynamic> req = {
+                            "device_id": deviceId,
+                            "language_id": langId
+                          };
+                          GoogleSignInHelper.instance
+                              .handleSignIn(context, req);
+                        }
+                      : () {
+                          showLoginMessage(context);
+                        }),
               SizedBox(
                 height: getSize(12),
               ),
               Visibility(
                 visible: false,
-                child: getButton(icGuest, "Continue with Guest", Colors.white,
-                    () async {
-                  int? langId =
-                      context.read<LanguageProvider>().selctedLanguages?.id;
-                  String deviceId = app.resolve<PrefUtils>().deviceId ?? "";
-                  Map<String, dynamic> req = {
-                    "device_id": deviceId,
-                    "language_id": langId
-                  };
-                  print(req);
-                  await CommonApiHelper.shared
-                      .callGuestLogintApi(context, req, () {}, () {});
-                  NavigationUtilities.pushReplacementNamed(Gender.route);
-                }),
+                child: getButton(
+                    icGuest,
+                    "Continue with Guest",
+                    Colors.white,
+                    isAccepted == true
+                        ? () async {
+                            int? langId = context
+                                .read<LanguageProvider>()
+                                .selctedLanguages
+                                ?.id;
+                            String deviceId =
+                                app.resolve<PrefUtils>().deviceId ?? "";
+                            Map<String, dynamic> req = {
+                              "device_id": deviceId,
+                              "language_id": langId
+                            };
+                            print(req);
+                            await CommonApiHelper.shared
+                                .callGuestLogintApi(context, req, () {}, () {});
+                            NavigationUtilities.pushReplacementNamed(
+                                Gender.route);
+                          }
+                        : () {
+                            showLoginMessage(context);
+                          }),
               )
             ],
           ),
         ),
       ),
     );
+  }
+
+  showLoginMessage(context) {
+    View.showMessage(context, 'Please accept terms and conditions');
   }
 
   getButton(String image, String title, Color color, Function click) {
