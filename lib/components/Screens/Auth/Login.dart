@@ -1,9 +1,10 @@
 import 'package:appsflyer_sdk/appsflyer_sdk.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:provider/provider.dart';
+import 'package:url_launcher/url_launcher.dart';
 import 'package:video_chat/app/Helper/CommonApiHelper.dart';
 import 'package:video_chat/app/Helper/apple_login_helper.dart';
 import 'package:video_chat/app/Helper/facebook_login_helper.dart';
@@ -29,6 +30,8 @@ class Login extends StatefulWidget {
 }
 
 class _LoginState extends State<Login> {
+  bool? isAccepted = true;
+
   @override
   void initState() {
     super.initState();
@@ -93,75 +96,159 @@ class _LoginState extends State<Login> {
                     style: appTheme?.white14Normal),
               ),
               Spacer(),
+              Row(
+                children: [
+                  Theme(
+                    data: Theme.of(context).copyWith(
+                      unselectedWidgetColor: Colors.white,
+                    ),
+                    child: Checkbox(
+                      activeColor: ColorConstants.facebook,
+                      value: isAccepted,
+                      onChanged: (bool? value) {
+                        setState(() {
+                          isAccepted = value;
+                        });
+                      },
+                    ),
+                  ),
+                  // ''
+                  Flexible(
+                    child: RichText(
+                      text: TextSpan(children: [
+                        TextSpan(
+                          text: 'I accept privacy policy and terms of use ',
+                          style: appTheme?.white14Normal,
+                        ),
+                        TextSpan(
+                          text: 'privacy policy and terms of use',
+                          style: appTheme?.white14Normal
+                              .copyWith(color: ColorConstants.facebook),
+                          recognizer: new TapGestureRecognizer()
+                            ..onTap = () {
+                              launch('https://mjmedia.live/privacy-policy');
+                            },
+                        ),
+                      ]),
+                    ),
+                  ),
+                ],
+              ),
               if (Platform.isIOS)
-                getButton(icApple, "Continue with Apple", Colors.black, () {
-                  int? langId =
-                      context.read<LanguageProvider>().selctedLanguages?.id;
-                  String deviceId = app.resolve<PrefUtils>().deviceId ?? "";
-                  Map<String, dynamic> req = {
-                    "device_id": deviceId,
-                    "language_id": langId
-                  };
-                  print(req);
-                  AppleLoginHealper.shared.login(context, req, () {});
-                }),
+                getButton(
+                    icApple,
+                    "Continue with Apple",
+                    Colors.black,
+                    isAccepted == true
+                        ? () {
+                            int? langId = context
+                                .read<LanguageProvider>()
+                                .selctedLanguages
+                                ?.id;
+                            String deviceId =
+                                app.resolve<PrefUtils>().deviceId ?? "";
+                            Map<String, dynamic> req = {
+                              "device_id": deviceId,
+                              "language_id": langId
+                            };
+                            print(req);
+                            AppleLoginHealper.shared.login(context, req, () {});
+                          }
+                        : () {
+                            showLoginMessage(context);
+                          }),
               SizedBox(
                 height: getSize(12),
               ),
               getButton(
-                  icFacebook, "Continue with Facebook", ColorConstants.facebook,
-                  () {
-                // AppsFlyerService.appsFlyerService
-                //     .logEvent(AppsFlyerKeys.registration, eventValues);
-                int? langId =
-                    context.read<LanguageProvider>().selctedLanguages?.id;
-                String deviceId = app.resolve<PrefUtils>().deviceId ?? "";
-                Map<String, dynamic> req = {
-                  "device_id": deviceId,
-                  "language_id": langId
-                };
-                print(req);
-                FacebookLoginHelper.shared
-                    .loginWithFacebook(context, req, () {});
-              }),
+                  icFacebook,
+                  "Continue with Facebook",
+                  ColorConstants.facebook,
+                  isAccepted == true
+                      ? () {
+                          // AppsFlyerService.appsFlyerService
+                          //     .logEvent(AppsFlyerKeys.registration, eventValues);
+                          int? langId = context
+                              .read<LanguageProvider>()
+                              .selctedLanguages
+                              ?.id;
+                          String deviceId =
+                              app.resolve<PrefUtils>().deviceId ?? "";
+                          Map<String, dynamic> req = {
+                            "device_id": deviceId,
+                            "language_id": langId
+                          };
+                          print(req);
+                          FacebookLoginHelper.shared
+                              .loginWithFacebook(context, req, () {});
+                        }
+                      : () {
+                          showLoginMessage(context);
+                        }),
               SizedBox(
                 height: getSize(12),
               ),
-              getButton(icGoogle, "Continue with Google", Colors.white, () {
-                int? langId =
-                    context.read<LanguageProvider>().selctedLanguages?.id;
-                String deviceId = app.resolve<PrefUtils>().deviceId ?? "";
-                Map<String, dynamic> req = {
-                  "device_id": deviceId,
-                  "language_id": langId
-                };
-                GoogleSignInHelper.instance.handleSignIn(context, req);
-              }),
+              getButton(
+                  icGoogle,
+                  "Continue with Google",
+                  Colors.white,
+                  isAccepted == true
+                      ? () {
+                          int? langId = context
+                              .read<LanguageProvider>()
+                              .selctedLanguages
+                              ?.id;
+                          String deviceId =
+                              app.resolve<PrefUtils>().deviceId ?? "";
+                          Map<String, dynamic> req = {
+                            "device_id": deviceId,
+                            "language_id": langId
+                          };
+                          GoogleSignInHelper.instance
+                              .handleSignIn(context, req);
+                        }
+                      : () {
+                          showLoginMessage(context);
+                        }),
               SizedBox(
                 height: getSize(12),
               ),
               Visibility(
                 visible: false,
-                child: getButton(icGuest, "Continue with Guest", Colors.white,
-                    () async {
-                  int? langId =
-                      context.read<LanguageProvider>().selctedLanguages?.id;
-                  String deviceId = app.resolve<PrefUtils>().deviceId ?? "";
-                  Map<String, dynamic> req = {
-                    "device_id": deviceId,
-                    "language_id": langId
-                  };
-                  print(req);
-                  await CommonApiHelper.shared
-                      .callGuestLogintApi(context, req, () {}, () {});
-                  NavigationUtilities.push(Gender());
-                }),
+                child: getButton(
+                    icGuest,
+                    "Continue with Guest",
+                    Colors.white,
+                    isAccepted == true
+                        ? () async {
+                            int? langId = context
+                                .read<LanguageProvider>()
+                                .selctedLanguages
+                                ?.id;
+                            String deviceId =
+                                app.resolve<PrefUtils>().deviceId ?? "";
+                            Map<String, dynamic> req = {
+                              "device_id": deviceId,
+                              "language_id": langId
+                            };
+                            print(req);
+                            await CommonApiHelper.shared
+                                .callGuestLogintApi(context, req, () {}, () {});
+                            NavigationUtilities.push(Gender());
+                          }
+                        : () {
+                            showLoginMessage(context);
+                          }),
               ),
             ],
           ),
         ),
       ),
     );
+  }
+
+  showLoginMessage(context) {
+    View.showMessage(context, 'Please accept terms and conditions');
   }
 
   getButton(String image, String title, Color color, Function click) {
