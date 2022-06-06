@@ -41,6 +41,7 @@ import 'app/di/app_module.dart';
 import 'app/theme/app_theme.dart';
 import 'app/theme/global_models_provider.dart';
 import 'app/theme/settings_models_provider.dart';
+import 'app/utils/apps_flyer/apps_flyer_service.dart';
 import 'app/utils/navigator.dart';
 import 'app/utils/pref_utils.dart';
 import 'app/utils/route_observer.dart';
@@ -58,7 +59,7 @@ FirebaseAnalyticsObserver observer =
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
-
+  await AppsFlyerService.getInstance();
   app = KiwiContainer();
 
   SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp])
