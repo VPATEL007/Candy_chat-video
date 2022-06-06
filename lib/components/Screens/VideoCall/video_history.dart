@@ -129,7 +129,7 @@ class _VideoChatHistoryState extends State<VideoChatHistory> {
                               context,
                               MaterialPageRoute(
                                   builder: (_) => UserProfile(
-                                        id: chatHistory[index].id,
+                                        id: chatHistory[index].toUserId,
                                       )));
                         },
                         child: cellItem(

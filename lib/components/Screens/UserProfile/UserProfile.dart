@@ -27,7 +27,7 @@ class UserProfile extends StatefulWidget {
   int? id;
   UserModel? userModel;
 
-  UserProfile({Key? key, this.isPopUp, @required this.userModel, this.id})
+  UserProfile({Key? key, this.isPopUp, @required this.userModel, this.id = 0})
       : super(key: key);
 
   @override
@@ -50,15 +50,16 @@ class _UserProfileState extends State<UserProfile> {
         .getUserProfile(
             widget.id != 0 ? widget.id ?? 0 : widget.userModel?.id ?? 0,
             context);
-    Provider.of<GiftProvider>(context, listen: false)
-        .fetchReceivedGift(context, widget.userModel?.id ?? 0);
+    Provider.of<GiftProvider>(context, listen: false).fetchReceivedGift(
+        context, widget.id != 0 ? widget.id ?? 0 : widget.userModel?.id ?? 0);
     setState(() {});
   }
 
   getTags() async {
     var provider = Provider.of<TagsProvider>(context, listen: false);
 
-    await provider.fetchTags(context, widget.userModel?.id ?? 0);
+    await provider.fetchTags(
+        context, widget.id != 0 ? widget.id ?? 0 : widget.userModel?.id ?? 0);
 
     for (var item in provider.tagsList) {
       if (provider.checkFeedBackTagExist(item.id ?? 0)) {

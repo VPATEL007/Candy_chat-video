@@ -57,7 +57,7 @@ class _SplashState extends State<Splash> {
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  getColorText("SugarCam", ColorConstants.red, fontSize: 35),
+                  getColorText("Candy:", ColorConstants.red, fontSize: 35),
                   SizedBox(
                     width: getSize(8),
                   ),
