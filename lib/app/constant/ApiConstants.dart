@@ -43,6 +43,9 @@ class ApiConstants {
   static const String blockUser = "profile/block-unblock-profile";
   static const String createChat = "chat-history";
   static const String getProfile = "profile/";
+  static const String getAllAlbums = 'album/getAllAlbums';
+  static const String createAlbum = 'album';
+  static const String buyAlbum = 'album/buyAlbum';
   static const String chatList = "chat-history";
   static const String blockList = "report/app/block-list";
   static const String unBlockUser = "report/remove-block";

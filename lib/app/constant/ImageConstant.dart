@@ -62,6 +62,8 @@ const String icGiftCoin = "assets/Profile/giftCoin.png";
 const String icChatWhite = "assets/Profile/chatWhite.png";
 const String icDiamond = "assets/Profile/diamond.png";
 const String icWallet = "assets/Profile/wallet.png";
+const String icAddAlbum = "assets/Profile/icAddAlbum.png";
+const String icMyAlbum = "assets/Profile/icMyAlbum.png";
 
 const String vip1 = "assets/Vip/vip1.png";
 const String vip2 = "assets/Vip/vip2.png";

@@ -32,6 +32,8 @@ const createdAt_DESC = "createdAt DESC";
 const successStatusCode = 200;
 const addedSuccesStatusCode = 201;
 const notFoundStatusCode = 404;
+const price300 = 300;
+const price500 = 500;
 
 const masterSyncInitial = "1970-01-01T00:00:00+00:00";
 

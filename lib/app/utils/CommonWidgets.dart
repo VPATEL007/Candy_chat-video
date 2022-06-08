@@ -40,6 +40,18 @@ Widget getBottomButton(
   );
 }
 
+Widget cancelIcon(onTap, {top = 0.0, right = 0.0}) => Positioned(
+  top: top,
+  right: right,
+  child: InkWell(
+      onTap: onTap,
+      child: Image.asset(
+        "assets/Profile/close.png",
+        height: 15,
+        width: 15,
+      )),
+);
+
 getPopBottomButton(BuildContext context, String text, VoidCallback onPressed) {
   return InkWell(
     onTap: onPressed,

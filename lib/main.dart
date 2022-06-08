@@ -50,6 +50,7 @@ import 'app/utils/route_observer.dart';
 import 'components/Screens/OnboardingVerfication/VerificationInvitation.dart';
 import 'components/Screens/OnboardingVerfication/VerificationProfile.dart';
 import 'components/Screens/UserProfile/UserProfile.dart';
+import 'provider/album_provider.dart';
 // import 'package:in_app_purchase_android/in_app_purchase_android.dart';
 
 late KiwiContainer app;
@@ -231,6 +232,9 @@ class _BaseState extends State<Base> {
         ),
         ChangeNotifierProvider.value(
           value: WithDrawProvider(),
+        ),
+        ChangeNotifierProvider.value(
+          value: AlbumProvider(),
         ),
       ],
       child: MaterialApp(

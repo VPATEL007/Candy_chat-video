@@ -22,6 +22,8 @@ import 'package:video_chat/components/widgets/TabBar/Tabbar.dart';
 import 'package:video_chat/provider/feedback_provider.dart';
 import 'package:video_chat/provider/followes_provider.dart';
 
+import '../album/myAlbum.dart';
+
 class Profile extends StatefulWidget {
   Profile({
     Key? key,
@@ -94,6 +96,12 @@ class _ProfileState extends State<Profile> {
                       getListItem(icLanguage, "Language", false, 0, () {
                         NavigationUtilities.push(LanguageSelection(
                           isChange: true,
+                        ));
+                      }),
+                      getListItem(icMyAlbum, "My Album", false, 0, () {
+                        NavigationUtilities.push(MyAlbum(
+                          coinBalance:
+                              profie.userModel?.coinBalance!.toInt() ?? 0,
                         ));
                       }),
                       getListItem(icSetting, "Settings", false, 0, () {
