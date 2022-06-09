@@ -53,17 +53,23 @@ class AppNavigation {
   }
 
   isValidProfile() {
-    var userId = app.resolve<PrefUtils>().getUserDetails()?.id;
-    print('userId==> $userId');
-    var email = app.resolve<PrefUtils>().getUserDetails()?.email;
-    print('email==> $email');
-    final Map eventValues = {"af_email": "$email", "af_userid": "$userId"};
-    AppsFlyerService.appsFlyerService
-        .logData(AppsFlyerKeys.appOpen, eventValues);
+    try {
+      var userId = app.resolve<PrefUtils>().getUserDetails()?.id;
+      print('userId==> $userId');
+      var email = app.resolve<PrefUtils>().getUserDetails()?.email;
+      print('email==> $email');
+      final Map eventValues = {"af_email": "$email", "af_userid": "$userId"};
+      AppsFlyerService.appsFlyerService
+          .logData(AppsFlyerKeys.appOpen, eventValues);
+    } catch (e) {
+      print('appsFlyer event error af_email: $e');
+    }
 
     var provider = Provider.of<FollowesProvider>(
         NavigationUtilities.key.currentState!.overlay!.context,
         listen: false);
+    print('provider==> ${provider.userModel?.userName}');
+    print('provider==> ${provider.userModel?.userImages![0].photoUrl}');
     if (provider.userModel?.userName == null ||
         provider.userModel?.userName?.isEmpty == true ||
         provider.userModel?.userImages == null ||
@@ -74,7 +80,7 @@ class AppNavigation {
       SocketHealper.shared.connect();
       NavigationUtilities.pushReplacementNamed(LeaderBoard.route,
           type: RouteType.fade);
-     
+
       CommonApiHelper.shared.appStart();
       CommonApiHelper.shared.updateFCMToken();
     }

@@ -151,7 +151,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
               NetworkClient.getInstance.showLoader(context);
               await Provider.of<FollowesProvider>(context, listen: false)
                   .saveMyProfile(context, _userInfo, removeImage);
-              NetworkClient.getInstance.hideProgressDialog();
+              // NetworkClient.getInstance.hideProgressDialog();
               NavigationUtilities.pushReplacementNamed(LeaderBoard.route);
             } else {
               Provider.of<FollowesProvider>(context, listen: false)
