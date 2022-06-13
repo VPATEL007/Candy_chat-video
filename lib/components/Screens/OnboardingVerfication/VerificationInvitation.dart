@@ -3,10 +3,12 @@ import 'package:flutter/material.dart';
 import 'package:video_chat/app/app.export.dart';
 import 'package:video_chat/app/constant/ColorConstant.dart';
 import 'package:video_chat/app/utils/CommonWidgets.dart';
+import 'package:video_chat/components/Screens/OnboardingVerfication/VerificationFace.dart';
 import 'package:video_chat/components/Screens/OnboardingVerfication/VerificationProfile.dart';
 
 class VerficationInvitation extends StatefulWidget {
   static const route = "VerficationInvitation";
+
   VerficationInvitation({Key? key}) : super(key: key);
 
   @override
@@ -38,7 +40,7 @@ class _VerficationInvitationState extends State<VerficationInvitation> {
 
         if (response != null) {
           if (response["verify_code"] == true) {
-            NavigationUtilities.push(VerificationProfile());
+            NavigationUtilities.push(VerificationFace());
           } else {
             View.showMessage(context, response["message"]);
           }
@@ -74,7 +76,6 @@ class _VerficationInvitationState extends State<VerficationInvitation> {
                   children: [
                     getCircle(true),
                     getTopLine(true),
-                    getCircle(false),
                     getTopLine(false),
                     getCircle(false)
                   ],
@@ -90,17 +91,10 @@ class _VerficationInvitationState extends State<VerficationInvitation> {
                             fontSize: getFontSize(14),
                             color: ColorConstants.red,
                             fontWeight: FontWeight.w600)),
-                    SizedBox(
-                      width: getSize(28),
-                    ),
-                    Text("Upload profile",
-                        textAlign: TextAlign.start,
-                        style: TextStyle(
-                            fontSize: getFontSize(14),
-                            color: Colors.grey,
-                            fontWeight: FontWeight.w600)),
-                    SizedBox(
-                      width: getSize(65),
+                    Expanded(
+                      child: SizedBox(
+                        width: getSize(28),
+                      ),
                     ),
                     Text("Complete",
                         textAlign: TextAlign.start,
@@ -272,7 +266,7 @@ class _VerficationInvitationState extends State<VerficationInvitation> {
   Widget getTopLine(bool isColor) {
     return Container(
       height: 1,
-      width: (MathUtilities.screenWidth(context) / 2) - 60,
+      width: (MathUtilities.screenWidth(context) / 2) - 45,
       color: isColor ? ColorConstants.red : Colors.grey,
     );
   }

@@ -68,8 +68,6 @@ class AppNavigation {
     var provider = Provider.of<FollowesProvider>(
         NavigationUtilities.key.currentState!.overlay!.context,
         listen: false);
-    print('provider==> ${provider.userModel?.userName}');
-    print('provider==> ${provider.userModel?.userImages![0].photoUrl}');
     if (provider.userModel?.userName == null ||
         provider.userModel?.userName?.isEmpty == true ||
         provider.userModel?.userImages == null ||
