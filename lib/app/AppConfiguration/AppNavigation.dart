@@ -43,7 +43,7 @@ class AppNavigation {
             listen: false)
         .fetchMyProfile(NavigationUtilities.key.currentState!.overlay!.context);
 
-    NetworkClient.getInstance.hideProgressDialog();
+    // NetworkClient.getInstance.hideProgressDialog();
     isValidProfile();
 
     SocketHealper.shared.connect();

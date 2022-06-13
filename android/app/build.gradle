@@ -43,15 +43,15 @@ android {
         applicationId "com.sugarcam.videochat"
         minSdkVersion 21
         targetSdkVersion 30
-        versionCode 4
-        versionName '4.1'
+        versionCode 6
+        versionName '6.1'
     }
 //    flavorName {
 //        applicationId = "com.sugarcam.videochat"
 //    }
 
     signingConfigs {
-        release {
+            release {
             storeFile file('key.jks')
             storePassword "Mayur@123"
             keyAlias "key0"

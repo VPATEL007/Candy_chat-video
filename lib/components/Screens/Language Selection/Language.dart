@@ -10,6 +10,7 @@ import 'package:video_chat/app/utils/navigator.dart';
 import 'package:video_chat/app/utils/pref_utils.dart';
 import 'package:video_chat/components/Model/Auth/OnboardingModel.dart';
 import 'package:video_chat/components/Model/Language/Language.dart';
+import 'package:video_chat/components/Screens/Auth/Login.dart';
 import 'package:video_chat/components/Screens/Onboarding/Onboarding.dart';
 import 'package:video_chat/provider/language_provider.dart';
 
@@ -50,6 +51,8 @@ class _LanguageSelectionState extends State<LanguageSelection> {
         params: req,
         successCallback: (response, message) async {
           NetworkClient.getInstance.hideProgressDialog();
+          NavigationUtilities.push(Login());
+          return;
           List<dynamic> list = response;
           if (list != null) {
             List<OnboardingModel> arrList =

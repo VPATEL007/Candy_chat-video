@@ -52,9 +52,11 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
   List<int> removeImage = [];
 
   Future<void> init() async {
-    _userInfo = Provider.of<FollowesProvider>(context, listen: false)
-        .userModel!
-        .toCloneInfo;
+    if (_userInfo != null) {
+      _userInfo = Provider.of<FollowesProvider>(context, listen: false)
+          .userModel!
+          .toCloneInfo;
+    }
     if (_userInfo == null) {
       await Provider.of<FollowesProvider>(context, listen: false)
           .fetchMyProfile(context);

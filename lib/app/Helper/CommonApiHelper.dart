@@ -58,7 +58,7 @@ class CommonApiHelper {
           await profileProvider.fetchMyProfile(
               NavigationUtilities.key.currentState!.overlay!.context);
 
-          NetworkClient.getInstance.hideProgressDialog();
+          // NetworkClient.getInstance.hideProgressDialog();
 
           if (profileProvider.userModel?.gender?.isEmpty == true) {
             NavigationUtilities.key.currentState!.pushReplacement(FadeRoute(
