@@ -322,7 +322,7 @@ class VideoCallState extends State<VideoCall> {
                               SizedBox(
                                 width: getSize(12),
                               ),
-                              callEndButton()
+                              // callEndButton()
                             ],
                           ),
                         ),
