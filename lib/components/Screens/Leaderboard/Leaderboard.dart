@@ -1,5 +1,7 @@
 import 'dart:convert';
+import 'dart:developer';
 
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:video_chat/app/Helper/CommonApiHelper.dart';
@@ -20,8 +22,12 @@ import 'package:video_chat/components/Screens/OnboardingVerfication/Verification
 import 'package:video_chat/components/widgets/TabBar/Tabbar.dart';
 import 'package:video_chat/main.dart';
 
+import '../Home/MatchedProfile.dart';
+import '../album/createAlbum.dart';
+
 class LeaderBoard extends StatefulWidget {
   static const route = "LeaderBoard";
+
   LeaderBoard({Key? key}) : super(key: key);
 
   @override
@@ -34,15 +40,42 @@ class _LeaderBoardState extends State<LeaderBoard> {
   List<LeaderBoardModel> callDuration = [];
   List<LeaderBoardModel> giftCoins = [];
   bool isCall = true;
+  bool showLoader = true;
 
   @override
   void initState() {
     super.initState();
-
     WidgetsBinding.instance?.addPostFrameCallback((timeStamp) {
-      CommonApiHelper.shared.getRTMToken(context);
+      getRtmToken();
       openVerificationPopUp();
-      getCallDuration();
+      getCallDuration(showLoader: false);
+    });
+  }
+
+  getRtmToken() async {
+    bool isCompleted = await CommonApiHelper.shared.getRTMToken(context);
+    FirebaseMessaging.instance.getInitialMessage().then((message) {
+      if (message != null) {
+        String userName = message.data['user_name'];
+        String toUserId = message.data['to_user_id'];
+        String fromUserId = message.data['from_user_id'];
+        String toImageUrl = message.data['toImageUrl'];
+        String fromImageUrl = message.data['fromImageUrl'];
+        String channelName = message.data['channel_name'];
+        String sessionId = message.data['token'];
+        String toGender = message.data['toGender'];
+        Navigator.of(context).push(MaterialPageRoute(
+          builder: (context) => MatchedProfile(
+              channelName: channelName,
+              token: sessionId,
+              fromId: toUserId.toString(),
+              fromImageUrl: fromImageUrl,
+              name: userName,
+              toImageUrl: toImageUrl,
+              id: fromUserId.toString(),
+              toGender: toGender),
+        ));
+      }
     });
   }
 
@@ -192,12 +225,12 @@ class _LeaderBoardState extends State<LeaderBoard> {
         });
   }
 
-  getCallDuration() {
+  getCallDuration({showLoader = true}) {
     Map<String, dynamic> req = {};
     req["callType"] = isCall == true ? "call" : "gift";
     req["agency_id"] = app.resolve<PrefUtils>().getUserDetails()?.agencyId ?? 0;
 
-    NetworkClient.getInstance.showLoader(context);
+    if (showLoader) NetworkClient.getInstance.showLoader(context);
     NetworkClient.getInstance.callApi(
       context: context,
       baseUrl: ApiConstants.apiUrl,
@@ -206,7 +239,7 @@ class _LeaderBoardState extends State<LeaderBoard> {
       headers: NetworkClient.getInstance.getAuthHeaders(),
       method: MethodType.Post,
       successCallback: (response, message) async {
-        NetworkClient.getInstance.hideProgressDialog();
+        if (showLoader) NetworkClient.getInstance.hideProgressDialog();
 
         if (response != null) {
           if (isCall) {
@@ -221,7 +254,7 @@ class _LeaderBoardState extends State<LeaderBoard> {
         }
       },
       failureCallback: (code, message) {
-        NetworkClient.getInstance.hideProgressDialog();
+        if (showLoader) NetworkClient.getInstance.hideProgressDialog();
         View.showMessage(context, message);
       },
     );

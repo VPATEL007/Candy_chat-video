@@ -1,6 +1,7 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 import 'package:video_chat/app/AppConfiguration/AppNavigation.dart';
 import 'package:video_chat/app/Helper/CommonApiHelper.dart';
@@ -78,6 +79,47 @@ class _ProfileState extends State<Profile> {
                         height: getSize(16),
                       ),
                       getCounts(profie.userModel),
+                      SizedBox(
+                        height: getSize(16),
+                      ),
+                      profie.userModel?.referralCode != null
+                          ? InkWell(
+                              onTap: () {
+                                Clipboard.setData(ClipboardData(
+                                    text: "${profie.userModel?.referralCode}"));
+                                View.showMessage(context, 'Copied to clipboard',
+                                    mode: DisplayMode.SUCCESS);
+                              },
+                              child: Container(
+                                alignment: Alignment.center,
+                                width: MathUtilities.screenWidth(context),
+                                height: 55.0,
+                                decoration: BoxDecoration(
+                                    color: ColorConstants.grayBackGround,
+                                    borderRadius: BorderRadius.circular(16)),
+                                child: Row(
+                                  children: [
+                                    Expanded(child: SizedBox()),
+                                    Container(),
+                                    Expanded(child: SizedBox()),
+                                    Text(
+                                      'Referral Code: ${profie.userModel?.referralCode}',
+                                      style: appTheme?.white16Normal,
+                                    ),
+                                    Expanded(child: SizedBox()),
+                                    Container(
+                                        padding: EdgeInsets.only(left: 20.0),
+                                        alignment: Alignment.centerRight,
+                                        child: Icon(
+                                          Icons.copy,
+                                          color: Colors.white,
+                                        )),
+                                    Expanded(child: SizedBox()),
+                                  ],
+                                ),
+                              ),
+                            )
+                          : Container(),
                       SizedBox(
                         height: getSize(16),
                       ),

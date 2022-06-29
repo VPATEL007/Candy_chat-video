@@ -28,6 +28,7 @@ class PrefUtils {
   String get keyIsFCMToken => "keyIsFCMToken";
   String get keyIsFromAge => "keyFromAge";
   String get keyIsToAge => "keyToAge";
+  String get callerName=> 'username';
 
   bool? isHomeVisible;
 

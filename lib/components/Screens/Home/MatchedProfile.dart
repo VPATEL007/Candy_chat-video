@@ -225,7 +225,7 @@ class _MatchedProfileState extends State<MatchedProfile> {
                               listen: false)
                           .coinStatus;
 
-                  Navigator.pop(context);
+                  // Navigator.pop(context);
                   if (coinStatus?.continueCall == true) {
                     AgoraService.instance
                         .sendReceiveCallMessage(widget.id ?? "");
