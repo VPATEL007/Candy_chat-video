@@ -1,13 +1,13 @@
 import 'dart:io';
 
-import 'package:firebase_analytics/firebase_analytics.dart';
-import 'package:firebase_analytics/observer.dart';
+// import 'package:firebase_analytics/firebase_analytics.dart';
+// import 'package:firebase_analytics/observer.dart';
 
-import 'package:firebase_core/firebase_core.dart';
-import 'package:firebase_crashlytics/firebase_crashlytics.dart';
+// import 'package:firebase_core/firebase_core.dart';
 // import 'package:firebase_crashlytics/firebase_crashlytics.dart';
-import 'package:firebase_messaging/firebase_messaging.dart';
-import 'package:firebase_performance/firebase_performance.dart';
+// import 'package:firebase_crashlytics/firebase_crashlytics.dart';
+// import 'package:firebase_messaging/firebase_messaging.dart';
+// import 'package:firebase_performance/firebase_performance.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -56,14 +56,14 @@ import 'provider/album_provider.dart';
 late KiwiContainer app;
 FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
     FlutterLocalNotificationsPlugin();
-FirebasePerformance _performance = FirebasePerformance.instance;
-FirebaseAnalytics analytics = FirebaseAnalytics.instance;
-FirebaseAnalyticsObserver observer =
-    FirebaseAnalyticsObserver(analytics: analytics);
+// FirebasePerformance _performance = FirebasePerformance.instance;
+// FirebaseAnalytics analytics = FirebaseAnalytics();
+// FirebaseAnalyticsObserver observer =
+//     FirebaseAnalyticsObserver(analytics: analytics);
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  await Firebase.initializeApp();
+  // await Firebase.initializeApp();
   await AppsFlyerService.getInstance();
   app = KiwiContainer();
 
@@ -92,34 +92,34 @@ Future<void> main() async {
 }
 
 Future<void> setupFCM() async {
-  analytics.setAnalyticsCollectionEnabled(true);
-  FlutterError.onError = FirebaseCrashlytics.instance.recordFlutterError;
-  _performance.setPerformanceCollectionEnabled(true);
-  final FirebaseMessaging _firebaseMessaging = FirebaseMessaging.instance;
+  // analytics.setAnalyticsCollectionEnabled(true);
+  // FlutterError.onError = FirebaseCrashlytics.instance.recordFlutterError;
+  // _performance.setPerformanceCollectionEnabled(true);
+  // final FirebaseMessaging _firebaseMessaging = FirebaseMessaging.instance;
 
-  FirebaseMessaging.onMessage.listen((RemoteMessage event) {
-    showNotification(event.notification);
-  });
-  FirebaseMessaging.onMessageOpenedApp.listen((message) {
-    openNotification(message);
-    print('Message clicked!');
-  });
+  // FirebaseMessaging.onMessage.listen((RemoteMessage event) {
+  //   showNotification(event.notification);
+  // });
+  // FirebaseMessaging.onMessageOpenedApp.listen((message) {
+  //   openNotification(message);
+  //   print('Message clicked!');
+  // });
 
-  _firebaseMessaging.requestPermission(sound: true, badge: true, alert: true);
+  // _firebaseMessaging.requestPermission(sound: true, badge: true, alert: true);
 
-  var token = app
-      .resolve<PrefUtils>()
-      .getString(app.resolve<PrefUtils>().keyIsFCMToken);
-  if (token.length == 0) {
-    print("sdfsdf");
-    _firebaseMessaging.getToken().then((token) {
-      if (token != null) {
-        app
-            .resolve<PrefUtils>()
-            .saveString(app.resolve<PrefUtils>().keyIsFCMToken, token);
-      }
-    });
-  }
+  // var token = app
+  //     .resolve<PrefUtils>()
+  //     .getString(app.resolve<PrefUtils>().keyIsFCMToken);
+  // if (token.length == 0) {
+  //   print("sdfsdf");
+  //   _firebaseMessaging.getToken().then((token) {
+  //     if (token != null) {
+  //       app
+  //           .resolve<PrefUtils>()
+  //           .saveString(app.resolve<PrefUtils>().keyIsFCMToken, token);
+  //     }
+  //   });
+  // }
 
   configLocalNotification();
 }
@@ -133,35 +133,35 @@ void configLocalNotification() {
   flutterLocalNotificationsPlugin.initialize(initializationSettings);
 }
 
-void showNotification(RemoteNotification? message) async {
-  var androidPlatformChannelSpecifics = new AndroidNotificationDetails(
-    Platform.isAndroid ? 'high_importance_channel' : 'com.sugarcam.videochat',
-    'This channel is used for important notifications.',
-    '',
-    playSound: true,
-    enableVibration: true,
-    importance: Importance.max,
-    priority: Priority.high,
-  );
-  const IOSNotificationDetails iOSPlatformChannelSpecifics =
-      IOSNotificationDetails(subtitle: 'the subtitle');
-  var platformChannelSpecifics = new NotificationDetails(
-      android: androidPlatformChannelSpecifics,
-      iOS: iOSPlatformChannelSpecifics);
-  await flutterLocalNotificationsPlugin.show(
-      0, message?.title, message?.body, platformChannelSpecifics,
-      payload: 'data');
-  print("Show Notification");
-}
+// void showNotification(RemoteNotification? message) async {
+//   var androidPlatformChannelSpecifics = new AndroidNotificationDetails(
+//     Platform.isAndroid ? 'high_importance_channel' : 'com.sugarcam.videochat',
+//     'This channel is used for important notifications.',
+//     '',
+//     playSound: true,
+//     enableVibration: true,
+//     importance: Importance.max,
+//     priority: Priority.high,
+//   );
+//   const IOSNotificationDetails iOSPlatformChannelSpecifics =
+//       IOSNotificationDetails(subtitle: 'the subtitle');
+//   var platformChannelSpecifics = new NotificationDetails(
+//       android: androidPlatformChannelSpecifics,
+//       iOS: iOSPlatformChannelSpecifics);
+//   await flutterLocalNotificationsPlugin.show(
+//       0, message?.title, message?.body, platformChannelSpecifics,
+//       payload: 'data');
+//   print("Show Notification");
+// }
 
-openNotification(RemoteMessage message) {
-  NotificationModel model = NotificationModel.fromJson(message.data);
-  if (model.type == "follow") {
-    NavigationUtilities.push(UserProfile(
-      userModel: UserModel(id: int.parse(model.userId ?? "")),
-    ));
-  }
-}
+// openNotification(RemoteMessage message) {
+//   NotificationModel model = NotificationModel.fromJson(message.data);
+//   if (model.type == "follow") {
+//     NavigationUtilities.push(UserProfile(
+//       userModel: UserModel(id: int.parse(model.userId ?? "")),
+//     ));
+//   }
+// }
 
 GlobalKey navigationKey = GlobalKey();
 
@@ -243,7 +243,9 @@ class _BaseState extends State<Base> {
         title: APPNAME,
         navigatorKey: NavigationUtilities.key,
         onGenerateRoute: onGenerateRoute,
-        navigatorObservers: [routeObserver, observer],
+        navigatorObservers: [
+          routeObserver,
+        ],
         theme: ThemeData(
           // Define the default brightness and colors.
           brightness: Brightness.light,

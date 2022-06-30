@@ -1,17 +1,9 @@
 import 'dart:async';
 
-// import 'package:firebase_crashlytics/firebase_crashlytics.dart';
-import 'package:firebase_crashlytics/firebase_crashlytics.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:video_chat/app/AppConfiguration/AppNavigation.dart';
 import 'package:video_chat/app/Helper/socket_helper.dart';
 import 'package:video_chat/app/app.export.dart';
-import 'package:video_chat/app/utils/CommonWidgets.dart';
-import 'package:video_chat/components/Screens/OnboardingVerfication/VerificationCamera.dart';
-import 'package:video_chat/components/Screens/OnboardingVerfication/VerificationFace.dart';
-import 'package:video_chat/components/Screens/OnboardingVerfication/VerificationInvitation.dart';
-import 'package:video_chat/components/Screens/OnboardingVerfication/VerificationProfile.dart';
 
 class Splash extends StatefulWidget {
   Splash({Key? key}) : super(key: key);
