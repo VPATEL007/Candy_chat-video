@@ -11,6 +11,8 @@ import 'package:video_chat/components/Model/Chat/videoChatHistoryModel.dart';
 import 'package:video_chat/components/Model/User/UserModel.dart';
 import 'package:video_chat/components/Screens/Chat/Chat.dart';
 
+import '../components/Model/Chat/chat_message_model.dart';
+
 class ChatProvider with ChangeNotifier {
   // Create Chat...
   Future<void> startChat(
@@ -34,7 +36,6 @@ class ChatProvider with ChangeNotifier {
           NetworkClient.getInstance.hideProgressDialog();
           if (response["channel_name"] != null) {
             NavigationUtilities.push(Chat(
-              channelId: response["channel_name"].toString(),
               toUserId: toUserId,
               isFromProfile: isFromProfile,
             ));
@@ -82,11 +83,11 @@ class ChatProvider with ChangeNotifier {
 
   //Chat List
 
-  List<ChatListModel> _chatList = [];
+  List<ChatListData> _chatList = [];
 
-  List<ChatListModel> get chatList => this._chatList;
+  List<ChatListData> get chatList => this._chatList;
 
-  set chatList(List<ChatListModel> value) => this._chatList = value;
+  set chatList(List<ChatListData> value) => this._chatList = value;
 
   List<VideoChatHistoryResult> _videoChatList = [];
 
@@ -110,7 +111,7 @@ class ChatProvider with ChangeNotifier {
         context: context,
         params: _parms,
         baseUrl: ApiConstants.apiUrl,
-        command: ApiConstants.chatList,
+        command: ApiConstants.friendList,
         headers: NetworkClient.getInstance.getAuthHeaders(),
         method: MethodType.Get,
         successCallback: (response, message) {
@@ -118,9 +119,9 @@ class ChatProvider with ChangeNotifier {
             NetworkClient.getInstance.hideProgressDialog();
           }
 
-          if (response["rows"] != null) {
-            List<ChatListModel> arrList =
-                chatListModelFromJson(jsonEncode(response["rows"]));
+          if (response != null) {
+            List<ChatListData> arrList =
+                chatListModelFromJson(jsonEncode(response));
             if (page == 1) {
               chatList = arrList;
             } else {
@@ -184,17 +185,8 @@ class ChatProvider with ChangeNotifier {
   }
 
   Future<String?> getChatQuesryId(
-      BuildContext context, String channelId, String endDate) async {
+      BuildContext context, String endDate) async {
     Map<String, dynamic> _parms = {"limit": 10, "order": "desc"};
-    Map<String, dynamic> _filter = {
-      "destination": channelId,
-      "start_time":
-          DateTime.now().subtract(Duration(days: 6)).toUtc().toIso8601String(),
-      "end_time": endDate
-      // "end_time": DateTime.now().toUtc().toIso8601String()
-    };
-    _parms["filter"] = _filter;
-
     String? query;
 
     await NetworkClient.getInstance.callApi(
@@ -219,46 +211,35 @@ class ChatProvider with ChangeNotifier {
     return query;
   }
 
-  Future<List<MessageObj>> getChatMessageHistory(
-      BuildContext context, String channelId, String endDate) async {
-    String? query = await getChatQuesryId(context, channelId, endDate);
+  List<ChatMessageData> _chatMessage = [];
 
-    if (query == null) {
-      return [];
-    }
+  List<ChatMessageData> get chatMessage => this._chatMessage;
 
-    List<MessageObj> messages = [];
-    String? userId = app.resolve<PrefUtils>().getUserDetails()?.id.toString();
+  set chatMessage(List<ChatMessageData> value) =>
+      this._chatMessage = value;
 
+  Future<void> getChatMessageHistory(
+      BuildContext context, String endDate, userId) async {
     await NetworkClient.getInstance.callApi(
       context: context,
-      baseUrl:
-          "https://api.agora.io/dev/v2/project/$AGORA_APPID/rtm/message/history/query/$query",
-      command: "",
+      baseUrl: ApiConstants.apiUrl,
+      command: ApiConstants.getById+'/$userId',
       headers: getAuthHeaders(),
       method: MethodType.Get,
-      isAgora: true,
       successCallback: (response, message) {
-        if (response is List<dynamic>) {
-          for (var item in response) {
-            MessageObj message = MessageObj();
-            message.message = item["payload"].toString();
-            message.sendBy = item["src"].toString();
-            message.isSendByMe = userId == message.sendBy;
-
-            DateTime dateTime =
-                DateTime.fromMillisecondsSinceEpoch(item["ms"]).toLocal();
-            message.chatDate = dateTime;
-            messages.add(message);
-          }
+        if (response != null) {
+          List<ChatMessageData> arrList =
+          chatMessageHistoryModel(jsonEncode(response));
+          chatMessage = arrList;
+          // chatMessage.reversed;
         }
+        notifyListeners();
       },
       failureCallback: (code, message) {
-        NetworkClient.getInstance.hideProgressDialog();
+        print('message==> $message');
+        // NetworkClient.getInstance.hideProgressDialog();
       },
     );
-
-    return messages.reversed.toList();
   }
 
   Map<String, dynamic> getAuthHeaders() {

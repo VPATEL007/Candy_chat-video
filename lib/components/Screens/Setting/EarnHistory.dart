@@ -26,6 +26,7 @@ class _EarnHistoryState extends State<EarnHistory> {
   List<LeaderBoardModel> callDuration = [];
   List<LeaderBoardModel> giftCoins = [];
   bool isCall = true;
+  List<bool> isCurrent = [true, false, false, false];
 
   @override
   void initState() {
@@ -34,6 +35,34 @@ class _EarnHistoryState extends State<EarnHistory> {
     WidgetsBinding.instance?.addPostFrameCallback((timeStamp) {
       getCallDuration();
     });
+  }
+
+  resetSelectedState() {
+    isCurrent = [false, false, false, false];
+  }
+
+  setIndexZero() {
+    resetSelectedState();
+    isCurrent[0] = true;
+    currentIndex = 0;
+  }
+
+  setIndexOne() {
+    resetSelectedState();
+    isCurrent[1] = true;
+    currentIndex = 1;
+  }
+
+  setIndexTwo() {
+    resetSelectedState();
+    isCurrent[2] = true;
+    currentIndex = 2;
+  }
+
+  setIndexThree() {
+    resetSelectedState();
+    isCurrent[3] = true;
+    currentIndex = 3;
   }
 
   getCallDuration() {
@@ -77,25 +106,27 @@ class _EarnHistoryState extends State<EarnHistory> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: ColorConstants.mainBgColor,
-      appBar: getAppBar(context, "Ranking",
+      appBar: getAppBar(context, "Earn History",
           isWhite: false, leadingButton: getBackButton(context)),
       body: Stack(
         children: [
           Positioned(
             child: Row(
               children: [
+                // Album earning and Referral earning
                 InkWell(
                     onTap: () {
+                      setIndexZero();
                       isCall = true;
                       setState(() {});
-
                       if (callDuration.length == 0) {
                         getCallDuration();
                       }
                     },
-                    child: getTabItem('Total call duration', isCall)),
+                    child: getTabItem('Call Earning', 0)),
                 InkWell(
                     onTap: () {
+                      setIndexOne();
                       isCall = false;
                       setState(() {});
 
@@ -103,7 +134,29 @@ class _EarnHistoryState extends State<EarnHistory> {
                         getCallDuration();
                       }
                     },
-                    child: getTabItem('Gift coins', !isCall))
+                    child: getTabItem('Gift coins', 1)),
+                InkWell(
+                    onTap: () {
+                      setIndexTwo();
+                      isCall = true;
+                      setState(() {});
+
+                      if (callDuration.length == 0) {
+                        getCallDuration();
+                      }
+                    },
+                    child: getTabItem('Album earning', 2)),
+                InkWell(
+                    onTap: () {
+                      setIndexThree();
+                      isCall = false;
+                      setState(() {});
+
+                      if (giftCoins.length == 0) {
+                        getCallDuration();
+                      }
+                    },
+                    child: getTabItem('Referral earning', 3))
               ],
             ),
           ),
@@ -127,6 +180,8 @@ class _EarnHistoryState extends State<EarnHistory> {
                   setState(() {});
                 },
                 children: [
+                  getPageViewItem(),
+                  getPageViewItem(),
                   getPageViewItem(),
                   getPageViewItem(),
                 ],
@@ -249,25 +304,32 @@ class _EarnHistoryState extends State<EarnHistory> {
   }
 
 //Get Tab Item
-  Widget getTabItem(String title, bool isCurrent) {
+  Widget getTabItem(String title, index) {
     return Container(
-      width: MathUtilities.screenWidth(context) / 2,
+      width: MathUtilities.screenWidth(context) / 4,
       child: Column(
         children: [
-          Text(
-            title,
-            style: appTheme?.black14SemiBold.copyWith(
-                fontSize: getFontSize(16),
-                color:
-                    isCurrent == true ? ColorConstants.redText : Colors.white),
+          Container(
+            alignment: Alignment.center,
+            child: Text(
+              title,
+              overflow: TextOverflow.ellipsis,
+              style: appTheme?.black14SemiBold.copyWith(
+                  fontSize: getFontSize(14),
+                  color: isCurrent[index] == true
+                      ? ColorConstants.redText
+                      : Colors.white),
+            ),
           ),
           SizedBox(
             height: getSize(12),
           ),
           Container(
               height: 1,
-              color: isCurrent == true ? ColorConstants.redText : Colors.white,
-              width: MathUtilities.screenWidth(context) / 2)
+              color: isCurrent[index] == true
+                  ? ColorConstants.redText
+                  : Colors.white,
+              width: MathUtilities.screenWidth(context) / 4)
         ],
       ),
     );

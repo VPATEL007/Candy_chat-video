@@ -22,17 +22,14 @@ import 'package:video_chat/provider/matching_profile_provider.dart';
 import 'package:video_chat/provider/video_call_status_provider.dart';
 
 import '../../../app/app.export.dart';
+import '../../../app/utils/date_utils.dart';
+import '../../Model/Chat/chat_message_model.dart';
 
 class Chat extends StatefulWidget {
-  final String channelId;
   final int toUserId;
   final isFromProfile;
 
-  Chat(
-      {Key? key,
-      required this.channelId,
-      required this.toUserId,
-      this.isFromProfile = false})
+  Chat({Key? key, required this.toUserId, this.isFromProfile = false})
       : super(key: key);
 
   @override
@@ -42,7 +39,7 @@ class Chat extends StatefulWidget {
 class _ChatState extends State<Chat> {
   final TextEditingController _chatController = TextEditingController();
   AgoraService agoraService = AgoraService.instance;
-  List<MessageObj> _chatsList = [];
+  List<ChatMessageData> _chatsList = [];
   ScrollController messageListScrollController = ScrollController();
 
   String? userId = app.resolve<PrefUtils>().getUserDetails()?.id.toString();
@@ -53,7 +50,7 @@ class _ChatState extends State<Chat> {
   @override
   void initState() {
     super.initState();
-    init();
+    // init();
     WidgetsBinding.instance?.addPostFrameCallback((_) {
       getToUserDetail();
     });
@@ -62,11 +59,9 @@ class _ChatState extends State<Chat> {
   getToUserDetail() async {
     toUser = await Provider.of<ChatProvider>(context, listen: false)
         .getUserProfile(widget.toUserId, context);
-    List<MessageObj> chatsList =
-        await Provider.of<ChatProvider>(context, listen: false)
-            .getChatMessageHistory(context, widget.channelId,
-                DateTime.now().toUtc().toIso8601String());
-    _chatsList.addAll(chatsList);
+    await Provider.of<ChatProvider>(context, listen: false)
+        .getChatMessageHistory(
+            context, DateTime.now().toUtc().toIso8601String(), widget.toUserId);
     setState(() {});
   }
 
@@ -74,40 +69,40 @@ class _ChatState extends State<Chat> {
     String endDate = DateTime.now().toUtc().toIso8601String();
 
     if (_chatsList.length > 0) {
-      endDate = _chatsList.last.chatDate?.toUtc().toIso8601String() ?? "";
+      // endDate = _chatsList.last.chatDate?.toUtc().toIso8601String() ?? "";
     }
 
-    List<MessageObj> chatsList =
-        await Provider.of<ChatProvider>(context, listen: false)
-            .getChatMessageHistory(context, widget.channelId, endDate);
+    // List<ChatMessageData> chatsList =
+    //     await Provider.of<ChatProvider>(context, listen: false)
+    //         .getChatMessageHistory(context, endDate);
 
     setState(() {
       _refreshController.loadComplete();
 
-      _chatsList.addAll(chatsList);
+      // _chatsList.addAll(chatsList);
     });
   }
 
-  Future<void> init() async {
-    agoraService.joinChannel((widget.channelId),
-        onMemberJoined: (AgoraRtmMember member) {
-      print(
-          "Member joined: " + member.userId + ', channel: ' + member.channelId);
-    }, onMemberLeft: (AgoraRtmMember member) {
-      print("Member left: " + member.userId + ', channel: ' + member.channelId);
-    }, onMessageReceived: (AgoraRtmMessage message, AgoraRtmMember member) {
-      MessageObj _chat = MessageObj(
-          chatDate: DateTime.now(),
-          message: message.text,
-          isSendByMe: member.userId.toString().toLowerCase() ==
-              userId?.toLowerCase().toLowerCase(),
-          sendBy: member.userId);
-
-      _chatsList.add(_chat);
-      if (mounted) setState(() {});
-      print("Channel msg: " + member.userId + ", msg: " + message.text);
-    });
-  }
+  // Future<void> init() async {
+  //   agoraService.joinChannel((),
+  //       onMemberJoined: (AgoraRtmMember member) {
+  //     print(
+  //         "Member joined: " + member.userId + ', channel: ' + member.channelId);
+  //   }, onMemberLeft: (AgoraRtmMember member) {
+  //     print("Member left: " + member.userId + ', channel: ' + member.channelId);
+  //   }, onMessageReceived: (AgoraRtmMessage message, AgoraRtmMember member) {
+  //     MessageObj _chat = MessageObj(
+  //         chatDate: DateTime.now(),
+  //         message: message.text,
+  //         isSendByMe: member.userId.toString().toLowerCase() ==
+  //             userId?.toLowerCase().toLowerCase(),
+  //         sendBy: member.userId);
+  //
+  //     _chatsList.add(_chat);
+  //     if (mounted) setState(() {});
+  //     print("Channel msg: " + member.userId + ", msg: " + message.text);
+  //   });
+  // }
 
   @override
   void dispose() {
@@ -256,22 +251,10 @@ class _ChatState extends State<Chat> {
   }
 
   Widget chatList() {
-    return StreamBuilder<List<ChatObj>>(
-        stream: Stream.value(sortChatByDate(_chatsList)),
-        builder: (context, snapshot) {
-          if (snapshot.hasError) {
-            return Center(
-              child: Text(
-                snapshot.error.toString(),
-                style: appTheme?.black14Normal,
-              ),
-            );
-          } else if (snapshot.connectionState == ConnectionState.waiting) {
-            return CircularProgressIndicator();
-          } else if (snapshot.data?.isEmpty ?? true) {
-            return emptyChat();
-          } else {
-            return SmartRefresher(
+    return Consumer<ChatProvider>(builder: (context, chatProvider, child) {
+      return chatProvider.chatMessage.isEmpty
+          ? emptyChat()
+          : SmartRefresher(
               enablePullDown: false,
               enablePullUp: true,
               controller: _refreshController,
@@ -282,23 +265,52 @@ class _ChatState extends State<Chat> {
               },
               child: ListView.builder(
                 reverse: true,
-                itemCount: snapshot.data?.length,
+                itemCount: chatProvider.chatMessage.length,
                 shrinkWrap: true,
                 padding:
                     EdgeInsets.only(top: getSize(20), bottom: getSize(120)),
                 controller: messageListScrollController,
                 physics: AlwaysScrollableScrollPhysics(),
                 itemBuilder: (context, index) {
-                  List<MessageObj>? msgObjList = [];
+                  chatProvider.chatMessage[index].isSendByMe = userId ==
+                      chatProvider.chatMessage[index].sendBy.toString();
+                  int difference = 2;
+                  bool showDate = false;
+                  var date = '';
+                  if (chatProvider.chatMessage[index].chatDate != null) {
+                    try {
+                      difference = DateUtilities().calculateDifference(
+                          DateTime.parse(
+                              chatProvider.chatMessage[index].chatDate ??
+                                  DateTime.now().toString()));
+                      // print('difference==> $difference');
+                      var currentDate = DateFormat('d MMM, yy').format(
+                          DateTime.parse(
+                              chatProvider.chatMessage[index].chatDate ?? ''));
+                      var previousDate = DateFormat('d MMM, yy').format(
+                          DateTime.parse(
+                              chatProvider.chatMessage[index + 1].chatDate ??
+                                  ''));
+                      showDate = false;
 
-                  if (index != snapshot.data?.length) {
-                    msgObjList = snapshot.data?[index].messageObjList;
+                      if (currentDate.toString() != previousDate.toString()) {
+                        showDate = true;
+                        print('showDate true for index==> ${index}');
+                      }
+                    } catch (e) {
+                      showDate = true;
+                      print('showDate true for index==> ${index}');
+                      print('chatModel: $e');
+                    }
+                    date = DateFormat('d MMM, yy').format(DateTime.parse(
+                        chatProvider.chatMessage[index].chatDate ??
+                            DateTime.now().toString()));
                   }
-                  return snapshot.data?.isEmpty ?? true
-                      ? Container()
-                      : StickyHeader(
-                          // Header...
-                          header: Center(
+                  print('showDate=> $showDate $index');
+                  return StickyHeader(
+                    // Header...
+                    header: showDate
+                        ? Center(
                             child: Container(
                               decoration: BoxDecoration(
                                   borderRadius: BorderRadius.circular(20),
@@ -310,40 +322,64 @@ class _ChatState extends State<Chat> {
                                     left: getSize(20),
                                     right: getSize(20)),
                                 child: Text(
-                                  snapshot.data?[index].getChatingDates ?? "",
+                                  difference == 0
+                                      ? 'Today'
+                                      : difference == -1
+                                          ? 'Yesterday'
+                                          : date,
                                   style: appTheme?.black12Normal,
                                 ),
                               ),
                             ),
-                          ),
-                          // Content...
-                          content: _buildChats(
-                              snapshot.data![index], msgObjList ?? []),
-                        );
+                          )
+                        : Container(),
+                    // Content...
+                    content: getChatItem(chatProvider.chatMessage[index]),
+                  );
                 },
               ),
             );
-          }
-        });
+
+      //   StreamBuilder<List<ChatObj>>(
+      //     // stream: Stream.value(sortChatByDate(_chatsList)),
+      //     builder: (context, snapshot) {
+      //   if (snapshot.hasError) {
+      //     return Center(
+      //       child: Text(
+      //         snapshot.error.toString(),
+      //         style: appTheme?.black14Normal,
+      //       ),
+      //     );
+      //   } else if (snapshot.connectionState == ConnectionState.waiting) {
+      //     return CircularProgressIndicator();
+      //   } else if (snapshot.data?.isEmpty ?? true) {
+      //     return emptyChat();
+      //   } else {
+      //
+      //   }
+      // });
+    });
   }
 
   // Chat date and chats...
-  Widget _buildChats(ChatObj chat, List<MessageObj> messageList) {
-    return ListView.builder(
-      reverse: true,
-      shrinkWrap: true,
-      padding: EdgeInsets.only(top: 10),
-      physics: NeverScrollableScrollPhysics(),
-      itemCount: messageList.length,
-      itemBuilder: (context, contentIndex) {
-        return getChatItem(
-          messageList[contentIndex],
-        );
-      },
-    );
-  }
+  // Widget _buildChats(ChatObj chat, List<ChatMessageData> messageList) {
+  //   return ListView.builder(
+  //     reverse: true,
+  //     shrinkWrap: true,
+  //     padding: EdgeInsets.only(top: 10),
+  //     physics: NeverScrollableScrollPhysics(),
+  //     itemCount: messageList.length,
+  //     itemBuilder: (context, contentIndex) {
+  //       return getChatItem(
+  //         messageList[contentIndex],
+  //       );
+  //     },
+  //   );
+  // }
 
-  Widget getChatItem(MessageObj messageList) {
+  Widget getChatItem(ChatMessageData messageList) {
+    var time = DateFormat.jm().format(
+        DateTime.parse(messageList.chatDate ?? DateTime.now().toString()));
     return Container(
       padding: EdgeInsets.only(left: 14, right: 14, top: 14, bottom: 0),
       child: Align(
@@ -377,9 +413,9 @@ class _ChatState extends State<Chat> {
                         borderRadius: BorderRadius.only(
                             topRight: Radius.circular(
                                 getSize(!messageList.isSendByMe ? 16 : 0)),
-                            topLeft: Radius.circular(
+                            topLeft: Radius.circular(getSize(16)),
+                            bottomLeft: Radius.circular(
                                 getSize(messageList.isSendByMe ? 16 : 0)),
-                            bottomLeft: Radius.circular(getSize(16)),
                             bottomRight: Radius.circular(getSize(16))),
                         gradient: LinearGradient(
                           begin: Alignment.topLeft,
@@ -407,7 +443,7 @@ class _ChatState extends State<Chat> {
             Padding(
               padding: EdgeInsets.only(left: 8, right: 8),
               child: Text(
-                messageList.getChatDate,
+                time,
                 textAlign: messageList.sendBy != userId
                     ? TextAlign.left
                     : TextAlign.right,
@@ -489,11 +525,11 @@ class _ChatState extends State<Chat> {
                           child: InkWell(
                             onTap: () async {
                               if (_chatController.text.isEmpty) return;
-                              MessageObj _chat = MessageObj(
-                                  chatDate: DateTime.now(),
+                              ChatMessageData _chat = ChatMessageData(
+                                  chatDate: DateTime.now().toString(),
                                   message: _chatController.text,
                                   isSendByMe: true,
-                                  sendBy: userId);
+                                  sendBy: int.parse(userId!));
 
                               _chatsList.add(_chat);
                               if (mounted) setState(() {});
@@ -529,11 +565,11 @@ class _ChatState extends State<Chat> {
                     Provider.of<GiftProvider>(context, listen: false)
                         .openGiftPopUp(widget.toUserId, (url) async {
                       //Gift Purchase
-                      MessageObj _chat = MessageObj(
-                          chatDate: DateTime.now(),
+                      ChatMessageData _chat = ChatMessageData(
+                          chatDate: DateTime.now().toString(),
                           message: "isGift~$url",
                           isSendByMe: true,
-                          sendBy: userId);
+                          sendBy: int.parse(userId!));
 
                       _chatsList.add(_chat);
                       if (mounted) setState(() {});
@@ -593,11 +629,11 @@ class _ChatState extends State<Chat> {
               ),
               InkWell(
                 onTap: () async {
-                  MessageObj _chat = MessageObj(
-                      chatDate: DateTime.now(),
+                  ChatMessageData _chat = ChatMessageData(
+                      chatDate: DateTime.now().toString(),
                       message: "hi",
                       isSendByMe: true,
-                      sendBy: userId);
+                      sendBy: int.parse(userId!));
 
                   _chatsList.add(_chat);
                   if (mounted) setState(() {});
@@ -646,30 +682,30 @@ class _ChatState extends State<Chat> {
     );
   }
 
-  // Get Sorted List By Chat dates...
-  List<ChatObj> sortChatByDate(List<MessageObj> chatList) {
-    List<ChatObj> tempArray = [];
-    chatList.forEach((chats) {
-      //Get list Index...
-      int transIndex = tempArray.indexWhere((item) {
-        return DateFormat('dd MMMM yyyy')
-                .format(item.chatDate ?? DateTime.now()) ==
-            DateFormat('dd MMMM yyyy').format(
-                chats.chatDate ?? DateTime.now()); //Sort by List Category...
-      });
-      //Check If Project Already Added, if added then add category and list in same project...
-      if (transIndex >= 0) {
-        tempArray[transIndex].messageObjList?.insert(0, chats);
-      } else {
-        //New Temp List...
-        ChatObj tempList = ChatObj();
-        tempList.chatDate = chats.chatDate; // List Name...
-        tempList.messageObjList = [chats];
-
-        tempArray.add(tempList);
-      }
-    });
-
-    return tempArray;
-  }
+// Get Sorted List By Chat dates...
+// List<ChatObj> sortChatByDate(List<ChatMessageData> chatList) {
+//   List<ChatMessageData> tempArray = [];
+//   chatList.forEach((chats) {
+//     //Get list Index...
+//     int transIndex = tempArray.indexWhere((item) {
+//       return DateFormat('dd MMMM yyyy')
+//               .format(item.chatDate ?? DateTime.now()) ==
+//           DateFormat('dd MMMM yyyy').format(
+//               chats?.chatDate ?? DateTime.now()); //Sort by List Category...
+//     });
+//     //Check If Project Already Added, if added then add category and list in same project...
+//     if (transIndex >= 0) {
+//       tempArray[transIndex].messageObjList?.insert(0, chats);
+//     } else {
+//       //New Temp List...
+//       ChatObj tempList = ChatObj();
+//       tempList.chatDate = chats.chatDate; // List Name...
+//       tempList.messageObjList = [chats];
+//
+//       tempArray.add(tempList);
+//     }
+//   });
+//
+//   return tempArray;
+// }
 }
