@@ -49,7 +49,7 @@ class _MatchedProfileState extends State<MatchedProfile> {
 
   @override
   void dispose() {
-    // assetsAudioPlayer.stop();
+    assetsAudioPlayer.stop();
     timer?.cancel();
     super.dispose();
   }
@@ -225,7 +225,7 @@ class _MatchedProfileState extends State<MatchedProfile> {
                               listen: false)
                           .coinStatus;
 
-                  // Navigator.pop(context);
+                  Navigator.pop(context);
                   if (coinStatus?.continueCall == true) {
                     AgoraService.instance
                         .sendReceiveCallMessage(widget.id ?? "");
