@@ -4,79 +4,84 @@ import 'package:video_chat/app/utils/pref_utils.dart';
 import 'package:video_chat/components/Model/User/UserModel.dart';
 import 'package:video_chat/main.dart';
 
-List<ChatListModel> chatListModelFromJson(String str) =>
-    List<ChatListModel>.from(
-        jsonDecode(str).map((e) => ChatListModel.fromJson(e)));
+List<ChatListData> chatListModelFromJson(String str) =>
+    List<ChatListData>.from(
+        jsonDecode(str).map((e) => ChatListData.fromJson(e)));
 
 class ChatListModel {
-  int? id;
-  int? user1;
-  int? user2;
-  String? channelName;
-  String? updatedOn;
-  String? createdOn;
-  WithUser? withUser;
+  String? status;
+  String? message;
+  String? messageCode;
+  bool? success;
+  List<ChatListData>? data;
+  int? statusCode;
 
   ChatListModel(
-      {this.id,
-      this.user1,
-      this.user2,
-      this.channelName,
-      this.updatedOn,
-      this.createdOn,
-      this.withUser});
+      {this.status,
+      this.message,
+      this.messageCode,
+      this.success,
+      this.data,
+      this.statusCode});
 
   ChatListModel.fromJson(Map<String, dynamic> json) {
-    id = json['id'];
-    user1 = json['user1'];
-    user2 = json['user2'];
-    channelName = json['channel_name'];
-    updatedOn = json['updated_on'];
-    createdOn = json['created_on'];
-    withUser = json['withUser'] != null
-        ? new WithUser.fromJson(json['withUser'])
-        : null;
+    status = json['status'];
+    message = json['message'];
+    messageCode = json['messageCode'];
+    success = json['success'];
+    if (json['data'] != null) {
+      data = <ChatListData>[];
+      json['data'].forEach((v) {
+        data!.add(new ChatListData.fromJson(v));
+      });
+    }
+    statusCode = json['statusCode'];
   }
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['id'] = this.id;
-    data['user1'] = this.user1;
-    data['user2'] = this.user2;
-    data['channel_name'] = this.channelName;
-    data['updated_on'] = this.updatedOn;
-    data['created_on'] = this.createdOn;
-    if (this.withUser != null) {
-      data['withUser'] = this.withUser?.toJson();
+    data['status'] = this.status;
+    data['message'] = this.message;
+    data['messageCode'] = this.messageCode;
+    data['success'] = this.success;
+    if (this.data != null) {
+      data['data'] = this.data!.map((v) => v.toJson()).toList();
     }
+    data['statusCode'] = this.statusCode;
     return data;
-  }
-
-  int? getToUserId() {
-    int? userId = app.resolve<PrefUtils>().getUserDetails()?.id;
-    if (userId == user1) {
-      return user2;
-    }
-    return user1;
   }
 }
 
-class WithUser {
+class ChatListData {
   int? id;
-  String? userName;
-  List<UserImage>? userImages;
-  String? onlineStatus;
+  int? isSeen;
+  String? message;
+  String? createdOn;
+  String? updatedOn;
+  ChatListUser? user;
+  List<ChatListUserImages>? userImages;
 
-  WithUser({this.id, this.userName, this.userImages, this.onlineStatus});
+  ChatListData(
+      {this.id,
+      this.isSeen,
+      this.message,
+      this.createdOn,
+      this.user,
+      this.updatedOn,
+      this.userImages});
 
-  WithUser.fromJson(Map<String, dynamic> json) {
+  ChatListData.fromJson(Map<String, dynamic> json) {
     id = json['id'];
-    onlineStatus = json["online_status"];
-    userName = json['user_name'];
+    isSeen = json['isSeen'];
+    message = json['message'];
+    createdOn = json['createdOn'];
+    updatedOn = json['updatedOn'];
+    user =
+        json['user'] != null ? new ChatListUser.fromJson(json['user']) : null;
     if (json['user_images'] != null) {
-      userImages = [];
+      userImages = <ChatListUserImages>[];
       json['user_images'].forEach((v) {
-        userImages?.add(new UserImage.fromJson(v));
+        userImages!.add(new ChatListUserImages.fromJson(v));
       });
     }
   }
@@ -84,18 +89,60 @@ class WithUser {
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     data['id'] = this.id;
-    data['user_name'] = this.userName;
-    data['online_status'] = this.onlineStatus;
+    data['isSeen'] = this.isSeen;
+    data['message'] = this.message;
+    data['createdOn'] = this.createdOn;
+    data['updatedOn'] = this.updatedOn;
+    if (this.user != null) {
+      data['user'] = this.user!.toJson();
+    }
     if (this.userImages != null) {
-      data['user_images'] = this.userImages?.map((v) => v.toJson()).toList();
+      data['user_images'] = this.userImages!.map((v) => v.toJson()).toList();
     }
     return data;
   }
+}
 
-  String getUserImage() {
-    if ((userImages?.length ?? 0) > 0) {
-      return userImages?.first.photoUrl ?? "";
-    }
-    return "";
+class ChatListUser {
+  int? id;
+  String? userName;
+  String? onlineStatus;
+  String? photoUrl;
+
+  ChatListUser({this.id, this.userName, this.onlineStatus, this.photoUrl});
+
+  ChatListUser.fromJson(Map<String, dynamic> json) {
+    id = json['id'];
+    userName = json['user_name'];
+    onlineStatus = json['online_status'];
+    photoUrl = json['photo_url'];
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+    data['id'] = this.id;
+    data['user_name'] = this.userName;
+    data['online_status'] = this.onlineStatus;
+    data['photo_url'] = this.photoUrl;
+    return data;
+  }
+}
+
+class ChatListUserImages {
+  int? id;
+  String? photoUrl;
+
+  ChatListUserImages({this.id, this.photoUrl});
+
+  ChatListUserImages.fromJson(Map<String, dynamic> json) {
+    id = json['id'];
+    photoUrl = json['photo_url'];
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+    data['id'] = this.id;
+    data['photo_url'] = this.photoUrl;
+    return data;
   }
 }

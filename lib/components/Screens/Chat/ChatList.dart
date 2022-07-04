@@ -180,14 +180,12 @@ class _ChatListState extends State<ChatList> {
                     child: InkWell(
                         onTap: () {
                           NavigationUtilities.push(Chat(
-                            channelId:
-                                chatHistory.chatList[index].channelName ?? "",
-                            toUserId:
-                                chatHistory.chatList[index].getToUserId() ?? 0,
+                            toUserId: chatHistory.chatList[index].user?.id ?? 0,
                             isFromProfile: false,
                           ));
                         },
-                        child: getChatItem(chatHistory.chatList[index])));
+                        child:
+                            getChatItem(chatHistory.chatList[index], index)));
               },
               separatorBuilder: (BuildContext context, int index) {
                 return Padding(
@@ -211,22 +209,25 @@ class _ChatListState extends State<ChatList> {
             title,
             style: appTheme?.black14SemiBold.copyWith(
                 fontSize: getFontSize(16),
-                color:
-                    isMessage[index] == true ? ColorConstants.redText : Colors.white),
+                color: isMessage[index] == true
+                    ? ColorConstants.redText
+                    : Colors.white),
           ),
           SizedBox(
             height: getSize(12),
           ),
           Container(
               height: 1,
-              color: isMessage[index] == true ? ColorConstants.redText : Colors.white,
+              color: isMessage[index] == true
+                  ? ColorConstants.redText
+                  : Colors.white,
               width: MathUtilities.screenWidth(context) / 2)
         ],
       ),
     );
   }
 
-  Widget getChatItem(ChatListModel model) {
+  Widget getChatItem(ChatListData model, index) {
     return Container(
       decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(12), color: fromHex('#121212')),
@@ -241,7 +242,9 @@ class _ChatListState extends State<ChatList> {
                 ClipRRect(
                     borderRadius: BorderRadius.circular(52),
                     child: CachedNetworkImage(
-                      imageUrl: model.withUser?.getUserImage() ?? "",
+                      imageUrl: model.userImages?.isNotEmpty ?? false
+                          ? model.userImages![0].photoUrl ?? ''
+                          : '',
                       height: getSize(52),
                       width: getSize(52),
                       fit: BoxFit.cover,
@@ -258,7 +261,7 @@ class _ChatListState extends State<ChatList> {
                     height: getSize(10),
                     width: getSize(10),
                     decoration: BoxDecoration(
-                      color: (model.withUser?.onlineStatus ?? offline) == online
+                      color: (model.user?.onlineStatus ?? offline) == online
                           ? fromHex("#50F5C3")
                           : fromHex("#F55050"),
                       border: Border.all(color: Colors.white, width: 1),
@@ -279,7 +282,7 @@ class _ChatListState extends State<ChatList> {
               children: [
                 SizedBox(height: getSize(2)),
                 Text(
-                  model.withUser?.userName ?? "",
+                  model.user?.userName ?? "",
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
                   style: appTheme?.black16Bold

@@ -49,6 +49,7 @@ class ApiConstants {
   static const String createAlbum = 'album';
   static const String buyAlbum = 'album/buyAlbum';
   static const String chatList = "chat-history";
+  static const String friendList = "chat/friendList";
   static const String blockList = "report/app/block-list";
   static const String unBlockUser = "report/remove-block";
   static const String visitorList = "profile/visitor-list";
@@ -61,6 +62,7 @@ class ApiConstants {
   static const String buyGift = "gift/buy";
   static const String receivedGift = "gift/received";
   static const String startApp = "auth/app-open";
+  static const String getById = "chat/getbyid";
   static const String logout = "auth/logout";
   static const String updateFCMToken = "profile/update-fcm";
   static const String withDrawRequest = "transaction/withdrawal-request";
