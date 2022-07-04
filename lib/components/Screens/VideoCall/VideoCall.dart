@@ -61,7 +61,7 @@ class VideoCallState extends State<VideoCall> {
   UserModel? fromUser;
   var keyboardVisibilityController = KeyboardVisibilityController();
   String? userId = app.resolve<PrefUtils>().getUserDetails()?.id.toString();
-  int durationCounter = 10;
+  int durationCounter = 0;
   late Timer duraationTimer;
 
   @override
