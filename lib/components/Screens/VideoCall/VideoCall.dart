@@ -25,6 +25,7 @@ import 'package:flutter_keyboard_visibility/flutter_keyboard_visibility.dart';
 // import 'package:screen/screen.dart';
 
 class VideoCall extends StatefulWidget {
+  static const route = "VideoCall";
   final String token;
   final String channelName;
   final String userId;
@@ -60,6 +61,9 @@ class VideoCallState extends State<VideoCall> {
   UserModel? fromUser;
   var keyboardVisibilityController = KeyboardVisibilityController();
   String? userId = app.resolve<PrefUtils>().getUserDetails()?.id.toString();
+  int durationCounter = 10;
+  late Timer duraationTimer;
+
   @override
   void initState() {
     super.initState();
@@ -82,12 +86,14 @@ class VideoCallState extends State<VideoCall> {
         if (user?.isInfluencer == false) {
           timer = Timer.periodic(
               Duration(seconds: 60), (Timer t) => callReceiveApiCall());
+          startTimer();
         }
       });
     } else {
       if (fromUser?.isInfluencer == false) {
         timer = Timer.periodic(
             Duration(seconds: 60), (Timer t) => callReceiveApiCall());
+        startTimer();
       }
     }
 
@@ -99,9 +105,9 @@ class VideoCallState extends State<VideoCall> {
 
     // KeyboardVisibilityNotification().addNewListener(
     //   onChange: (bool visible) {
-    // setState(() {
-    //   isKeyboardOpen = visible;
-    // });
+    //     setState(() {
+    //       isKeyboardOpen = visible;
+    //     });
     //   },
     // );
   }
@@ -115,7 +121,33 @@ class VideoCallState extends State<VideoCall> {
     timer?.cancel();
     endCall();
     agoraService.leaveChannel();
+    duraationTimer.cancel();
     super.dispose();
+  }
+
+  void startTimer() {
+    durationCounter = 0;
+    duraationTimer = Timer.periodic(Duration(seconds: 1), (timer) {
+      setState(() {
+        durationCounter++;
+      });
+    });
+  }
+
+  String formatHHMMSS(int seconds) {
+    int hours = (seconds / 3600).truncate();
+    seconds = (seconds % 3600).truncate();
+    int minutes = (seconds / 60).truncate();
+
+    String hoursStr = (hours).toString().padLeft(2, '0');
+    String minutesStr = (minutes).toString().padLeft(2, '0');
+    String secondsStr = (seconds % 60).toString().padLeft(2, '0');
+
+    if (hours == 0) {
+      return "$minutesStr:$secondsStr";
+    }
+
+    return "$hoursStr:$minutesStr:$secondsStr";
   }
 
   getToUserDetail() async {
@@ -219,6 +251,25 @@ class VideoCallState extends State<VideoCall> {
                     ),
                   ),
                 )),
+            SafeArea(
+              child: Align(
+                  alignment: Alignment.topCenter,
+                  child: Padding(
+                    padding: EdgeInsets.only(top: getSize(30)),
+                    child: Container(
+                      decoration: BoxDecoration(
+                          color: Colors.black,
+                          borderRadius: BorderRadius.circular(10)),
+                      child: Padding(
+                        padding: EdgeInsets.only(
+                            top: 4, bottom: 4, left: 8, right: 8),
+                        child: getTitleText(
+                            context, formatHHMMSS(durationCounter),
+                            color: Colors.white),
+                      ),
+                    ),
+                  )),
+            ),
             switchCameraButton(),
             isRemoteAudioMute == true || isRemoteVideoMute
                 ? Center(

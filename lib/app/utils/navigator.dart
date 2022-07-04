@@ -13,6 +13,7 @@ import 'package:video_chat/components/Screens/OnboardingVerfication/Verification
 import 'package:video_chat/components/Screens/OnboardingVerfication/VerificationProfile.dart';
 import 'package:video_chat/components/Screens/Profile/edit_profile.dart';
 
+import '../../components/Screens/VideoCall/VideoCall.dart';
 import 'fade_route.dart';
 
 /// The [RouteType] determines what [PageRoute] is used for the new route.
@@ -131,6 +132,9 @@ Route<dynamic> onGenerateRoute(RouteSettings settings) {
       break;
     case VerificationFace.route:
       screen = VerificationFace();
+      break;
+    case VideoCall.route:
+      screen = VideoCall(toUserId: "", token: "", channelName: "", userId: "");
       break;
     case LikesScreen.route:
       screen = LikesScreen();

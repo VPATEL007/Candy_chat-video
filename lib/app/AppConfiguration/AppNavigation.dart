@@ -9,6 +9,7 @@ import 'package:video_chat/components/Screens/OnboardingVerfication/Verification
 import 'package:video_chat/components/Screens/Profile/edit_profile.dart';
 import 'package:video_chat/provider/followes_provider.dart';
 
+import '../../components/Screens/VideoCall/VideoCall.dart';
 import '../app.export.dart';
 import '../utils/apps_flyer/apps_flyer_keys.dart';
 import '../utils/apps_flyer/apps_flyer_service.dart';

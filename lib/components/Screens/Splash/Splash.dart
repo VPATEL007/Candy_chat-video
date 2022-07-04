@@ -29,7 +29,6 @@ class _SplashState extends State<Splash> {
     await AgoraService.instance.initialize(AGORA_APPID);
     AppNavigation.shared.goNextFromSplash();
     SocketHealper.shared.connect();
-    // FirebaseCrashlytics.instance.crash();
   }
 
   @override
