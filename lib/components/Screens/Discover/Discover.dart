@@ -21,6 +21,7 @@ import 'package:video_chat/provider/video_call_status_provider.dart';
 
 class Discover extends StatefulWidget {
   static const route = "Discover";
+
   Discover({Key? key}) : super(key: key);
 
   @override
@@ -31,17 +32,24 @@ class _DiscoverState extends State<Discover> {
   List<SortBy> tab = SortBy.values;
   int selectedIndex = 0;
   int page = 1;
+
   // List<MatchProfileModel> arrList = [];
 
   @override
   void initState() {
     super.initState();
-
+    setUserStatus();
     // MatchProfileModel model = MatchProfileModel();
     // model.id = 123;
     // model.userName = "Mayur";
     // model.age = 14;
     // arrList.add(model);
+  }
+
+  setUserStatus() async {
+    await Provider.of<DiscoverProvider>(context, listen: false)
+        .getUserStatus(context);
+    setState(() {});
   }
 
   @override
@@ -61,6 +69,13 @@ class _DiscoverState extends State<Discover> {
               height: getSize(10),
             ),
             getUserList(discover.discoverProfileList, discover),
+            getBottomButton(context,
+                'Go ${discover.userStatus == 'online' ? 'offline' : 'online'}',
+                () async {
+              String status =
+                  discover.userStatus == 'online' ? 'offline' : 'online';
+              discover.setUserStatus(context, status);
+            })
             // getUserList(arrList, discover),
             // getMatchButton()
           ],

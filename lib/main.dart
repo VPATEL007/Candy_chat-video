@@ -3,7 +3,9 @@ import 'dart:io';
 // import 'package:firebase_analytics/firebase_analytics.dart';
 // import 'package:firebase_analytics/observer.dart';
 
-// import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_core/firebase_core.dart';
+// import 'package:firebase_crashlytics/firebase_crashlytics.dart';
+
 // import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 // import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 // import 'package:firebase_messaging/firebase_messaging.dart';
@@ -12,6 +14,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+
 // import 'package:in_app_purchase/in_app_purchase.dart';
 import 'package:kiwi/kiwi.dart';
 import 'package:provider/provider.dart';
@@ -21,6 +24,7 @@ import 'package:video_chat/components/Model/Notification/NotificatonModel.dart';
 import 'package:video_chat/components/Model/User/UserModel.dart';
 import 'package:video_chat/components/Screens/Leaderboard/Leaderboard.dart';
 import 'package:video_chat/components/Screens/Splash/Splash.dart';
+import 'package:video_chat/components/Screens/album/createAlbum.dart';
 
 import 'package:video_chat/provider/chat_provider.dart';
 import 'package:video_chat/provider/discover_provider.dart';
@@ -47,6 +51,7 @@ import 'app/utils/apps_flyer/apps_flyer_service.dart';
 import 'app/utils/navigator.dart';
 import 'app/utils/pref_utils.dart';
 import 'app/utils/route_observer.dart';
+import 'components/Screens/Home/MatchedProfile.dart';
 import 'components/Screens/OnboardingVerfication/VerificationInvitation.dart';
 import 'components/Screens/OnboardingVerfication/VerificationProfile.dart';
 import 'components/Screens/UserProfile/UserProfile.dart';
@@ -97,13 +102,7 @@ Future<void> setupFCM() async {
   // _performance.setPerformanceCollectionEnabled(true);
   // final FirebaseMessaging _firebaseMessaging = FirebaseMessaging.instance;
 
-  // FirebaseMessaging.onMessage.listen((RemoteMessage event) {
-  //   showNotification(event.notification);
-  // });
-  // FirebaseMessaging.onMessageOpenedApp.listen((message) {
-  //   openNotification(message);
-  //   print('Message clicked!');
-  // });
+  // listenNotifications();
 
   // _firebaseMessaging.requestPermission(sound: true, badge: true, alert: true);
 
@@ -123,6 +122,38 @@ Future<void> setupFCM() async {
 
   configLocalNotification();
 }
+
+// listenNotifications() {
+//   FirebaseMessaging.onMessage.listen((RemoteMessage event) {
+//     showNotification(event.notification);
+//   });
+
+//   // FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
+//   FirebaseMessaging.onMessageOpenedApp.listen((message) {
+//     openNotification(message);
+//     print('Message clicked!');
+//   });
+// }
+
+// Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
+//   await Firebase.initializeApp();
+//   if (message.data['type'] == 'videocall') {
+//     print(
+//         '_firebaseMessagingBackgroundHandler userName==> ${message.data['user_name']}');
+//     IncomingCallerData.userName = message.data['user_name'];
+//     print(
+//         '_firebaseMessagingBackgroundHandler username class==> ${IncomingCallerData.userName}');
+//     IncomingCallerData.toUserId = message.data['to_user_id'];
+//     print(
+//         '_firebaseMessagingBackgroundHandler toUserId==> ${IncomingCallerData.toUserId}');
+//     IncomingCallerData.fromUserId = message.data['from_user_id'];
+//     IncomingCallerData.toImageUrl = message.data['toImageUrl'];
+//     IncomingCallerData.fromImageUrl = message.data['fromImageUrl'];
+//     IncomingCallerData.channelName = message.data['channel_name'];
+//     IncomingCallerData.sessionId = message.data['token'];
+//     IncomingCallerData.toGender = message.data['toGender'];
+//   }
+// }
 
 void configLocalNotification() {
   var initializationSettingsAndroid =

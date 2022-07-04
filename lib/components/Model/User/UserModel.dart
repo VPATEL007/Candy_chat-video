@@ -35,7 +35,8 @@ class UserModel {
       this.coinBalance,
       this.coinsEarned,
       this.isFacVerify,
-      this.agencyId});
+      this.agencyId,
+      this.referralCode});
 
   String? userName;
   String? email;
@@ -64,6 +65,7 @@ class UserModel {
   num? coinsEarned;
   num? agencyId;
   num? isFacVerify;
+  String? referralCode;
 
   factory UserModel.fromJson(Map<String, dynamic> json) => UserModel(
       userName: json["user_name"],
@@ -107,7 +109,8 @@ class UserModel {
       coinsEarned: json["coins_earned"],
       isFollowing: json["is_following"] == 1 ? true : false,
       isFacVerify: json["is_face_verify"],
-      isFavourite: json["is_favourite"] == 1 ? true : false);
+      isFavourite: json["is_favourite"] == 1 ? true : false,
+      referralCode: json['ReferralCode']);
 
   Map<String, dynamic> toJson() => {
         "user_name": userName,
@@ -132,6 +135,7 @@ class UserModel {
         "coins_earned": coinsEarned,
         "agency_id": agencyId,
         "is_face_verify": isFacVerify,
+        "ReferralCode": referralCode,
         "user_images": List<dynamic>.from(userImages!.map((x) => x.toJson())),
       };
 

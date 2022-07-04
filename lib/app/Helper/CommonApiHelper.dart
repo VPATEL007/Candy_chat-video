@@ -249,8 +249,9 @@ class CommonApiHelper {
   }
 
   //Login
-  getRTMToken(BuildContext context) {
-    NetworkClient.getInstance.callApi(
+  Future<bool> getRTMToken(BuildContext context) async {
+    bool isComplete = false;
+    await NetworkClient.getInstance.callApi(
       context: context,
       baseUrl: ApiConstants.apiUrl,
       command: ApiConstants.getRTMToken,
@@ -258,15 +259,19 @@ class CommonApiHelper {
       method: MethodType.Get,
       successCallback: (response, message) async {
         if (response["RTMToken"] != null) {
-          AgoraService.instance.login(
+          await AgoraService.instance.login(
               token: response["RTMToken"].toString(),
               userId:
                   app.resolve<PrefUtils>().getUserDetails()?.id.toString() ??
                       "");
+          isComplete = true;
+          // print();
+          return isComplete;
         }
       },
       failureCallback: (code, message) {},
     );
+    return isComplete;
   }
 
   //App Start

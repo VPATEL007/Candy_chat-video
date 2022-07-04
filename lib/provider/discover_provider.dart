@@ -6,7 +6,9 @@ import 'package:video_chat/components/Model/Match%20Profile/match_profile.dart';
 
 class DiscoverProvider with ChangeNotifier {
   List<MatchProfileModel> _discoverProfileList = [];
+
   List<MatchProfileModel> get discoverProfileList => this._discoverProfileList;
+  String userStatus = 'online';
 
   set discoverProfileList(List<MatchProfileModel> value) =>
       this._discoverProfileList = value;
@@ -36,6 +38,48 @@ class DiscoverProvider with ChangeNotifier {
     } catch (e) {
       View.showMessage(context, e.toString());
     }
+  }
+
+  Future<void> setUserStatus(context, status) async {
+    Map<String, dynamic> params = {"online_status": status};
+    await NetworkClient.getInstance.callApi(
+      context: context,
+      baseUrl: ApiConstants.apiUrl,
+      command: ApiConstants.setUserStatus,
+      headers: NetworkClient.getInstance.getAuthHeaders(),
+      method: MethodType.Post,
+      params: params,
+      successCallback: (response, message) async {
+        userStatus = status;
+        notifyListeners();
+        if (status == 'online') {
+          View.showMessage(
+              context, 'You are now online and receive calls from users');
+        } else {
+          View.showMessage(context, 'You are now offline');
+        }
+      },
+      failureCallback: (code, message) {
+        View.showMessage(context, message);
+      },
+    );
+  }
+
+  Future<void> getUserStatus(context) async {
+    await NetworkClient.getInstance.callApi(
+      context: context,
+      baseUrl: ApiConstants.apiUrl,
+      command: ApiConstants.getUserStatus,
+      headers: NetworkClient.getInstance.getAuthHeaders(),
+      method: MethodType.Post,
+      successCallback: (response, message) async {
+        userStatus = response['online_status'];
+        notifyListeners();
+      },
+      failureCallback: (code, message) {
+        View.showMessage(context, message);
+      },
+    );
   }
 
   removeUser(int id) {
