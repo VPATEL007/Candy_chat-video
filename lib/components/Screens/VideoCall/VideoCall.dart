@@ -74,6 +74,7 @@ class VideoCallState extends State<VideoCall> {
       init();
 
       getToUserDetail();
+      startTimer();
     });
 
     fromUser = Provider.of<FollowesProvider>(context, listen: false).userModel;
@@ -86,14 +87,12 @@ class VideoCallState extends State<VideoCall> {
         if (user?.isInfluencer == false) {
           timer = Timer.periodic(
               Duration(seconds: 60), (Timer t) => callReceiveApiCall());
-          startTimer();
         }
       });
     } else {
       if (fromUser?.isInfluencer == false) {
         timer = Timer.periodic(
             Duration(seconds: 60), (Timer t) => callReceiveApiCall());
-        startTimer();
       }
     }
 
