@@ -32,7 +32,7 @@ dependencies:
 
   permission_handler: ^8.1.6
   flutter_spinkit: ^5.1.0
-  # another_flushbar: ^1.10.24
+  another_flushbar: ^1.10.24
 
   flutter_facebook_auth: ^3.5.1
   sign_in_with_apple: ^3.0.0
@@ -61,7 +61,7 @@ dependencies:
   firebase_core: ^1.6.0
   flutter_local_notifications: ^8.2.0
   circular_countdown_timer: ^0.2.0
-  # assets_audio_player: ^3.0.3+7
+  assets_audio_player: ^3.0.3+7
   dio: ^4.0.0
   simple_tags: ^0.0.4
   firebase_crashlytics: ^2.2.1

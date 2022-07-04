@@ -1,6 +1,6 @@
 import 'dart:async';
 
-// import 'package:assets_audio_player/assets_audio_player.dart';
+import 'package:assets_audio_player/assets_audio_player.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -38,7 +38,7 @@ class MatchedProfile extends StatefulWidget {
 
 class _MatchedProfileState extends State<MatchedProfile> {
   // List<ProductDetails> _products = [];
-  // final assetsAudioPlayer = AssetsAudioPlayer();
+  final assetsAudioPlayer = AssetsAudioPlayer();
   Timer? timer;
 
   @override
@@ -58,10 +58,10 @@ class _MatchedProfileState extends State<MatchedProfile> {
     var status =
         Provider.of<VideoCallStatusProvider>(context, listen: false).callStatus;
 
-    // // if (status == CallStatus.None) {
-    // assetsAudioPlayer.open(Audio("assets/Audio/instrumental.mp3"),
-    //     showNotification: false, autoStart: true);
-    // }
+    if (status == CallStatus.None) {
+      assetsAudioPlayer.open(Audio("assets/Audio/instrumental.mp3"),
+          showNotification: false, autoStart: true);
+    }
 
     if (status == CallStatus.Start) {
       timer =

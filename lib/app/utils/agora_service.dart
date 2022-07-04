@@ -3,7 +3,7 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:agora_rtm/agora_rtm.dart';
-// import 'package:another_flushbar/flushbar.dart';
+import 'package:another_flushbar/flushbar.dart';
 
 import 'package:flutter/material.dart';
 
@@ -341,30 +341,30 @@ class AgoraService {
     setCallStatus(model);
 
     if (model.isLike == true) {
-      // Flushbar? flush;
-      // flush = Flushbar(
-      //   padding: EdgeInsets.only(top: 16, bottom: 16, left: 16, right: 16),
-      //   flushbarPosition: FlushbarPosition.TOP,
-      //   backgroundColor: ColorConstants.button,
-      //   message: "likes you!",
-      //   titleText: Text(
-      //     model.name ?? "",
-      //     style: appTheme?.white14Bold,
-      //   ),
-      //   mainButton: InkWell(
-      //     onTap: () {
-      //       flush?.dismiss();
-      //       sendReverseLikeMessage(model.userId.toString(),
-      //           NavigationUtilities.key.currentState!.overlay!.context);
-      //     },
-      //     child: Text(
-      //       'Click To Like Me',
-      //       style: appTheme?.white14Bold,
-      //     ),
-      //   ),
-      //   duration: Duration(seconds: 20),
-      // );
-      // flush.show(NavigationUtilities.key.currentState!.overlay!.context);
+      Flushbar? flush;
+      flush = Flushbar(
+        padding: EdgeInsets.only(top: 16, bottom: 16, left: 16, right: 16),
+        flushbarPosition: FlushbarPosition.TOP,
+        backgroundColor: ColorConstants.button,
+        message: "likes you!",
+        titleText: Text(
+          model.name ?? "",
+          style: appTheme?.white14Bold,
+        ),
+        mainButton: InkWell(
+          onTap: () {
+            flush?.dismiss();
+            sendReverseLikeMessage(model.userId.toString(),
+                NavigationUtilities.key.currentState!.overlay!.context);
+          },
+          child: Text(
+            'Click To Like Me',
+            style: appTheme?.white14Bold,
+          ),
+        ),
+        duration: Duration(seconds: 20),
+      );
+      flush.show(NavigationUtilities.key.currentState!.overlay!.context);
     } else if (model.isReverseLike == true) {
       Navigator.pop(NavigationUtilities.key.currentState!.overlay!.context);
       NavigationUtilities.push(CallMessage(

@@ -63,13 +63,13 @@ class InAppPurchaseHelper {
   }
 
   intialConfig() async {
-    // try {
-    //   await FlutterInappPurchase.instance.platformVersion;
-    // } on PlatformException {
-    //   print("sdfsdf");
-    // }
+    try {
+      await FlutterInappPurchase.instance.platformVersion;
+    } on PlatformException {
+      print("sdfsdf");
+    }
 
-    // await FlutterInappPurchase.instance.initConnection;
+    await FlutterInappPurchase.instance.initConnection;
 
     _conectionSubscription =
         FlutterInappPurchase.connectionUpdated.listen((connected) {
