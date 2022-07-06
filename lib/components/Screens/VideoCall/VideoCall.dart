@@ -62,7 +62,7 @@ class VideoCallState extends State<VideoCall> {
   var keyboardVisibilityController = KeyboardVisibilityController();
   String? userId = app.resolve<PrefUtils>().getUserDetails()?.id.toString();
   int durationCounter = 0;
-  late Timer duraationTimer;
+  Timer? duraationTimer;
 
   @override
   void initState() {
@@ -120,7 +120,8 @@ class VideoCallState extends State<VideoCall> {
     timer?.cancel();
     endCall();
     agoraService.leaveChannel();
-    duraationTimer.cancel();
+    duraationTimer?.cancel();
+
     super.dispose();
   }
 
@@ -556,7 +557,10 @@ class VideoCallState extends State<VideoCall> {
     try {
       timer?.cancel();
       engine?.leaveChannel();
+      engine?.pauseAllChannelMediaRelay();
+      engine?.stopPreview();
       engine?.destroy();
+      duraationTimer?.cancel();
     } catch (e) {
       print(e);
     }

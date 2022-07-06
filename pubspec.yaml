@@ -43,7 +43,7 @@ dependencies:
   intl: ^0.17.0
   lazy_loading_list: ^1.0.1
   # in_app_purchase: ^1.0.8
-  flutter_inapp_purchase: ^5.1.2
+  flutter_inapp_purchase: 5.1.2
   # in_app_purchase: any
   multi_image_picker2: ^5.0.02
 
