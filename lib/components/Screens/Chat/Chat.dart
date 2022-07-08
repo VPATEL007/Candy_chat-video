@@ -7,9 +7,11 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
+import 'package:socket_io_client/socket_io_client.dart';
 
 import 'package:sticky_headers/sticky_headers.dart';
 import 'package:video_chat/app/Helper/inAppPurchase_service.dart';
+import 'package:video_chat/app/Helper/socket_helper.dart';
 import 'package:video_chat/components/Model/Match%20Profile/call_status.dart';
 import 'package:video_chat/components/Model/Match%20Profile/video_call.dart';
 import 'package:video_chat/components/Model/User/UserModel.dart';
@@ -23,6 +25,7 @@ import 'package:video_chat/provider/video_call_status_provider.dart';
 
 import '../../../app/app.export.dart';
 import '../../../app/utils/date_utils.dart';
+import '../../Model/Chat/ChatList.dart';
 import '../../Model/Chat/chat_message_model.dart';
 
 class Chat extends StatefulWidget {
@@ -46,6 +49,7 @@ class _ChatState extends State<Chat> {
   UserModel? toUser;
   RefreshController _refreshController =
       RefreshController(initialRefresh: false);
+  Socket? socket = SocketHealper.socket;
 
   @override
   void initState() {
@@ -53,6 +57,10 @@ class _ChatState extends State<Chat> {
     // init();
     WidgetsBinding.instance?.addPostFrameCallback((_) {
       getToUserDetail();
+    });
+    socket?.on('getMessage', (data) {
+      Provider.of<ChatProvider>(context, listen: false).addMessage(
+          data['toSend'], data['sendBy'], data['message'], data['type']);
     });
   }
 
@@ -107,7 +115,8 @@ class _ChatState extends State<Chat> {
   @override
   void dispose() {
     super.dispose();
-
+    socket?.destroy();
+    socket?.dispose();
     agoraService.leaveChannel();
     messageListScrollController.dispose();
   }
@@ -444,7 +453,7 @@ class _ChatState extends State<Chat> {
               padding: EdgeInsets.only(left: 8, right: 8),
               child: Text(
                 time,
-                textAlign: messageList.sendBy != userId
+                textAlign: messageList.sendBy.toString() != userId
                     ? TextAlign.left
                     : TextAlign.right,
                 style: appTheme?.black12Normal.copyWith(
@@ -524,22 +533,19 @@ class _ChatState extends State<Chat> {
                               top: getSize(16), right: getSize(16)),
                           child: InkWell(
                             onTap: () async {
-                              if (_chatController.text.isEmpty) return;
-                              ChatMessageData _chat = ChatMessageData(
-                                  chatDate: DateTime.now().toString(),
-                                  message: _chatController.text,
-                                  isSendByMe: true,
-                                  sendBy: int.parse(userId!));
-
-                              _chatsList.add(_chat);
-                              if (mounted) setState(() {});
-                              await agoraService
-                                  .sendMessage(_chatController.text);
-
+                              socket?.emit('sendMessage', {
+                                'sendBy': userId,
+                                'toSend': widget.toUserId,
+                                'message': _chatController.text,
+                                'type': 1,
+                                'giftUlr': ''
+                              });
+                              Provider.of<ChatProvider>(context,
+                                  listen: false)
+                                  .addMessage(widget.toUserId, userId,
+                                  _chatController.text, 1);
                               _chatController.clear();
-                              if (_chatsList.isNotEmpty)
-                                messageListScrollController.jumpTo(0.0);
-                              if (mounted) setState(() {});
+                              return;
                             },
                             child: Text(
                               "Send",

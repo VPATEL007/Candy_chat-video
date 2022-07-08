@@ -184,8 +184,7 @@ class ChatProvider with ChangeNotifier {
     );
   }
 
-  Future<String?> getChatQuesryId(
-      BuildContext context, String endDate) async {
+  Future<String?> getChatQuesryId(BuildContext context, String endDate) async {
     Map<String, dynamic> _parms = {"limit": 10, "order": "desc"};
     String? query;
 
@@ -215,21 +214,20 @@ class ChatProvider with ChangeNotifier {
 
   List<ChatMessageData> get chatMessage => this._chatMessage;
 
-  set chatMessage(List<ChatMessageData> value) =>
-      this._chatMessage = value;
+  set chatMessage(List<ChatMessageData> value) => this._chatMessage = value;
 
   Future<void> getChatMessageHistory(
       BuildContext context, String endDate, userId) async {
     await NetworkClient.getInstance.callApi(
       context: context,
       baseUrl: ApiConstants.apiUrl,
-      command: ApiConstants.getById+'/$userId',
+      command: ApiConstants.getById + '/$userId',
       headers: getAuthHeaders(),
       method: MethodType.Get,
       successCallback: (response, message) {
         if (response != null) {
           List<ChatMessageData> arrList =
-          chatMessageHistoryModel(jsonEncode(response));
+              chatMessageHistoryModel(jsonEncode(response));
           chatMessage = arrList;
           // chatMessage.reversed;
         }
@@ -240,6 +238,22 @@ class ChatProvider with ChangeNotifier {
         // NetworkClient.getInstance.hideProgressDialog();
       },
     );
+  }
+
+  addMessage(toUserId, userId, messageChat, type) {
+    ChatMessageData message = ChatMessageData(
+      toSend: toUserId,
+      sendBy: int.parse(userId.toString()),
+      message: messageChat,
+      type: type,
+      chatDate: DateTime.now().toString(),
+      // giftUlr = json['giftUlr'];
+      // status: 1,
+      // createdOn : DateTime.now().toString(),
+      // updatedOn = json['updatedOn'];
+    );
+    chatMessage.insert(0, message);
+    notifyListeners();
   }
 
   Map<String, dynamic> getAuthHeaders() {

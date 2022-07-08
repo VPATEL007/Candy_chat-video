@@ -4,7 +4,7 @@ import 'package:video_chat/app/app.export.dart';
 class SocketHealper {
   static var shared = SocketHealper();
 
-  Socket? socket;
+  static Socket? socket;
 
   connect() async {
     if (app.resolve<PrefUtils>().isUserLogin() == false) return;
