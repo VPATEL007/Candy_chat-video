@@ -73,13 +73,9 @@ class _DiscoverState extends State<Discover> {
             child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            getTabBar(discover),
-            SizedBox(
-              height: getSize(10),
-            ),
-            getUserList(discover.discoverProfileList, discover),
+            SizedBox(height: 5.0,),
             Container(
-              padding: EdgeInsets.only(left: 20.0, right: 20.0),
+              padding: EdgeInsets.only(left: 20.0, right: 15.0),
               child: Row(
                 children: [
                   Text(
@@ -107,6 +103,12 @@ class _DiscoverState extends State<Discover> {
                 ],
               ),
             ),
+            SizedBox(height: 5.0,),
+            getTabBar(discover),
+            SizedBox(
+              height: getSize(10),
+            ),
+            getUserList(discover.discoverProfileList, discover),
             // getUserList(arrList, discover),
             // getMatchButton()
           ],
