@@ -65,6 +65,10 @@ class DiscoverProvider with ChangeNotifier {
     );
   }
 
+  updateStatus(status){
+    userStatus = status;
+    notifyListeners();
+  }
   Future<void> getUserStatus(context) async {
     await NetworkClient.getInstance.callApi(
       context: context,

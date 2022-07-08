@@ -115,9 +115,6 @@ class _ChatState extends State<Chat> {
   @override
   void dispose() {
     super.dispose();
-    socket?.destroy();
-    socket?.dispose();
-    agoraService.leaveChannel();
     messageListScrollController.dispose();
   }
 
@@ -540,10 +537,9 @@ class _ChatState extends State<Chat> {
                                 'type': 1,
                                 'giftUlr': ''
                               });
-                              Provider.of<ChatProvider>(context,
-                                  listen: false)
+                              Provider.of<ChatProvider>(context, listen: false)
                                   .addMessage(widget.toUserId, userId,
-                                  _chatController.text, 1);
+                                      _chatController.text, 1);
                               _chatController.clear();
                               return;
                             },
