@@ -43,7 +43,7 @@ class VideoCall extends StatefulWidget {
   VideoCallState createState() => VideoCallState();
 }
 
-class VideoCallState extends State<VideoCall> {
+class VideoCallState extends State<VideoCall> with WidgetsBindingObserver {
   final TextEditingController _chatController = TextEditingController();
   ScrollController messageListScrollController = ScrollController();
   RtcEngine? engine;
@@ -63,9 +63,11 @@ class VideoCallState extends State<VideoCall> {
   String? userId = app.resolve<PrefUtils>().getUserDetails()?.id.toString();
   int durationCounter = 0;
   Timer? duraationTimer;
+  bool isSwitch = false;
 
   @override
   void initState() {
+    WidgetsBinding.instance?.addObserver(this);
     super.initState();
     // Screen.keepOn(true);
     agoraService.isOngoingCall = true;
@@ -109,6 +111,35 @@ class VideoCallState extends State<VideoCall> {
     //     });
     //   },
     // );
+  }
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    print(state.name);
+    switch (state) {
+      case AppLifecycleState.resumed:
+        break;
+      case AppLifecycleState.inactive:
+        autoEndCall();
+        endCall();
+        break;
+      case AppLifecycleState.paused:
+        autoEndCall();
+        endCall();
+        break;
+      case AppLifecycleState.detached:
+        autoEndCall();
+        endCall();
+        break;
+    }
+  }
+
+  autoEndCall() {
+    agoraService.endCallMessage(widget.toUserId);
+    agoraService.updateCallStatus(
+        channelName: widget.channelName,
+        sessionId: widget.token,
+        status: "ended");
   }
 
   @override
@@ -231,7 +262,9 @@ class VideoCallState extends State<VideoCall> {
                   ? Container(
                       color: Colors.black,
                     )
-                  : _renderRemoteVideo(),
+                  : (isSwitch == true
+                      ? _renderLocalPreview()
+                      : _renderRemoteVideo()),
             ),
             Positioned(bottom: getSize(120), child: chatList()),
             Positioned(
@@ -246,7 +279,9 @@ class VideoCallState extends State<VideoCall> {
                         width: getSize(120),
                         height: getSize(160),
                         color: Colors.black,
-                        child: _renderLocalPreview(),
+                        child: isSwitch == true
+                            ? _renderRemoteVideo()
+                            : _renderLocalPreview(),
                       ),
                     ),
                   ),
@@ -392,16 +427,36 @@ class VideoCallState extends State<VideoCall> {
       right: getSize(40),
       top: getSize(40),
       child: SafeArea(
-        child: InkWell(
-          onTap: () {
-            _onSwitchCamera();
-          },
-          child: Image.asset(
-            icSwitchCamera,
-            width: getSize(34),
-            height: getSize(34),
-            color: Colors.red,
-          ),
+        child: Column(
+          children: [
+            InkWell(
+              onTap: () {
+                _onSwitchCamera();
+              },
+              child: Image.asset(
+                icSwitchCamera,
+                width: getSize(34),
+                height: getSize(34),
+                color: Colors.red,
+              ),
+            ),
+            SizedBox(
+              height: 16,
+            ),
+            InkWell(
+              onTap: () {
+                setState(() {
+                  isSwitch = !isSwitch;
+                });
+              },
+              child: Image.asset(
+                icSwitchView,
+                width: getSize(25),
+                height: getSize(25),
+                color: Colors.red,
+              ),
+            ),
+          ],
         ),
       ),
     );

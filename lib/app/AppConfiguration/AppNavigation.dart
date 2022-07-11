@@ -80,6 +80,9 @@ class AppNavigation {
       NavigationUtilities.pushReplacementNamed(LeaderBoard.route,
           type: RouteType.fade);
 
+      // NavigationUtilities.pushReplacementNamed(VideoCall.route,
+      //     type: RouteType.fade);
+
       CommonApiHelper.shared.appStart();
       CommonApiHelper.shared.updateFCMToken();
     }
