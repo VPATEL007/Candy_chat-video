@@ -32,6 +32,7 @@ class _DiscoverState extends State<Discover> {
   List<SortBy> tab = SortBy.values;
   int selectedIndex = 0;
   int page = 1;
+  bool _switchValue = true;
 
   // List<MatchProfileModel> arrList = [];
 
@@ -49,7 +50,15 @@ class _DiscoverState extends State<Discover> {
   setUserStatus() async {
     await Provider.of<DiscoverProvider>(context, listen: false)
         .getUserStatus(context);
+
+    Provider.of<DiscoverProvider>(context, listen: false).userStatus == online
+        ? setSwitchValue(true)
+        : setSwitchValue(false);
     setState(() {});
+  }
+
+  setSwitchValue(value) {
+    _switchValue = value;
   }
 
   @override
@@ -64,18 +73,42 @@ class _DiscoverState extends State<Discover> {
             child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
+            SizedBox(height: 5.0,),
+            Container(
+              padding: EdgeInsets.only(left: 20.0, right: 15.0),
+              child: Row(
+                children: [
+                  Text(
+                    discover.userStatus == 'online'
+                        ? 'You are now online'
+                        : 'You are now offline',
+                    style: discover.userStatus == 'online'
+                        ? appTheme?.white14Bold.copyWith(color: Colors.green)
+                        : appTheme?.white14Bold,
+                  ),
+                  Expanded(child: SizedBox()),
+                  CupertinoSwitch(
+                    trackColor: ColorConstants.grayBackGround,
+                    value: _switchValue,
+                    onChanged: (value) {
+                      setState(() {
+                        _switchValue = value;
+                        String status = discover.userStatus == 'online'
+                            ? 'offline'
+                            : 'online';
+                        discover.setUserStatus(context, status);
+                      });
+                    },
+                  ),
+                ],
+              ),
+            ),
+            SizedBox(height: 5.0,),
             getTabBar(discover),
             SizedBox(
               height: getSize(10),
             ),
             getUserList(discover.discoverProfileList, discover),
-            getBottomButton(context,
-                'Go ${discover.userStatus == 'online' ? 'offline' : 'online'}',
-                () async {
-              String status =
-                  discover.userStatus == 'online' ? 'offline' : 'online';
-              discover.setUserStatus(context, status);
-            })
             // getUserList(arrList, discover),
             // getMatchButton()
           ],

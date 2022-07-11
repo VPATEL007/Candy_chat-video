@@ -3,6 +3,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:lazy_loading_list/lazy_loading_list.dart';
 import 'package:provider/provider.dart';
+import 'package:video_chat/app/Helper/socket_helper.dart';
 import 'package:video_chat/app/app.export.dart';
 import 'package:video_chat/app/utils/CommonWidgets.dart';
 import 'package:video_chat/app/utils/date_utils.dart';
@@ -179,10 +180,13 @@ class _ChatListState extends State<ChatList> {
                     },
                     child: InkWell(
                         onTap: () {
-                          NavigationUtilities.push(Chat(
+                          Navigator.push(context, MaterialPageRoute(builder: (_)=> Chat(
                             toUserId: chatHistory.chatList[index].user?.id ?? 0,
                             isFromProfile: false,
-                          ));
+                          ))).then((value) {
+                            SocketHealper.shared.disconnect();
+                            SocketHealper.shared.connect();
+                          });
                         },
                         child:
                             getChatItem(chatHistory.chatList[index], index)));
@@ -288,12 +292,12 @@ class _ChatListState extends State<ChatList> {
                   style: appTheme?.black16Bold
                       .copyWith(fontSize: getFontSize(14), color: Colors.white),
                 ),
-                // SizedBox(height: getSize(6)),
-                // Text(
-                //   "Hi, how are you ? May i get",
-                //   style: appTheme.black14Normal,
-                //   overflow: TextOverflow.ellipsis,
-                // )
+                SizedBox(height: getSize(6)),
+                Text(
+                  model.message ?? '',
+                  style: appTheme?.white12Normal,
+                  overflow: TextOverflow.ellipsis,
+                )
               ],
             ),
             Spacer(),
