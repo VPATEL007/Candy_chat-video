@@ -1,6 +1,6 @@
 // import 'package:flushbar/flushbar.dart';
 // import 'package:flushbar/flushbar_route.dart' as route;
-// import 'package:another_flushbar/flushbar.dart';
+import 'package:another_flushbar/flushbar.dart';
 import 'package:flutter/material.dart';
 import 'package:logging/logging.dart';
 
@@ -90,16 +90,16 @@ class FlushbarService {
         break;
     }
 
-    // Flushbar(
-    //   backgroundColor: appTheme.backgroundColors?.first ?? Colors.white,
-    //   icon: Icon(icon, color: color),
-    //   messageText: child ??
-    //       Text(message ?? "", style: appTheme.theme.textTheme.subtitle1),
-    //   duration: duration,
-    //   leftBarIndicatorColor: color,
-    //   animationDuration: const Duration(milliseconds: 600),
-    //   forwardAnimationCurve: Curves.easeOutCirc,
-    // ).show(navigator.context);
+    Flushbar(
+      backgroundColor: appTheme.backgroundColors?.first ?? Colors.white,
+      icon: Icon(icon, color: color),
+      messageText: child ??
+          Text(message ?? "", style: appTheme.theme.textTheme.subtitle1),
+      duration: duration,
+      leftBarIndicatorColor: color,
+      animationDuration: const Duration(milliseconds: 600),
+      forwardAnimationCurve: Curves.easeOutCirc,
+    ).show(navigator.context);
 
     // navigator.push(route.showFlushbar(
     //   context: navigator.context,
