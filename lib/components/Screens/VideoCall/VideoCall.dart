@@ -6,9 +6,11 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
+
 // import 'package:flutter_screen/screen.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:provider/provider.dart';
+import 'package:socket_io_client/socket_io_client.dart';
 import 'package:video_chat/app/app.export.dart';
 import 'package:video_chat/app/constant/ColorConstant.dart';
 import 'package:video_chat/app/constant/KeyConsant.dart';
@@ -22,6 +24,9 @@ import 'package:video_chat/provider/followes_provider.dart';
 import 'package:video_chat/provider/gift_provider.dart';
 import 'package:video_chat/provider/matching_profile_provider.dart';
 import 'package:flutter_keyboard_visibility/flutter_keyboard_visibility.dart';
+
+import '../../../app/Helper/socket_helper.dart';
+import '../../Model/Chat/chat_message_model.dart';
 // import 'package:screen/screen.dart';
 
 class VideoCall extends StatefulWidget {
@@ -54,7 +59,7 @@ class VideoCallState extends State<VideoCall> {
   bool isRemoteVideoMute = false;
   bool isRemoteAudioMute = false;
   AgoraService agoraService = AgoraService.instance;
-  List<MessageObj> _chatsList = [];
+  List<ChatMessageData> _chatsList = [];
   Timer? timer;
   bool isKeyboardOpen = false;
   UserModel? toUser;
@@ -63,6 +68,7 @@ class VideoCallState extends State<VideoCall> {
   String? userId = app.resolve<PrefUtils>().getUserDetails()?.id.toString();
   int durationCounter = 0;
   Timer? duraationTimer;
+  Socket? socket = SocketHealper.socket;
 
   @override
   void initState() {
@@ -71,8 +77,8 @@ class VideoCallState extends State<VideoCall> {
     agoraService.isOngoingCall = true;
     WidgetsBinding.instance?.addPostFrameCallback((_) {
       initPlatformState();
-      init();
-
+      // init();
+      receiveMessage();
       getToUserDetail();
       startTimer();
     });
@@ -111,6 +117,13 @@ class VideoCallState extends State<VideoCall> {
     // );
   }
 
+  receiveMessage() {
+    socket?.on('getMessage', (data) {
+      Provider.of<ChatProvider>(context, listen: false).addMessage(
+          data['toSend'], data['sendBy'], data['message'], data['type']);
+    });
+  }
+
   @override
   void dispose() {
     // destroy sdk
@@ -123,6 +136,7 @@ class VideoCallState extends State<VideoCall> {
     duraationTimer?.cancel();
 
     super.dispose();
+    Provider.of<ChatProvider>(context, listen: false).chatMessage.clear();
   }
 
   void startTimer() {
@@ -156,27 +170,27 @@ class VideoCallState extends State<VideoCall> {
     setState(() {});
   }
 
-  Future<void> init() async {
-    await agoraService.joinChannel((widget.channelName),
-        onMemberJoined: (AgoraRtmMember member) {
-      print(
-          "Member joined: " + member.userId + ', channel: ' + member.channelId);
-    }, onMemberLeft: (AgoraRtmMember member) {
-      print("Member left: " + member.userId + ', channel: ' + member.channelId);
-    }, onMessageReceived: (AgoraRtmMessage message, AgoraRtmMember member) {
-      MessageObj _chat = MessageObj(
-          chatDate: DateTime.now(),
-          message: message.text,
-          isSendByMe: member.userId.toString().toLowerCase() ==
-              widget.userId.toLowerCase().toLowerCase(),
-          sendBy: member.userId);
-
-      _chatsList.insert(0, _chat);
-      // _chatsList.add(_chat);
-      if (mounted) setState(() {});
-      print("Channel msg: " + member.userId + ", msg: " + message.text);
-    });
-  }
+  // Future<void> init() async {
+  //   await agoraService.joinChannel((widget.channelName),
+  //       onMemberJoined: (AgoraRtmMember member) {
+  //     print(
+  //         "Member joined: " + member.userId + ', channel: ' + member.channelId);
+  //   }, onMemberLeft: (AgoraRtmMember member) {
+  //     print("Member left: " + member.userId + ', channel: ' + member.channelId);
+  //   }, onMessageReceived: (AgoraRtmMessage message, AgoraRtmMember member) {
+  //     MessageObj _chat = MessageObj(
+  //         chatDate: DateTime.now(),
+  //         message: message.text,
+  //         isSendByMe: member.userId.toString().toLowerCase() ==
+  //             widget.userId.toLowerCase().toLowerCase(),
+  //         sendBy: member.userId);
+  //
+  //     _chatsList.insert(0, _chat);
+  //     // _chatsList.add(_chat);
+  //     if (mounted) setState(() {});
+  //     print("Channel msg: " + member.userId + ", msg: " + message.text);
+  //   });
+  // }
 
   // Init the app
   Future<void> initPlatformState() async {
@@ -313,24 +327,21 @@ class VideoCallState extends State<VideoCall> {
                                         onTap: () async {
                                           if (_chatController.text.isEmpty)
                                             return;
-                                          MessageObj _chat = MessageObj(
-                                              chatDate: DateTime.now(),
-                                              message: _chatController.text,
-                                              isSendByMe: true,
-                                              sendBy: widget.userId);
-
-                                          _chatsList.insert(0, _chat);
-
-                                          if (mounted) setState(() {});
-
-                                          await agoraService.sendMessage(
-                                              _chatController.text);
-
+                                          socket?.emit('sendMessage', {
+                                            'sendBy': userId,
+                                            'toSend': widget.toUserId,
+                                            'message': _chatController.text,
+                                            'type': 1,
+                                            'giftUlr': ''
+                                          });
+                                          Provider.of<ChatProvider>(context,
+                                                  listen: false)
+                                              .addMessage(
+                                                  widget.toUserId,
+                                                  userId,
+                                                  _chatController.text,
+                                                  1);
                                           _chatController.clear();
-                                          if (_chatsList.isNotEmpty)
-                                            messageListScrollController
-                                                .jumpTo(0.0);
-                                          if (mounted) setState(() {});
                                         },
                                         child: Text(
                                           "Send",
@@ -417,19 +428,16 @@ class VideoCallState extends State<VideoCall> {
 
         Provider.of<GiftProvider>(context, listen: false)
             .openGiftPopUp(int.parse(widget.toUserId), (url) async {
-          //Gift Purchase
-          MessageObj _chat = MessageObj(
-              chatDate: DateTime.now(),
-              message: "isGift~$url",
-              isSendByMe: true,
-              sendBy: userId);
-
-          _chatsList.add(_chat);
-          if (mounted) setState(() {});
-          await agoraService.sendMessage("isGift~$url");
-
-          if (_chatsList.isNotEmpty) messageListScrollController.jumpTo(0.0);
-          if (mounted) setState(() {});
+          socket?.emit('sendMessage', {
+            'sendBy': userId,
+            'toSend': widget.toUserId,
+            'message': "isGift~$url",
+            'type': 1,
+            'giftUlr': ''
+          });
+          Provider.of<ChatProvider>(context, listen: false).addMessage(
+              widget.toUserId, userId, "isGift~$url", 2,
+              giftUrl: "isGift~$url");
         });
       },
       child: Container(
@@ -472,18 +480,22 @@ class VideoCallState extends State<VideoCall> {
   }
 
   Widget chatList() {
-    return StreamBuilder<List<MessageObj>>(
-        stream: Stream.value(_chatsList),
-        builder: (context, snapshot) {
-          if (snapshot.data?.isEmpty ?? true) {
-            return Container();
-          }
-          return _buildChats(_chatsList);
-        });
+    return Consumer<ChatProvider>(builder: (context, chatProvider, child) {
+      return _buildChats(chatProvider.chatMessage, chatProvider);
+    });
+    // return StreamBuilder<List<MessageObj>>(
+    //     stream: Stream.value(_chatsList),
+    //     builder: (context, snapshot) {
+    //       if (snapshot.data?.isEmpty ?? true) {
+    //         return Container();
+    //       }
+    //       return _buildChats(_chatsList);
+    //     });
   }
 
   // Chat date and chats...
-  Widget _buildChats(List<MessageObj> messageList) {
+  Widget _buildChats(
+      List<ChatMessageData> messageList, ChatProvider chatProvider) {
     return Container(
       height: getSize(200),
       width: MathUtilities.screenWidth(context),

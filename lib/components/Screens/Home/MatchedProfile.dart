@@ -229,7 +229,7 @@ class _MatchedProfileState extends State<MatchedProfile> {
                   if (coinStatus?.continueCall == true) {
                     AgoraService.instance
                         .sendReceiveCallMessage(widget.id ?? "");
-                    AgoraService.instance.openVideoCall(
+                    AgoraService.instance.openVideoCall(context,
                         channelName: widget.channelName ?? "",
                         sessionId: widget.token ?? "",
                         toUserId: widget.id ?? "");

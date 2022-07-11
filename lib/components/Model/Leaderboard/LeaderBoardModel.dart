@@ -15,8 +15,14 @@ class LeaderBoardModel {
   int? coins;
   int? giftCoins;
   num? earning;
+  int? numberOfPurchase;
 
-  LeaderBoardModel({this.id, this.name, this.callDuration, this.coins});
+  LeaderBoardModel(
+      {this.id,
+      this.name,
+      this.callDuration,
+      this.coins,
+      this.numberOfPurchase});
 
   LeaderBoardModel.fromJson(Map<String, dynamic> json) {
     id = json['id'];
@@ -26,6 +32,7 @@ class LeaderBoardModel {
     giftCoins = json['gift_coins'];
     date = json['date'];
     earning = json['earning'];
+    numberOfPurchase = json['numberOfPurchase'];
   }
 
   Map<String, dynamic> toJson() {
@@ -36,6 +43,7 @@ class LeaderBoardModel {
     data['coins'] = this.coins;
     data['gift_coins'] = this.giftCoins;
     data['date'] = this.date;
+    data['numberOfPurchase'] = this.numberOfPurchase;
     return data;
   }
 }

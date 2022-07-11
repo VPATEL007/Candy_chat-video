@@ -20,6 +20,7 @@ import 'package:video_chat/provider/matching_profile_provider.dart';
 import 'package:video_chat/provider/tags_provider.dart';
 import 'package:video_chat/provider/video_call_status_provider.dart';
 
+import '../Helper/socket_helper.dart';
 import 'apps_flyer/apps_flyer_keys.dart';
 import 'apps_flyer/apps_flyer_service.dart';
 
@@ -36,7 +37,7 @@ class AgoraService {
   bool isOngoingCall = false;
   String? RTMToken;
 
-  Future<void> initialize(String appId) async {
+  Future<void> initialize(String appId, context) async {
     try {
       if (appId.isEmpty) throw "APP_ID missing, please provide your APP_ID";
       _client = await AgoraRtmClient.createInstance(appId);
@@ -59,7 +60,7 @@ class AgoraService {
         StartVideoCallModel videoCallModel =
             startVideoCallModelFromJson((message.text));
         if (videoCallModel == null) return;
-        handleVideoCallEvent(videoCallModel, peerId);
+        handleVideoCallEvent(context, videoCallModel, peerId);
       };
     } on AgoraRtmClientException catch (e) {
       throw e.reason.toString();
@@ -332,7 +333,7 @@ class AgoraService {
     }
   }
 
-  Future<void> handleVideoCallEvent(
+  Future<void> handleVideoCallEvent(context,
       StartVideoCallModel model, String peerId) async {
     UserModel? userModel = Provider.of<FollowesProvider>(
             navigationKey.currentContext!,
@@ -409,7 +410,7 @@ class AgoraService {
               listen: false)
           .videoCallModel!;
       NavigationUtilities.pop();
-      openVideoCall(
+      openVideoCall(context,
           channelName: videoCallModel.channelName!,
           sessionId: videoCallModel.sessionId!,
           toUserId: videoCallModel.toUserId.toString());
@@ -434,7 +435,7 @@ class AgoraService {
   }
 
 //Open Video Call
-  openVideoCall(
+  openVideoCall(context,
       {required String channelName,
       required String sessionId,
       required String toUserId}) {
@@ -443,14 +444,15 @@ class AgoraService {
     //         listen: false)
     //     .userModel;
 
-    NavigationUtilities.push(
-      VideoCall(
-          channelName: channelName,
-          token: sessionId,
-          userId:
-              app.resolve<PrefUtils>().getUserDetails()?.id.toString() ?? "",
-          toUserId: toUserId),
-    );
+    Navigator.push(context, MaterialPageRoute(builder: (_)=> VideoCall(
+        channelName: channelName,
+        token: sessionId,
+        userId:
+        app.resolve<PrefUtils>().getUserDetails()?.id.toString() ?? "",
+        toUserId: toUserId),)).then((value) {
+      SocketHealper.shared.disconnect();
+      SocketHealper.shared.connect();
+    });
   }
 
   updateCallStatus(

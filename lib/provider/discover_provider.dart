@@ -75,7 +75,7 @@ class DiscoverProvider with ChangeNotifier {
       baseUrl: ApiConstants.apiUrl,
       command: ApiConstants.getUserStatus,
       headers: NetworkClient.getInstance.getAuthHeaders(),
-      method: MethodType.Post,
+      method: MethodType.Get,
       successCallback: (response, message) async {
         userStatus = response['online_status'];
         notifyListeners();

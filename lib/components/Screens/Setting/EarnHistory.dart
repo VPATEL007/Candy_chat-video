@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:video_chat/app/Helper/Themehelper.dart';
 import 'package:video_chat/app/constant/ApiConstants.dart';
 import 'package:video_chat/app/constant/ColorConstant.dart';
@@ -25,6 +26,8 @@ class _EarnHistoryState extends State<EarnHistory> {
   int currentIndex = 0;
   List<LeaderBoardModel> callDuration = [];
   List<LeaderBoardModel> giftCoins = [];
+  List<LeaderBoardModel> albumEarning = [];
+  List<LeaderBoardModel> referralEarning = [];
   bool isCall = true;
   List<bool> isCurrent = [true, false, false, false];
 
@@ -92,6 +95,13 @@ class _EarnHistoryState extends State<EarnHistory> {
             giftCoins = leaderBoardModelFromJson(jsonEncode(gift["thisWeek"]));
           }
 
+          // var album = ;
+          albumEarning =
+              leaderBoardModelFromJson(jsonEncode(response["album"]));
+          print(albumEarning[0].numberOfPurchase);
+          referralEarning =
+              leaderBoardModelFromJson(jsonEncode(response["refral"]));
+          print(referralEarning[0].numberOfPurchase);
           setState(() {});
         }
       },
@@ -149,7 +159,7 @@ class _EarnHistoryState extends State<EarnHistory> {
                 InkWell(
                     onTap: () {
                       setIndexThree();
-                      isCall = false;
+                      isCall = true;
                       setState(() {});
 
                       if (giftCoins.length == 0) {
@@ -181,9 +191,6 @@ class _EarnHistoryState extends State<EarnHistory> {
                 },
                 children: [
                   getPageViewItem(),
-                  getPageViewItem(),
-                  getPageViewItem(),
-                  getPageViewItem(),
                 ],
               ),
             ),
@@ -207,13 +214,17 @@ class _EarnHistoryState extends State<EarnHistory> {
           ),
           child: Padding(
             padding: const EdgeInsets.all(8.0),
-            child: Row(
-              children: [
-                getInfoTabItem("Date"),
-                isCall == true ? getInfoTabItem("Performance") : SizedBox(),
-                getInfoTabItem("Coins"),
-              ],
-            ),
+            child: currentIndex > 1
+                ? rows()
+                : Row(
+                    children: [
+                      getInfoTabItem("Date"),
+                      isCall == true
+                          ? getInfoTabItem("Performance")
+                          : SizedBox(),
+                      getInfoTabItem("Coins"),
+                    ],
+                  ),
           ),
         ),
         Container(
@@ -221,19 +232,40 @@ class _EarnHistoryState extends State<EarnHistory> {
           child: ListView.separated(
               itemBuilder: (BuildContext context, int index) {
                 return getListRow(
-                    isCall == true ? callDuration[index] : giftCoins[index]);
+                    currentIndex == 2
+                        ? albumEarning[index]
+                        : currentIndex == 3
+                            ? referralEarning[index]
+                            : isCall == true
+                                ? callDuration[index]
+                                : giftCoins[index],
+                    currentIndex);
               },
               separatorBuilder: (BuildContext context, int index) {
                 return Container(height: 1, color: ColorConstants.borderColor);
               },
-              itemCount:
-                  isCall == true ? callDuration.length : giftCoins.length),
+              itemCount: currentIndex == 2
+                  ? albumEarning.length
+                  : currentIndex == 3
+                      ? referralEarning.length
+                      : isCall == true
+                          ? callDuration.length
+                          : giftCoins.length),
         )
       ],
     );
   }
 
-  getListRow(LeaderBoardModel item) {
+  Widget rows() => Row(
+        children: [
+          getInfoTabItem("Date"),
+          getInfoTabItem("Number of purchase"),
+          getInfoTabItem("Coins"),
+        ],
+      );
+
+  getListRow(LeaderBoardModel item, currentIndex) {
+    print('coins==> ${item.coins} ${item.numberOfPurchase} $currentIndex');
     return Container(
       child: Padding(
         padding: EdgeInsets.all(8.0),
@@ -245,7 +277,7 @@ class _EarnHistoryState extends State<EarnHistory> {
                   : (MathUtilities.screenWidth(context) - 34) / 2,
               child: Center(
                 child: Text(
-                  item.date ?? "",
+                  DateFormat('d-M-y').format(DateTime.parse(item.date ?? '')),
                   style: appTheme?.black14SemiBold
                       .copyWith(fontSize: getFontSize(12), color: Colors.white),
                 ),
@@ -258,7 +290,11 @@ class _EarnHistoryState extends State<EarnHistory> {
                         : (MathUtilities.screenWidth(context) - 34) / 2,
                     child: Center(
                       child: Text(
-                        item.callDuration.toString() + " mins",
+                        currentIndex > 1
+                            ? item.numberOfPurchase == null
+                                ? '0'
+                                : item.numberOfPurchase.toString()
+                            : item.callDuration.toString() + " mins",
                         style: appTheme?.black14SemiBold.copyWith(
                             fontSize: getFontSize(12), color: Colors.white),
                       ),
@@ -271,7 +307,11 @@ class _EarnHistoryState extends State<EarnHistory> {
                   : (MathUtilities.screenWidth(context) - 34) / 2,
               child: Center(
                 child: Text(
-                  "Coins " + item.earning.toString(),
+                  currentIndex > 1
+                      ? item.coins == null
+                          ? '0'
+                          : item.coins.toString()
+                      : "Coins " + item.earning.toString(),
                   style: appTheme?.black14SemiBold.copyWith(
                       fontSize: getFontSize(12), color: ColorConstants.red),
                 ),
@@ -286,6 +326,7 @@ class _EarnHistoryState extends State<EarnHistory> {
   //Get Tab Item
   getInfoTabItem(String title) {
     return Container(
+      alignment: Alignment.center,
       width: isCall == true
           ? (MathUtilities.screenWidth(context) - 34) / 3
           : (MathUtilities.screenWidth(context) - 34) / 2,
@@ -293,10 +334,14 @@ class _EarnHistoryState extends State<EarnHistory> {
         mainAxisAlignment: MainAxisAlignment.center,
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
-          Text(
-            title,
-            style: appTheme?.black14SemiBold
-                .copyWith(fontSize: getFontSize(12), color: Colors.black),
+          Align(
+            alignment: Alignment.center,
+            child: Text(
+              title,
+              textAlign: TextAlign.center,
+              style: appTheme?.black14SemiBold
+                  .copyWith(fontSize: getFontSize(12), color: Colors.black),
+            ),
           ),
         ],
       ),

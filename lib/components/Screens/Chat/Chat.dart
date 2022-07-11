@@ -115,6 +115,7 @@ class _ChatState extends State<Chat> {
   @override
   void dispose() {
     super.dispose();
+    Provider.of<ChatProvider>(context, listen: false).chatMessage.clear();
     messageListScrollController.dispose();
   }
 
@@ -530,6 +531,8 @@ class _ChatState extends State<Chat> {
                               top: getSize(16), right: getSize(16)),
                           child: InkWell(
                             onTap: () async {
+                              if (_chatController.text.isEmpty)
+                                return;
                               socket?.emit('sendMessage', {
                                 'sendBy': userId,
                                 'toSend': widget.toUserId,
@@ -566,21 +569,16 @@ class _ChatState extends State<Chat> {
 
                     Provider.of<GiftProvider>(context, listen: false)
                         .openGiftPopUp(widget.toUserId, (url) async {
-                      //Gift Purchase
-                      ChatMessageData _chat = ChatMessageData(
-                          chatDate: DateTime.now().toString(),
-                          message: "isGift~$url",
-                          isSendByMe: true,
-                          sendBy: int.parse(userId!));
-
-                      _chatsList.add(_chat);
-                      if (mounted) setState(() {});
-                      await agoraService.sendMessage("isGift~$url");
-
-                      _chatController.clear();
-                      if (_chatsList.isNotEmpty)
-                        messageListScrollController.jumpTo(0.0);
-                      if (mounted) setState(() {});
+                      socket?.emit('sendMessage', {
+                        'sendBy': userId,
+                        'toSend': widget.toUserId,
+                        'message': "isGift~$url",
+                        'type': 1,
+                        'giftUlr': ''
+                      });
+                      Provider.of<ChatProvider>(context, listen: false)
+                          .addMessage(widget.toUserId, userId, "isGift~$url", 2,
+                              giftUrl: "isGift~$url");
                     });
                   },
                   child: Image.asset(

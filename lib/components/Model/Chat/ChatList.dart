@@ -4,9 +4,8 @@ import 'package:video_chat/app/utils/pref_utils.dart';
 import 'package:video_chat/components/Model/User/UserModel.dart';
 import 'package:video_chat/main.dart';
 
-List<ChatListData> chatListModelFromJson(String str) =>
-    List<ChatListData>.from(
-        jsonDecode(str).map((e) => ChatListData.fromJson(e)));
+List<ChatListData> chatListModelFromJson(String str) => List<ChatListData>.from(
+    jsonDecode(str).map((e) => ChatListData.fromJson(e)));
 
 class ChatListModel {
   String? status;
@@ -58,6 +57,7 @@ class ChatListData {
   String? message;
   String? createdOn;
   String? updatedOn;
+  String? giftUrl;
   ChatListUser? user;
   List<ChatListUserImages>? userImages;
 
@@ -68,7 +68,8 @@ class ChatListData {
       this.createdOn,
       this.user,
       this.updatedOn,
-      this.userImages});
+      this.userImages,
+      this.giftUrl});
 
   ChatListData.fromJson(Map<String, dynamic> json) {
     id = json['id'];

@@ -24,7 +24,7 @@ class ApiConstants {
   static const String matchProfile = "profile/get-profiles-conversation";
   static const String myProfile = "profile/me";
   static const String setUserStatus = 'profile/user-online-offline';
-  static const String getUserStatus = 'profile/is-user-online';
+  static const String getUserStatus = 'user/is-online-offline';
   static const String reportReason = "report/get-reasons";
   static const String feedbacks = "feedback/get-categories";
   static const String fetchTags = "feedback/tags";

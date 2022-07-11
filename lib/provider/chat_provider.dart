@@ -240,14 +240,14 @@ class ChatProvider with ChangeNotifier {
     );
   }
 
-  addMessage(toUserId, userId, messageChat, type) {
+  addMessage(toUserId, userId, messageChat, type, {String giftUrl = ''}) {
     ChatMessageData message = ChatMessageData(
-      toSend: toUserId,
+      toSend: int.parse(toUserId.toString()),
       sendBy: int.parse(userId.toString()),
       message: messageChat,
       type: type,
       chatDate: DateTime.now().toString(),
-      // giftUlr = json['giftUlr'];
+        giftUlr : giftUrl,
       // status: 1,
       // createdOn : DateTime.now().toString(),
       // updatedOn = json['updatedOn'];

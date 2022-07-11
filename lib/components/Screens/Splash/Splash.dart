@@ -26,7 +26,7 @@ class _SplashState extends State<Splash> {
   }
 
   goToNext() async {
-    await AgoraService.instance.initialize(AGORA_APPID);
+    await AgoraService.instance.initialize(AGORA_APPID, context);
     AppNavigation.shared.goNextFromSplash();
     SocketHealper.shared.connect();
   }

@@ -180,10 +180,15 @@ class _ChatListState extends State<ChatList> {
                     },
                     child: InkWell(
                         onTap: () {
-                          Navigator.push(context, MaterialPageRoute(builder: (_)=> Chat(
-                            toUserId: chatHistory.chatList[index].user?.id ?? 0,
-                            isFromProfile: false,
-                          ))).then((value) {
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (_) => Chat(
+                                        toUserId: chatHistory
+                                                .chatList[index].user?.id ??
+                                            0,
+                                        isFromProfile: false,
+                                      ))).then((value) {
                             SocketHealper.shared.disconnect();
                             SocketHealper.shared.connect();
                           });
@@ -293,11 +298,26 @@ class _ChatListState extends State<ChatList> {
                       .copyWith(fontSize: getFontSize(14), color: Colors.white),
                 ),
                 SizedBox(height: getSize(6)),
-                Text(
-                  model.message ?? '',
-                  style: appTheme?.white12Normal,
-                  overflow: TextOverflow.ellipsis,
-                )
+                isGiftMessage(model.message, model) == true
+                    ? Container(
+                        child: CachedNetworkImage(
+                          imageUrl: model.giftUrl ?? "",
+                          width: getSize(25),
+                          height: getSize(25),
+                          fit: BoxFit.cover,
+                          errorWidget: (context, url, error) => Image.asset(
+                            noAttachment,
+                            fit: BoxFit.cover,
+                            height: getSize(45),
+                            width: getSize(45),
+                          ),
+                        ),
+                      )
+                    : Text(
+                        model.message ?? '',
+                        style: appTheme?.white12Normal,
+                        overflow: TextOverflow.ellipsis,
+                      )
               ],
             ),
             Spacer(),
@@ -338,5 +358,16 @@ class _ChatListState extends State<ChatList> {
         ),
       ),
     );
+  }
+
+  bool isGiftMessage(message, ChatListData model) {
+    if (message?.contains("isGift") == true) {
+      var split = message?.split("~");
+      if (split?.length == 2) {
+        model.giftUrl = split?.last;
+        return true;
+      }
+    }
+    return false;
   }
 }
