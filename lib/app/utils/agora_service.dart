@@ -333,8 +333,8 @@ class AgoraService {
     }
   }
 
-  Future<void> handleVideoCallEvent(context,
-      StartVideoCallModel model, String peerId) async {
+  Future<void> handleVideoCallEvent(
+      context, StartVideoCallModel model, String peerId) async {
     UserModel? userModel = Provider.of<FollowesProvider>(
             navigationKey.currentContext!,
             listen: false)
@@ -443,16 +443,14 @@ class AgoraService {
     // UserModel user = Provider.of<FollowesProvider>(navigationKey.currentContext,
     //         listen: false)
     //     .userModel;
-
-    Navigator.push(context, MaterialPageRoute(builder: (_)=> VideoCall(
-        channelName: channelName,
-        token: sessionId,
-        userId:
-        app.resolve<PrefUtils>().getUserDetails()?.id.toString() ?? "",
-        toUserId: toUserId),)).then((value) {
-      SocketHealper.shared.disconnect();
-      SocketHealper.shared.connect();
-    });
+    NavigationUtilities.push(
+      VideoCall(
+          channelName: channelName,
+          token: sessionId,
+          userId:
+              app.resolve<PrefUtils>().getUserDetails()?.id.toString() ?? "",
+          toUserId: toUserId),
+    );
   }
 
   updateCallStatus(

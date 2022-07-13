@@ -1,3 +1,4 @@
+import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:video_chat/app/Helper/CommonApiHelper.dart';
 import 'package:video_chat/app/Helper/socket_helper.dart';
@@ -21,22 +22,22 @@ class AppNavigation {
 
   Future<void> init() async {}
 
-  void goNextFromSplash() {
+  void goNextFromSplash(context) {
     if (!app.resolve<PrefUtils>().isShowIntro() ||
         app.resolve<PrefUtils>().selectedLanguages == null) {
       //show Intro
-      NavigationUtilities.pushReplacementNamed(LanguageSelection.route,
-          type: RouteType.fade);
+      Navigator.pushAndRemoveUntil(context,
+          MaterialPageRoute(builder: (_) => LeaderBoard()), (route) => false);
     } else if (app.resolve<PrefUtils>().isUserLogin()) {
       //Home
-      moveToHome();
+      moveToHome(context);
     } else {
       //Login
-      moveToLogin();
+      moveToLogin(context);
     }
   }
 
-  Future<void> moveToHome() async {
+  Future<void> moveToHome(context) async {
     NetworkClient.getInstance
         .showLoader(NavigationUtilities.key.currentState!.overlay!.context);
     await Provider.of<FollowesProvider>(
@@ -45,7 +46,7 @@ class AppNavigation {
         .fetchMyProfile(NavigationUtilities.key.currentState!.overlay!.context);
 
     // NetworkClient.getInstance.hideProgressDialog();
-    isValidProfile();
+    isValidProfile(context);
 
     SocketHealper.shared.connect();
     // NavigationUtilities.pushReplacementNamed(Home.route, type: RouteType.fade);
@@ -53,7 +54,7 @@ class AppNavigation {
     // CommonApiHelper.shared.updateFCMToken();
   }
 
-  isValidProfile() {
+  isValidProfile(context) {
     try {
       var userId = app.resolve<PrefUtils>().getUserDetails()?.id;
       print('userId==> $userId');
@@ -73,12 +74,14 @@ class AppNavigation {
         provider.userModel?.userName?.isEmpty == true ||
         provider.userModel?.userImages == null ||
         provider.userModel?.userImages?.isEmpty == true) {
-      NavigationUtilities.pushReplacementNamed(EditProfileScreen.route,
-          type: RouteType.fade);
+      Navigator.pushAndRemoveUntil(
+          context,
+          MaterialPageRoute(builder: (_) => EditProfileScreen()),
+          (route) => false);
     } else {
       SocketHealper.shared.connect();
-      NavigationUtilities.pushReplacementNamed(LeaderBoard.route,
-          type: RouteType.fade);
+      Navigator.pushAndRemoveUntil(context,
+          MaterialPageRoute(builder: (_) => LeaderBoard()), (route) => false);
 
       CommonApiHelper.shared.appStart();
       CommonApiHelper.shared.updateFCMToken();
@@ -91,7 +94,8 @@ class AppNavigation {
     AgoraService.instance.logOut();
   }
 
-  void moveToLogin() {
-    NavigationUtilities.pushReplacementNamed(Login.route);
+  void moveToLogin(context) {
+    Navigator.pushAndRemoveUntil(
+        context, MaterialPageRoute(builder: (_) => Login()), (route) => false);
   }
 }

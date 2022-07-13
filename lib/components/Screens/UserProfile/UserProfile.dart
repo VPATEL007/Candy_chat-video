@@ -15,6 +15,7 @@ import 'package:video_chat/components/Model/User/UserModel.dart';
 import 'package:video_chat/components/Screens/Home/MatchedProfile.dart';
 import 'package:video_chat/components/Screens/Home/Reportblock.dart';
 import 'package:video_chat/components/widgets/ProfileSlider.dart';
+import 'package:video_chat/components/widgets/safeOnTap.dart';
 import 'package:video_chat/provider/chat_provider.dart';
 import 'package:video_chat/provider/followes_provider.dart';
 import 'package:video_chat/provider/gift_provider.dart';
@@ -174,25 +175,27 @@ class _UserProfileState extends State<UserProfile> {
             SizedBox(
               width: getSize(8),
             ),
-            InkWell(
-              onTap: () async {
+            SafeOnTap(
+              intervalMs: 2000,
+              onSafeTap: ()  async {
                 await Provider.of<MatchingProfileProvider>(context,
-                        listen: false)
+                    listen: false)
                     .checkCoinBalance(context, widget.userModel?.id ?? 0,
-                        widget.userModel?.userName ?? "");
+                    widget.userModel?.userName ?? "");
 
-                CoinModel? coins =
-                    Provider.of<MatchingProfileProvider>(context, listen: false)
-                        .coinBalance;
+                CoinModel? coins = Provider.of<MatchingProfileProvider>(
+                    context,
+                    listen: false)
+                    .coinBalance;
 
                 if (coins?.lowBalance == false) {
                   // discover.id = 41;
                   await Provider.of<MatchingProfileProvider>(context,
-                          listen: false)
+                      listen: false)
                       .startVideoCall(context, widget.userModel?.id ?? 0);
                   VideoCallModel? videoCallModel =
                       Provider.of<MatchingProfileProvider>(context,
-                              listen: false)
+                          listen: false)
                           .videoCallModel;
 
                   if (videoCallModel != null) {
@@ -203,7 +206,8 @@ class _UserProfileState extends State<UserProfile> {
                         videoCallModel.channelName ?? "",
                         widget.userModel?.gender ?? "",
                         context);
-                    Provider.of<VideoCallStatusProvider>(context, listen: false)
+                    Provider.of<VideoCallStatusProvider>(context,
+                        listen: false)
                         .setCallStatus = CallStatus.Start;
                     UserModel? userModel =
                         Provider.of<FollowesProvider>(context, listen: false)
@@ -218,10 +222,10 @@ class _UserProfileState extends State<UserProfile> {
                             : userModel?.userImages?.first.photoUrl ?? "",
                         name: widget.userModel?.userName ?? "",
                         toImageUrl: (widget.userModel?.userImages?.isEmpty ??
-                                true)
+                            true)
                             ? ""
                             : widget.userModel?.userImages?.first.photoUrl ??
-                                "",
+                            "",
                         id: videoCallModel.toUserId.toString(),
                         toGender: widget.userModel?.gender ?? "",
                       ),
@@ -266,7 +270,7 @@ class _UserProfileState extends State<UserProfile> {
                   ),
                 ),
               ),
-            )
+            ),
           ],
         ),
       ),

@@ -55,7 +55,7 @@ class _VerificationFaceState extends State<VerificationFace> {
       method: MethodType.Post,
       params: req,
       successCallback: (response, message) async {
-        AppNavigation.shared.goNextFromSplash();
+        AppNavigation.shared.goNextFromSplash(context);
         NetworkClient.getInstance.hideProgressDialog();
       },
       failureCallback: (code, message) {

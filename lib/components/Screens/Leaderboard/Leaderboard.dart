@@ -4,6 +4,7 @@ import 'dart:developer';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:permission_handler/permission_handler.dart';
 import 'package:video_chat/app/Helper/CommonApiHelper.dart';
 import 'package:video_chat/app/Helper/Themehelper.dart';
 import 'package:video_chat/app/app.export.dart';
@@ -24,6 +25,7 @@ import 'package:video_chat/main.dart';
 
 import '../Home/MatchedProfile.dart';
 import '../album/createAlbum.dart';
+import '../permissionScreen.dart';
 
 class LeaderBoard extends StatefulWidget {
   static const route = "LeaderBoard";
@@ -48,8 +50,25 @@ class _LeaderBoardState extends State<LeaderBoard> {
     WidgetsBinding.instance?.addPostFrameCallback((timeStamp) {
       getRtmToken();
       openVerificationPopUp();
+      reqPermission();
       getCallDuration(showLoader: false);
     });
+  }
+
+  void reqPermission() async {
+    var camStatus = await Permission.camera.status;
+    var microphoneStatus = await Permission.microphone.status;
+    if (camStatus.isDenied == true || microphoneStatus.isDenied == true) {
+      var cameraRequest = await Permission.camera.request();
+      if (cameraRequest.isGranted == true) {
+        var microPhone = await Permission.microphone.request();
+        if (microPhone.isDenied == true) {
+          NavigationUtilities.push(PermissionScreen());
+        }
+      } else {
+        NavigationUtilities.push(PermissionScreen());
+      }
+    }
   }
 
   getRtmToken() async {

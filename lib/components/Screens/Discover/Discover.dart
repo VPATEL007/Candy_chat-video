@@ -14,6 +14,7 @@ import 'package:video_chat/components/Screens/Home/MatchProfile.dart';
 import 'package:video_chat/components/Screens/Home/MatchedProfile.dart';
 import 'package:video_chat/components/Screens/UserProfile/UserProfile.dart';
 import 'package:video_chat/components/widgets/TabBar/Tabbar.dart';
+import 'package:video_chat/components/widgets/safeOnTap.dart';
 import 'package:video_chat/provider/discover_provider.dart';
 import 'package:video_chat/provider/followes_provider.dart';
 import 'package:video_chat/provider/matching_profile_provider.dart';
@@ -351,8 +352,9 @@ class _DiscoverState extends State<Discover> {
                   alignment: Alignment.topRight,
                   child: Padding(
                     padding: EdgeInsets.only(top: 8, right: 8),
-                    child: InkWell(
-                      onTap: () {
+                    child: SafeOnTap(
+                      intervalMs: 2000,
+                      onSafeTap: () {
                         startCall(discover);
                       },
                       child: ClipRRect(

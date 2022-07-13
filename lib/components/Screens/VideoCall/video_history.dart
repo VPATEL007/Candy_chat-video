@@ -18,6 +18,7 @@ import '../../../provider/video_call_status_provider.dart';
 import '../../Model/Match Profile/call_status.dart';
 import '../../Model/Match Profile/video_call.dart';
 import '../../Model/User/UserModel.dart';
+import '../../widgets/safeOnTap.dart';
 import '../Home/MatchedProfile.dart';
 import '../UserProfile/UserProfile.dart';
 
@@ -278,8 +279,9 @@ class _VideoChatHistoryState extends State<VideoChatHistory> {
                   ),
                   Align(
                     alignment: Alignment.centerRight,
-                    child: InkWell(
-                      onTap: () {
+                    child: SafeOnTap(
+                      intervalMs: 2000,
+                      onSafeTap: () {
                         callUser(
                             videoChatHistoryData.toUserId,
                             videoChatHistoryData.userName,

@@ -219,7 +219,7 @@ class _GenderState extends State<Gender> {
   }
 
   moveToScreen() async {
-    AppNavigation.shared.moveToHome();
+    AppNavigation.shared.moveToHome(context);
     // NetworkClient.getInstance.showLoader(context);
     // var provider = Provider.of<FollowesProvider>(context, listen: false);
     // await provider.fetchMyProfile(context);

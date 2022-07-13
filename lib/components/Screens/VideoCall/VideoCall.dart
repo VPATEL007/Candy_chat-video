@@ -48,7 +48,7 @@ class VideoCall extends StatefulWidget {
   VideoCallState createState() => VideoCallState();
 }
 
-class VideoCallState extends State<VideoCall> {
+class VideoCallState extends State<VideoCall> with WidgetsBindingObserver {
   final TextEditingController _chatController = TextEditingController();
   ScrollController messageListScrollController = ScrollController();
   RtcEngine? engine;
@@ -69,10 +69,15 @@ class VideoCallState extends State<VideoCall> {
   int durationCounter = 0;
   Timer? duraationTimer;
   Socket? socket = SocketHealper.socket;
+  bool isSwitch = false;
 
   @override
   void initState() {
+    if(socket?.disconnected ?? true){
+      SocketHealper.socket?.connect();
+    }
     super.initState();
+    WidgetsBinding.instance?.addObserver(this);
     // Screen.keepOn(true);
     agoraService.isOngoingCall = true;
     WidgetsBinding.instance?.addPostFrameCallback((_) {
@@ -124,6 +129,34 @@ class VideoCallState extends State<VideoCall> {
     });
   }
 
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    print(state.name);
+    switch (state) {
+      case AppLifecycleState.resumed:
+        break;
+      case AppLifecycleState.inactive:
+        autoEndCall();
+        endCall();
+        break;
+      case AppLifecycleState.paused:
+        autoEndCall();
+        endCall();
+        break;
+      case AppLifecycleState.detached:
+        autoEndCall();
+        endCall();
+        break;
+    }
+  }
+
+  autoEndCall() {
+    agoraService.endCallMessage(widget.toUserId);
+    agoraService.updateCallStatus(
+        channelName: widget.channelName,
+        sessionId: widget.token,
+        status: "ended");
+  }
+
   @override
   void dispose() {
     // destroy sdk
@@ -134,9 +167,9 @@ class VideoCallState extends State<VideoCall> {
     endCall();
     agoraService.leaveChannel();
     duraationTimer?.cancel();
-
     super.dispose();
     Provider.of<ChatProvider>(context, listen: false).chatMessage.clear();
+    SocketHealper.socket?.disconnect();
   }
 
   void startTimer() {
@@ -245,7 +278,9 @@ class VideoCallState extends State<VideoCall> {
                   ? Container(
                       color: Colors.black,
                     )
-                  : _renderRemoteVideo(),
+                  : (isSwitch == true
+                      ? _renderLocalPreview()
+                      : _renderRemoteVideo()),
             ),
             Positioned(bottom: getSize(120), child: chatList()),
             Positioned(
@@ -253,14 +288,23 @@ class VideoCallState extends State<VideoCall> {
                 top: getSize(30),
                 child: Visibility(
                   visible: !_videoMute,
-                  child: SafeArea(
-                    child: ClipRRect(
-                      borderRadius: BorderRadius.circular(8),
-                      child: Container(
-                        width: getSize(120),
-                        height: getSize(160),
-                        color: Colors.black,
-                        child: _renderLocalPreview(),
+                  child: InkWell(
+                    onTap: (){
+                      setState(() {
+                        isSwitch = !isSwitch;
+                      });
+                    },
+                    child: SafeArea(
+                      child: ClipRRect(
+                        borderRadius: BorderRadius.circular(8),
+                        child: Container(
+                          width: getSize(120),
+                          height: getSize(160),
+                          color: Colors.black,
+                          child: isSwitch == true
+                              ? _renderRemoteVideo()
+                              : _renderLocalPreview(),
+                        ),
                       ),
                     ),
                   ),
@@ -400,22 +444,52 @@ class VideoCallState extends State<VideoCall> {
 
   Widget switchCameraButton() {
     return Positioned(
-      right: getSize(40),
-      top: getSize(40),
-      child: SafeArea(
-        child: InkWell(
-          onTap: () {
-            _onSwitchCamera();
-          },
-          child: Image.asset(
-            icSwitchCamera,
-            width: getSize(34),
-            height: getSize(34),
-            color: Colors.red,
+        right: getSize(40),
+        top: getSize(40),
+        child: SafeArea(
+          child: Column(
+            children: [
+              InkWell(
+                onTap: () {
+                  _onSwitchCamera();
+                },
+                child: Image.asset(
+                  icSwitchCamera,
+                  width: getSize(34),
+                  height: getSize(34),
+                  color: Colors.red,
+                ),
+              ),
+              // SizedBox(
+              //   height: 16,
+              // ),
+              // InkWell(
+              //   onTap: () {
+              //     setState(() {
+              //       isSwitch = !isSwitch;
+              //     });
+              //   },
+              //   child: Image.asset(
+              //     icSwitchView,
+              //     width: getSize(25),
+              //     height: getSize(25),
+              //     color: Colors.red,
+              //   ),
+              // ),
+            ],
+            // InkWell(
+            //   onTap: () {
+            //     _onSwitchCamera();
+            //   },
+            //   child: Image.asset(
+            //     icSwitchCamera,
+            //     width: getSize(34),
+            //     height: getSize(34),
+            //     color: Colors.red,
+            //   ),
+            // ),
           ),
-        ),
-      ),
-    );
+        ));
   }
 
   Widget giftButton() {
@@ -536,9 +610,9 @@ class VideoCallState extends State<VideoCall> {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Text(
-                              messageList[contentIndex].isSendByMe == true
-                                  ? (fromUser?.userName ?? "")
-                                  : (toUser?.userName ?? ""),
+                              messageList[contentIndex].sendBy.toString() == userId
+                                  ? (fromUser?.userName ?? "from user")
+                                  : (toUser?.userName ?? "to user"),
                               textAlign: TextAlign.left,
                               style: appTheme?.black14Normal
                                   .copyWith(color: Colors.red),

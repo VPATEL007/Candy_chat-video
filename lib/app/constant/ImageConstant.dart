@@ -81,6 +81,7 @@ const String icEmptyChatList = "assets/Chat/emptyChatList.png";
 
 const String icPlaceWoman = "assets/Common/woman.png";
 const String icPlaceMan = "assets/Common/man.png";
+const String icSwitchView = "assets/Video/switchView.png";
 const String icInviteCode = "assets/Onboarding/inviteCode.png";
 const String icVerification = "assets/Verification/showthrough.png";
 const String icVerificationExam = "assets/Verification/verificationExample.png";

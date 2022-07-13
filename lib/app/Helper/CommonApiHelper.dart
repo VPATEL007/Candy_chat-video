@@ -65,7 +65,7 @@ class CommonApiHelper {
               builder: (context) => Gender(),
             ));
           } else {
-            AppNavigation.shared.moveToHome();
+            AppNavigation.shared.moveToHome(context);
             // NavigationUtilities.key.currentState!.pushReplacement(FadeRoute(
             //   builder: (context) => Gender(
             //     isFromPreGender: true,

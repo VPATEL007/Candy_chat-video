@@ -69,7 +69,7 @@ class _LanguageSelectionState extends State<LanguageSelection> {
         },
       );
     } else {
-      AppNavigation.shared.goNextFromSplash();
+      AppNavigation.shared.goNextFromSplash(context);
     }
   }
 
