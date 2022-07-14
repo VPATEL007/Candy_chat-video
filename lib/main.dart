@@ -2,10 +2,8 @@ import 'dart:io';
 
 import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:firebase_analytics/observer.dart';
-
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
-
 // import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:firebase_performance/firebase_performance.dart';
@@ -13,18 +11,13 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
-
 // import 'package:in_app_purchase/in_app_purchase.dart';
 import 'package:kiwi/kiwi.dart';
 import 'package:provider/provider.dart';
 import 'package:video_chat/app/app.export.dart';
-import 'package:video_chat/app/utils/apps_flyer/apps_flyer_keys.dart';
 import 'package:video_chat/components/Model/Notification/NotificatonModel.dart';
 import 'package:video_chat/components/Model/User/UserModel.dart';
-import 'package:video_chat/components/Screens/Leaderboard/Leaderboard.dart';
 import 'package:video_chat/components/Screens/Splash/Splash.dart';
-import 'package:video_chat/components/Screens/album/createAlbum.dart';
-
 import 'package:video_chat/provider/chat_provider.dart';
 import 'package:video_chat/provider/discover_provider.dart';
 import 'package:video_chat/provider/favourite_provider.dart';
@@ -50,11 +43,10 @@ import 'app/utils/apps_flyer/apps_flyer_service.dart';
 import 'app/utils/navigator.dart';
 import 'app/utils/pref_utils.dart';
 import 'app/utils/route_observer.dart';
-import 'components/Screens/Home/MatchedProfile.dart';
-import 'components/Screens/OnboardingVerfication/VerificationInvitation.dart';
-import 'components/Screens/OnboardingVerfication/VerificationProfile.dart';
 import 'components/Screens/UserProfile/UserProfile.dart';
 import 'provider/album_provider.dart';
+import 'provider/detail_earning_provider.dart';
+import 'provider/income_report_provider.dart';
 // import 'package:in_app_purchase_android/in_app_purchase_android.dart';
 
 late KiwiContainer app;
@@ -265,6 +257,12 @@ class _BaseState extends State<Base> {
         ),
         ChangeNotifierProvider.value(
           value: AlbumProvider(),
+        ),
+        ChangeNotifierProvider.value(
+          value: DailyEarningDetailProvider(),
+        ),
+        ChangeNotifierProvider.value(
+          value: DetailEarningProvider(),
         ),
       ],
       child: MaterialApp(

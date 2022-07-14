@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:provider/provider.dart';
 import 'package:video_chat/app/Helper/Themehelper.dart';
 import 'package:video_chat/app/constant/ApiConstants.dart';
 import 'package:video_chat/app/constant/ColorConstant.dart';
@@ -13,6 +14,7 @@ import 'package:video_chat/app/utils/math_utils.dart';
 import 'package:video_chat/components/Model/Leaderboard/LeaderBoardModel.dart';
 import 'package:video_chat/components/Screens/Setting/income_report.dart';
 import 'package:video_chat/components/widgets/CommanButton.dart';
+import 'package:video_chat/provider/detail_earning_provider.dart';
 
 class EarnHistory extends StatefulWidget {
   EarnHistory({Key? key}) : super(key: key);
@@ -37,6 +39,11 @@ class _EarnHistoryState extends State<EarnHistory> {
 
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
       getCallDuration();
+    });
+
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      Provider.of<DetailEarningProvider>(context, listen: false)
+          .dailyDetailEarningReport(context, dateTime: '2022-07-14');
     });
   }
 
@@ -213,10 +220,12 @@ class _EarnHistoryState extends State<EarnHistory> {
                     SizedBox(
                       height: getSize(7),
                     ),
-                    getPageViewItem(),
-                    getPageViewItem(),
-                    getPageViewItem(),
-                    getPageViewItem(),
+                    // ListView.builder(
+                    //   itemCount: ,
+                    //   shrinkWrap: true,
+                    //   itemBuilder: (context, index) {
+                    //   return getPageViewItem(imgUrl: imgUrl, coin: coin, name: name, userID: userID, callDuration: callDuration, callType: callType);
+                    // },),
                     SizedBox(
                       height: getSize(7),
                     ),
@@ -231,7 +240,13 @@ class _EarnHistoryState extends State<EarnHistory> {
         ));
   }
 
-  getPageViewItem() {
+  getPageViewItem(
+      {required String imgUrl,
+      required int coin,
+      required String name,
+      required String userID,
+      required int callDuration,
+      required String callType}) {
     return Container(
         margin: EdgeInsets.symmetric(vertical: getSize(7)),
         width: MathUtilities.screenWidth(context),
@@ -252,7 +267,7 @@ class _EarnHistoryState extends State<EarnHistory> {
                 CircleAvatar(
                   minRadius: getSize(15),
                   maxRadius: getSize(15),
-                  backgroundImage: AssetImage(icVerficationDemo),
+                  backgroundImage: NetworkImage(imgUrl),
                 ),
                 Row(
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -264,7 +279,7 @@ class _EarnHistoryState extends State<EarnHistory> {
                     SizedBox(
                       width: getSize(6),
                     ),
-                    Text('+0',
+                    Text('$coin',
                         style: appTheme!.black16Bold.copyWith(
                             color: ColorConstants.colorPrimary,
                             fontWeight: FontWeight.w700,
@@ -276,12 +291,12 @@ class _EarnHistoryState extends State<EarnHistory> {
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text('Xiaoming Tian',
+                Text(name,
                     style: appTheme!.black16Bold.copyWith(
                         color: ColorConstants.colorPrimary,
                         fontWeight: FontWeight.w700,
                         fontSize: getFontSize(12))),
-                Text('User ID: 142054243',
+                Text('User ID: $userID',
                     style: appTheme!.black16Bold.copyWith(
                         color: ColorConstants.colorPrimary,
                         fontWeight: FontWeight.w500,
@@ -301,14 +316,14 @@ class _EarnHistoryState extends State<EarnHistory> {
                             fontWeight: FontWeight.w500,
                             fontSize: getFontSize(12)),
                         children: [
-                          TextSpan(
-                            text: ' 14:21',
-                            style: appTheme!.black16Bold.copyWith(
-                                color: ColorConstants.red,
-                                fontWeight: FontWeight.w500,
-                                fontSize: getFontSize(12)),
-                          )
-                        ])),
+                      TextSpan(
+                        text: ' 14:21',
+                        style: appTheme!.black16Bold.copyWith(
+                            color: ColorConstants.red,
+                            fontWeight: FontWeight.w500,
+                            fontSize: getFontSize(12)),
+                      )
+                    ])),
                 RichText(
                     text: TextSpan(
                         text: 'Call Duration:',
@@ -317,14 +332,14 @@ class _EarnHistoryState extends State<EarnHistory> {
                             fontWeight: FontWeight.w500,
                             fontSize: getFontSize(12)),
                         children: [
-                          TextSpan(
-                            text: ' 0:27',
-                            style: appTheme!.black16Bold.copyWith(
-                                color: ColorConstants.red,
-                                fontWeight: FontWeight.w500,
-                                fontSize: getFontSize(12)),
-                          )
-                        ])),
+                      TextSpan(
+                        text: '$callDuration',
+                        style: appTheme!.black16Bold.copyWith(
+                            color: ColorConstants.red,
+                            fontWeight: FontWeight.w500,
+                            fontSize: getFontSize(12)),
+                      )
+                    ])),
                 RichText(
                     text: TextSpan(
                         text: 'Call type:',
@@ -333,14 +348,14 @@ class _EarnHistoryState extends State<EarnHistory> {
                             fontWeight: FontWeight.w500,
                             fontSize: getFontSize(12)),
                         children: [
-                          TextSpan(
-                            text: ' Private',
-                            style: appTheme!.black16Bold.copyWith(
-                                color: ColorConstants.red,
-                                fontWeight: FontWeight.w500,
-                                fontSize: getFontSize(12)),
-                          )
-                        ]))
+                      TextSpan(
+                        text: callType,
+                        style: appTheme!.black16Bold.copyWith(
+                            color: ColorConstants.red,
+                            fontWeight: FontWeight.w500,
+                            fontSize: getFontSize(12)),
+                      )
+                    ]))
               ],
             )
           ],
@@ -348,12 +363,12 @@ class _EarnHistoryState extends State<EarnHistory> {
   }
 
   Widget rows() => Row(
-    children: [
-      getInfoTabItem("Date"),
-      getInfoTabItem("Number of purchase"),
-      getInfoTabItem("Coins"),
-    ],
-  );
+        children: [
+          getInfoTabItem("Date"),
+          getInfoTabItem("Number of purchase"),
+          getInfoTabItem("Coins"),
+        ],
+      );
 
   getListRow(LeaderBoardModel item, currentIndex) {
     print('coins==> ${item.coins} ${item.numberOfPurchase} $currentIndex');
@@ -376,21 +391,21 @@ class _EarnHistoryState extends State<EarnHistory> {
             ),
             isCall == true
                 ? Container(
-              width: isCall == true
-                  ? (MathUtilities.screenWidth(context) - 34) / 3
-                  : (MathUtilities.screenWidth(context) - 34) / 2,
-              child: Center(
-                child: Text(
-                  currentIndex > 1
-                      ? item.numberOfPurchase == null
-                      ? '0'
-                      : item.numberOfPurchase.toString()
-                      : item.callDuration.toString() + " mins",
-                  style: appTheme?.black14SemiBold.copyWith(
-                      fontSize: getFontSize(12), color: Colors.white),
-                ),
-              ),
-            )
+                    width: isCall == true
+                        ? (MathUtilities.screenWidth(context) - 34) / 3
+                        : (MathUtilities.screenWidth(context) - 34) / 2,
+                    child: Center(
+                      child: Text(
+                        currentIndex > 1
+                            ? item.numberOfPurchase == null
+                                ? '0'
+                                : item.numberOfPurchase.toString()
+                            : item.callDuration.toString() + " mins",
+                        style: appTheme?.black14SemiBold.copyWith(
+                            fontSize: getFontSize(12), color: Colors.white),
+                      ),
+                    ),
+                  )
                 : SizedBox(),
             Container(
               width: isCall == true
@@ -400,8 +415,8 @@ class _EarnHistoryState extends State<EarnHistory> {
                 child: Text(
                   currentIndex > 1
                       ? item.coins == null
-                      ? '0'
-                      : item.coins.toString()
+                          ? '0'
+                          : item.coins.toString()
                       : "Coins " + item.earning.toString(),
                   style: appTheme?.black14SemiBold.copyWith(
                       fontSize: getFontSize(12), color: ColorConstants.red),
@@ -479,16 +494,16 @@ class _EarnHistoryState extends State<EarnHistory> {
           ),
           isCurrent[index] == true
               ? Container(
-            height: getSize(8),
-            decoration: BoxDecoration(
-                color: ColorConstants.red,
-                borderRadius: BorderRadius.only(
-                    topLeft: Radius.circular(8),
-                    topRight: Radius.circular(8))),
-          )
+                  height: getSize(8),
+                  decoration: BoxDecoration(
+                      color: ColorConstants.red,
+                      borderRadius: BorderRadius.only(
+                          topLeft: Radius.circular(8),
+                          topRight: Radius.circular(8))),
+                )
               : SizedBox(
-            height: getSize(8),
-          ),
+                  height: getSize(8),
+                ),
         ],
       ),
     );
