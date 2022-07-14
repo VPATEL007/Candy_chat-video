@@ -17,6 +17,7 @@ import 'package:video_chat/components/Screens/Setting/EarnHistory.dart';
 import 'package:video_chat/components/Screens/Setting/FavouriteList.dart';
 import 'package:video_chat/components/Screens/Setting/WithDraw.dart';
 import 'package:video_chat/components/Screens/Setting/feedback.dart';
+import 'package:video_chat/components/Screens/Setting/income_report.dart';
 import 'package:video_chat/provider/followes_provider.dart';
 
 import 'WithDrawHistory.dart';
@@ -53,7 +54,7 @@ class _SettingState extends State<Setting> {
                             ?.isInfluencer ==
                         true
                     ? getListItem("Earn History", () {
-                        NavigationUtilities.push(EarnHistory());
+                        NavigationUtilities.push(IncomeReport());
                       })
                     : SizedBox(),
                 // Provider.of<FollowesProvider>(context, listen: false)

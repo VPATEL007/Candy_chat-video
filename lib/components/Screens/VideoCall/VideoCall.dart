@@ -685,7 +685,7 @@ class VideoCallState extends State<VideoCall> with WidgetsBindingObserver {
   // Remote preview
   Widget _renderRemoteVideo() {
     if (_remoteUid != 0) {
-      return RtcRemoteView.SurfaceView(uid: _remoteUid);
+      return RtcRemoteView.SurfaceView(uid: _remoteUid,channelId: '');
     } else {
       return Container();
     }

@@ -20,12 +20,15 @@ class ColorConstants {
   static Color mainBgColor = fromHex("#000000");
   static Color activeStatusColor = fromHex("#F55050");
   static Color inActiveStatusColor = fromHex("#50F5C3");
+  static Color calenderGreyColor = fromHex("#ACACAC");
+  static Color dropShadowColor = fromHex("#3A393A");
+  static Color greyC4Color = fromHex("#C4C4C4");
 
   //Error border and Text color
   static Color errorColor = fromHex("#FF4B4B");
 
   static MaterialColor accentCustomColor =
-      MaterialColor(0xFF2B0DB2, accentColor);
+  MaterialColor(0xFF2B0DB2, accentColor);
 
   static Color fromHex(String hexString) {
     final buffer = StringBuffer();

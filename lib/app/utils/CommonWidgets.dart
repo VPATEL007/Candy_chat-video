@@ -433,7 +433,7 @@ getTitleText(
   double? fontSize,
   TextAlign? alignment = TextAlign.left,
   FontWeight? fontweight,
-  Overflow? overflow,
+      TextOverflow? overflow,
 }) {
   return Text(
     text,
@@ -454,7 +454,7 @@ getSubTitleText(
   double? fontSize,
   TextAlign? alignment = TextAlign.left,
   FontWeight? fontweight,
-  Overflow? overflow,
+  TextOverflow? overflow,
 }) {
   return Text(
     text,

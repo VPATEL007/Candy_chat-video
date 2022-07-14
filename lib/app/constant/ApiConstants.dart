@@ -44,6 +44,9 @@ class ApiConstants {
   static const String coinBalance = "call-history/balance-status";
   static const String blockUser = "profile/block-unblock-profile";
   static const String createChat = "chat-history";
+  static const String dailyEarningReport = "profile/get-daily-influencer-earning-v2";
+  static const String weeklyEarningReport = "profile/get-weekly-influencer-earning-v2";
+  static const String dailyEarningDetailReport = "profile/get-detailed-influencer-earning-v2";
   static const String getProfile = "profile/";
   static const String getAllAlbums = 'album/getAllAlbums';
   static const String createAlbum = 'album';
