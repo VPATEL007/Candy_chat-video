@@ -51,7 +51,7 @@ android {
 //    }
 
     signingConfigs {
-            release {
+        release {
             storeFile file('key.jks')
             storePassword "Mayur@123"
             keyAlias "key0"
@@ -69,6 +69,8 @@ android {
             // proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
+
+
     packagingOptions {
         exclude 'META-INF/DEPENDENCIES'
         exclude 'META-INF/LICENSE'

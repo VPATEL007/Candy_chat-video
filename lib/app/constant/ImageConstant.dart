@@ -41,6 +41,8 @@ const String icCallAccept = "assets/Home/callAccept.png";
 const String icCallEnd = "assets/Home/callEnd.png";
 const String icCoin = "assets/Home/coin.png";
 const String icCoinPurchase = "assets/Home/coinPurchase.png";
+const String questionIcon = "assets/Home/questionIcon.png";
+const String winIcon = "assets/Home/winIcon.png";
 
 const String icEmptyChat = "assets/Chat/emptyChat.png";
 const String icWavingHand = "assets/Chat/wavingHand.png";
@@ -81,7 +83,6 @@ const String icEmptyChatList = "assets/Chat/emptyChatList.png";
 
 const String icPlaceWoman = "assets/Common/woman.png";
 const String icPlaceMan = "assets/Common/man.png";
-const String icSwitchView = "assets/Video/switchView.png";
 const String icInviteCode = "assets/Onboarding/inviteCode.png";
 const String icVerification = "assets/Verification/showthrough.png";
 const String icVerificationExam = "assets/Verification/verificationExample.png";
