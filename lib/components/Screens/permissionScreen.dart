@@ -20,7 +20,9 @@ class _PermissionScreenState extends State<PermissionScreen> {
   void initState() {
     WidgetsBinding.instance?.addObserver(LifecycleEventHandler(
         detachedCallBack: () {},
-        resumeCallBack: permissionHandler(),
+        resumeCallBack: () {
+          permissionHandler();
+        },
         context: context));
     permissionHandler();
     // TODO: implement initState
@@ -38,6 +40,7 @@ class _PermissionScreenState extends State<PermissionScreen> {
 
   @override
   Widget build(BuildContext context) {
+    permissionHandler();
     return WillPopScope(
       onWillPop: () async => false,
       child: Scaffold(

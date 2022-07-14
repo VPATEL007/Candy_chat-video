@@ -29,8 +29,8 @@ class _TabBarWidgetState extends State<TabBarWidget> {
       color: ColorConstants.mainBgColor,
       child: Padding(
         padding: EdgeInsets.only(
-            left: getSize(35),
-            right: getSize(35),
+            left: getSize(25),
+            right: getSize(25),
             bottom: MathUtilities.safeAreaBottomHeight(context) > 20
                 ? getSize(26)
                 : getSize(16),
@@ -51,13 +51,15 @@ class _TabBarWidgetState extends State<TabBarWidget> {
             ),
           ),
           child: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               InkWell(
                 onTap: () {
                   NavigationUtilities.pushReplacementNamed(Discover.route);
                 },
                 child: getTabItem(
-                    widget.screen == TabType.Discover, "tablike", "Discovery"),
+                    widget.screen == TabType.Discover, "tablike", "Online Users"),
               ),
               InkWell(
                 onTap: () {
@@ -186,6 +188,7 @@ class _TabBarWidgetState extends State<TabBarWidget> {
         ),
         Text(
           title,
+          textAlign: TextAlign.center,
           style: appTheme?.white12Normal.copyWith(
               fontWeight: FontWeight.w500,
               color: isSelected

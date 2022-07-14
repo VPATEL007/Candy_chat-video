@@ -1,9 +1,13 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_absolute_path/flutter_absolute_path.dart';
 import 'package:multi_image_picker2/multi_image_picker2.dart';
 import 'package:provider/provider.dart';
 import 'package:video_chat/app/app.export.dart';
 import 'package:video_chat/provider/album_provider.dart';
+import 'package:video_chat/utils/commonActivity.dart';
 
 import '../../../app/Helper/Themehelper.dart';
 import '../../../app/constant/ColorConstant.dart';
@@ -21,16 +25,12 @@ class CreateAlbum extends StatefulWidget {
 }
 
 class _CreateAlbumState extends State<CreateAlbum> {
-  List<Asset> albumList = [];
+  List<String> albumList = [];
   String selectedPrice = price300.toString();
   List<String> priceList = [price300.toString(), price500.toString()];
   bool isCreated = false;
 
   loadAssets() async {
-    // int? maxImageSelectLength = _userInfo?.userImages!
-    //     .where((maxImage) => maxImage.id == null)
-    //     .toList()
-    //     .length;
     try {
       List<Asset> _resultList = await MultiImagePicker.pickImages(
         maxImages: 5,
@@ -42,9 +42,12 @@ class _CreateAlbumState extends State<CreateAlbum> {
       );
       if (_resultList.isNotEmpty) {
         for (var i = 0; i <= _resultList.length; i++) {
-          // final String filePath = _resultList[i].identifier ?? '';
+          var path = await FlutterAbsolutePath.getAbsolutePath(
+              _resultList[i].identifier ?? '');
+          var croppedFile = await CommonActivity.cropImage(path);
+          final croppedPath = croppedFile!.path;
           setState(() {
-            albumList.add(_resultList[i]);
+            albumList.add(croppedPath);
           });
         }
       }
@@ -119,12 +122,17 @@ class _CreateAlbumState extends State<CreateAlbum> {
                             Container(
                               child: ClipRRect(
                                 borderRadius: BorderRadius.circular(15.0),
-                                child: AssetThumb(
-                                  asset: Asset(albumList[index - 1].identifier,
-                                      albumList[index - 1].name, 100, 100),
-                                  width: 100,
-                                  height: 100,
+                                child: Image.file(
+                                  File(albumList[index - 1]),
+                                  width: 155,
+                                  height: 155,
                                 ),
+                                // AssetThumb(
+                                //   asset: Asset(albumList[index - 1].identifier,
+                                //       albumList[index - 1].name, 100, 100),
+                                //   width: 100,
+                                //   height: 100,
+                                // ),
                               ),
                             ),
                             cancelIcon(() {
@@ -233,7 +241,10 @@ class _CreateAlbumState extends State<CreateAlbum> {
               onTap: () {
                 Navigator.pop(context, isCreated);
               },
-              child: Icon(Icons.arrow_back_ios, color: Colors.white,)),
+              child: Icon(
+                Icons.arrow_back_ios,
+                color: Colors.white,
+              )),
           Spacer(),
           Row(
             children: [

@@ -41,6 +41,10 @@ class _DiscoverState extends State<Discover> {
   void initState() {
     super.initState();
     setUserStatus();
+    WidgetsBinding.instance?.addPostFrameCallback((_) {
+      Provider.of<DiscoverProvider>(context, listen: false)
+          .fetchDiscoverProfileList(context, tab[0], isbackgroundCall: false);
+    });
     // MatchProfileModel model = MatchProfileModel();
     // model.id = 123;
     // model.userName = "Mayur";
@@ -74,7 +78,9 @@ class _DiscoverState extends State<Discover> {
             child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            SizedBox(height: 5.0,),
+            SizedBox(
+              height: 5.0,
+            ),
             Container(
               padding: EdgeInsets.only(left: 20.0, right: 15.0),
               child: Row(
@@ -104,7 +110,9 @@ class _DiscoverState extends State<Discover> {
                 ],
               ),
             ),
-            SizedBox(height: 5.0,),
+            SizedBox(
+              height: 5.0,
+            ),
             getTabBar(discover),
             SizedBox(
               height: getSize(10),

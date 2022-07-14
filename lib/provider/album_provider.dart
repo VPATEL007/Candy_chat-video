@@ -78,9 +78,9 @@ class AlbumProvider with ChangeNotifier {
       NetworkClient.getInstance.showLoader(context);
       if (images.isNotEmpty) {
         for (var i = 0; i < (images.length); i++) {
-          final filePath =
-              await FlutterAbsolutePath.getAbsolutePath(images[i].identifier);
-          String compressPath = await ImageUtils().compressImage(filePath);
+          // final filePath =
+          //     await FlutterAbsolutePath.getAbsolutePath(images[i].identifier);
+          String compressPath = await ImageUtils().compressImage(images[i]);
           await NetworkClient.getInstance.uploadImages(
             context: context,
             baseUrl: ApiConstants.apiUrl,
