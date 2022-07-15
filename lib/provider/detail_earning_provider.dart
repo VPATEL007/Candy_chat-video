@@ -23,11 +23,12 @@ class DetailEarningProvider extends ChangeNotifier {
       params: _parms,
       successCallback: (response, message) async {
         if (!fetchInBackground) NetworkClient.getInstance.hideProgressDialog();
-        print('======${response}');
+        print('======response${response}');
         if (response != null) {
           detailEarningReportModel =
               DetailEarningReportModel.fromJson(response);
         }
+        print(detailEarningReportModel);
       },
       failureCallback: (code, message) {
         if (!fetchInBackground) NetworkClient.getInstance.hideProgressDialog();

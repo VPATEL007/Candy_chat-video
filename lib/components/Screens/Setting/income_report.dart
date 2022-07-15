@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
+import 'package:table_calendar/table_calendar.dart';
 import 'package:video_chat/app/app.export.dart';
 import 'package:video_chat/components/Screens/Setting/EarnHistory.dart';
 import 'package:video_chat/components/widgets/CommanButton.dart';
+import 'package:video_chat/provider/detail_earning_provider.dart';
 import 'package:video_chat/provider/income_report_provider.dart';
 
 class IncomeReport extends StatefulWidget {
@@ -15,6 +17,9 @@ class IncomeReport extends StatefulWidget {
 
 class _IncomeReportState extends State<IncomeReport> {
   bool isWeeklySelected = false;
+   int? selectedIndex;
+
+  late int todayIndex;
 
   List<DateTime> daysInRange(DateTime first, DateTime last) {
     final dayCount = last.difference(first).inDays + 1;
@@ -28,15 +33,42 @@ class _IncomeReportState extends State<IncomeReport> {
   @override
   void initState() {
 
+    for(int i=0;i<daysInRange.call(
+        DateTime(2022,07,01), DateTime(2023)).length;i++)
+      {
+        DateTime datetime= DateTime.now();
+
+          if(daysInRange.call(
+              DateTime(2022,07,01), DateTime(2023))[i].toIso8601String().substring(0,10)==datetime.toIso8601String().substring(0,10))
+            {
+              int todayindex = daysInRange.call(
+                  DateTime(2022,07,01), DateTime(2023)).indexWhere((element) => element.toIso8601String().substring(0,10)==datetime.toIso8601String().substring(0,10));
+              setState(() {
+                todayIndex=todayindex;
+                selectedIndex=todayIndex;
+              });
+            }
+          else
+            {
+              print('no');
+            }
+
+      }
+
+
+
+    Provider.of<DailyEarningDetailProvider>(context, listen: false).dailyEarningReport(context,dateTime: selectedDate);
     super.initState();
   }
 
   String? formatted;
   String? monthFormatted;
-   int selectedIndex =0;
+
+  String selectedDate= DateTime.now().toIso8601String();
 
   @override
   Widget build(BuildContext context) {
+
     return Scaffold(
       backgroundColor: ColorConstants.mainBgColor,
       appBar: getAppBarColor(context, 'Income ', 'report'),
@@ -66,24 +98,24 @@ class _IncomeReportState extends State<IncomeReport> {
                   scrollDirection: Axis.horizontal,
                   shrinkWrap: true,
                   itemCount:
-                  daysInRange.call(DateTime.now(), DateTime(2023)).length,
+                  daysInRange.call(DateTime(2022,07,01), DateTime(2023)).length,
                   itemBuilder: (context, index) {
                     final DateFormat formatter = DateFormat('E');
                     formatted = formatter.format(daysInRange.call(
-                        DateTime.now(), DateTime(2023))[index]);
+                        DateTime(2022,07,01), DateTime(2023))[index]);
                     final DateFormat formatter2 = DateFormat('yMMMM');
                     monthFormatted = formatter2.format(daysInRange.call(
-                        DateTime.now(), DateTime(2023))[index]);
+                        DateTime(2022,07,01), DateTime(2023))[index]);
                     return GestureDetector(
                       onTap: () {
                         setState(() {
+                          print('object');
                           Provider.of<DailyEarningDetailProvider>(context, listen: false).dailyEarningReportModel=null;
                           selectedIndex = index;
+                          selectedDate=daysInRange.call(
+                              DateTime(2022,07,01), DateTime(2023))[index].toIso8601String();
                           isWeeklySelected = false;
-                          print(daysInRange.call(
-                              DateTime.now(), DateTime(2023))[index].toIso8601String());
-                          Provider.of<DailyEarningDetailProvider>(context, listen: false).dailyEarningReport(context,dateTime: daysInRange.call(
-                              DateTime.now(), DateTime(2023))[index].toIso8601String());
+                          Provider.of<DailyEarningDetailProvider>(context, listen: false).dailyEarningReport(context,dateTime: selectedDate);
 
                         });
                       },
@@ -143,6 +175,7 @@ class _IncomeReportState extends State<IncomeReport> {
                                     ? getSize(1)
                                     : getSize(18),
                               ),
+
                               Container(
                                 margin: EdgeInsets.symmetric(
                                     horizontal: selectedIndex == index &&
@@ -180,7 +213,7 @@ class _IncomeReportState extends State<IncomeReport> {
                                           ? getSize(3)
                                           : 0),
                                   child: Text(
-                                    '${daysInRange.call(DateTime.now(), DateTime(2023))[index].day}',
+                                    '${daysInRange.call(DateTime(2022,07,01), DateTime(2023))[index].day}',
                                     style: appTheme!.black16Bold.copyWith(
                                         color: selectedIndex == index &&
                                             isWeeklySelected == false
@@ -194,117 +227,116 @@ class _IncomeReportState extends State<IncomeReport> {
                               ),
                             ],
                           ),
-                          formatted == 'Sun'
-                              ? GestureDetector(
-                            onTap: () {
-                              setState(() {
-                                isWeeklySelected = true;
-                                Provider.of<DailyEarningDetailProvider>(context, listen: false).weeklyEarningReport(context,dateTime: daysInRange.call(
-                                    DateTime.now(), DateTime(2023))[index].toIso8601String());
-                              });
-                            },
-                            child: Column(
-                              children: [
-                                Container(
-                                  alignment: Alignment.topCenter,
-                                  margin: EdgeInsets.symmetric(
-                                      horizontal: isWeeklySelected
-                                          ? getSize(10)
-                                          : 0),
-                                  width: isWeeklySelected
-                                      ? getSize(72)
-                                      : null,
-                                  height: isWeeklySelected
-                                      ? getSize(33)
-                                      : getSize(30),
-                                  decoration: BoxDecoration(
-                                      color: isWeeklySelected
-                                          ? ColorConstants.red
-                                          : Colors.transparent,
-                                      borderRadius: BorderRadius.only(
-                                          topLeft: Radius.circular(10),
-                                          topRight:
-                                          Radius.circular(10))),
-                                  child: Padding(
-                                    padding: EdgeInsets.symmetric(
-                                        horizontal: isWeeklySelected
-                                            ? getSize(5)
-                                            : getSize(10),
-                                        vertical: isWeeklySelected
-                                            ? getSize(3)
-                                            : 0),
-                                    child: Text(
-                                      'Weekly',
-                                      style: appTheme!.black16Bold
-                                          .copyWith(
-                                          color: isWeeklySelected
-                                              ? ColorConstants
-                                              .mainBgColor
-                                              : ColorConstants
-                                              .calenderGreyColor,
-                                          fontWeight:
-                                          FontWeight.w600,
-                                          fontSize:
-                                          getFontSize(11)),
-                                    ),
-                                  ),
-                                ),
-                                SizedBox(
-                                  height: isWeeklySelected
-                                      ? getSize(1)
-                                      : getSize(18),
-                                ),
-                                Container(
-                                  margin: EdgeInsets.symmetric(
-                                      horizontal: isWeeklySelected
-                                          ? getSize(10)
-                                          : 0),
-                                  alignment: isWeeklySelected
-                                      ? Alignment.bottomCenter
-                                      : null,
-                                  width: isWeeklySelected
-                                      ? getSize(72)
-                                      : null,
-                                  height: isWeeklySelected
-                                      ? getSize(33)
-                                      : getSize(30),
-                                  decoration: BoxDecoration(
-                                      color: isWeeklySelected
-                                          ? ColorConstants.red
-                                          : Colors.transparent,
-                                      borderRadius: BorderRadius.only(
-                                          bottomLeft:
-                                          Radius.circular(10),
-                                          bottomRight:
-                                          Radius.circular(10))),
-                                  child: Padding(
-                                    padding: EdgeInsets.symmetric(
-                                        horizontal: isWeeklySelected
-                                            ? getSize(5)
-                                            : getSize(10),
-                                        vertical: isWeeklySelected
-                                            ? getSize(3)
-                                            : 0),
-                                    child: Text(
-                                      '7/-7/8',
-                                      style: appTheme!.black16Bold
-                                          .copyWith(
-                                          color: isWeeklySelected
-                                              ? ColorConstants
-                                              .mainBgColor
-                                              : ColorConstants
-                                              .calenderGreyColor,
-                                          fontWeight:
-                                          FontWeight.w600,
-                                          fontSize:
-                                          getFontSize(12)),
-                                    ),
-                                  ),
-                                ),
-                              ],
-                            ),
-                          )
-                              : SizedBox()
+                          // formatted == 'Sun'
+                          //     ? GestureDetector(
+                          //   onTap: () {
+                          //     setState(() {
+                          //       isWeeklySelected = true;
+                          //       Provider.of<DailyEarningDetailProvider>(context, listen: false).weeklyEarningReport(context,dateTime: '14-07-2022');
+                          //     });
+                          //   },
+                          //   child: Column(
+                          //     children: [
+                          //       Container(
+                          //         alignment: Alignment.topCenter,
+                          //         margin: EdgeInsets.symmetric(
+                          //             horizontal: isWeeklySelected
+                          //                 ? getSize(10)
+                          //                 : 0),
+                          //         width: isWeeklySelected
+                          //             ? getSize(72)
+                          //             : null,
+                          //         height: isWeeklySelected
+                          //             ? getSize(33)
+                          //             : getSize(30),
+                          //         decoration: BoxDecoration(
+                          //             color: isWeeklySelected
+                          //                 ? ColorConstants.red
+                          //                 : Colors.transparent,
+                          //             borderRadius: BorderRadius.only(
+                          //                 topLeft: Radius.circular(10),
+                          //                 topRight:
+                          //                 Radius.circular(10))),
+                          //         child: Padding(
+                          //           padding: EdgeInsets.symmetric(
+                          //               horizontal: isWeeklySelected
+                          //                   ? getSize(5)
+                          //                   : getSize(10),
+                          //               vertical: isWeeklySelected
+                          //                   ? getSize(3)
+                          //                   : 0),
+                          //           child: Text(
+                          //             'Weekly',
+                          //             style: appTheme!.black16Bold
+                          //                 .copyWith(
+                          //                 color: isWeeklySelected
+                          //                     ? ColorConstants
+                          //                     .mainBgColor
+                          //                     : ColorConstants
+                          //                     .calenderGreyColor,
+                          //                 fontWeight:
+                          //                 FontWeight.w600,
+                          //                 fontSize:
+                          //                 getFontSize(11)),
+                          //           ),
+                          //         ),
+                          //       ),
+                          //       SizedBox(
+                          //         height: isWeeklySelected
+                          //             ? getSize(1)
+                          //             : getSize(18),
+                          //       ),
+                          //       Container(
+                          //         margin: EdgeInsets.symmetric(
+                          //             horizontal: isWeeklySelected
+                          //                 ? getSize(10)
+                          //                 : 0),
+                          //         alignment: isWeeklySelected
+                          //             ? Alignment.bottomCenter
+                          //             : null,
+                          //         width: isWeeklySelected
+                          //             ? getSize(72)
+                          //             : null,
+                          //         height: isWeeklySelected
+                          //             ? getSize(33)
+                          //             : getSize(30),
+                          //         decoration: BoxDecoration(
+                          //             color: isWeeklySelected
+                          //                 ? ColorConstants.red
+                          //                 : Colors.transparent,
+                          //             borderRadius: BorderRadius.only(
+                          //                 bottomLeft:
+                          //                 Radius.circular(10),
+                          //                 bottomRight:
+                          //                 Radius.circular(10))),
+                          //         child: Padding(
+                          //           padding: EdgeInsets.symmetric(
+                          //               horizontal: isWeeklySelected
+                          //                   ? getSize(5)
+                          //                   : getSize(10),
+                          //               vertical: isWeeklySelected
+                          //                   ? getSize(3)
+                          //                   : 0),
+                          //           child: Text(
+                          //             '7/-7/8',
+                          //             style: appTheme!.black16Bold
+                          //                 .copyWith(
+                          //                 color: isWeeklySelected
+                          //                     ? ColorConstants
+                          //                     .mainBgColor
+                          //                     : ColorConstants
+                          //                     .calenderGreyColor,
+                          //                 fontWeight:
+                          //                 FontWeight.w600,
+                          //                 fontSize:
+                          //                 getFontSize(12)),
+                          //           ),
+                          //         ),
+                          //       ),
+                          //     ],
+                          //   ),
+                          // )
+                          //     : SizedBox()
                         ],
                       ),
                     );
@@ -399,9 +431,14 @@ class _IncomeReportState extends State<IncomeReport> {
                       title: 'Video call coins',
                       coin: value.dailyEarningReportModel?.videoCallCoins??0,
                       onTap: () {
-                        NavigationUtilities.push(EarnHistory());
+                        print('object');
+                        NavigationUtilities.push(EarnHistory(selectedDate: selectedDate??'',));
+
                       }),
-                  getBox(context: context, title: 'Gifts coins', coin: value.dailyEarningReportModel?.giftsCoin??0),
+                  getBox(context: context, title: 'Gifts coins', coin: value.dailyEarningReportModel?.giftsCoin??0,onTap: () {
+                    print('object2');
+
+                  }),
                   getBox(context: context, title: 'Match total', coin: value.dailyEarningReportModel?.matchCoin??0),
                   getBox(
                       context: context, title: 'Referral Coins', coin: value.dailyEarningReportModel?.refralCoins??0),
