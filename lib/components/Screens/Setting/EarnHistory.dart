@@ -108,7 +108,7 @@ class _EarnHistoryState extends State<EarnHistory> {
                               isCall = false;
                               // value.detailEarningReportModel=null;
                               value
-                                  .dailyDetailEarningReport(context, dateTime: '2022-07-14');
+                                  .dailyDetailEarningReport(context, dateTime: widget.selectedDate);
                               setState(() {});
 
                             },
@@ -118,7 +118,7 @@ class _EarnHistoryState extends State<EarnHistory> {
                               setIndexTwo();
                               isCall = true;
                               value
-                                  .dailyDetailEarningReport(context, dateTime: '2022-07-14');
+                                  .dailyDetailEarningReport(context, dateTime: widget.selectedDate);
                               setState(() {});
 
                             },
@@ -128,7 +128,7 @@ class _EarnHistoryState extends State<EarnHistory> {
                               setIndexThree();
                               isCall = true;
                               value
-                                  .dailyDetailEarningReport(context, dateTime: '2022-07-14');
+                                  .dailyDetailEarningReport(context, dateTime: widget.selectedDate);
                               setState(() {});
 
                             },

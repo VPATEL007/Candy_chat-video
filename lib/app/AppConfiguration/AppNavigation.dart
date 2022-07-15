@@ -26,8 +26,10 @@ class AppNavigation {
     if (!app.resolve<PrefUtils>().isShowIntro() ||
         app.resolve<PrefUtils>().selectedLanguages == null) {
       //show Intro
-      Navigator.pushAndRemoveUntil(context,
-          MaterialPageRoute(builder: (_) => LeaderBoard()), (route) => false);
+      Navigator.pushAndRemoveUntil(
+          context,
+          MaterialPageRoute(builder: (_) => LanguageSelection()),
+          (route) => false);
     } else if (app.resolve<PrefUtils>().isUserLogin()) {
       //Home
       moveToHome(context);
@@ -76,7 +78,7 @@ class AppNavigation {
         provider.userModel?.userImages?.isEmpty == true) {
       Navigator.pushAndRemoveUntil(
           context,
-          MaterialPageRoute(builder: (_) => EditProfileScreen()),
+          MaterialPageRoute(builder: (_) => EditProfileScreen(isFromSignUp: true,)),
           (route) => false);
     } else {
       SocketHealper.shared.connect();

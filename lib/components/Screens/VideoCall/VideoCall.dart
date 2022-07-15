@@ -73,7 +73,7 @@ class VideoCallState extends State<VideoCall> with WidgetsBindingObserver {
 
   @override
   void initState() {
-    if(socket?.disconnected ?? true){
+    if (socket?.disconnected ?? true) {
       SocketHealper.socket?.connect();
     }
     super.initState();
@@ -82,6 +82,7 @@ class VideoCallState extends State<VideoCall> with WidgetsBindingObserver {
     agoraService.isOngoingCall = true;
     WidgetsBinding.instance?.addPostFrameCallback((_) {
       initPlatformState();
+      clearData();
       // init();
       receiveMessage();
       getToUserDetail();
@@ -122,6 +123,10 @@ class VideoCallState extends State<VideoCall> with WidgetsBindingObserver {
     // );
   }
 
+  clearData() {
+    Provider.of<ChatProvider>(context, listen: false).chatMessage.clear();
+  }
+
   receiveMessage() {
     socket?.on('getMessage', (data) {
       Provider.of<ChatProvider>(context, listen: false).addMessage(
@@ -135,12 +140,12 @@ class VideoCallState extends State<VideoCall> with WidgetsBindingObserver {
       case AppLifecycleState.resumed:
         break;
       case AppLifecycleState.inactive:
-        autoEndCall();
-        endCall();
         break;
       case AppLifecycleState.paused:
         autoEndCall();
         endCall();
+        Navigator.pop(context);
+        WidgetsBinding.instance?.removeObserver(this);
         break;
       case AppLifecycleState.detached:
         autoEndCall();
@@ -168,7 +173,6 @@ class VideoCallState extends State<VideoCall> with WidgetsBindingObserver {
     agoraService.leaveChannel();
     duraationTimer?.cancel();
     super.dispose();
-    Provider.of<ChatProvider>(context, listen: false).chatMessage.clear();
     SocketHealper.socket?.disconnect();
   }
 
@@ -289,7 +293,7 @@ class VideoCallState extends State<VideoCall> with WidgetsBindingObserver {
                 child: Visibility(
                   visible: !_videoMute,
                   child: InkWell(
-                    onTap: (){
+                    onTap: () {
                       setState(() {
                         isSwitch = !isSwitch;
                       });
@@ -610,7 +614,8 @@ class VideoCallState extends State<VideoCall> with WidgetsBindingObserver {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Text(
-                              messageList[contentIndex].sendBy.toString() == userId
+                              messageList[contentIndex].sendBy.toString() ==
+                                      userId
                                   ? (fromUser?.userName ?? "from user")
                                   : (toUser?.userName ?? "to user"),
                               textAlign: TextAlign.left,
@@ -685,7 +690,7 @@ class VideoCallState extends State<VideoCall> with WidgetsBindingObserver {
   // Remote preview
   Widget _renderRemoteVideo() {
     if (_remoteUid != 0) {
-      return RtcRemoteView.SurfaceView(uid: _remoteUid,channelId: '');
+      return RtcRemoteView.SurfaceView(uid: _remoteUid, channelId: '');
     } else {
       return Container();
     }

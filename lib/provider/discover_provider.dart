@@ -54,9 +54,11 @@ class DiscoverProvider with ChangeNotifier {
         notifyListeners();
         if (status == 'online') {
           View.showMessage(
-              context, 'You are now online and receive calls from users');
+              context, 'You are now online and receive calls from users',
+              mode: DisplayMode.SUCCESS);
         } else {
-          View.showMessage(context, 'You are now offline');
+          View.showMessage(context, 'You are now offline',
+              mode: DisplayMode.SUCCESS);
         }
       },
       failureCallback: (code, message) {
@@ -65,10 +67,11 @@ class DiscoverProvider with ChangeNotifier {
     );
   }
 
-  updateStatus(status){
+  updateStatus(status) {
     userStatus = status;
     notifyListeners();
   }
+
   Future<void> getUserStatus(context) async {
     await NetworkClient.getInstance.callApi(
       context: context,

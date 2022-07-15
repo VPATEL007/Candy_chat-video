@@ -20,11 +20,24 @@ class _PermissionScreenState extends State<PermissionScreen> {
   void initState() {
     WidgetsBinding.instance?.addObserver(LifecycleEventHandler(
         detachedCallBack: () {},
-        resumeCallBack: permissionHandler(),
+        resumeCallBack: () {
+          permissionHandler();
+        },
         context: context));
     permissionHandler();
     // TODO: implement initState
     super.initState();
+  }
+
+  @override
+  dispose() {
+    super.dispose();
+    WidgetsBinding.instance?.removeObserver(LifecycleEventHandler(
+        detachedCallBack: () {},
+        resumeCallBack: () {
+          permissionHandler();
+        },
+        context: context));
   }
 
   permissionHandler() async {
