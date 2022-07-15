@@ -29,6 +29,17 @@ class _PermissionScreenState extends State<PermissionScreen> {
     super.initState();
   }
 
+  @override
+  dispose() {
+    super.dispose();
+    WidgetsBinding.instance?.removeObserver(LifecycleEventHandler(
+        detachedCallBack: () {},
+        resumeCallBack: () {
+          permissionHandler();
+        },
+        context: context));
+  }
+
   permissionHandler() async {
     var camStatus = await Permission.camera.status;
     var microphoneStatus = await Permission.microphone.status;
@@ -40,7 +51,6 @@ class _PermissionScreenState extends State<PermissionScreen> {
 
   @override
   Widget build(BuildContext context) {
-    permissionHandler();
     return WillPopScope(
       onWillPop: () async => false,
       child: Scaffold(
