@@ -28,7 +28,7 @@ class DailyEarningDetailProvider extends ChangeNotifier {
         print('======${response}');
         if (response != null) {
           dailyEarningReportModel = DailyEarningReportModel.fromJson(response);
-          print(dailyEarningReportModel?.albumCoin);
+          print(dailyEarningReportModel);
         }
       },
       failureCallback: (code, message) {
