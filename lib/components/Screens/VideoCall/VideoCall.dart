@@ -26,6 +26,7 @@ import 'package:video_chat/provider/matching_profile_provider.dart';
 import 'package:flutter_keyboard_visibility/flutter_keyboard_visibility.dart';
 
 import '../../../app/Helper/socket_helper.dart';
+import '../../../utils/appLifeCycle.dart';
 import '../../Model/Chat/chat_message_model.dart';
 // import 'package:screen/screen.dart';
 
@@ -77,7 +78,18 @@ class VideoCallState extends State<VideoCall> with WidgetsBindingObserver {
       SocketHealper.socket?.connect();
     }
     super.initState();
-    WidgetsBinding.instance?.addObserver(this);
+    // WidgetsBinding.instance?.addObserver(this);
+    WidgetsBinding.instance?.addObserver(LifecycleEventHandler(
+        detachedCallBack: () {},
+        resumeCallBack: () {},
+        pausedCallback: () {
+          if (mounted) {
+            autoEndCall();
+            endCall();
+            Navigator.pop(context);
+          }
+        },
+        context: context));
     // Screen.keepOn(true);
     agoraService.isOngoingCall = true;
     WidgetsBinding.instance?.addPostFrameCallback((_) {
@@ -134,26 +146,6 @@ class VideoCallState extends State<VideoCall> with WidgetsBindingObserver {
     });
   }
 
-  void didChangeAppLifecycleState(AppLifecycleState state) {
-    print(state.name);
-    switch (state) {
-      case AppLifecycleState.resumed:
-        break;
-      case AppLifecycleState.inactive:
-        break;
-      case AppLifecycleState.paused:
-        autoEndCall();
-        endCall();
-        Navigator.pop(context);
-        WidgetsBinding.instance?.removeObserver(this);
-        break;
-      case AppLifecycleState.detached:
-        autoEndCall();
-        endCall();
-        break;
-    }
-  }
-
   autoEndCall() {
     agoraService.endCallMessage(widget.toUserId);
     agoraService.updateCallStatus(
@@ -168,6 +160,11 @@ class VideoCallState extends State<VideoCall> with WidgetsBindingObserver {
     agoraService.openUserFeedBackPopUp(toUser?.id ?? 0);
     agoraService.isOngoingCall = false;
     // Screen.keepOn(false);
+    WidgetsBinding.instance?.removeObserver(LifecycleEventHandler(
+        detachedCallBack: () {},
+        resumeCallBack: () {},
+        pausedCallback: () {},
+        context: context));
     timer?.cancel();
     endCall();
     agoraService.leaveChannel();
