@@ -17,8 +17,9 @@ class _IncomeReportState extends State<IncomeReport> {
   bool isWeeklySelected = false;
   int? selectedIndex;
 
-  late int todayIndex;
 
+
+  late int todayIndex;
   List<DateTime> daysInRange(DateTime first, DateTime last) {
     final dayCount = last.difference(first).inDays + 1;
 
@@ -27,6 +28,23 @@ class _IncomeReportState extends State<IncomeReport> {
       (index) => DateTime.utc(first.year, first.month, first.day + index),
     );
   }
+
+  final controller = ScrollController();
+  get newItemCount => (daysInRange
+      .call(DateTime(2022, 07, 01), DateTime(2023))
+      .length / getSize(10)).round();
+
+  void jumpToItem(int item) {
+    final width = controller.position.maxScrollExtent +
+        context.size!.width;
+    final value = item / newItemCount * width;
+    final valueSpace = getSize(10) + value;
+    final newValue = valueSpace > controller.position.maxScrollExtent
+        ? controller.position.maxScrollExtent
+        : valueSpace;
+    controller.jumpTo(newValue);
+  }
+
 
   @override
   void initState() {
@@ -48,11 +66,16 @@ class _IncomeReportState extends State<IncomeReport> {
         setState(() {
           todayIndex = todayindex;
           selectedIndex = todayIndex;
+
         });
       } else {
         print('no');
       }
     }
+    int item = todayIndex + 1 >= newItemCount ? todayIndex : todayIndex + 1;
+
+    jumpToItem(item);
+
 
     Provider.of<DailyEarningDetailProvider>(context, listen: false)
         .dailyEarningReport(context,
@@ -92,6 +115,7 @@ class _IncomeReportState extends State<IncomeReport> {
                     width: MathUtilities.screenWidth(context),
                     height: 78,
                     child: ListView.builder(
+                      controller: controller,
                       scrollDirection: Axis.horizontal,
                       shrinkWrap: true,
                       itemCount: daysInRange
