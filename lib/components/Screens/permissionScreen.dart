@@ -23,6 +23,7 @@ class _PermissionScreenState extends State<PermissionScreen> {
         resumeCallBack: () {
           permissionHandler();
         },
+        pausedCallback: (){},
         context: context));
     permissionHandler();
     // TODO: implement initState
@@ -37,6 +38,7 @@ class _PermissionScreenState extends State<PermissionScreen> {
         resumeCallBack: () {
           permissionHandler();
         },
+        pausedCallback: (){},
         context: context));
   }
 
