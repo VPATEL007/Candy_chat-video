@@ -56,7 +56,6 @@ class DailyEarningDetailProvider extends ChangeNotifier {
         if (response != null) {
           weeklyEariningReportModel =
               WeeklyEariningReportModel.fromJson(response);
-          print(weeklyEariningReportModel?.coinRate);
         }
       },
       failureCallback: (code, message) {
