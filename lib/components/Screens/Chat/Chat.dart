@@ -53,14 +53,26 @@ class _ChatState extends State<Chat> {
 
   @override
   void initState() {
+    if (socket?.disconnected ?? true) {
+      SocketHealper.shared.connect();
+    }
+
     super.initState();
     // init();
     WidgetsBinding.instance?.addPostFrameCallback((_) {
       getToUserDetail();
+      receiveMessage();
     });
+  }
+
+  receiveMessage() {
     socket?.on('getMessage', (data) {
-      Provider.of<ChatProvider>(context, listen: false).addMessage(
-          data['toSend'], data['sendBy'], data['message'], data['type']);
+      print('data==> $data');
+      if (data['sendBy'].toString().trim() ==
+          widget.toUserId.toString().trim()) {
+        Provider.of<ChatProvider>(context, listen: false).addMessage(
+            data['toSend'], data['sendBy'], data['message'], data['type']);
+      }
     });
   }
 
@@ -531,8 +543,7 @@ class _ChatState extends State<Chat> {
                               top: getSize(16), right: getSize(16)),
                           child: InkWell(
                             onTap: () async {
-                              if (_chatController.text.isEmpty)
-                                return;
+                              if (_chatController.text.isEmpty) return;
                               socket?.emit('sendMessage', {
                                 'sendBy': userId,
                                 'toSend': widget.toUserId,
