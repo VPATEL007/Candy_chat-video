@@ -1,12 +1,13 @@
 import 'dart:async';
 
 import 'package:agora_rtc_engine/rtc_engine.dart';
-import 'package:agora_rtm/agora_rtm.dart';
+import 'package:agora_rtc_engine/rtc_local_view.dart' as RtcLocalView;
+import 'package:agora_rtc_engine/rtc_remote_view.dart' as RtcRemoteView;
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
-
+import 'package:flutter_keyboard_visibility/flutter_keyboard_visibility.dart';
 // import 'package:flutter_screen/screen.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:provider/provider.dart';
@@ -14,8 +15,6 @@ import 'package:socket_io_client/socket_io_client.dart';
 import 'package:video_chat/app/app.export.dart';
 import 'package:video_chat/app/constant/ColorConstant.dart';
 import 'package:video_chat/app/constant/KeyConsant.dart';
-import 'package:agora_rtc_engine/rtc_remote_view.dart' as RtcRemoteView;
-import 'package:agora_rtc_engine/rtc_local_view.dart' as RtcLocalView;
 import 'package:video_chat/app/utils/CommonTextfield.dart';
 import 'package:video_chat/components/Model/Match%20Profile/call_status.dart';
 import 'package:video_chat/components/Model/User/UserModel.dart';
@@ -23,7 +22,6 @@ import 'package:video_chat/provider/chat_provider.dart';
 import 'package:video_chat/provider/followes_provider.dart';
 import 'package:video_chat/provider/gift_provider.dart';
 import 'package:video_chat/provider/matching_profile_provider.dart';
-import 'package:flutter_keyboard_visibility/flutter_keyboard_visibility.dart';
 
 import '../../../app/Helper/socket_helper.dart';
 import '../../../utils/appLifeCycle.dart';
@@ -72,11 +70,17 @@ class VideoCallState extends State<VideoCall> with WidgetsBindingObserver {
   Socket? socket = SocketHealper.socket;
   bool isSwitch = false;
 
+  CallStatusModel? callStatus = Provider.of<MatchingProfileProvider>(
+          navigationKey.currentContext!,
+          listen: false)
+      .coinStatus;
+
   @override
   void initState() {
     if (socket?.disconnected ?? true) {
       SocketHealper.socket?.connect();
     }
+
     super.initState();
     // WidgetsBinding.instance?.addObserver(this);
     WidgetsBinding.instance?.addObserver(LifecycleEventHandler(
@@ -311,11 +315,13 @@ class VideoCallState extends State<VideoCall> with WidgetsBindingObserver {
                   ),
                 )),
             SafeArea(
-              child: Align(
-                  alignment: Alignment.topCenter,
-                  child: Padding(
-                    padding: EdgeInsets.only(top: getSize(30)),
-                    child: Container(
+              child: Padding(
+                padding: const EdgeInsets.only(top: 22, left: 20),
+                child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Container(
                       decoration: BoxDecoration(
                           color: Colors.black,
                           borderRadius: BorderRadius.circular(10)),
@@ -327,7 +333,24 @@ class VideoCallState extends State<VideoCall> with WidgetsBindingObserver {
                             color: Colors.white),
                       ),
                     ),
-                  )),
+                    SizedBox(
+                      width: getSize(15),
+                    ),
+                    Container(
+                      decoration: BoxDecoration(
+                          color: Colors.black,
+                          borderRadius: BorderRadius.circular(10)),
+                      child: Padding(
+                        padding: EdgeInsets.only(
+                            top: 4, bottom: 4, left: 8, right: 8),
+                        child: Text(callStatus?.callType ?? '',
+                            style: appTheme?.black14SemiBold
+                                .copyWith(color: Colors.white)),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
             ),
             switchCameraButton(),
             isRemoteAudioMute == true || isRemoteVideoMute
@@ -772,7 +795,7 @@ class VideoCallState extends State<VideoCall> with WidgetsBindingObserver {
             listen: false)
         .coinStatus;
 
-    if (callStatus?.continueCall == false) {
+    if (callStatus?.callStatusTypeTwo?.continueCall == false) {
       Navigator.pop(context);
       agoraService.updateCallStatus(
           channelName: widget.channelName,

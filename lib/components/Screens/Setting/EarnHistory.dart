@@ -14,7 +14,9 @@ import 'package:video_chat/app/utils/math_utils.dart';
 import 'package:video_chat/components/Model/Leaderboard/LeaderBoardModel.dart';
 import 'package:video_chat/components/Screens/Setting/income_report.dart';
 import 'package:video_chat/components/widgets/CommanButton.dart';
+import 'package:video_chat/main.dart';
 import 'package:video_chat/provider/detail_earning_provider.dart';
+import 'package:video_chat/provider/matching_profile_provider.dart';
 
 class EarnHistory extends StatefulWidget {
   final String selectedDate;
@@ -35,6 +37,7 @@ class _EarnHistoryState extends State<EarnHistory> {
   @override
   void initState() {
     super.initState();
+
     WidgetsBinding.instance.addPostFrameCallback((_) {
       Provider.of<DetailEarningProvider>(context, listen: false)
           .dailyDetailEarningReport(context, dateTime: widget.selectedDate);

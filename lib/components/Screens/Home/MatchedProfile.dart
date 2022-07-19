@@ -225,8 +225,8 @@ class _MatchedProfileState extends State<MatchedProfile> {
                               listen: false)
                           .coinStatus;
 
-                  Navigator.pop(context);
-                  if (coinStatus?.continueCall == true) {
+                  // Navigator.pop(context);
+                  if (coinStatus?.callStatusTypeTwo?.continueCall == true) {
                     AgoraService.instance
                         .sendReceiveCallMessage(widget.id ?? "");
                     AgoraService.instance.openVideoCall(context,
