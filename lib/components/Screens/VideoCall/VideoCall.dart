@@ -78,7 +78,7 @@ class VideoCallState extends State<VideoCall> with WidgetsBindingObserver {
   @override
   void initState() {
     if (socket?.disconnected ?? true) {
-      SocketHealper.socket?.connect();
+      SocketHealper.shared.connect();
     }
 
     super.initState();
@@ -174,7 +174,8 @@ class VideoCallState extends State<VideoCall> with WidgetsBindingObserver {
     agoraService.leaveChannel();
     duraationTimer?.cancel();
     super.dispose();
-    SocketHealper.socket?.disconnect();
+    SocketHealper.shared.disconnect();
+    SocketHealper.shared.connect();
   }
 
   void startTimer() {

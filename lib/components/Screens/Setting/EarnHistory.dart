@@ -14,9 +14,7 @@ import 'package:video_chat/app/utils/math_utils.dart';
 import 'package:video_chat/components/Model/Leaderboard/LeaderBoardModel.dart';
 import 'package:video_chat/components/Screens/Setting/income_report.dart';
 import 'package:video_chat/components/widgets/CommanButton.dart';
-import 'package:video_chat/main.dart';
 import 'package:video_chat/provider/detail_earning_provider.dart';
-import 'package:video_chat/provider/matching_profile_provider.dart';
 
 class EarnHistory extends StatefulWidget {
   final String selectedDate;
@@ -38,7 +36,7 @@ class _EarnHistoryState extends State<EarnHistory> {
   void initState() {
     super.initState();
 
-    WidgetsBinding.instance.addPostFrameCallback((_) {
+    WidgetsBinding.instance?.addPostFrameCallback((_) {
       Provider.of<DetailEarningProvider>(context, listen: false)
           .dailyDetailEarningReport(context, dateTime: widget.selectedDate);
     });
@@ -96,9 +94,7 @@ class _EarnHistoryState extends State<EarnHistory> {
                               setIndexZero();
                               // value.detailEarningReportModel=null;
                               isCall = true;
-                              print(value.detailEarningReportModel?.vidocall
-                                      ?.total ??
-                                  0);
+
                               value.dailyDetailEarningReport(context,
                                   dateTime: widget.selectedDate);
                               setState(() {});
@@ -107,7 +103,7 @@ class _EarnHistoryState extends State<EarnHistory> {
                                 'Video Call',
                                 0,
                                 value.detailEarningReportModel?.vidocall
-                                        ?.total ??
+                                    ?.total ??
                                     0)),
                         InkWell(
                             onTap: () {
@@ -193,167 +189,167 @@ class _EarnHistoryState extends State<EarnHistory> {
                         height: 350,
                         child: currentIndex == 0
                             ? ListView.builder(
-                                itemCount: value.detailEarningReportModel
-                                    ?.vidocall?.details?.length,
-                                shrinkWrap: true,
-                                physics: const NeverScrollableScrollPhysics(),
-                                itemBuilder: (context, index) {
-                                  return getPageViewItem(
-                                      time: value
-                                              .detailEarningReportModel
-                                              ?.vidocall
-                                              ?.details![index]
-                                              .time ??
-                                          '',
-                                      isShowTwoField: true,
-                                      imgUrl: value
-                                              .detailEarningReportModel
-                                              ?.vidocall
-                                              ?.details![index]
-                                              .user
-                                              ?.photoUrl ??
-                                          '',
-                                      coin: value
-                                              .detailEarningReportModel
-                                              ?.vidocall
-                                              ?.details![index]
-                                              .coin ??
-                                          0,
-                                      name: value
-                                              .detailEarningReportModel
-                                              ?.vidocall
-                                              ?.details![index]
-                                              .user
-                                              ?.userName ??
-                                          '',
-                                      userID: value
-                                              .detailEarningReportModel
-                                              ?.vidocall
-                                              ?.details![index]
-                                              .user
-                                              ?.id ??
-                                          0,
-                                      callDurations:
-                                          value.detailEarningReportModel?.vidocall?.details?[index].callDuration ?? 0,
-                                      callType: value.detailEarningReportModel?.vidocall?.details?[index].calltype ?? '');
-                                },
-                              )
+                          itemCount: value.detailEarningReportModel
+                              ?.vidocall?.details?.length,
+                          shrinkWrap: true,
+                          physics: const NeverScrollableScrollPhysics(),
+                          itemBuilder: (context, index) {
+                            return getPageViewItem(
+                                time: value
+                                    .detailEarningReportModel
+                                    ?.vidocall
+                                    ?.details![index]
+                                    .time ??
+                                    '',
+                                isShowTwoField: true,
+                                imgUrl: value
+                                    .detailEarningReportModel
+                                    ?.vidocall
+                                    ?.details![index]
+                                    .user
+                                    ?.photoUrl ??
+                                    '',
+                                coin: value
+                                    .detailEarningReportModel
+                                    ?.vidocall
+                                    ?.details![index]
+                                    .coin ??
+                                    0,
+                                name: value
+                                    .detailEarningReportModel
+                                    ?.vidocall
+                                    ?.details![index]
+                                    .user
+                                    ?.userName ??
+                                    '',
+                                userID: value
+                                    .detailEarningReportModel
+                                    ?.vidocall
+                                    ?.details![index]
+                                    .user
+                                    ?.id ??
+                                    0,
+                                callDurations:
+                                value.detailEarningReportModel?.vidocall?.details?[index].callDuration ?? 0,
+                                callType: value.detailEarningReportModel?.vidocall?.details?[index].calltype ?? '');
+                          },
+                        )
                             : ListView.builder(
-                                itemCount: currentIndex == 1
-                                    ? value.detailEarningReportModel?.gifts
-                                        ?.details?.length
-                                    : currentIndex == 2
-                                        ? value.detailEarningReportModel?.match
-                                            ?.details?.length
-                                        : value.detailEarningReportModel?.refral
-                                            ?.details?.length,
-                                shrinkWrap: true,
-                                physics: const NeverScrollableScrollPhysics(),
-                                itemBuilder: (context, index) {
-                                  return getPageViewItem(
-                                    isShowTwoField: false,
-                                    time: currentIndex == 1
-                                        ? value.detailEarningReportModel?.gifts
-                                                ?.details![index].time ??
-                                            ''
-                                        : currentIndex == 2
-                                            ? value
-                                                    .detailEarningReportModel
-                                                    ?.match
-                                                    ?.details![index]
-                                                    .time ??
-                                                ''
-                                            : value
-                                                    .detailEarningReportModel
-                                                    ?.refral
-                                                    ?.details![index]
-                                                    .time ??
-                                                '',
-                                    imgUrl: currentIndex == 1
-                                        ? value
-                                                .detailEarningReportModel
-                                                ?.gifts
-                                                ?.details![index]
-                                                .user
-                                                ?.photoUrl ??
-                                            ''
-                                        : currentIndex == 2
-                                            ? value
-                                                    .detailEarningReportModel
-                                                    ?.match
-                                                    ?.details![index]
-                                                    .user
-                                                    ?.photoUrl ??
-                                                ''
-                                            : value
-                                                    .detailEarningReportModel
-                                                    ?.refral
-                                                    ?.details![index]
-                                                    .user
-                                                    ?.photoUrl ??
-                                                '',
-                                    coin: currentIndex == 1
-                                        ? value.detailEarningReportModel?.gifts
-                                                ?.details![index].coin ??
-                                            0
-                                        : currentIndex == 2
-                                            ? value
-                                                    .detailEarningReportModel
-                                                    ?.match
-                                                    ?.details![index]
-                                                    .coin ??
-                                                0
-                                            : value
-                                                    .detailEarningReportModel
-                                                    ?.refral
-                                                    ?.details![index]
-                                                    .coin ??
-                                                0,
-                                    name: currentIndex == 1
-                                        ? value
-                                                .detailEarningReportModel
-                                                ?.gifts
-                                                ?.details![index]
-                                                .user
-                                                ?.userName ??
-                                            ''
-                                        : currentIndex == 2
-                                            ? value
-                                                    .detailEarningReportModel
-                                                    ?.match
-                                                    ?.details![index]
-                                                    .user
-                                                    ?.userName ??
-                                                ''
-                                            : value
-                                                    .detailEarningReportModel
-                                                    ?.refral
-                                                    ?.details![index]
-                                                    .user
-                                                    ?.userName ??
-                                                '',
-                                    userID: currentIndex == 1
-                                        ? value.detailEarningReportModel?.gifts
-                                                ?.details![index].user?.id ??
-                                            0
-                                        : currentIndex == 2
-                                            ? value
-                                                    .detailEarningReportModel
-                                                    ?.match
-                                                    ?.details![index]
-                                                    .user
-                                                    ?.id ??
-                                                0
-                                            : value
-                                                    .detailEarningReportModel
-                                                    ?.refral
-                                                    ?.details![index]
-                                                    .user
-                                                    ?.id ??
-                                                0,
-                                  );
-                                },
-                              ),
+                          itemCount: currentIndex == 1
+                              ? value.detailEarningReportModel?.gifts
+                              ?.details?.length
+                              : currentIndex == 2
+                              ? value.detailEarningReportModel?.match
+                              ?.details?.length
+                              : value.detailEarningReportModel?.refral
+                              ?.details?.length,
+                          shrinkWrap: true,
+                          physics: const NeverScrollableScrollPhysics(),
+                          itemBuilder: (context, index) {
+                            return getPageViewItem(
+                              isShowTwoField: false,
+                              time: currentIndex == 1
+                                  ? value.detailEarningReportModel?.gifts
+                                  ?.details![index].time ??
+                                  ''
+                                  : currentIndex == 2
+                                  ? value
+                                  .detailEarningReportModel
+                                  ?.match
+                                  ?.details![index]
+                                  .time ??
+                                  ''
+                                  : value
+                                  .detailEarningReportModel
+                                  ?.refral
+                                  ?.details![index]
+                                  .time ??
+                                  '',
+                              imgUrl: currentIndex == 1
+                                  ? value
+                                  .detailEarningReportModel
+                                  ?.gifts
+                                  ?.details![index]
+                                  .user
+                                  ?.photoUrl ??
+                                  ''
+                                  : currentIndex == 2
+                                  ? value
+                                  .detailEarningReportModel
+                                  ?.match
+                                  ?.details![index]
+                                  .user
+                                  ?.photoUrl ??
+                                  ''
+                                  : value
+                                  .detailEarningReportModel
+                                  ?.refral
+                                  ?.details![index]
+                                  .user
+                                  ?.photoUrl ??
+                                  '',
+                              coin: currentIndex == 1
+                                  ? value.detailEarningReportModel?.gifts
+                                  ?.details![index].coin ??
+                                  0
+                                  : currentIndex == 2
+                                  ? value
+                                  .detailEarningReportModel
+                                  ?.match
+                                  ?.details![index]
+                                  .coin ??
+                                  0
+                                  : value
+                                  .detailEarningReportModel
+                                  ?.refral
+                                  ?.details![index]
+                                  .coin ??
+                                  0,
+                              name: currentIndex == 1
+                                  ? value
+                                  .detailEarningReportModel
+                                  ?.gifts
+                                  ?.details![index]
+                                  .user
+                                  ?.userName ??
+                                  ''
+                                  : currentIndex == 2
+                                  ? value
+                                  .detailEarningReportModel
+                                  ?.match
+                                  ?.details![index]
+                                  .user
+                                  ?.userName ??
+                                  ''
+                                  : value
+                                  .detailEarningReportModel
+                                  ?.refral
+                                  ?.details![index]
+                                  .user
+                                  ?.userName ??
+                                  '',
+                              userID: currentIndex == 1
+                                  ? value.detailEarningReportModel?.gifts
+                                  ?.details![index].user?.id ??
+                                  0
+                                  : currentIndex == 2
+                                  ? value
+                                  .detailEarningReportModel
+                                  ?.match
+                                  ?.details![index]
+                                  .user
+                                  ?.id ??
+                                  0
+                                  : value
+                                  .detailEarningReportModel
+                                  ?.refral
+                                  ?.details![index]
+                                  .user
+                                  ?.id ??
+                                  0,
+                            );
+                          },
+                        ),
                       ),
                       SizedBox(
                         height: getSize(7),
@@ -452,49 +448,49 @@ class _EarnHistoryState extends State<EarnHistory> {
                             fontWeight: FontWeight.w500,
                             fontSize: getFontSize(12)),
                         children: [
-                      TextSpan(
-                        text: time,
-                        style: appTheme!.black16Bold.copyWith(
-                            color: ColorConstants.red,
-                            fontWeight: FontWeight.w500,
-                            fontSize: getFontSize(12)),
-                      )
-                    ])),
-                isShowTwoField
-                    ? RichText(
-                        text: TextSpan(
-                            text: 'Call Duration : ',
+                          TextSpan(
+                            text: time,
                             style: appTheme!.black16Bold.copyWith(
-                                color: ColorConstants.colorPrimary,
+                                color: ColorConstants.red,
                                 fontWeight: FontWeight.w500,
                                 fontSize: getFontSize(12)),
-                            children: [
-                            TextSpan(
-                              text: '${callDurations}',
-                              style: appTheme!.black16Bold.copyWith(
-                                  color: ColorConstants.red,
-                                  fontWeight: FontWeight.w500,
-                                  fontSize: getFontSize(12)),
-                            )
-                          ]))
+                          )
+                        ])),
+                isShowTwoField
+                    ? RichText(
+                    text: TextSpan(
+                        text: 'Call Duration : ',
+                        style: appTheme!.black16Bold.copyWith(
+                            color: ColorConstants.colorPrimary,
+                            fontWeight: FontWeight.w500,
+                            fontSize: getFontSize(12)),
+                        children: [
+                          TextSpan(
+                            text: '${callDurations}',
+                            style: appTheme!.black16Bold.copyWith(
+                                color: ColorConstants.red,
+                                fontWeight: FontWeight.w500,
+                                fontSize: getFontSize(12)),
+                          )
+                        ]))
                     : SizedBox(),
                 isShowTwoField
                     ? RichText(
-                        text: TextSpan(
-                            text: 'Call type : ',
+                    text: TextSpan(
+                        text: 'Call type : ',
+                        style: appTheme!.black16Bold.copyWith(
+                            color: ColorConstants.colorPrimary,
+                            fontWeight: FontWeight.w500,
+                            fontSize: getFontSize(12)),
+                        children: [
+                          TextSpan(
+                            text: callType ?? '',
                             style: appTheme!.black16Bold.copyWith(
-                                color: ColorConstants.colorPrimary,
+                                color: ColorConstants.red,
                                 fontWeight: FontWeight.w500,
                                 fontSize: getFontSize(12)),
-                            children: [
-                            TextSpan(
-                              text: callType ?? '',
-                              style: appTheme!.black16Bold.copyWith(
-                                  color: ColorConstants.red,
-                                  fontWeight: FontWeight.w500,
-                                  fontSize: getFontSize(12)),
-                            )
-                          ]))
+                          )
+                        ]))
                     : SizedBox()
               ],
             )
@@ -634,16 +630,16 @@ class _EarnHistoryState extends State<EarnHistory> {
           ),
           isCurrent[index] == true
               ? Container(
-                  height: getSize(8),
-                  decoration: BoxDecoration(
-                      color: ColorConstants.red,
-                      borderRadius: BorderRadius.only(
-                          topLeft: Radius.circular(8),
-                          topRight: Radius.circular(8))),
-                )
+            height: getSize(8),
+            decoration: BoxDecoration(
+                color: ColorConstants.red,
+                borderRadius: BorderRadius.only(
+                    topLeft: Radius.circular(8),
+                    topRight: Radius.circular(8))),
+          )
               : SizedBox(
-                  height: getSize(8),
-                ),
+            height: getSize(8),
+          ),
         ],
       ),
     );

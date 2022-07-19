@@ -110,6 +110,7 @@ class AlbumProvider with ChangeNotifier {
         },
         successCallback: (response, message) {
           NetworkClient.getInstance.hideProgressDialog();
+          NetworkClient.getInstance.hideProgressDialog();
           View.showMessage(context, message, mode: DisplayMode.SUCCESS);
           print('respose==> $response');
         },
