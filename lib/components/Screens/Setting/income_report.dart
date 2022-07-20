@@ -78,6 +78,8 @@ class _IncomeReportState extends State<IncomeReport> {
     }
   }
 
+  ScrollController? scrollController =  ScrollController();
+
   @override
   void initState() {
     getDate();
@@ -99,6 +101,20 @@ class _IncomeReportState extends State<IncomeReport> {
         print('no');
       }
     }
+
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+
+      double _position =  todayIndex.toDouble() * (getSize(36));
+      print(_position);
+      setState(() {
+        scrollController?.animateTo(
+            _position,
+            duration: Duration(milliseconds: 1000),
+            curve: Curves.ease
+        );
+      });
+    });
+
     Provider.of<DailyEarningDetailProvider>(context, listen: false)
         .dailyEarningReport(context,
             dateTime: DateTime.now().toIso8601String().substring(0, 10));
@@ -139,6 +155,9 @@ class _IncomeReportState extends State<IncomeReport> {
                     child: ListView.builder(
                       scrollDirection: Axis.horizontal,
                       shrinkWrap: true,
+                      physics: BouncingScrollPhysics(),
+
+                      controller: scrollController,
                       itemCount: vijaylist.length,
                       itemBuilder: (context, index) {
                         final DateFormat formatter = DateFormat('E');
@@ -254,6 +273,7 @@ class _IncomeReportState extends State<IncomeReport> {
                             : GestureDetector(
                                 onTap: () {
                                   setState(() {
+
                                     selectedIndex = index;
                                     selectedDate =
                                         vijaylist[index].toIso8601String();
