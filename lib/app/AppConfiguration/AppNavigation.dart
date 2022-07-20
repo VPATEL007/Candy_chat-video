@@ -81,7 +81,6 @@ class AppNavigation {
           MaterialPageRoute(builder: (_) => EditProfileScreen(isFromSignUp: true,)),
           (route) => false);
     } else {
-      SocketHealper.shared.connect();
       Navigator.pushAndRemoveUntil(context,
           MaterialPageRoute(builder: (_) => LeaderBoard()), (route) => false);
 
