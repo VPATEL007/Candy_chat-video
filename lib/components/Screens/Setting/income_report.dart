@@ -97,9 +97,8 @@ class _IncomeReportState extends State<IncomeReport> {
     }
 
     WidgetsBinding.instance.addPostFrameCallback((_) {
-
       double _position =  todayIndex.toDouble() * (getSize(36));
-      print(_position);
+
       setState(() {
         scrollController?.animateTo(
             _position,
