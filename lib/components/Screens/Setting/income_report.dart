@@ -18,7 +18,6 @@ class _IncomeReportState extends State<IncomeReport> {
   bool isWeeklySelected = false;
   int? selectedIndex;
 
-
   late int todayIndex;
   List<DateTime> daysInRange(DateTime first, DateTime last) {
     final dayCount = last.difference(first).inDays + 1;
@@ -62,12 +61,7 @@ class _IncomeReportState extends State<IncomeReport> {
       final formatteds = formatter.format(dataList[i]);
 
       if (formatteds == 'Mon') {
-        sundayIndex.add(daysInRange
-            .call(DateTime(2022, 07, 05), DateTime(2023))[i]
-            .toIso8601String()
-            .substring(8, 10));
         finalList.add(sundayIndex.toSet().toList());
-
         sundayIndex.clear();
       } else {
         sundayIndex.add(daysInRange
@@ -284,7 +278,6 @@ class _IncomeReportState extends State<IncomeReport> {
                                         .dailyEarningReport(context,
                                             dateTime:
                                                 selectedDate.substring(0, 10));
-
                                   });
                                 },
                                 child: Column(

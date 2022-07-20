@@ -70,7 +70,6 @@ class VideoCallState extends State<VideoCall> with WidgetsBindingObserver {
   Socket? socket = SocketHealper.socket;
   bool isSwitch = false;
 
-
   CallStatusModel? callStatus = Provider.of<MatchingProfileProvider>(
           navigationKey.currentContext!,
           listen: false)
