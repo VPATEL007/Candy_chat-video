@@ -32,7 +32,7 @@ class CoinModel {
   bool? continueCall;
   bool? lowBalance;
   int? newBalance;
-  int? minutesRemaining;
+  double? minutesRemaining;
 
   CoinModel(
       {this.continueCall,
@@ -44,7 +44,7 @@ class CoinModel {
     continueCall = json['continueCall'];
     lowBalance = json['lowBalance'];
     newBalance = json['newBalance'];
-    minutesRemaining = json['minutesRemaining'];
+    minutesRemaining = json['minutesRemaining'].toDouble();
   }
 
   Map<String, dynamic> toJson() {

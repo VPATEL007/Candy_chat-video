@@ -26,7 +26,7 @@ class DailyEarningReportModel {
     matchCoin = json['matchCoin'];
     albumCoin = json['AlbumCoin'];
     refralCoins = json['refralCoins'];
-    weeklyCallDuration = json['weeklyCallDuration'];
+    weeklyCallDuration = json['weeklyCallDuration'].toString();
   }
 
   Map<String, dynamic> toJson() {
