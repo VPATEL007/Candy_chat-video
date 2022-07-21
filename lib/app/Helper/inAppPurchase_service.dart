@@ -185,84 +185,86 @@ class InAppPurchaseHelper {
                   child: Padding(
                 padding: EdgeInsets.only(
                     top: getSize(23), left: getSize(26), right: getSize(26)),
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Row(
-                      children: [
-                        Text(
-                          "Insufficient Coins",
-                          style: appTheme?.black16Bold
-                              .copyWith(fontSize: getFontSize(25)),
-                        ),
-                        Spacer(),
-                        InkWell(
-                          onTap: () {
-                            Navigator.pop(context);
-                          },
-                          child: Text(
-                            "Close",
-                            style: appTheme?.black14SemiBold.copyWith(
+                child: SingleChildScrollView(
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Row(
+                        children: [
+                          Text(
+                            "Insufficient Coins",
+                            style: appTheme?.black16Bold
+                                .copyWith(fontSize: getFontSize(25)),
+                          ),
+                          Spacer(),
+                          InkWell(
+                            onTap: () {
+                              Navigator.pop(context);
+                            },
+                            child: Text(
+                              "Close",
+                              style: appTheme?.black14SemiBold.copyWith(
+                                  fontSize: getFontSize(18),
+                                  color: ColorConstants.red),
+                            ),
+                          )
+                        ],
+                      ),
+                      SizedBox(
+                        height: getSize(19),
+                      ),
+                      Row(
+                        children: [
+                          Image.asset(
+                            icCoin,
+                            height: getSize(20),
+                          ),
+                          SizedBox(
+                            width: getSize(8),
+                          ),
+                          Text(
+                            "30/min",
+                            style: appTheme?.black12Normal.copyWith(
                                 fontSize: getFontSize(18),
                                 color: ColorConstants.red),
-                          ),
-                        )
-                      ],
-                    ),
-                    SizedBox(
-                      height: getSize(19),
-                    ),
-                    Row(
-                      children: [
-                        Image.asset(
-                          icCoin,
-                          height: getSize(20),
-                        ),
-                        SizedBox(
-                          width: getSize(8),
-                        ),
-                        Text(
-                          "30/min",
-                          style: appTheme?.black12Normal.copyWith(
-                              fontSize: getFontSize(18),
-                              color: ColorConstants.red),
-                        )
-                      ],
-                    ),
-                    SizedBox(
-                      height: getSize(13),
-                    ),
-                    Text(
-                      "Recharge to enable 1 to 1 Video chat.",
-                      style: appTheme?.black14Normal
-                          .copyWith(fontWeight: FontWeight.w500),
-                    ),
-                    SizedBox(
-                      height: getSize(26),
-                    ),
-                    GridView.builder(
-                        gridDelegate:
-                            new SliverGridDelegateWithFixedCrossAxisCount(
-                                crossAxisCount: 2),
-                        shrinkWrap: true,
-                        physics: NeverScrollableScrollPhysics(),
-                        itemCount: _products.length,
-                        itemBuilder: (BuildContext context, int index) {
-                          return InkWell(
-                              onTap: () {
-                                InAppPurchaseHelper.instance
-                                    .purchaseProduct(_products[index]);
-                              },
-                              child: getCoinItem(
-                                  _products[index], false, context));
-                          // return getCoinItem(index == 0, context);
-                        }),
-                    SizedBox(
-                      height: getSize(22),
-                    ),
-                    getPopBottomButton(context, "Apply", () {})
-                  ],
+                          )
+                        ],
+                      ),
+                      SizedBox(
+                        height: getSize(13),
+                      ),
+                      Text(
+                        "Recharge to enable 1 to 1 Video chat.",
+                        style: appTheme?.black14Normal
+                            .copyWith(fontWeight: FontWeight.w500),
+                      ),
+                      SizedBox(
+                        height: getSize(26),
+                      ),
+                      GridView.builder(
+                          gridDelegate:
+                              new SliverGridDelegateWithFixedCrossAxisCount(
+                                  crossAxisCount: 2),
+                          shrinkWrap: true,
+                          physics: NeverScrollableScrollPhysics(),
+                          itemCount: _products.length,
+                          itemBuilder: (BuildContext context, int index) {
+                            return InkWell(
+                                onTap: () {
+                                  InAppPurchaseHelper.instance
+                                      .purchaseProduct(_products[index]);
+                                },
+                                child: getCoinItem(
+                                    _products[index], false, context));
+                            // return getCoinItem(index == 0, context);
+                          }),
+                      SizedBox(
+                        height: getSize(22),
+                      ),
+                      getPopBottomButton(context, "Apply", () {})
+                    ],
+                  ),
                 ),
               ));
             },

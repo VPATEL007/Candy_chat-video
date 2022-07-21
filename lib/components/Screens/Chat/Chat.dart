@@ -127,7 +127,6 @@ class _ChatState extends State<Chat> {
   @override
   void dispose() {
     super.dispose();
-    Provider.of<ChatProvider>(context, listen: false).chatMessage.clear();
     messageListScrollController.dispose();
   }
 
