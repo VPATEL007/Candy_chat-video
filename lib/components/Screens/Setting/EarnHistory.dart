@@ -279,7 +279,7 @@ class _EarnHistoryState extends State<EarnHistory> {
                               time: currentIndex == 1
                                   ? DateUtilities().convertDateToFormatterString(value
                                   .detailEarningReportModel
-                                  ?.vidocall
+                                  ?.gifts
                                   ?.details![index]
                                   .time ??
                                   '',formatter: DateUtilities.h_mm_a)
