@@ -18,19 +18,19 @@ import 'package:video_chat/provider/detail_earning_provider.dart';
 
 class EarnHistory extends StatefulWidget {
   final String selectedDate;
-  EarnHistory({Key? key, required this.selectedDate}) : super(key: key);
+  final int selectedIndex;
+  EarnHistory({Key? key, required this.selectedDate, required this.selectedIndex}) : super(key: key);
 
   @override
   State<EarnHistory> createState() => _EarnHistoryState();
 }
 
 class _EarnHistoryState extends State<EarnHistory> {
-  PageController pageController = new PageController(initialPage: 0);
   int currentIndex = 0;
 
   bool isCall = true;
 
-  List<bool> isCurrent = [true, false, false, false];
+  List<bool> isCurrent = [false, false, false, false];
 
   @override
   void initState() {
@@ -39,6 +39,11 @@ class _EarnHistoryState extends State<EarnHistory> {
     WidgetsBinding.instance?.addPostFrameCallback((_) {
       Provider.of<DetailEarningProvider>(context, listen: false)
           .dailyDetailEarningReport(context, dateTime: widget.selectedDate);
+
+    });
+    setState(() {
+      currentIndex=widget.selectedIndex;
+      isCurrent[widget.selectedIndex] = true;
     });
   }
 
@@ -92,9 +97,7 @@ class _EarnHistoryState extends State<EarnHistory> {
                         InkWell(
                             onTap: () {
                               setIndexZero();
-                              // value.detailEarningReportModel=null;
                               isCall = true;
-
                               value.dailyDetailEarningReport(context,
                                   dateTime: widget.selectedDate);
                               setState(() {});
@@ -109,7 +112,6 @@ class _EarnHistoryState extends State<EarnHistory> {
                             onTap: () {
                               setIndexOne();
                               isCall = false;
-                              // value.detailEarningReportModel=null;
                               value.dailyDetailEarningReport(context,
                                   dateTime: widget.selectedDate);
                               setState(() {});
@@ -192,7 +194,6 @@ class _EarnHistoryState extends State<EarnHistory> {
                           itemCount: value.detailEarningReportModel
                               ?.vidocall?.details?.length,
                           shrinkWrap: true,
-                          physics: const NeverScrollableScrollPhysics(),
                           itemBuilder: (context, index) {
                             return getPageViewItem(
                                 time: value
@@ -420,20 +421,25 @@ class _EarnHistoryState extends State<EarnHistory> {
             SizedBox(
               width: getSize(10),
             ),
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(name,
-                    style: appTheme!.black16Bold.copyWith(
-                        color: ColorConstants.colorPrimary,
-                        fontWeight: FontWeight.w700,
-                        fontSize: getFontSize(12))),
-                Text('User ID: $userID',
-                    style: appTheme!.black16Bold.copyWith(
-                        color: ColorConstants.colorPrimary,
-                        fontWeight: FontWeight.w500,
-                        fontSize: getFontSize(10)))
-              ],
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(name,
+                      style: appTheme!.black16Bold.copyWith(
+                          color: ColorConstants.colorPrimary,
+                          fontWeight: FontWeight.w700,
+                          fontSize: getFontSize(12))),
+                  SizedBox(
+                    height: getSize(5),
+                  ),
+                  Text('User ID: $userID',
+                      style: appTheme!.black16Bold.copyWith(
+                          color: ColorConstants.colorPrimary,
+                          fontWeight: FontWeight.w500,
+                          fontSize: getFontSize(10)))
+                ],
+              ),
             ),
             const Spacer(),
             Column(
@@ -466,7 +472,7 @@ class _EarnHistoryState extends State<EarnHistory> {
                             fontSize: getFontSize(12)),
                         children: [
                           TextSpan(
-                            text: '${callDurations}',
+                            text: '$callDurations',
                             style: appTheme!.black16Bold.copyWith(
                                 color: ColorConstants.red,
                                 fontWeight: FontWeight.w500,
@@ -498,72 +504,6 @@ class _EarnHistoryState extends State<EarnHistory> {
         ));
   }
 
-  // Widget rows() => Row(
-  //       children: [
-  //         getInfoTabItem("Date"),
-  //         getInfoTabItem("Number of purchase"),
-  //         getInfoTabItem("Coins"),
-  //       ],
-  //     );
-
-  // getListRow(LeaderBoardModel item, currentIndex) {
-  //   print('coins==> ${item.coins} ${item.numberOfPurchase} $currentIndex');
-  //   return Container(
-  //     child: Padding(
-  //       padding: EdgeInsets.all(8.0),
-  //       child: Row(
-  //         children: [
-  //           Container(
-  //             width: isCall == true
-  //                 ? (MathUtilities.screenWidth(context) - 34) / 3
-  //                 : (MathUtilities.screenWidth(context) - 34) / 2,
-  //             child: Center(
-  //               child: Text(
-  //                 DateFormat('d-M-y').format(DateTime.parse(item.date ?? '')),
-  //                 style: appTheme?.black14SemiBold
-  //                     .copyWith(fontSize: getFontSize(12), color: Colors.white),
-  //               ),
-  //             ),
-  //           ),
-  //           isCall == true
-  //               ? Container(
-  //                   width: isCall == true
-  //                       ? (MathUtilities.screenWidth(context) - 34) / 3
-  //                       : (MathUtilities.screenWidth(context) - 34) / 2,
-  //                   child: Center(
-  //                     child: Text(
-  //                       currentIndex > 1
-  //                           ? item.numberOfPurchase == null
-  //                               ? '0'
-  //                               : item.numberOfPurchase.toString()
-  //                           : item.callDuration.toString() + " mins",
-  //                       style: appTheme?.black14SemiBold.copyWith(
-  //                           fontSize: getFontSize(12), color: Colors.white),
-  //                     ),
-  //                   ),
-  //                 )
-  //               : SizedBox(),
-  //           Container(
-  //             width: isCall == true
-  //                 ? (MathUtilities.screenWidth(context) - 34) / 3
-  //                 : (MathUtilities.screenWidth(context) - 34) / 2,
-  //             child: Center(
-  //               child: Text(
-  //                 currentIndex > 1
-  //                     ? item.coins == null
-  //                         ? '0'
-  //                         : item.coins.toString()
-  //                     : "Coins " + item.earning.toString(),
-  //                 style: appTheme?.black14SemiBold.copyWith(
-  //                     fontSize: getFontSize(12), color: ColorConstants.red),
-  //               ),
-  //             ),
-  //           ),
-  //         ],
-  //       ),
-  //     ),
-  //   );
-  // }
 
   //Get Tab Item
   getInfoTabItem(String title) {
