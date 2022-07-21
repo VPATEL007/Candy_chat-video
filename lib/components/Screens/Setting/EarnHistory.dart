@@ -16,6 +16,8 @@ import 'package:video_chat/components/Screens/Setting/income_report.dart';
 import 'package:video_chat/components/widgets/CommanButton.dart';
 import 'package:video_chat/provider/detail_earning_provider.dart';
 
+import '../../../app/utils/date_utils.dart';
+
 class EarnHistory extends StatefulWidget {
   final String selectedDate;
   final int selectedIndex;
@@ -30,13 +32,18 @@ class _EarnHistoryState extends State<EarnHistory> {
 
   bool isCall = true;
 
-  List<bool> isCurrent = [false, false, false, false];
-
+  List<bool> isCurrent = [false, false, false, false,false];
+  ScrollController scrollController = ScrollController();
   @override
   void initState() {
     super.initState();
-
+    
     WidgetsBinding.instance?.addPostFrameCallback((_) {
+      widget.selectedIndex==4 || widget.selectedIndex==3 ?scrollController?.animateTo(
+          getSize(160),
+          duration: Duration(milliseconds: 1000),
+          curve: Curves.ease
+      ):null;
       Provider.of<DetailEarningProvider>(context, listen: false)
           .dailyDetailEarningReport(context, dateTime: widget.selectedDate);
 
@@ -48,7 +55,7 @@ class _EarnHistoryState extends State<EarnHistory> {
   }
 
   resetSelectedState() {
-    isCurrent = [false, false, false, false];
+    isCurrent = [false, false, false, false,false];
   }
 
   setIndexZero() {
@@ -75,6 +82,12 @@ class _EarnHistoryState extends State<EarnHistory> {
     currentIndex = 3;
   }
 
+  setIndexFour() {
+    resetSelectedState();
+    isCurrent[4] = true;
+    currentIndex = 4;
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -91,6 +104,7 @@ class _EarnHistoryState extends State<EarnHistory> {
                   padding: EdgeInsets.symmetric(horizontal: getSize(25)),
                   child: SingleChildScrollView(
                     scrollDirection: Axis.horizontal,
+                    controller: scrollController,
                     child: Row(
                       children: [
                         // Album earning and Referral earning
@@ -146,6 +160,19 @@ class _EarnHistoryState extends State<EarnHistory> {
                                 'Referral ',
                                 3,
                                 value.detailEarningReportModel?.refral?.total ??
+                                    0)),
+                        InkWell(
+                            onTap: () {
+                              setIndexFour();
+                              isCall = true;
+                              value.dailyDetailEarningReport(context,
+                                  dateTime: widget.selectedDate);
+                              setState(() {});
+                            },
+                            child: getTabItem(
+                                'Albums ',
+                                4,
+                                value.detailEarningReportModel?.albums?.total ??
                                     0))
                       ],
                     ),
@@ -196,12 +223,12 @@ class _EarnHistoryState extends State<EarnHistory> {
                           shrinkWrap: true,
                           itemBuilder: (context, index) {
                             return getPageViewItem(
-                                time: value
+                                time: DateUtilities().convertDateToFormatterString(value
                                     .detailEarningReportModel
                                     ?.vidocall
                                     ?.details![index]
                                     .time ??
-                                    '',
+                                    '',formatter: DateUtilities.h_mm_a),
                                 isShowTwoField: true,
                                 imgUrl: value
                                     .detailEarningReportModel
@@ -242,30 +269,38 @@ class _EarnHistoryState extends State<EarnHistory> {
                               : currentIndex == 2
                               ? value.detailEarningReportModel?.match
                               ?.details?.length
-                              : value.detailEarningReportModel?.refral
+                              : currentIndex == 3?value.detailEarningReportModel?.refral
+                              ?.details?.length:value.detailEarningReportModel?.albums
                               ?.details?.length,
                           shrinkWrap: true,
-                          physics: const NeverScrollableScrollPhysics(),
                           itemBuilder: (context, index) {
                             return getPageViewItem(
                               isShowTwoField: false,
                               time: currentIndex == 1
-                                  ? value.detailEarningReportModel?.gifts
-                                  ?.details![index].time ??
-                                  ''
+                                  ? DateUtilities().convertDateToFormatterString(value
+                                  .detailEarningReportModel
+                                  ?.vidocall
+                                  ?.details![index]
+                                  .time ??
+                                  '',formatter: DateUtilities.h_mm_a)
                                   : currentIndex == 2
-                                  ? value
+                                  ? DateUtilities().convertDateToFormatterString(value
                                   .detailEarningReportModel
                                   ?.match
                                   ?.details![index]
                                   .time ??
-                                  ''
-                                  : value
+                                  '',formatter: DateUtilities.h_mm_a)
+                                  : currentIndex == 3?DateUtilities().convertDateToFormatterString(value
                                   .detailEarningReportModel
                                   ?.refral
                                   ?.details![index]
                                   .time ??
-                                  '',
+                                  '',formatter: DateUtilities.h_mm_a):DateUtilities().convertDateToFormatterString(value
+                                  .detailEarningReportModel
+                                  ?.albums
+                                  ?.details![index]
+                                  .time ??
+                                  '',formatter: DateUtilities.h_mm_a),
                               imgUrl: currentIndex == 1
                                   ? value
                                   .detailEarningReportModel
@@ -282,9 +317,15 @@ class _EarnHistoryState extends State<EarnHistory> {
                                   .user
                                   ?.photoUrl ??
                                   ''
-                                  : value
+                                  : currentIndex == 3?value
                                   .detailEarningReportModel
                                   ?.refral
+                                  ?.details![index]
+                                  .user
+                                  ?.photoUrl ??
+                                  '':value
+                                  .detailEarningReportModel
+                                  ?.albums
                                   ?.details![index]
                                   .user
                                   ?.photoUrl ??
@@ -300,9 +341,14 @@ class _EarnHistoryState extends State<EarnHistory> {
                                   ?.details![index]
                                   .coin ??
                                   0
-                                  : value
+                                  : currentIndex == 3?value
                                   .detailEarningReportModel
                                   ?.refral
+                                  ?.details![index]
+                                  .coin ??
+                                  0:value
+                                  .detailEarningReportModel
+                                  ?.albums
                                   ?.details![index]
                                   .coin ??
                                   0,
@@ -322,9 +368,15 @@ class _EarnHistoryState extends State<EarnHistory> {
                                   .user
                                   ?.userName ??
                                   ''
-                                  : value
+                                  : currentIndex == 3?value
                                   .detailEarningReportModel
                                   ?.refral
+                                  ?.details![index]
+                                  .user
+                                  ?.userName ??
+                                  '':value
+                                  .detailEarningReportModel
+                                  ?.albums
                                   ?.details![index]
                                   .user
                                   ?.userName ??
@@ -341,7 +393,13 @@ class _EarnHistoryState extends State<EarnHistory> {
                                   .user
                                   ?.id ??
                                   0
-                                  : value
+                                  : currentIndex == 3?value
+                                  .detailEarningReportModel
+                                  ?.refral
+                                  ?.details![index]
+                                  .user
+                                  ?.id ??
+                                  0:value
                                   .detailEarningReportModel
                                   ?.refral
                                   ?.details![index]
@@ -422,6 +480,7 @@ class _EarnHistoryState extends State<EarnHistory> {
               width: getSize(10),
             ),
             Expanded(
+              flex: 2,
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [

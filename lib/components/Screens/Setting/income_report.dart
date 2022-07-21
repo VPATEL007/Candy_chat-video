@@ -48,6 +48,8 @@ class _IncomeReportState extends State<IncomeReport> {
       final DateFormat formatter = DateFormat('E');
       final formatteds = formatter.format(dataList[i]);
 
+      final DateFormat monthYearFormat = DateFormat('yMMMM');
+      monthFormatted = monthYearFormat.format(DateTime.now());
       if (formatteds == 'Mon') {
         finalList
             .add(sundayIndex.toSet().toList());
@@ -141,8 +143,6 @@ class _IncomeReportState extends State<IncomeReport> {
                           final DateFormat formatter = DateFormat('E');
                           formatted = formatter.format(parsedDate);
 
-                          final DateFormat monthYearFormat = DateFormat('yMMMM');
-                          monthFormatted = monthYearFormat.format(parsedDate);
                           final DateFormat formatter2 = DateFormat('M');
                           month = formatter2.format(parsedDate);
                         }
@@ -155,6 +155,9 @@ class _IncomeReportState extends State<IncomeReport> {
                             GestureDetector(
                                 onTap: () {
                                   setState(() {
+                                    final DateFormat monthYearFormat = DateFormat('yMMMM');
+                                    monthFormatted = monthYearFormat.format(DateTime.parse(finalList[index].join()));
+                                    print('MONTHFORMATED === ${monthFormatted}');
                                     selectedIndex = index;
                                     selectedDate =
                                         finalList[index].join();
@@ -277,8 +280,10 @@ class _IncomeReportState extends State<IncomeReport> {
                                 ),
                               ):GestureDetector(
                           onTap: () {
-
                             setState(() {
+                              // final DateFormat monthYearFormat = DateFormat('yMMMM');
+                              // monthFormatted = monthYearFormat.format(DateTime.parse(finalList[index].first));
+                              print('MONTHFORMATED === ${monthFormatted}');
                               selectedWeeklyIndex=index;
                               isWeeklySelected = true;
                               Provider.of<DailyEarningDetailProvider>(
@@ -439,6 +444,11 @@ class _IncomeReportState extends State<IncomeReport> {
                         getBox(
                             context: context,
                             title: 'Albums coins',
+                            onTap: () {
+                              NavigationUtilities.push(EarnHistory(
+                                  selectedIndex: 4,
+                                  selectedDate: selectedDate.substring(0, 10)));
+                            },
                             coin: value.weeklyEariningReportModel?.albumCoin ??
                                 0),
                         getBox(
@@ -501,6 +511,11 @@ class _IncomeReportState extends State<IncomeReport> {
                         getBox(
                             context: context,
                             title: 'Albums coins',
+                            onTap: () {
+                              NavigationUtilities.push(EarnHistory(
+                                  selectedIndex: 4,
+                                  selectedDate: selectedDate.substring(0, 10)));
+                            },
                             coin:
                                 value.dailyEarningReportModel?.albumCoin ?? 0),
                         getBox(
@@ -648,11 +663,23 @@ class _IncomeReportState extends State<IncomeReport> {
                   fontStyle: FontStyle.italic,
                   fontWeight: FontWeight.w700,
                   fontSize: getFontSize(20))),
-          Padding(
-            padding: EdgeInsets.symmetric(horizontal: getSize(12)),
-            child: Image.asset(
-              questionIcon,
-              height: getSize(19),
+          GestureDetector(
+            onTap: () async{
+              return showDialog(
+                context: context,
+                builder: (ctx) => AlertDialog(
+                  title: Text("Total coins is sum of all the coins earned",style: appTheme?.black16Bold.copyWith(
+                    fontSize: getFontSize(14)
+                  ),),
+                ),
+              );
+            },
+            child: Padding(
+              padding: EdgeInsets.symmetric(horizontal: getSize(12)),
+              child: Image.asset(
+                questionIcon,
+                height: getSize(19),
+              ),
             ),
           ),
         ],
