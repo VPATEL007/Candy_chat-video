@@ -18,19 +18,19 @@ import 'package:video_chat/provider/detail_earning_provider.dart';
 
 class EarnHistory extends StatefulWidget {
   final String selectedDate;
-  EarnHistory({Key? key, required this.selectedDate}) : super(key: key);
+  final int selectedIndex;
+  EarnHistory({Key? key, required this.selectedDate, required this.selectedIndex}) : super(key: key);
 
   @override
   State<EarnHistory> createState() => _EarnHistoryState();
 }
 
 class _EarnHistoryState extends State<EarnHistory> {
-  PageController pageController = new PageController(initialPage: 0);
   int currentIndex = 0;
 
   bool isCall = true;
 
-  List<bool> isCurrent = [true, false, false, false];
+  List<bool> isCurrent = [false, false, false, false];
 
   @override
   void initState() {
@@ -39,6 +39,8 @@ class _EarnHistoryState extends State<EarnHistory> {
     WidgetsBinding.instance?.addPostFrameCallback((_) {
       Provider.of<DetailEarningProvider>(context, listen: false)
           .dailyDetailEarningReport(context, dateTime: widget.selectedDate);
+      currentIndex=widget.selectedIndex;
+      isCurrent[widget.selectedIndex] = true;
     });
   }
 
@@ -72,6 +74,7 @@ class _EarnHistoryState extends State<EarnHistory> {
 
   @override
   Widget build(BuildContext context) {
+    print('SELECTEDINDEX=====${widget.selectedIndex}');
     return Scaffold(
         backgroundColor: ColorConstants.mainBgColor,
         appBar: getAppBarColor(context, 'Coins  ', 'details'),
@@ -192,7 +195,6 @@ class _EarnHistoryState extends State<EarnHistory> {
                           itemCount: value.detailEarningReportModel
                               ?.vidocall?.details?.length,
                           shrinkWrap: true,
-                          physics: const NeverScrollableScrollPhysics(),
                           itemBuilder: (context, index) {
                             return getPageViewItem(
                                 time: value
@@ -420,20 +422,25 @@ class _EarnHistoryState extends State<EarnHistory> {
             SizedBox(
               width: getSize(10),
             ),
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(name,
-                    style: appTheme!.black16Bold.copyWith(
-                        color: ColorConstants.colorPrimary,
-                        fontWeight: FontWeight.w700,
-                        fontSize: getFontSize(12))),
-                Text('User ID: $userID',
-                    style: appTheme!.black16Bold.copyWith(
-                        color: ColorConstants.colorPrimary,
-                        fontWeight: FontWeight.w500,
-                        fontSize: getFontSize(10)))
-              ],
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(name,
+                      style: appTheme!.black16Bold.copyWith(
+                          color: ColorConstants.colorPrimary,
+                          fontWeight: FontWeight.w700,
+                          fontSize: getFontSize(12))),
+                  SizedBox(
+                    height: getSize(5),
+                  ),
+                  Text('User ID: $userID',
+                      style: appTheme!.black16Bold.copyWith(
+                          color: ColorConstants.colorPrimary,
+                          fontWeight: FontWeight.w500,
+                          fontSize: getFontSize(10)))
+                ],
+              ),
             ),
             const Spacer(),
             Column(
