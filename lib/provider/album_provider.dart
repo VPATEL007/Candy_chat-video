@@ -15,6 +15,8 @@ class AlbumProvider with ChangeNotifier {
 
   set albumList(List<GetAlbumData> value) => this._albumList = value;
 
+  bool isCreated = false;
+
   Future<void> buyAlbum(context, id) async {
     NetworkClient.getInstance.showLoader(context);
     await NetworkClient.getInstance.callApi(
@@ -89,7 +91,9 @@ class AlbumProvider with ChangeNotifier {
             image: compressPath,
             successCallback: (response, message) {
               print('response==> $response');
+              isCreated = true;
               profileImages.add(response ?? "");
+              notifyListeners();
             },
             failureCallback: (code, message) {
               View.showMessage(context, message);

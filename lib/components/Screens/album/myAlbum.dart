@@ -131,8 +131,7 @@ class _MyAlbumState extends State<MyAlbum> {
                                       image: DecorationImage(
                                         fit: BoxFit.fill,
                                         image: NetworkImage(albumProvider
-                                                .albumList[index]
-                                                .coverImage ??
+                                                .albumList[index].coverImage ??
                                             ''),
                                       ),
                                       borderRadius:
@@ -161,11 +160,16 @@ class _MyAlbumState extends State<MyAlbum> {
             getBottomButton(context, 'Create Album', () async {
               // Provider.of<AlbumProvider>(context, listen: false)
               //     .getAllAlbums(context);
-              bool isCreated = await Navigator.push(
-                  context, MaterialPageRoute(builder: (_) => CreateAlbum()));
-              if (isCreated)
-                Provider.of<AlbumProvider>(context, listen: false)
-                    .getAllAlbums(context);
+              await Navigator.push(
+                      context, MaterialPageRoute(builder: (_) => CreateAlbum()))
+                  .then((value) {
+                print('albumProvider.isCreated==> ${albumProvider.isCreated}');
+                if (albumProvider.isCreated) {
+                  Provider.of<AlbumProvider>(context, listen: false)
+                      .getAllAlbums(context);
+                  albumProvider.isCreated = false;
+                }
+              });
             })
           ],
         ),
@@ -182,7 +186,10 @@ class _MyAlbumState extends State<MyAlbum> {
               onTap: () {
                 Navigator.pop(context);
               },
-              child: Icon(Icons.arrow_back_ios, color: Colors.white,)),
+              child: Icon(
+                Icons.arrow_back_ios,
+                color: Colors.white,
+              )),
           Spacer(),
           Row(
             children: [
