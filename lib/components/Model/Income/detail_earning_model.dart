@@ -1,5 +1,12 @@
 import 'dart:convert';
 
+List<Details> detailEarningModelFromJson(String str) =>
+    List<Details>.from(
+        jsonDecode(str).map((e) => Details.fromJson(e)));
+
+String detailEarningModelToJson(Details data) =>
+    json.encode(data.toJson());
+
 class DetailEarningReportModel {
   Vidocall? vidocall;
   Vidocall? gifts;

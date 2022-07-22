@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:lazy_loading_list/lazy_loading_list.dart';
 import 'package:provider/provider.dart';
 import 'package:video_chat/app/Helper/Themehelper.dart';
 import 'package:video_chat/app/constant/ColorConstant.dart';
@@ -27,8 +28,17 @@ class EarnHistory extends StatefulWidget {
 
 class _EarnHistoryState extends State<EarnHistory> {
   int currentIndex = 0;
+  int page=1;
 
   bool isCall = true;
+
+  resetPagination() {
+    page = 1;
+    WidgetsBinding.instance?.addPostFrameCallback((_) {
+      Provider.of<DetailEarningProvider>(context, listen: false)
+          .dailyDetailEarningReport(context, dateTime: widget.selectedDate);
+    });
+  }
 
   List<bool> isCurrent = [false, false, false, false, false];
   ScrollController scrollController = ScrollController();
@@ -36,7 +46,7 @@ class _EarnHistoryState extends State<EarnHistory> {
   @override
   void initState() {
     super.initState();
-
+    resetPagination();
     WidgetsBinding.instance?.addPostFrameCallback((_) {
       widget.selectedIndex == 4 || widget.selectedIndex == 3
           ? scrollController?.animateTo(getSize(160),
@@ -147,6 +157,8 @@ class _EarnHistoryState extends State<EarnHistory> {
                                     0)),
                         InkWell(
                             onTap: () {
+                              scrollController?.animateTo(getSize(160),
+                                  duration: Duration(milliseconds: 1000), curve: Curves.ease);
                               setIndexThree();
                               isCall = true;
                               value.dailyDetailEarningReport(context,
@@ -222,34 +234,34 @@ class _EarnHistoryState extends State<EarnHistory> {
                                   return getPageViewItem(
                                       time: DateUtilities()
                                           .convertServerDateToFormatterString(value.detailEarningReportModel?.vidocall?.details![index].time ?? '',
-                                              formatter: DateUtilities.h_mm_a),
+                                          formatter: DateUtilities.h_mm_a),
                                       isShowTwoField: true,
                                       imgUrl: value
-                                              .detailEarningReportModel
-                                              ?.vidocall
-                                              ?.details![index]
-                                              .user
-                                              ?.photoUrl ??
+                                          .detailEarningReportModel
+                                          ?.vidocall
+                                          ?.details![index]
+                                          .user
+                                          ?.photoUrl ??
                                           '',
                                       coin: value
-                                              .detailEarningReportModel
-                                              ?.vidocall
-                                              ?.details![index]
-                                              .coin ??
+                                          .detailEarningReportModel
+                                          ?.vidocall
+                                          ?.details![index]
+                                          .coin ??
                                           0,
                                       name: value
-                                              .detailEarningReportModel
-                                              ?.vidocall
-                                              ?.details![index]
-                                              .user
-                                              ?.userName ??
+                                          .detailEarningReportModel
+                                          ?.vidocall
+                                          ?.details![index]
+                                          .user
+                                          ?.userName ??
                                           '',
                                       userID: value
-                                              .detailEarningReportModel
-                                              ?.vidocall
-                                              ?.details![index]
-                                              .user
-                                              ?.id ??
+                                          .detailEarningReportModel
+                                          ?.vidocall
+                                          ?.details![index]
+                                          .user
+                                          ?.id ??
                                           0,
                                       callDurations: value.detailEarningReportModel?.vidocall?.details?[index].callDuration ?? 0,
                                       callType: value.detailEarningReportModel?.vidocall?.details?[index].calltype ?? '');
