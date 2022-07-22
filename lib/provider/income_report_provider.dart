@@ -40,8 +40,13 @@ class DailyEarningDetailProvider extends ChangeNotifier {
   }
 
   Future<void> weeklyEarningReport(BuildContext context,
-      {bool fetchInBackground = true, String? dateTime}) async {
-    Map<String, dynamic> _parms = {"date": dateTime};
+      {bool fetchInBackground = true,
+      String? startDate,
+      String? endDate}) async {
+    Map<String, dynamic> _parms = {
+      "start_date": startDate,
+      "end_date": endDate
+    };
     if (!fetchInBackground) NetworkClient.getInstance.showLoader(context);
     await NetworkClient.getInstance.callApi(
       context: context,

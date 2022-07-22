@@ -2,16 +2,11 @@ import 'dart:convert';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:video_chat/app/Helper/Themehelper.dart';
-import 'package:video_chat/app/constant/ApiConstants.dart';
 import 'package:video_chat/app/constant/ColorConstant.dart';
 import 'package:video_chat/app/constant/ImageConstant.dart';
-import 'package:video_chat/app/extensions/view.dart';
-import 'package:video_chat/app/network/NetworkClient.dart';
 import 'package:video_chat/app/utils/math_utils.dart';
-import 'package:video_chat/components/Model/Leaderboard/LeaderBoardModel.dart';
 import 'package:video_chat/components/Screens/Setting/income_report.dart';
 import 'package:video_chat/components/widgets/CommanButton.dart';
 import 'package:video_chat/provider/detail_earning_provider.dart';
@@ -21,7 +16,10 @@ import '../../../app/utils/date_utils.dart';
 class EarnHistory extends StatefulWidget {
   final String selectedDate;
   final int selectedIndex;
-  EarnHistory({Key? key, required this.selectedDate, required this.selectedIndex}) : super(key: key);
+
+  EarnHistory(
+      {Key? key, required this.selectedDate, required this.selectedIndex})
+      : super(key: key);
 
   @override
   State<EarnHistory> createState() => _EarnHistoryState();
@@ -32,30 +30,29 @@ class _EarnHistoryState extends State<EarnHistory> {
 
   bool isCall = true;
 
-  List<bool> isCurrent = [false, false, false, false,false];
+  List<bool> isCurrent = [false, false, false, false, false];
   ScrollController scrollController = ScrollController();
+
   @override
   void initState() {
     super.initState();
-    
+
     WidgetsBinding.instance?.addPostFrameCallback((_) {
-      widget.selectedIndex==4 || widget.selectedIndex==3 ?scrollController?.animateTo(
-          getSize(160),
-          duration: Duration(milliseconds: 1000),
-          curve: Curves.ease
-      ):null;
+      widget.selectedIndex == 4 || widget.selectedIndex == 3
+          ? scrollController?.animateTo(getSize(160),
+              duration: Duration(milliseconds: 1000), curve: Curves.ease)
+          : null;
       Provider.of<DetailEarningProvider>(context, listen: false)
           .dailyDetailEarningReport(context, dateTime: widget.selectedDate);
-
     });
     setState(() {
-      currentIndex=widget.selectedIndex;
+      currentIndex = widget.selectedIndex;
       isCurrent[widget.selectedIndex] = true;
     });
   }
 
   resetSelectedState() {
-    isCurrent = [false, false, false, false,false];
+    isCurrent = [false, false, false, false, false];
   }
 
   setIndexZero() {
@@ -120,7 +117,7 @@ class _EarnHistoryState extends State<EarnHistory> {
                                 'Video Call',
                                 0,
                                 value.detailEarningReportModel?.vidocall
-                                    ?.total ??
+                                        ?.total ??
                                     0)),
                         InkWell(
                             onTap: () {
@@ -218,197 +215,205 @@ class _EarnHistoryState extends State<EarnHistory> {
                         height: 350,
                         child: currentIndex == 0
                             ? ListView.builder(
-                          itemCount: value.detailEarningReportModel
-                              ?.vidocall?.details?.length,
-                          shrinkWrap: true,
-                          itemBuilder: (context, index) {
-                            return getPageViewItem(
-                                time: DateUtilities().convertDateToFormatterString(value
-                                    .detailEarningReportModel
-                                    ?.vidocall
-                                    ?.details![index]
-                                    .time ??
-                                    '',formatter: DateUtilities.h_mm_a),
-                                isShowTwoField: true,
-                                imgUrl: value
-                                    .detailEarningReportModel
-                                    ?.vidocall
-                                    ?.details![index]
-                                    .user
-                                    ?.photoUrl ??
-                                    '',
-                                coin: value
-                                    .detailEarningReportModel
-                                    ?.vidocall
-                                    ?.details![index]
-                                    .coin ??
-                                    0,
-                                name: value
-                                    .detailEarningReportModel
-                                    ?.vidocall
-                                    ?.details![index]
-                                    .user
-                                    ?.userName ??
-                                    '',
-                                userID: value
-                                    .detailEarningReportModel
-                                    ?.vidocall
-                                    ?.details![index]
-                                    .user
-                                    ?.id ??
-                                    0,
-                                callDurations:
-                                value.detailEarningReportModel?.vidocall?.details?[index].callDuration ?? 0,
-                                callType: value.detailEarningReportModel?.vidocall?.details?[index].calltype ?? '');
-                          },
-                        )
+                                itemCount: value.detailEarningReportModel
+                                    ?.vidocall?.details?.length,
+                                shrinkWrap: true,
+                                itemBuilder: (context, index) {
+                                  return getPageViewItem(
+                                      time: DateUtilities()
+                                          .convertServerDateToFormatterString(value.detailEarningReportModel?.vidocall?.details![index].time ?? '',
+                                              formatter: DateUtilities.h_mm_a),
+                                      isShowTwoField: true,
+                                      imgUrl: value
+                                              .detailEarningReportModel
+                                              ?.vidocall
+                                              ?.details![index]
+                                              .user
+                                              ?.photoUrl ??
+                                          '',
+                                      coin: value
+                                              .detailEarningReportModel
+                                              ?.vidocall
+                                              ?.details![index]
+                                              .coin ??
+                                          0,
+                                      name: value
+                                              .detailEarningReportModel
+                                              ?.vidocall
+                                              ?.details![index]
+                                              .user
+                                              ?.userName ??
+                                          '',
+                                      userID: value
+                                              .detailEarningReportModel
+                                              ?.vidocall
+                                              ?.details![index]
+                                              .user
+                                              ?.id ??
+                                          0,
+                                      callDurations: value.detailEarningReportModel?.vidocall?.details?[index].callDuration ?? 0,
+                                      callType: value.detailEarningReportModel?.vidocall?.details?[index].calltype ?? '');
+                                },
+                              )
                             : ListView.builder(
-                          itemCount: currentIndex == 1
-                              ? value.detailEarningReportModel?.gifts
-                              ?.details?.length
-                              : currentIndex == 2
-                              ? value.detailEarningReportModel?.match
-                              ?.details?.length
-                              : currentIndex == 3?value.detailEarningReportModel?.refral
-                              ?.details?.length:value.detailEarningReportModel?.albums
-                              ?.details?.length,
-                          shrinkWrap: true,
-                          itemBuilder: (context, index) {
-                            return getPageViewItem(
-                              isShowTwoField: false,
-                              time: currentIndex == 1
-                                  ? DateUtilities().convertDateToFormatterString(value
-                                  .detailEarningReportModel
-                                  ?.gifts
-                                  ?.details![index]
-                                  .time ??
-                                  '',formatter: DateUtilities.h_mm_a)
-                                  : currentIndex == 2
-                                  ? DateUtilities().convertDateToFormatterString(value
-                                  .detailEarningReportModel
-                                  ?.match
-                                  ?.details![index]
-                                  .time ??
-                                  '',formatter: DateUtilities.h_mm_a)
-                                  : currentIndex == 3?DateUtilities().convertDateToFormatterString(value
-                                  .detailEarningReportModel
-                                  ?.refral
-                                  ?.details![index]
-                                  .time ??
-                                  '',formatter: DateUtilities.h_mm_a):DateUtilities().convertDateToFormatterString(value
-                                  .detailEarningReportModel
-                                  ?.albums
-                                  ?.details![index]
-                                  .time ??
-                                  '',formatter: DateUtilities.h_mm_a),
-                              imgUrl: currentIndex == 1
-                                  ? value
-                                  .detailEarningReportModel
-                                  ?.gifts
-                                  ?.details![index]
-                                  .user
-                                  ?.photoUrl ??
-                                  ''
-                                  : currentIndex == 2
-                                  ? value
-                                  .detailEarningReportModel
-                                  ?.match
-                                  ?.details![index]
-                                  .user
-                                  ?.photoUrl ??
-                                  ''
-                                  : currentIndex == 3?value
-                                  .detailEarningReportModel
-                                  ?.refral
-                                  ?.details![index]
-                                  .user
-                                  ?.photoUrl ??
-                                  '':value
-                                  .detailEarningReportModel
-                                  ?.albums
-                                  ?.details![index]
-                                  .user
-                                  ?.photoUrl ??
-                                  '',
-                              coin: currentIndex == 1
-                                  ? value.detailEarningReportModel?.gifts
-                                  ?.details![index].coin ??
-                                  0
-                                  : currentIndex == 2
-                                  ? value
-                                  .detailEarningReportModel
-                                  ?.match
-                                  ?.details![index]
-                                  .coin ??
-                                  0
-                                  : currentIndex == 3?value
-                                  .detailEarningReportModel
-                                  ?.refral
-                                  ?.details![index]
-                                  .coin ??
-                                  0:value
-                                  .detailEarningReportModel
-                                  ?.albums
-                                  ?.details![index]
-                                  .coin ??
-                                  0,
-                              name: currentIndex == 1
-                                  ? value
-                                  .detailEarningReportModel
-                                  ?.gifts
-                                  ?.details![index]
-                                  .user
-                                  ?.userName ??
-                                  ''
-                                  : currentIndex == 2
-                                  ? value
-                                  .detailEarningReportModel
-                                  ?.match
-                                  ?.details![index]
-                                  .user
-                                  ?.userName ??
-                                  ''
-                                  : currentIndex == 3?value
-                                  .detailEarningReportModel
-                                  ?.refral
-                                  ?.details![index]
-                                  .user
-                                  ?.userName ??
-                                  '':value
-                                  .detailEarningReportModel
-                                  ?.albums
-                                  ?.details![index]
-                                  .user
-                                  ?.userName ??
-                                  '',
-                              userID: currentIndex == 1
-                                  ? value.detailEarningReportModel?.gifts
-                                  ?.details![index].user?.id ??
-                                  0
-                                  : currentIndex == 2
-                                  ? value
-                                  .detailEarningReportModel
-                                  ?.match
-                                  ?.details![index]
-                                  .user
-                                  ?.id ??
-                                  0
-                                  : currentIndex == 3?value
-                                  .detailEarningReportModel
-                                  ?.refral
-                                  ?.details![index]
-                                  .user
-                                  ?.id ??
-                                  0:value
-                                  .detailEarningReportModel
-                                  ?.refral
-                                  ?.details![index]
-                                  .user
-                                  ?.id ??
-                                  0,
-                            );
-                          },
-                        ),
+                                itemCount: currentIndex == 1
+                                    ? value.detailEarningReportModel?.gifts
+                                        ?.details?.length
+                                    : currentIndex == 2
+                                        ? value.detailEarningReportModel?.match
+                                            ?.details?.length
+                                        : currentIndex == 3
+                                            ? value.detailEarningReportModel
+                                                ?.refral?.details?.length
+                                            : value.detailEarningReportModel
+                                                ?.albums?.details?.length,
+                                shrinkWrap: true,
+                                itemBuilder: (context, index) {
+                                  return getPageViewItem(
+                                    isShowTwoField: false,
+                                    time: currentIndex == 1
+                                        ? DateUtilities().convertServerDateToFormatterString(
+                                            value.detailEarningReportModel?.gifts?.details![index].time ??
+                                                '',
+                                            formatter: DateUtilities.h_mm_a)
+                                        : currentIndex == 2
+                                            ? DateUtilities().convertServerDateToFormatterString(
+                                                value
+                                                        .detailEarningReportModel
+                                                        ?.match
+                                                        ?.details![index]
+                                                        .time ??
+                                                    '',
+                                                formatter: DateUtilities.h_mm_a)
+                                            : currentIndex == 3
+                                                ? DateUtilities().convertServerDateToFormatterString(
+                                                    value
+                                                            .detailEarningReportModel
+                                                            ?.refral
+                                                            ?.details![index]
+                                                            .time ??
+                                                        '',
+                                                    formatter:
+                                                        DateUtilities.h_mm_a)
+                                                : DateUtilities().convertServerDateToFormatterString(
+                                                    value.detailEarningReportModel?.albums?.details![index].time ?? '',
+                                                    formatter: DateUtilities.h_mm_a),
+                                    imgUrl: currentIndex == 1
+                                        ? value
+                                                .detailEarningReportModel
+                                                ?.gifts
+                                                ?.details![index]
+                                                .user
+                                                ?.photoUrl ??
+                                            ''
+                                        : currentIndex == 2
+                                            ? value
+                                                    .detailEarningReportModel
+                                                    ?.match
+                                                    ?.details![index]
+                                                    .user
+                                                    ?.photoUrl ??
+                                                ''
+                                            : currentIndex == 3
+                                                ? value
+                                                        .detailEarningReportModel
+                                                        ?.refral
+                                                        ?.details![index]
+                                                        .user
+                                                        ?.photoUrl ??
+                                                    ''
+                                                : value
+                                                        .detailEarningReportModel
+                                                        ?.albums
+                                                        ?.details![index]
+                                                        .user
+                                                        ?.photoUrl ??
+                                                    '',
+                                    coin: currentIndex == 1
+                                        ? value.detailEarningReportModel?.gifts
+                                                ?.details![index].coin ??
+                                            0
+                                        : currentIndex == 2
+                                            ? value
+                                                    .detailEarningReportModel
+                                                    ?.match
+                                                    ?.details![index]
+                                                    .coin ??
+                                                0
+                                            : currentIndex == 3
+                                                ? value
+                                                        .detailEarningReportModel
+                                                        ?.refral
+                                                        ?.details![index]
+                                                        .coin ??
+                                                    0
+                                                : value
+                                                        .detailEarningReportModel
+                                                        ?.albums
+                                                        ?.details![index]
+                                                        .coin ??
+                                                    0,
+                                    name: currentIndex == 1
+                                        ? value
+                                                .detailEarningReportModel
+                                                ?.gifts
+                                                ?.details![index]
+                                                .user
+                                                ?.userName ??
+                                            ''
+                                        : currentIndex == 2
+                                            ? value
+                                                    .detailEarningReportModel
+                                                    ?.match
+                                                    ?.details![index]
+                                                    .user
+                                                    ?.userName ??
+                                                ''
+                                            : currentIndex == 3
+                                                ? value
+                                                        .detailEarningReportModel
+                                                        ?.refral
+                                                        ?.details![index]
+                                                        .user
+                                                        ?.userName ??
+                                                    ''
+                                                : value
+                                                        .detailEarningReportModel
+                                                        ?.albums
+                                                        ?.details![index]
+                                                        .user
+                                                        ?.userName ??
+                                                    '',
+                                    userID: currentIndex == 1
+                                        ? value.detailEarningReportModel?.gifts
+                                                ?.details![index].user?.id ??
+                                            0
+                                        : currentIndex == 2
+                                            ? value
+                                                    .detailEarningReportModel
+                                                    ?.match
+                                                    ?.details![index]
+                                                    .user
+                                                    ?.id ??
+                                                0
+                                            : currentIndex == 3
+                                                ? value
+                                                        .detailEarningReportModel
+                                                        ?.refral
+                                                        ?.details![index]
+                                                        .user
+                                                        ?.id ??
+                                                    0
+                                                : value
+                                                        .detailEarningReportModel
+                                                        ?.refral
+                                                        ?.details![index]
+                                                        .user
+                                                        ?.id ??
+                                                    0,
+                                  );
+                                },
+                              ),
                       ),
                       SizedBox(
                         height: getSize(7),
@@ -453,6 +458,7 @@ class _EarnHistoryState extends State<EarnHistory> {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 CircleAvatar(
+                  backgroundColor: Colors.transparent,
                   minRadius: getSize(15),
                   maxRadius: getSize(15),
                   backgroundImage: NetworkImage(imgUrl),
@@ -513,56 +519,55 @@ class _EarnHistoryState extends State<EarnHistory> {
                             fontWeight: FontWeight.w500,
                             fontSize: getFontSize(12)),
                         children: [
-                          TextSpan(
-                            text: time,
-                            style: appTheme!.black16Bold.copyWith(
-                                color: ColorConstants.red,
-                                fontWeight: FontWeight.w500,
-                                fontSize: getFontSize(12)),
-                          )
-                        ])),
-                isShowTwoField
-                    ? RichText(
-                    text: TextSpan(
-                        text: 'Call Duration : ',
+                      TextSpan(
+                        text: time,
                         style: appTheme!.black16Bold.copyWith(
-                            color: ColorConstants.colorPrimary,
+                            color: ColorConstants.red,
                             fontWeight: FontWeight.w500,
                             fontSize: getFontSize(12)),
-                        children: [
-                          TextSpan(
-                            text: '$callDurations',
+                      )
+                    ])),
+                isShowTwoField
+                    ? RichText(
+                        text: TextSpan(
+                            text: 'Call Duration : ',
                             style: appTheme!.black16Bold.copyWith(
-                                color: ColorConstants.red,
+                                color: ColorConstants.colorPrimary,
                                 fontWeight: FontWeight.w500,
                                 fontSize: getFontSize(12)),
-                          )
-                        ]))
+                            children: [
+                            TextSpan(
+                              text: '$callDurations',
+                              style: appTheme!.black16Bold.copyWith(
+                                  color: ColorConstants.red,
+                                  fontWeight: FontWeight.w500,
+                                  fontSize: getFontSize(12)),
+                            )
+                          ]))
                     : SizedBox(),
                 isShowTwoField
                     ? RichText(
-                    text: TextSpan(
-                        text: 'Call type : ',
-                        style: appTheme!.black16Bold.copyWith(
-                            color: ColorConstants.colorPrimary,
-                            fontWeight: FontWeight.w500,
-                            fontSize: getFontSize(12)),
-                        children: [
-                          TextSpan(
-                            text: callType ?? '',
+                        text: TextSpan(
+                            text: 'Call type : ',
                             style: appTheme!.black16Bold.copyWith(
-                                color: ColorConstants.red,
+                                color: ColorConstants.colorPrimary,
                                 fontWeight: FontWeight.w500,
                                 fontSize: getFontSize(12)),
-                          )
-                        ]))
+                            children: [
+                            TextSpan(
+                              text: callType ?? '',
+                              style: appTheme!.black16Bold.copyWith(
+                                  color: ColorConstants.red,
+                                  fontWeight: FontWeight.w500,
+                                  fontSize: getFontSize(12)),
+                            )
+                          ]))
                     : SizedBox()
               ],
             )
           ],
         ));
   }
-
 
   //Get Tab Item
   getInfoTabItem(String title) {
@@ -629,16 +634,16 @@ class _EarnHistoryState extends State<EarnHistory> {
           ),
           isCurrent[index] == true
               ? Container(
-            height: getSize(8),
-            decoration: BoxDecoration(
-                color: ColorConstants.red,
-                borderRadius: BorderRadius.only(
-                    topLeft: Radius.circular(8),
-                    topRight: Radius.circular(8))),
-          )
+                  height: getSize(8),
+                  decoration: BoxDecoration(
+                      color: ColorConstants.red,
+                      borderRadius: BorderRadius.only(
+                          topLeft: Radius.circular(8),
+                          topRight: Radius.circular(8))),
+                )
               : SizedBox(
-            height: getSize(8),
-          ),
+                  height: getSize(8),
+                ),
         ],
       ),
     );
