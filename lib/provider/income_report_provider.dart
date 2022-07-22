@@ -57,7 +57,7 @@ class DailyEarningDetailProvider extends ChangeNotifier {
       params: _parms,
       successCallback: (response, message) async {
         if (!fetchInBackground) NetworkClient.getInstance.hideProgressDialog();
-        print('======${response}');
+        print('======WEEKLY REPORT RESPONCE ${response}');
         if (response != null) {
           weeklyEariningReportModel =
               WeeklyEariningReportModel.fromJson(response);

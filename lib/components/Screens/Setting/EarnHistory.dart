@@ -28,7 +28,7 @@ class EarnHistory extends StatefulWidget {
 
 class _EarnHistoryState extends State<EarnHistory> {
   int currentIndex = 0;
-  int page=1;
+  int page = 0;
 
   bool isCall = true;
 
@@ -158,7 +158,8 @@ class _EarnHistoryState extends State<EarnHistory> {
                         InkWell(
                             onTap: () {
                               scrollController?.animateTo(getSize(160),
-                                  duration: Duration(milliseconds: 1000), curve: Curves.ease);
+                                  duration: Duration(milliseconds: 1000),
+                                  curve: Curves.ease);
                               setIndexThree();
                               isCall = true;
                               value.dailyDetailEarningReport(context,
@@ -227,203 +228,179 @@ class _EarnHistoryState extends State<EarnHistory> {
                         height: 350,
                         child: currentIndex == 0
                             ? ListView.builder(
-                                itemCount: value.detailEarningReportModel
-                                    ?.vidocall?.details?.length,
+                                itemCount: value.videoDetailEarningList.length,
                                 shrinkWrap: true,
                                 itemBuilder: (context, index) {
-                                  return getPageViewItem(
-                                      time: DateUtilities()
-                                          .convertServerDateToFormatterString(value.detailEarningReportModel?.vidocall?.details![index].time ?? '',
-                                          formatter: DateUtilities.h_mm_a),
-                                      isShowTwoField: true,
-                                      imgUrl: value
-                                          .detailEarningReportModel
-                                          ?.vidocall
-                                          ?.details![index]
-                                          .user
-                                          ?.photoUrl ??
-                                          '',
-                                      coin: value
-                                          .detailEarningReportModel
-                                          ?.vidocall
-                                          ?.details![index]
-                                          .coin ??
-                                          0,
-                                      name: value
-                                          .detailEarningReportModel
-                                          ?.vidocall
-                                          ?.details![index]
-                                          .user
-                                          ?.userName ??
-                                          '',
-                                      userID: value
-                                          .detailEarningReportModel
-                                          ?.vidocall
-                                          ?.details![index]
-                                          .user
-                                          ?.id ??
-                                          0,
-                                      callDurations: value.detailEarningReportModel?.vidocall?.details?[index].callDuration ?? 0,
-                                      callType: value.detailEarningReportModel?.vidocall?.details?[index].calltype ?? '');
+                                  return LazyLoadingList(
+                                    initialSizeOfItems: 5,
+                                    index: index,
+                                    hasMore: true,
+                                    loadMore: () {
+                                      page++;
+                                      print(
+                                          "--------========================= Lazy Loading $page ==========================---------");
+                                      WidgetsBinding.instance
+                                          ?.addPostFrameCallback((_) {
+                                        Provider.of<DetailEarningProvider>(
+                                                context,
+                                                listen: false)
+                                            .dailyDetailEarningReport(context,
+                                                dateTime: widget.selectedDate,
+                                                pageNumber: page,
+                                                fetchInBackground: true);
+                                      });
+                                    },
+                                    child: getPageViewItem(
+                                        time: DateUtilities()
+                                            .convertServerDateToFormatterString(
+                                                value.videoDetailEarningList[index].time ??
+                                                    '',
+                                                formatter:
+                                                    DateUtilities.h_mm_a),
+                                        isShowTwoField: true,
+                                        imgUrl: value
+                                                .videoDetailEarningList[index]
+                                                .user
+                                                ?.photoUrl ??
+                                            '',
+                                        coin: value
+                                                .videoDetailEarningList[index]
+                                                .coin ??
+                                            0,
+                                        name: value
+                                                .videoDetailEarningList[index]
+                                                .user
+                                                ?.userName ??
+                                            '',
+                                        userID: value.videoDetailEarningList[index].user?.id ?? 0,
+                                        callDurations: value.videoDetailEarningList[index].callDuration ?? 0,
+                                        callType: value.videoDetailEarningList[index].calltype ?? ''),
+                                  );
                                 },
                               )
                             : ListView.builder(
                                 itemCount: currentIndex == 1
-                                    ? value.detailEarningReportModel?.gifts
-                                        ?.details?.length
+                                    ? value.giftsEarningList.length
                                     : currentIndex == 2
-                                        ? value.detailEarningReportModel?.match
-                                            ?.details?.length
+                                        ? value.matchEarningList.length
                                         : currentIndex == 3
-                                            ? value.detailEarningReportModel
-                                                ?.refral?.details?.length
-                                            : value.detailEarningReportModel
-                                                ?.albums?.details?.length,
+                                            ? value.referalEarningList.length
+                                            : value.albumsEarningList.length,
                                 shrinkWrap: true,
                                 itemBuilder: (context, index) {
-                                  return getPageViewItem(
-                                    isShowTwoField: false,
-                                    time: currentIndex == 1
-                                        ? DateUtilities().convertServerDateToFormatterString(
-                                            value.detailEarningReportModel?.gifts?.details![index].time ??
-                                                '',
-                                            formatter: DateUtilities.h_mm_a)
-                                        : currentIndex == 2
+                                  return LazyLoadingList(
+                                      loadMore: () {},
+                                      child: getPageViewItem(
+                                        isShowTwoField: false,
+                                        time: currentIndex == 1
                                             ? DateUtilities().convertServerDateToFormatterString(
-                                                value
-                                                        .detailEarningReportModel
-                                                        ?.match
-                                                        ?.details![index]
+                                                value.giftsEarningList[index]
                                                         .time ??
                                                     '',
                                                 formatter: DateUtilities.h_mm_a)
-                                            : currentIndex == 3
-                                                ? DateUtilities().convertServerDateToFormatterString(
-                                                    value
-                                                            .detailEarningReportModel
-                                                            ?.refral
-                                                            ?.details![index]
-                                                            .time ??
-                                                        '',
-                                                    formatter:
-                                                        DateUtilities.h_mm_a)
-                                                : DateUtilities().convertServerDateToFormatterString(
-                                                    value.detailEarningReportModel?.albums?.details![index].time ?? '',
-                                                    formatter: DateUtilities.h_mm_a),
-                                    imgUrl: currentIndex == 1
-                                        ? value
-                                                .detailEarningReportModel
-                                                ?.gifts
-                                                ?.details![index]
-                                                .user
-                                                ?.photoUrl ??
-                                            ''
-                                        : currentIndex == 2
-                                            ? value
-                                                    .detailEarningReportModel
-                                                    ?.match
-                                                    ?.details![index]
-                                                    .user
+                                            : currentIndex == 2
+                                                ? DateUtilities()
+                                                    .convertServerDateToFormatterString(
+                                                        value.matchEarningList[index].time ??
+                                                            '',
+                                                        formatter: DateUtilities
+                                                            .h_mm_a)
+                                                : currentIndex == 3
+                                                    ? DateUtilities()
+                                                        .convertServerDateToFormatterString(
+                                                            value.referalEarningList[index].time ??
+                                                                '',
+                                                            formatter: DateUtilities
+                                                                .h_mm_a)
+                                                    : DateUtilities()
+                                                        .convertServerDateToFormatterString(
+                                                            value.albumsEarningList[index].time ?? '',
+                                                            formatter: DateUtilities.h_mm_a),
+                                        imgUrl: currentIndex == 1
+                                            ? value.giftsEarningList[index].user
                                                     ?.photoUrl ??
                                                 ''
-                                            : currentIndex == 3
-                                                ? value
-                                                        .detailEarningReportModel
-                                                        ?.refral
-                                                        ?.details![index]
-                                                        .user
-                                                        ?.photoUrl ??
+                                            : currentIndex == 2
+                                                ? value.matchEarningList[index]
+                                                        .user?.photoUrl ??
                                                     ''
-                                                : value
-                                                        .detailEarningReportModel
-                                                        ?.albums
-                                                        ?.details![index]
-                                                        .user
-                                                        ?.photoUrl ??
-                                                    '',
-                                    coin: currentIndex == 1
-                                        ? value.detailEarningReportModel?.gifts
-                                                ?.details![index].coin ??
-                                            0
-                                        : currentIndex == 2
-                                            ? value
-                                                    .detailEarningReportModel
-                                                    ?.match
-                                                    ?.details![index]
+                                                : currentIndex == 3
+                                                    ? value
+                                                            .referalEarningList[
+                                                                index]
+                                                            .user
+                                                            ?.photoUrl ??
+                                                        ''
+                                                    : value
+                                                            .albumsEarningList[
+                                                                index]
+                                                            .user
+                                                            ?.photoUrl ??
+                                                        '',
+                                        coin: currentIndex == 1
+                                            ? value.giftsEarningList[index]
                                                     .coin ??
                                                 0
-                                            : currentIndex == 3
-                                                ? value
-                                                        .detailEarningReportModel
-                                                        ?.refral
-                                                        ?.details![index]
+                                            : currentIndex == 2
+                                                ? value.matchEarningList[index]
                                                         .coin ??
                                                     0
-                                                : value
-                                                        .detailEarningReportModel
-                                                        ?.albums
-                                                        ?.details![index]
-                                                        .coin ??
-                                                    0,
-                                    name: currentIndex == 1
-                                        ? value
-                                                .detailEarningReportModel
-                                                ?.gifts
-                                                ?.details![index]
-                                                .user
-                                                ?.userName ??
-                                            ''
-                                        : currentIndex == 2
-                                            ? value
-                                                    .detailEarningReportModel
-                                                    ?.match
-                                                    ?.details![index]
-                                                    .user
+                                                : currentIndex == 3
+                                                    ? value
+                                                            .referalEarningList[
+                                                                index]
+                                                            .coin ??
+                                                        0
+                                                    : value
+                                                            .albumsEarningList[
+                                                                index]
+                                                            .coin ??
+                                                        0,
+                                        name: currentIndex == 1
+                                            ? value.giftsEarningList[index].user
                                                     ?.userName ??
                                                 ''
-                                            : currentIndex == 3
-                                                ? value
-                                                        .detailEarningReportModel
-                                                        ?.refral
-                                                        ?.details![index]
-                                                        .user
-                                                        ?.userName ??
+                                            : currentIndex == 2
+                                                ? value.matchEarningList[index]
+                                                        .user?.userName ??
                                                     ''
-                                                : value
-                                                        .detailEarningReportModel
-                                                        ?.albums
-                                                        ?.details![index]
-                                                        .user
-                                                        ?.userName ??
-                                                    '',
-                                    userID: currentIndex == 1
-                                        ? value.detailEarningReportModel?.gifts
-                                                ?.details![index].user?.id ??
-                                            0
-                                        : currentIndex == 2
-                                            ? value
-                                                    .detailEarningReportModel
-                                                    ?.match
-                                                    ?.details![index]
-                                                    .user
+                                                : currentIndex == 3
+                                                    ? value
+                                                            .referalEarningList[
+                                                                index]
+                                                            .user
+                                                            ?.userName ??
+                                                        ''
+                                                    : value
+                                                            .albumsEarningList[
+                                                                index]
+                                                            .user
+                                                            ?.userName ??
+                                                        '',
+                                        userID: currentIndex == 1
+                                            ? value.giftsEarningList[index].user
                                                     ?.id ??
                                                 0
-                                            : currentIndex == 3
-                                                ? value
-                                                        .detailEarningReportModel
-                                                        ?.refral
-                                                        ?.details![index]
-                                                        .user
-                                                        ?.id ??
+                                            : currentIndex == 2
+                                                ? value.matchEarningList[index]
+                                                        .user?.id ??
                                                     0
-                                                : value
-                                                        .detailEarningReportModel
-                                                        ?.refral
-                                                        ?.details![index]
-                                                        .user
-                                                        ?.id ??
-                                                    0,
-                                  );
+                                                : currentIndex == 3
+                                                    ? value
+                                                            .referalEarningList[
+                                                                index]
+                                                            .user
+                                                            ?.id ??
+                                                        0
+                                                    : value
+                                                            .albumsEarningList[
+                                                                index]
+                                                            .user
+                                                            ?.id ??
+                                                        0,
+                                      ),
+                                      index: index,
+                                      hasMore: true);
                                 },
                               ),
                       ),

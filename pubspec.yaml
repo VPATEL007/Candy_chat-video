@@ -43,7 +43,6 @@ dependencies:
   sticky_headers: ^0.2.0
   intl: ^0.17.0
   lazy_loading_list: ^1.0.1
-  pagination_view: ^2.0.0
   # in_app_purchase: ^1.0.8
   flutter_inapp_purchase: 5.1.2
   # in_app_purchase: any

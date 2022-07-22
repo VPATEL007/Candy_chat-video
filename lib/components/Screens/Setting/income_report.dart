@@ -285,12 +285,15 @@ class _IncomeReportState extends State<IncomeReport> {
 
                                     selectedWeeklyIndex = index;
                                     isWeeklySelected = true;
-                                    Provider.of<DailyEarningDetailProvider>(
-                                            context,
-                                            listen: false)
-                                        .weeklyEarningReport(context,
-                                            startDate: finalList[index].first,
-                                            endDate: finalList[index].last);
+                                    WidgetsBinding.instance
+                                        ?.addPostFrameCallback((_) {
+                                      Provider.of<DailyEarningDetailProvider>(
+                                              context,
+                                              listen: false)
+                                          .weeklyEarningReport(context,
+                                              startDate: finalList[index].first,
+                                              endDate: finalList[index].last);
+                                    });
                                   });
                                 },
                                 child: Column(
