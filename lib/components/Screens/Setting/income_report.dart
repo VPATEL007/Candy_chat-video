@@ -546,7 +546,7 @@ class _IncomeReportState extends State<IncomeReport> {
                                 value.dailyEarningReportModel?.albumCoin ?? 0),
                         getBox(
                             context: context,
-                            title: 'Weekly video call duration',
+                            title: 'Daily video call duration',
                             coin: 0,
                             isDuration: true,
                             duration: value.dailyEarningReportModel
