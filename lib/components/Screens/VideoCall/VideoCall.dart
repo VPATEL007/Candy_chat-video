@@ -8,6 +8,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter_keyboard_visibility/flutter_keyboard_visibility.dart';
+
 // import 'package:flutter_screen/screen.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:provider/provider.dart';
@@ -83,7 +84,7 @@ class VideoCallState extends State<VideoCall> with WidgetsBindingObserver {
 
     super.initState();
     // WidgetsBinding.instance?.addObserver(this);
-    WidgetsBinding.instance?.addObserver(LifecycleEventHandler(
+    WidgetsBinding.instance.addObserver(LifecycleEventHandler(
         detachedCallBack: () {},
         resumeCallBack: () {},
         pausedCallback: () {
@@ -96,7 +97,7 @@ class VideoCallState extends State<VideoCall> with WidgetsBindingObserver {
         context: context));
     // Screen.keepOn(true);
     agoraService.isOngoingCall = true;
-    WidgetsBinding.instance?.addPostFrameCallback((_) {
+    WidgetsBinding.instance.addPostFrameCallback((_) {
       initPlatformState();
       clearData();
       // init();
@@ -164,7 +165,7 @@ class VideoCallState extends State<VideoCall> with WidgetsBindingObserver {
     agoraService.openUserFeedBackPopUp(toUser?.id ?? 0);
     agoraService.isOngoingCall = false;
     // Screen.keepOn(false);
-    WidgetsBinding.instance?.removeObserver(LifecycleEventHandler(
+    WidgetsBinding.instance.removeObserver(LifecycleEventHandler(
         detachedCallBack: () {},
         resumeCallBack: () {},
         pausedCallback: () {},
@@ -181,6 +182,13 @@ class VideoCallState extends State<VideoCall> with WidgetsBindingObserver {
   void startTimer() {
     durationCounter = 0;
     duraationTimer = Timer.periodic(Duration(seconds: 1), (timer) {
+      if (callStatus?.callType?.toLowerCase() != 'paid') {
+        if (durationCounter == 30) {
+          autoEndCall();
+          endCall();
+          Navigator.pop(context);
+        }
+      }
       setState(() {
         durationCounter++;
       });
@@ -271,6 +279,7 @@ class VideoCallState extends State<VideoCall> with WidgetsBindingObserver {
 
   @override
   Widget build(BuildContext context) {
+    print('callStatus?.callType==> ${callStatus?.callType}');
     return WillPopScope(
       onWillPop: () async {
         return false;
@@ -337,18 +346,20 @@ class VideoCallState extends State<VideoCall> with WidgetsBindingObserver {
                     SizedBox(
                       width: getSize(15),
                     ),
-                    callStatus?.callType==null?SizedBox():Container(
-                      decoration: BoxDecoration(
-                          color: Colors.black,
-                          borderRadius: BorderRadius.circular(10)),
-                      child: Padding(
-                        padding: EdgeInsets.only(
-                            top: 4, bottom: 4, left: 8, right: 8),
-                        child: Text(callStatus?.callType ?? '',
-                            style: appTheme?.black14SemiBold
-                                .copyWith(color: Colors.white)),
-                      ),
-                    ),
+                    callStatus?.callType == null
+                        ? SizedBox()
+                        : Container(
+                            decoration: BoxDecoration(
+                                color: Colors.black,
+                                borderRadius: BorderRadius.circular(10)),
+                            child: Padding(
+                              padding: EdgeInsets.only(
+                                  top: 4, bottom: 4, left: 8, right: 8),
+                              child: Text(callStatus?.callType ?? '',
+                                  style: appTheme?.black14SemiBold
+                                      .copyWith(color: Colors.white)),
+                            ),
+                          ),
                   ],
                 ),
               ),

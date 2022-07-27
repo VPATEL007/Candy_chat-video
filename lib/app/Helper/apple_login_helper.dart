@@ -22,6 +22,7 @@ class AppleLoginHealper {
       req["provider"] = apple;
       req["language_id"] = app.resolve<PrefUtils>().selectedLanguages?.id;
       req["token"] = credential.identityToken;
+      req["registerApp"] = 'host';
       Map<String, dynamic> user = {};
       user["name"] = credential.familyName;
       user["email"] = credential.email;
