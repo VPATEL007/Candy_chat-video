@@ -191,6 +191,8 @@ class _ChatListState extends State<ChatList> {
                                       ))).then((value) {
                             SocketHealper.shared.disconnect();
                             SocketHealper.shared.connect();
+                            Provider.of<ChatProvider>(context, listen: false)
+                                .getChatList(1, context);
                           });
                         },
                         child:
@@ -313,11 +315,14 @@ class _ChatListState extends State<ChatList> {
                           ),
                         ),
                       )
-                    : Text(
-                        model.message ?? '',
-                        style: appTheme?.white12Normal,
-                        overflow: TextOverflow.ellipsis,
-                      )
+                    : Container(
+                  width: 115,
+                      child: Text(
+                          model.message ?? '',
+                          style: appTheme?.white12Normal,
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                    )
               ],
             ),
             Spacer(),

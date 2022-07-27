@@ -31,8 +31,8 @@
     <uses-feature android:name="android.hardware.camera.flash" />
 
     <application
-        android:icon="@mipmap/launcher_icon"
-        android:label="Storm Video Chat"
+        android:icon="@mipmap/ic_launcher"
+        android:label="Muffin Video Chat"
         android:usesCleartextTraffic="true">
 
         <service

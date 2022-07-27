@@ -10,7 +10,7 @@ const String icMore = "assets/Common/more.png";
 const String icMale = "assets/Common/male.png";
 const String icFemale = "assets/Common/feMale.png";
 
-const String splashLogo = "assets/Splash/splashLogo.png";
+const String splashLogo = "assets/Splash/MUFFIN 1.png";
 const String splashBottom = "assets/Splash/splashBottom.png";
 const String appIcon = "assets/Splash/appIcon.png";
 

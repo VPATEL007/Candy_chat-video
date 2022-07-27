@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
-import 'package:table_calendar/table_calendar.dart';
 import 'package:video_chat/app/app.export.dart';
 import 'package:video_chat/components/Screens/Setting/EarnHistory.dart';
 import 'package:video_chat/components/widgets/CommanButton.dart';
@@ -17,8 +16,10 @@ class IncomeReport extends StatefulWidget {
 class _IncomeReportState extends State<IncomeReport> {
   bool isWeeklySelected = false;
   int? selectedIndex;
+  int? selectedWeeklyIndex;
 
   late int todayIndex;
+
   List<DateTime> daysInRange(DateTime first, DateTime last) {
     final dayCount = last.difference(first).inDays + 1;
 
@@ -28,66 +29,69 @@ class _IncomeReportState extends State<IncomeReport> {
     );
   }
 
-  List<List> finalList = [];
   List sundayIndex = [];
-  int sunday = 0;
+  List<List> finalList = [];
+  ScrollController? scrollController = ScrollController();
 
-  @override
-  void initState() {
+  String? formatted;
+  String? date;
+  String? monthFormatted;
+  String? month;
+
+  sunDayWeeklyList() {
     List dataList = List.generate(
-        daysInRange.call(DateTime(2022, 07, 04), DateTime(2023)).length,
+        daysInRange.call(DateTime(2022, 07, 05), DateTime(2023)).length,
         (index) =>
-            daysInRange.call(DateTime(2022, 07, 04), DateTime(2023))[index]);
+            daysInRange.call(DateTime(2022, 07, 05), DateTime(2023))[index]);
 
     for (int i = 0; i < dataList.length; i++) {
       final DateFormat formatter = DateFormat('E');
-      final formatted = formatter.format(dataList[i]);
+      final formatteds = formatter.format(dataList[i]);
 
-      if (formatted == 'Sun') {
-        print('sundayindex=====${sundayIndex.toSet().toList()}');
+      final DateFormat monthYearFormat = DateFormat('yMMMM');
+      monthFormatted = monthYearFormat.format(DateTime.now());
+      if (formatteds == 'Mon') {
         finalList.add(sundayIndex.toSet().toList());
-
         sundayIndex.clear();
-      } else {
         sundayIndex.add(daysInRange
-            .call(DateTime(2022, 07, 04), DateTime(2023))[i]
+            .call(DateTime(2022, 07, 05), DateTime(2023))[i]
             .toIso8601String()
-            .substring(8, 10));
-      }
-    }
-    print('FINAL LIST===>>>${finalList.toSet().toList()}');
-
-    for (int i = 0;
-        i < daysInRange.call(DateTime(2022, 07, 04), DateTime(2023)).length;
-        i++) {
-      DateTime datetime = DateTime.now();
-
-      if (daysInRange
-              .call(DateTime(2022, 07, 04), DateTime(2023))[i]
-              .toIso8601String()
-              .substring(0, 10) ==
-          datetime.toIso8601String().substring(0, 10)) {
-        int todayindex = daysInRange
-            .call(DateTime(2022, 07, 04), DateTime(2023))
-            .indexWhere((element) =>
-                element.toIso8601String().substring(0, 10) ==
-                datetime.toIso8601String().substring(0, 10));
-        setState(() {
-          todayIndex = todayindex;
-          selectedIndex = todayIndex;
-        });
+            .substring(0, 10));
+        finalList.add([dataList[i]]);
       } else {
-        print('no');
+        finalList.add([dataList[i]]);
+        sundayIndex.add(daysInRange
+            .call(DateTime(2022, 07, 05), DateTime(2023))[i]
+            .toIso8601String()
+            .substring(0, 10));
       }
     }
-    Provider.of<DailyEarningDetailProvider>(context, listen: false)
-        .dailyEarningReport(context,
-            dateTime: DateTime.now().toIso8601String().substring(0, 10));
-    super.initState();
   }
 
-  String? formatted;
-  String? monthFormatted;
+  @override
+  void initState() {
+    sunDayWeeklyList();
+    DateTime datetime = DateTime.now();
+    int todayindex = finalList.indexWhere((element) =>
+        element.join().substring(0, 10) ==
+        datetime.toIso8601String().substring(0, 10));
+    setState(() {
+      todayIndex = todayindex;
+      selectedIndex = todayIndex;
+    });
+
+    WidgetsBinding.instance?.addPostFrameCallback((_) {
+      double _position = todayIndex.toDouble() * (getSize(36));
+      setState(() {
+        scrollController?.animateTo(_position,
+            duration: Duration(milliseconds: 1000), curve: Curves.ease);
+      });
+      Provider.of<DailyEarningDetailProvider>(context, listen: false)
+          .dailyEarningReport(context,
+              dateTime: DateTime.now().toIso8601String().substring(0, 10));
+    });
+    super.initState();
+  }
 
   String selectedDate = DateTime.now().toIso8601String();
 
@@ -120,261 +124,293 @@ class _IncomeReportState extends State<IncomeReport> {
                     child: ListView.builder(
                       scrollDirection: Axis.horizontal,
                       shrinkWrap: true,
-                      itemCount: daysInRange
-                          .call(DateTime(2022, 07, 04), DateTime(2023))
-                          .length,
+                      physics: BouncingScrollPhysics(),
+                      controller: scrollController,
+                      itemCount: finalList.length,
                       itemBuilder: (context, index) {
-                        final DateFormat formatter = DateFormat('E');
-                        formatted = formatter.format(daysInRange.call(
-                            DateTime(2022, 07, 04), DateTime(2023))[index]);
-                        final DateFormat formatter2 = DateFormat('yMMMM');
-                        monthFormatted = formatter2.format(daysInRange.call(
-                            DateTime(2022, 07, 04), DateTime(2023))[index]);
-                          
-                        if (formatted == 'Sat') {
-                          sunday++;
+                        if (finalList[index]
+                            .join()
+                            .substring(11, 13)
+                            .startsWith('00')) {
+                          date = finalList[index].join();
+
+                          var parsedDate = DateTime.parse(date!);
+                          final DateFormat formatter = DateFormat('E');
+                          formatted = formatter.format(parsedDate);
+
+                          final DateFormat formatter2 = DateFormat('M');
+                          month = formatter2.format(parsedDate);
+                        } else {
+                          print('Invalid');
                         }
-                        print('sunday====${sunday}');
-                        return GestureDetector(
-                          onTap: () {
-                            setState(() {
-                              selectedIndex = index;
-                              selectedDate = daysInRange
-                                  .call(DateTime(2022, 07, 04),
-                                      DateTime(2023))[index]
-                                  .toIso8601String();
-                              isWeeklySelected = false;
-                              Provider.of<DailyEarningDetailProvider>(context,
-                                      listen: false)
-                                  .dailyEarningReport(context,
-                                      dateTime: selectedDate.substring(0, 10));
-                            });
-                          },
-                          child: Row(
-                            children: [
-                              Column(
-                                children: [
-                                  Container(
-                                    alignment: Alignment.topCenter,
-                                    margin: EdgeInsets.symmetric(
-                                        horizontal: selectedIndex == index &&
-                                                isWeeklySelected == false
-                                            ? getSize(10)
-                                            : 0),
-                                    width: selectedIndex == index &&
-                                            isWeeklySelected == false
-                                        ? getSize(38)
-                                        : null,
-                                    height: selectedIndex == index &&
-                                            isWeeklySelected == false
-                                        ? getSize(33)
-                                        : getSize(30),
-                                    decoration: BoxDecoration(
-                                        color: selectedIndex == index &&
-                                                isWeeklySelected == false
-                                            ? ColorConstants.red
-                                            : Colors.transparent,
-                                        borderRadius: BorderRadius.only(
-                                            topLeft: Radius.circular(10),
-                                            topRight: Radius.circular(10))),
-                                    child: Padding(
-                                      padding: EdgeInsets.symmetric(
+                        return finalList[index]
+                                .join()
+                                .substring(11, 13)
+                                .startsWith('00')
+                            ? GestureDetector(
+                                onTap: () {
+                                  setState(() {
+                                    final DateFormat monthYearFormat =
+                                        DateFormat('yMMMM');
+                                    monthFormatted = monthYearFormat.format(
+                                        DateTime.parse(
+                                            finalList[index].join()));
+                                    selectedIndex = index;
+                                    selectedDate = finalList[index].join();
+                                    isWeeklySelected = false;
+                                    Provider.of<DailyEarningDetailProvider>(
+                                            context,
+                                            listen: false)
+                                        .dailyEarningReport(context,
+                                            dateTime:
+                                                selectedDate.substring(0, 10));
+                                  });
+                                },
+                                child: Column(
+                                  children: [
+                                    Container(
+                                      alignment: Alignment.topCenter,
+                                      margin: EdgeInsets.symmetric(
                                           horizontal: selectedIndex == index &&
                                                   isWeeklySelected == false
-                                              ? getSize(5)
-                                              : getSize(10),
-                                          vertical: selectedIndex == index &&
-                                                  isWeeklySelected == false
-                                              ? getSize(3)
+                                              ? getSize(10)
                                               : 0),
-                                      child: Text(
-                                        formatted!,
-                                        style: appTheme!.black16Bold.copyWith(
-                                            color: selectedIndex == index &&
+                                      width: selectedIndex == index &&
+                                              isWeeklySelected == false
+                                          ? getSize(38)
+                                          : null,
+                                      height: selectedIndex == index &&
+                                              isWeeklySelected == false
+                                          ? getSize(33)
+                                          : getSize(30),
+                                      decoration: BoxDecoration(
+                                          color: selectedIndex == index &&
+                                                  isWeeklySelected == false
+                                              ? ColorConstants.red
+                                              : Colors.transparent,
+                                          borderRadius: BorderRadius.only(
+                                              topLeft: Radius.circular(10),
+                                              topRight: Radius.circular(10))),
+                                      child: Padding(
+                                        padding: EdgeInsets.symmetric(
+                                            horizontal: selectedIndex ==
+                                                        index &&
                                                     isWeeklySelected == false
-                                                ? ColorConstants.mainBgColor
-                                                : ColorConstants
-                                                    .calenderGreyColor,
-                                            fontWeight: FontWeight.w600,
-                                            fontSize: getFontSize(11)),
+                                                ? getSize(5)
+                                                : getSize(10),
+                                            vertical: selectedIndex == index &&
+                                                    isWeeklySelected == false
+                                                ? getSize(3)
+                                                : 0),
+                                        child: Text(
+                                          formatted ?? '',
+                                          style: appTheme!.black16Bold.copyWith(
+                                              color: selectedIndex == index &&
+                                                      isWeeklySelected == false
+                                                  ? ColorConstants.mainBgColor
+                                                  : ColorConstants
+                                                      .calenderGreyColor,
+                                              fontWeight: FontWeight.w600,
+                                              fontSize: getFontSize(11)),
+                                        ),
                                       ),
                                     ),
-                                  ),
-                                  SizedBox(
-                                    height: selectedIndex == index &&
-                                            isWeeklySelected == false
-                                        ? getSize(1)
-                                        : getSize(18),
-                                  ),
-                                  Container(
-                                    margin: EdgeInsets.symmetric(
-                                        horizontal: selectedIndex == index &&
-                                                isWeeklySelected == false
-                                            ? getSize(10)
-                                            : 0),
-                                    alignment: selectedIndex == index &&
-                                            isWeeklySelected == false
-                                        ? Alignment.bottomCenter
-                                        : null,
-                                    width: selectedIndex == index &&
-                                            isWeeklySelected == false
-                                        ? getSize(38)
-                                        : null,
-                                    height: selectedIndex == index &&
-                                            isWeeklySelected == false
-                                        ? getSize(33)
-                                        : getSize(30),
-                                    decoration: BoxDecoration(
-                                        color: selectedIndex == index &&
-                                                isWeeklySelected == false
-                                            ? ColorConstants.red
-                                            : Colors.transparent,
-                                        borderRadius: BorderRadius.only(
-                                            bottomLeft: Radius.circular(10),
-                                            bottomRight: Radius.circular(10))),
-                                    child: Padding(
-                                      padding: EdgeInsets.symmetric(
+                                    SizedBox(
+                                      height: selectedIndex == index &&
+                                              isWeeklySelected == false
+                                          ? getSize(1)
+                                          : getSize(18),
+                                    ),
+                                    Container(
+                                      margin: EdgeInsets.symmetric(
                                           horizontal: selectedIndex == index &&
                                                   isWeeklySelected == false
-                                              ? getSize(5)
-                                              : getSize(10),
-                                          vertical: selectedIndex == index &&
-                                                  isWeeklySelected == false
-                                              ? getSize(3)
+                                              ? getSize(10)
                                               : 0),
-                                      child: Text(
-                                        '${daysInRange.call(DateTime(2022, 07, 04), DateTime(2023))[index].day}',
-                                        style: appTheme!.black16Bold.copyWith(
-                                            color: selectedIndex == index &&
+                                      alignment: selectedIndex == index &&
+                                              isWeeklySelected == false
+                                          ? Alignment.bottomCenter
+                                          : null,
+                                      width: selectedIndex == index &&
+                                              isWeeklySelected == false
+                                          ? getSize(38)
+                                          : null,
+                                      height: selectedIndex == index &&
+                                              isWeeklySelected == false
+                                          ? getSize(33)
+                                          : getSize(30),
+                                      decoration: BoxDecoration(
+                                          color: selectedIndex == index &&
+                                                  isWeeklySelected == false
+                                              ? ColorConstants.red
+                                              : Colors.transparent,
+                                          borderRadius: BorderRadius.only(
+                                              bottomLeft: Radius.circular(10),
+                                              bottomRight:
+                                                  Radius.circular(10))),
+                                      child: Padding(
+                                        padding: EdgeInsets.symmetric(
+                                            horizontal: selectedIndex ==
+                                                        index &&
                                                     isWeeklySelected == false
-                                                ? ColorConstants.mainBgColor
-                                                : ColorConstants
-                                                    .calenderGreyColor,
-                                            fontWeight: FontWeight.w600,
-                                            fontSize: getFontSize(12)),
+                                                ? getSize(5)
+                                                : getSize(10),
+                                            vertical: selectedIndex == index &&
+                                                    isWeeklySelected == false
+                                                ? getSize(3)
+                                                : 0),
+                                        child: Text(
+                                          '${date?.substring(8, 10)}',
+                                          style: appTheme!.black16Bold.copyWith(
+                                              color: selectedIndex == index &&
+                                                      isWeeklySelected == false
+                                                  ? ColorConstants.mainBgColor
+                                                  : ColorConstants
+                                                      .calenderGreyColor,
+                                              fontWeight: FontWeight.w600,
+                                              fontSize: getFontSize(12)),
+                                        ),
                                       ),
                                     ),
-                                  ),
-                                ],
-                              ),
-                              formatted == 'Sat'
-                                  ? GestureDetector(
-                                      onTap: () {
-                                        setState(() {
-                                          isWeeklySelected = true;
-                                          Provider.of<DailyEarningDetailProvider>(
-                                                  context,
-                                                  listen: false)
-                                              .weeklyEarningReport(context,
-                                                  dateTime: '2022-07-15');
-                                        });
-                                      },
-                                      child: Column(
-                                        children: [
-                                          Container(
-                                            alignment: Alignment.topCenter,
-                                            margin: EdgeInsets.symmetric(
-                                                horizontal: isWeeklySelected
-                                                    ? getSize(10)
+                                  ],
+                                ),
+                              )
+                            : GestureDetector(
+                                onTap: () {
+                                  setState(() {
+                                    final DateFormat monthYearFormat =
+                                        DateFormat('yMMMM');
+                                    monthFormatted = monthYearFormat.format(
+                                        DateTime.parse(finalList[index].last));
+
+                                    selectedWeeklyIndex = index;
+                                    isWeeklySelected = true;
+                                    WidgetsBinding.instance
+                                        ?.addPostFrameCallback((_) {
+                                      Provider.of<DailyEarningDetailProvider>(
+                                              context,
+                                              listen: false)
+                                          .weeklyEarningReport(context,
+                                              startDate: finalList[index].first,
+                                              endDate: finalList[index].last);
+                                    });
+                                  });
+                                },
+                                child: Column(
+                                  children: [
+                                    Container(
+                                      alignment: Alignment.topCenter,
+                                      margin: EdgeInsets.symmetric(
+                                          horizontal:
+                                              selectedWeeklyIndex == index &&
+                                                      isWeeklySelected
+                                                  ? getSize(10)
+                                                  : 0),
+                                      width: selectedWeeklyIndex == index &&
+                                              isWeeklySelected
+                                          ? getSize(72)
+                                          : null,
+                                      height: selectedWeeklyIndex == index &&
+                                              isWeeklySelected
+                                          ? getSize(33)
+                                          : getSize(30),
+                                      decoration: BoxDecoration(
+                                          color: selectedWeeklyIndex == index &&
+                                                  isWeeklySelected
+                                              ? ColorConstants.red
+                                              : Colors.transparent,
+                                          borderRadius: BorderRadius.only(
+                                              topLeft: Radius.circular(10),
+                                              topRight: Radius.circular(10))),
+                                      child: Padding(
+                                        padding: EdgeInsets.symmetric(
+                                            horizontal:
+                                                selectedWeeklyIndex == index &&
+                                                        isWeeklySelected
+                                                    ? getSize(5)
+                                                    : getSize(10),
+                                            vertical:
+                                                selectedWeeklyIndex == index &&
+                                                        isWeeklySelected
+                                                    ? getSize(3)
                                                     : 0),
-                                            width: isWeeklySelected
-                                                ? getSize(72)
-                                                : null,
-                                            height: isWeeklySelected
-                                                ? getSize(33)
-                                                : getSize(30),
-                                            decoration: BoxDecoration(
-                                                color: isWeeklySelected
-                                                    ? ColorConstants.red
-                                                    : Colors.transparent,
-                                                borderRadius: BorderRadius.only(
-                                                    topLeft:
-                                                        Radius.circular(10),
-                                                    topRight:
-                                                        Radius.circular(10))),
-                                            child: Padding(
-                                              padding: EdgeInsets.symmetric(
-                                                  horizontal: isWeeklySelected
-                                                      ? getSize(5)
-                                                      : getSize(10),
-                                                  vertical: isWeeklySelected
-                                                      ? getSize(3)
-                                                      : 0),
-                                              child: Text(
-                                                'Weekly',
-                                                style: appTheme!.black16Bold
-                                                    .copyWith(
-                                                        color: isWeeklySelected
-                                                            ? ColorConstants
-                                                                .mainBgColor
-                                                            : ColorConstants
-                                                                .calenderGreyColor,
-                                                        fontWeight:
-                                                            FontWeight.w600,
-                                                        fontSize:
-                                                            getFontSize(11)),
-                                              ),
-                                            ),
-                                          ),
-                                          SizedBox(
-                                            height: isWeeklySelected
-                                                ? getSize(1)
-                                                : getSize(18),
-                                          ),
-                                          Container(
-                                            margin: EdgeInsets.symmetric(
-                                                horizontal: isWeeklySelected
-                                                    ? getSize(10)
-                                                    : 0),
-                                            alignment: isWeeklySelected
-                                                ? Alignment.bottomCenter
-                                                : null,
-                                            width: isWeeklySelected
-                                                ? getSize(72)
-                                                : null,
-                                            height: isWeeklySelected
-                                                ? getSize(33)
-                                                : getSize(30),
-                                            decoration: BoxDecoration(
-                                                color: isWeeklySelected
-                                                    ? ColorConstants.red
-                                                    : Colors.transparent,
-                                                borderRadius: BorderRadius.only(
-                                                    bottomLeft:
-                                                        Radius.circular(10),
-                                                    bottomRight:
-                                                        Radius.circular(10))),
-                                            child: Padding(
-                                              padding: EdgeInsets.symmetric(
-                                                  horizontal: isWeeklySelected
-                                                      ? getSize(5)
-                                                      : getSize(10),
-                                                  vertical: isWeeklySelected
-                                                      ? getSize(3)
-                                                      : 0),
-                                              child: Text(
-                                                '${daysInRange.call(DateTime(2022, 07, 04), DateTime(2023))[index].month}/${finalList[sunday].first}-${daysInRange.call(DateTime(2022, 07, 04), DateTime(2023))[index].month}/${finalList[sunday].last}',
-                                                style: appTheme!.black16Bold
-                                                    .copyWith(
-                                                        color: isWeeklySelected
-                                                            ? ColorConstants
-                                                                .mainBgColor
-                                                            : ColorConstants
-                                                                .calenderGreyColor,
-                                                        fontWeight:
-                                                            FontWeight.w600,
-                                                        fontSize:
-                                                            getFontSize(12)),
-                                              ),
-                                            ),
-                                          ),
-                                        ],
+                                        child: Text(
+                                          'Weekly',
+                                          style: appTheme!.black16Bold.copyWith(
+                                              color: selectedWeeklyIndex ==
+                                                          index &&
+                                                      isWeeklySelected
+                                                  ? ColorConstants.mainBgColor
+                                                  : ColorConstants
+                                                      .calenderGreyColor,
+                                              fontWeight: FontWeight.w600,
+                                              fontSize: getFontSize(11)),
+                                        ),
                                       ),
-                                    )
-                                  : SizedBox()
-                            ],
-                          ),
-                        );
+                                    ),
+                                    SizedBox(
+                                      height: selectedWeeklyIndex == index &&
+                                              isWeeklySelected
+                                          ? getSize(1)
+                                          : getSize(18),
+                                    ),
+                                    Container(
+                                      margin: EdgeInsets.symmetric(
+                                          horizontal:
+                                              selectedWeeklyIndex == index &&
+                                                      isWeeklySelected
+                                                  ? getSize(10)
+                                                  : 0),
+                                      alignment: selectedWeeklyIndex == index &&
+                                              isWeeklySelected
+                                          ? Alignment.bottomCenter
+                                          : null,
+                                      width: selectedWeeklyIndex == index &&
+                                              isWeeklySelected
+                                          ? getSize(72)
+                                          : null,
+                                      height: selectedWeeklyIndex == index &&
+                                              isWeeklySelected
+                                          ? getSize(33)
+                                          : getSize(30),
+                                      decoration: BoxDecoration(
+                                          color: selectedWeeklyIndex == index &&
+                                                  isWeeklySelected
+                                              ? ColorConstants.red
+                                              : Colors.transparent,
+                                          borderRadius: BorderRadius.only(
+                                              bottomLeft: Radius.circular(10),
+                                              bottomRight:
+                                                  Radius.circular(10))),
+                                      child: Padding(
+                                        padding: EdgeInsets.symmetric(
+                                            horizontal:
+                                                selectedWeeklyIndex == index &&
+                                                        isWeeklySelected
+                                                    ? getSize(5)
+                                                    : getSize(10),
+                                            vertical:
+                                                selectedWeeklyIndex == index &&
+                                                        isWeeklySelected
+                                                    ? getSize(3)
+                                                    : 0),
+                                        child: Text(
+                                          '$month/${finalList[index].first.substring(8, 10)} $month/${finalList[index].last.substring(8, 10)}',
+                                          style: appTheme!.black16Bold.copyWith(
+                                              color: selectedWeeklyIndex ==
+                                                          index &&
+                                                      isWeeklySelected
+                                                  ? ColorConstants.mainBgColor
+                                                  : ColorConstants
+                                                      .calenderGreyColor,
+                                              fontWeight: FontWeight.w600,
+                                              fontSize: getFontSize(12)),
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              );
                       },
                     ),
                   ),
@@ -398,8 +434,8 @@ class _IncomeReportState extends State<IncomeReport> {
                                     ?.videoCallCoins ??
                                 0,
                             onTap: () {
-                              print('object');
                               NavigationUtilities.push(EarnHistory(
+                                  selectedIndex: 0,
                                   selectedDate: selectedDate.substring(0, 10)));
                             }),
                         getBox(
@@ -408,22 +444,39 @@ class _IncomeReportState extends State<IncomeReport> {
                             coin:
                                 value.weeklyEariningReportModel?.giftsCoin ?? 0,
                             onTap: () {
-                              print('object2');
+                              NavigationUtilities.push(EarnHistory(
+                                  selectedIndex: 1,
+                                  selectedDate: selectedDate.substring(0, 10)));
                             }),
                         getBox(
                             context: context,
                             title: 'Match total',
+                            onTap: () {
+                              NavigationUtilities.push(EarnHistory(
+                                  selectedIndex: 2,
+                                  selectedDate: selectedDate.substring(0, 10)));
+                            },
                             coin: value.weeklyEariningReportModel?.matchCoin ??
                                 0),
                         getBox(
                             context: context,
                             title: 'Referral Coins',
+                            onTap: () {
+                              NavigationUtilities.push(EarnHistory(
+                                  selectedIndex: 3,
+                                  selectedDate: selectedDate.substring(0, 10)));
+                            },
                             coin:
                                 value.weeklyEariningReportModel?.refralCoins ??
                                     0),
                         getBox(
                             context: context,
                             title: 'Albums coins',
+                            onTap: () {
+                              NavigationUtilities.push(EarnHistory(
+                                  selectedIndex: 4,
+                                  selectedDate: selectedDate.substring(0, 10)));
+                            },
                             coin: value.weeklyEariningReportModel?.albumCoin ??
                                 0),
                         getBox(
@@ -442,41 +495,58 @@ class _IncomeReportState extends State<IncomeReport> {
                             totalCoin:
                                 value.dailyEarningReportModel?.totalCoins ?? 0),
                         getBox(
-                            context: context,
-                            title: 'Video call coins',
-                            coin:
-                                value.dailyEarningReportModel?.videoCallCoins ??
-                                    0,
-                            onTap: () {
-                              print('object');
-                              NavigationUtilities.push(EarnHistory(
-                                  selectedDate: selectedDate.substring(0, 10)));
-                            }),
+                          context: context,
+                          title: 'Video call coins',
+                          onTap: () {
+                            NavigationUtilities.push(EarnHistory(
+                                selectedIndex: 0,
+                                selectedDate: selectedDate.substring(0, 10)));
+                          },
+                          coin: value.dailyEarningReportModel?.videoCallCoins ??
+                              0,
+                        ),
                         getBox(
                             context: context,
                             title: 'Gifts coins',
                             coin: value.dailyEarningReportModel?.giftsCoin ?? 0,
                             onTap: () {
-                              print('object2');
+                              NavigationUtilities.push(EarnHistory(
+                                  selectedIndex: 1,
+                                  selectedDate: selectedDate.substring(0, 10)));
                             }),
                         getBox(
                             context: context,
                             title: 'Match total',
+                            onTap: () {
+                              NavigationUtilities.push(EarnHistory(
+                                  selectedIndex: 2,
+                                  selectedDate: selectedDate.substring(0, 10)));
+                            },
                             coin:
                                 value.dailyEarningReportModel?.matchCoin ?? 0),
                         getBox(
                             context: context,
+                            onTap: () {
+                              NavigationUtilities.push(EarnHistory(
+                                  selectedIndex: 3,
+                                  selectedDate: selectedDate.substring(0, 10)));
+                            },
                             title: 'Referral Coins',
                             coin: value.dailyEarningReportModel?.refralCoins ??
                                 0),
                         getBox(
                             context: context,
                             title: 'Albums coins',
+                            onTap: () {
+                              NavigationUtilities.push(EarnHistory(
+                                  selectedIndex: 4,
+                                  selectedDate: selectedDate.substring(0, 10)));
+                            },
                             coin:
                                 value.dailyEarningReportModel?.albumCoin ?? 0),
                         getBox(
                             context: context,
-                            title: 'Weekly video call duration',
+                            title: 'Daily video call duration',
                             coin: 0,
                             isDuration: true,
                             duration: value.dailyEarningReportModel
@@ -619,11 +689,25 @@ class _IncomeReportState extends State<IncomeReport> {
                   fontStyle: FontStyle.italic,
                   fontWeight: FontWeight.w700,
                   fontSize: getFontSize(20))),
-          Padding(
-            padding: EdgeInsets.symmetric(horizontal: getSize(12)),
-            child: Image.asset(
-              questionIcon,
-              height: getSize(19),
+          GestureDetector(
+            onTap: () async {
+              return showDialog(
+                context: context,
+                builder: (ctx) => AlertDialog(
+                  title: Text(
+                    "Total coins is sum of all the coins earned",
+                    style: appTheme?.black16Bold
+                        .copyWith(fontSize: getFontSize(14)),
+                  ),
+                ),
+              );
+            },
+            child: Padding(
+              padding: EdgeInsets.symmetric(horizontal: getSize(12)),
+              child: Image.asset(
+                questionIcon,
+                height: getSize(19),
+              ),
             ),
           ),
         ],

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_inapp_purchase/modules.dart';
+import 'package:video_chat/components/widgets/safeOnTap.dart';
 
 // import 'package:in_app_purchase/in_app_purchase.dart';
 // import 'package:flutter_statusbarcolor/flutter_statusbarcolor.dart';
@@ -41,16 +42,16 @@ Widget getBottomButton(
 }
 
 Widget cancelIcon(onTap, {top = 0.0, right = 0.0}) => Positioned(
-  top: top,
-  right: right,
-  child: InkWell(
-      onTap: onTap,
-      child: Image.asset(
-        "assets/Profile/close.png",
-        height: 15,
-        width: 15,
-      )),
-);
+      top: top,
+      right: right,
+      child: InkWell(
+          onTap: onTap,
+          child: Image.asset(
+            "assets/Profile/close.png",
+            height: 15,
+            width: 15,
+          )),
+    );
 
 getPopBottomButton(BuildContext context, String text, VoidCallback onPressed) {
   return InkWell(
@@ -141,12 +142,15 @@ getBarButton(
   return IconButton(
     key: navigation_key,
     padding: EdgeInsets.all(3),
-    onPressed: onPressed,
-    icon: Image.asset(
-      imageName,
-      // color: isBlack == true ? Colors.black : Colors.white,
-      width: getSize(22),
-      height: getSize(22),
+    onPressed: () {},
+    icon: SafeOnTap(
+      onSafeTap: onPressed,
+      child: Image.asset(
+        imageName,
+        // color: isBlack == true ? Colors.black : Colors.white,
+        width: getSize(22),
+        height: getSize(22),
+      ),
     ),
   );
 }
@@ -433,7 +437,7 @@ getTitleText(
   double? fontSize,
   TextAlign? alignment = TextAlign.left,
   FontWeight? fontweight,
-      TextOverflow? overflow,
+  TextOverflow? overflow,
 }) {
   return Text(
     text,

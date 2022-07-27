@@ -1,11 +1,24 @@
 import 'dart:convert';
 
+import 'package:video_chat/components/Model/Gift/ReceivedGiftModel.dart';
+import 'package:video_chat/components/Screens/VideoCall/VideoCall.dart';
+
+List<Details> detailEarningModelFromJson(String str) =>
+    List<Details>.from(
+        jsonDecode(str).map((e) => Details.fromJson(e)));
+
+
+
+
+String detailEarningModelToJson(Details data) =>
+    json.encode(data.toJson());
+
 class DetailEarningReportModel {
   Vidocall? vidocall;
-  Vidocall? gifts;
+  Gifts? gifts;
   Match? match;
-  Vidocall? refral;
-  Vidocall? albums;
+  Referal? refral;
+  Albums? albums;
 
   DetailEarningReportModel(
       {this.vidocall, this.gifts, this.match, this.refral, this.albums});
@@ -14,12 +27,12 @@ class DetailEarningReportModel {
     vidocall = json['vidocall'] != null
         ? new Vidocall.fromJson(json['vidocall'])
         : null;
-    gifts = json['gifts'] != null ? new Vidocall.fromJson(json['gifts']) : null;
+    gifts = json['gifts'] != null ? new Gifts.fromJson(json['gifts']) : null;
     match = json['match'] != null ? new Match.fromJson(json['match']) : null;
     refral =
-        json['refral'] != null ? new Vidocall.fromJson(json['refral']) : null;
+        json['refral'] != null ? new Referal.fromJson(json['refral']) : null;
     albums =
-        json['albums'] != null ? new Vidocall.fromJson(json['albums']) : null;
+        json['albums'] != null ? new Albums.fromJson(json['albums']) : null;
   }
 
   Map<String, dynamic> toJson() {
@@ -152,6 +165,84 @@ class Match {
   Match({this.total, this.details});
 
   Match.fromJson(Map<String, dynamic> json) {
+    total = json['total'];
+    if (json['details'] != null) {
+      details = <Details>[];
+      json['details'].forEach((v) {
+        details!.add(new Details.fromJson(v));
+      });
+    }
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+    data['total'] = this.total;
+    if (this.details != null) {
+      data['details'] = this.details!.map((v) => v.toJson()).toList();
+    }
+    return data;
+  }
+}
+
+class Gifts {
+  int? total;
+  List<Details>? details;
+
+  Gifts({this.total, this.details});
+
+  Gifts.fromJson(Map<String, dynamic> json) {
+    total = json['total'];
+    if (json['details'] != null) {
+      details = <Details>[];
+      json['details'].forEach((v) {
+        details!.add(new Details.fromJson(v));
+      });
+    }
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+    data['total'] = this.total;
+    if (this.details != null) {
+      data['details'] = this.details!.map((v) => v.toJson()).toList();
+    }
+    return data;
+  }
+}
+
+class Referal {
+  int? total;
+  List<Details>? details;
+
+  Referal({this.total, this.details});
+
+  Referal.fromJson(Map<String, dynamic> json) {
+    total = json['total'];
+    if (json['details'] != null) {
+      details = <Details>[];
+      json['details'].forEach((v) {
+        details!.add(new Details.fromJson(v));
+      });
+    }
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+    data['total'] = this.total;
+    if (this.details != null) {
+      data['details'] = this.details!.map((v) => v.toJson()).toList();
+    }
+    return data;
+  }
+}
+
+class Albums {
+  int? total;
+  List<Details>? details;
+
+  Albums({this.total, this.details});
+
+  Albums.fromJson(Map<String, dynamic> json) {
     total = json['total'];
     if (json['details'] != null) {
       details = <Details>[];

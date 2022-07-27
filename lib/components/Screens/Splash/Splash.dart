@@ -28,7 +28,6 @@ class _SplashState extends State<Splash> {
   goToNext() async {
     await AgoraService.instance.initialize(AGORA_APPID, context);
     AppNavigation.shared.goNextFromSplash(context);
-    SocketHealper.shared.connect();
   }
 
   @override
@@ -54,7 +53,7 @@ class _SplashState extends State<Splash> {
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  getColorText("Storm", ColorConstants.red, fontSize: 35),
+                  getColorText("Muffin", ColorConstants.red, fontSize: 35),
                   SizedBox(
                     width: getSize(8),
                   ),

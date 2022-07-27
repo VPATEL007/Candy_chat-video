@@ -154,7 +154,7 @@ class MatchingProfileProvider with ChangeNotifier {
             } else {
               coinBalance = CoinModel.fromJson(response);
               if (coinBalance?.lowBalance == true) {
-                View.showMessage(context, "Insufficient coin balance.");
+                // View.showMessage(context, "Insufficient coin balance.");
               }
             }
           } else {

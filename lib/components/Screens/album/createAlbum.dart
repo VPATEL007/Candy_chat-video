@@ -69,7 +69,7 @@ class _CreateAlbumState extends State<CreateAlbum> {
   }
 
   Future<bool> _willPopCallback() async {
-    Navigator.pop(context, isCreated);
+    Navigator.pop(context);
     return true;
   }
 
@@ -205,7 +205,6 @@ class _CreateAlbumState extends State<CreateAlbum> {
                   }
                   Provider.of<AlbumProvider>(context, listen: false)
                       .createAlbum(context, albumList, selectedPrice);
-                  isCreated = true;
                 })
               ],
             ),
@@ -243,7 +242,7 @@ class _CreateAlbumState extends State<CreateAlbum> {
         children: [
           InkWell(
               onTap: () {
-                Navigator.pop(context, isCreated);
+                Navigator.pop(context);
               },
               child: Icon(
                 Icons.arrow_back_ios,
