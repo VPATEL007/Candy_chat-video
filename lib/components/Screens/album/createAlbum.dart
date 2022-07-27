@@ -26,8 +26,12 @@ class CreateAlbum extends StatefulWidget {
 
 class _CreateAlbumState extends State<CreateAlbum> {
   List<String> albumList = [];
-  String selectedPrice = price300.toString();
-  List<String> priceList = [price300.toString(), price500.toString()];
+  String selectedPrice = price100.toString();
+  List<String> priceList = [
+    price100.toString(),
+    price200.toString(),
+    price300.toString()
+  ];
   bool isCreated = false;
 
   loadAssets() async {
