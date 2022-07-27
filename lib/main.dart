@@ -148,7 +148,7 @@ listenNotifications() {
 
 void configLocalNotification() {
   var initializationSettingsAndroid =
-      new AndroidInitializationSettings("@mipmap/launcher_icon");
+      new AndroidInitializationSettings("@mipmap/ic_launcher");
   var initializationSettingsIOS = new IOSInitializationSettings();
   var initializationSettings = new InitializationSettings(
       android: initializationSettingsAndroid, iOS: initializationSettingsIOS);

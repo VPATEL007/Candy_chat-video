@@ -8,6 +8,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter_keyboard_visibility/flutter_keyboard_visibility.dart';
+
 // import 'package:flutter_screen/screen.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:provider/provider.dart';
@@ -337,18 +338,20 @@ class VideoCallState extends State<VideoCall> with WidgetsBindingObserver {
                     SizedBox(
                       width: getSize(15),
                     ),
-                    callStatus?.callType==null?SizedBox():Container(
-                      decoration: BoxDecoration(
-                          color: Colors.black,
-                          borderRadius: BorderRadius.circular(10)),
-                      child: Padding(
-                        padding: EdgeInsets.only(
-                            top: 4, bottom: 4, left: 8, right: 8),
-                        child: Text(callStatus?.callType ?? '',
-                            style: appTheme?.black14SemiBold
-                                .copyWith(color: Colors.white)),
-                      ),
-                    ),
+                    callStatus?.callType == null
+                        ? SizedBox()
+                        : Container(
+                            decoration: BoxDecoration(
+                                color: Colors.black,
+                                borderRadius: BorderRadius.circular(10)),
+                            child: Padding(
+                              padding: EdgeInsets.only(
+                                  top: 4, bottom: 4, left: 8, right: 8),
+                              child: Text(callStatus?.callType ?? '',
+                                  style: appTheme?.black14SemiBold
+                                      .copyWith(color: Colors.white)),
+                            ),
+                          ),
                   ],
                 ),
               ),
