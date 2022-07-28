@@ -71,7 +71,7 @@ class VideoCallState extends State<VideoCall> with WidgetsBindingObserver {
   Timer? duraationTimer;
   Socket? socket = SocketHealper.socket;
   bool isSwitch = false;
-  bool isBlurryVideo=false;
+  bool isBlurryVideo = false;
 
   CallStatusModel? callStatus = Provider.of<MatchingProfileProvider>(
           navigationKey.currentContext!,
@@ -292,17 +292,18 @@ class VideoCallState extends State<VideoCall> with WidgetsBindingObserver {
           children: [
             Container(
               child: Stack(
-                    children: [
-                      (isSwitch == true
-                          ? _renderLocalPreview()
-                          : _renderRemoteVideo()),
-                      isRemoteVideoMute == true?BackdropFilter(
+                children: [
+                  (isSwitch == true
+                      ? _renderLocalPreview()
+                      : _renderRemoteVideo()),
+                  isRemoteVideoMute == true
+                      ? BackdropFilter(
                           filter: ImageFilter.blur(sigmaX: 80.0, sigmaY: 80.0),
-                          child: Container(
-                          ),
-                        ):SizedBox(),
-                    ],
-                  ) ,
+                          child: Container(),
+                        )
+                      : SizedBox(),
+                ],
+              ),
             ),
             Positioned(bottom: getSize(120), child: chatList()),
             Positioned(
@@ -380,34 +381,34 @@ class VideoCallState extends State<VideoCall> with WidgetsBindingObserver {
                             ? " camera and microphone off"
                             : isRemoteAudioMute
                                 ? " muted this call"
-                                : isBlurryVideo&&isRemoteVideoMute
+                                : isBlurryVideo && isRemoteVideoMute
                                     ? ""
-                                    : isRemoteVideoMute==true?"camera off":""),
+                                    : isRemoteVideoMute == true
+                                        ? "camera off"
+                                        : ""),
                     style:
                         appTheme?.black14SemiBold.copyWith(color: Colors.white),
                   ))
                 : SizedBox(),
-
             Padding(
-              padding: const EdgeInsets.only(bottom: 90,right: 30),
+              padding: const EdgeInsets.only(bottom: 90, right: 30),
               child: Align(
                 alignment: Alignment.bottomRight,
                 child: InkWell(
                     onTap: () {
                       setState(() {
-                        isBlurryVideo=!isBlurryVideo;
+                        isBlurryVideo = !isBlurryVideo;
                         engine?.muteLocalVideoStream(isBlurryVideo);
                       });
                     },
                     child: Container(
                       decoration: BoxDecoration(
-                          color: Colors.white, borderRadius: BorderRadius.circular(50)),
+                          color: Colors.white,
+                          borderRadius: BorderRadius.circular(50)),
                       child: Padding(
                         padding: EdgeInsets.all(getSize(10)),
-                        child: getTitleText(
-                            context, 'Blur\nVideo',
-                            alignment: TextAlign.center,
-                            color: Colors.pink),
+                        child: getTitleText(context, 'Blur\nVideo',
+                            alignment: TextAlign.center, color: Colors.pink),
                       ),
                     )),
               ),
@@ -496,7 +497,6 @@ class VideoCallState extends State<VideoCall> with WidgetsBindingObserver {
                               SizedBox(
                                 width: getSize(12),
                               ),
-
 
                               // callEndButton()
                             ],
