@@ -22,6 +22,7 @@ class GoogleSignInHelper with ChangeNotifier {
 
       req["provider"] = google;
       req["token"] = googleSignInAuthentication.accessToken;
+      req["registerApp"] = 'host';
 
       CommonApiHelper.shared.callLoginApi(req, context, () {}, () {});
       final Map eventValues = {

@@ -22,6 +22,7 @@ class CommonApiHelper {
 //Login
   void callLoginApi(Map<String, dynamic> req, BuildContext context,
       Function success, Function failure) {
+    print('req["registerApp"]==> ${req["registerApp"]}');
     NetworkClient.getInstance.showLoader(context);
     NetworkClient.getInstance.callApi(
       context: context,
@@ -223,7 +224,8 @@ class CommonApiHelper {
         if (response["userData"] != null) {
           UserModel model = UserModel.fromJson(response["userData"]);
           app.resolve<PrefUtils>().saveUser(model, isLoggedIn: true);
-          print('response from call guest login api==> ${response["userData"]}');
+          print(
+              'response from call guest login api==> ${response["userData"]}');
         }
 
         if (response["tokenData"] != null) {

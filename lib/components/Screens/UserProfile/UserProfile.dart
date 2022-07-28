@@ -177,25 +177,24 @@ class _UserProfileState extends State<UserProfile> {
             ),
             SafeOnTap(
               intervalMs: 2000,
-              onSafeTap: ()  async {
+              onSafeTap: () async {
                 await Provider.of<MatchingProfileProvider>(context,
-                    listen: false)
+                        listen: false)
                     .checkCoinBalance(context, widget.userModel?.id ?? 0,
-                    widget.userModel?.userName ?? "");
+                        widget.userModel?.userName ?? "");
 
-                CoinModel? coins = Provider.of<MatchingProfileProvider>(
-                    context,
-                    listen: false)
-                    .coinBalance;
+                CoinModel? coins =
+                    Provider.of<MatchingProfileProvider>(context, listen: false)
+                        .coinBalance;
 
                 if (coins?.lowBalance == false) {
                   // discover.id = 41;
                   await Provider.of<MatchingProfileProvider>(context,
-                      listen: false)
+                          listen: false)
                       .startVideoCall(context, widget.userModel?.id ?? 0);
                   VideoCallModel? videoCallModel =
                       Provider.of<MatchingProfileProvider>(context,
-                          listen: false)
+                              listen: false)
                           .videoCallModel;
 
                   if (videoCallModel != null) {
@@ -206,8 +205,7 @@ class _UserProfileState extends State<UserProfile> {
                         videoCallModel.channelName ?? "",
                         widget.userModel?.gender ?? "",
                         context);
-                    Provider.of<VideoCallStatusProvider>(context,
-                        listen: false)
+                    Provider.of<VideoCallStatusProvider>(context, listen: false)
                         .setCallStatus = CallStatus.Start;
                     UserModel? userModel =
                         Provider.of<FollowesProvider>(context, listen: false)
@@ -222,10 +220,10 @@ class _UserProfileState extends State<UserProfile> {
                             : userModel?.userImages?.first.photoUrl ?? "",
                         name: widget.userModel?.userName ?? "",
                         toImageUrl: (widget.userModel?.userImages?.isEmpty ??
-                            true)
+                                true)
                             ? ""
                             : widget.userModel?.userImages?.first.photoUrl ??
-                            "",
+                                "",
                         id: videoCallModel.toUserId.toString(),
                         toGender: widget.userModel?.gender ?? "",
                       ),
@@ -597,6 +595,7 @@ class _UserProfileState extends State<UserProfile> {
               width: getSize(110),
               child: Row(
                 children: [
+                  Expanded(child: SizedBox()),
                   InkWell(
                       onTap: () {
                         if (widget.userModel?.id != null) {
@@ -638,6 +637,7 @@ class _UserProfileState extends State<UserProfile> {
                                   (widget.userModel?.isFollowing == true))
                               ? "assets/Profile/remove_user.png"
                               : icFollow)),
+                  Expanded(child: SizedBox()),
                   // Spacer(),
                   // Container(
                   //   // height: getSize(72),
@@ -661,47 +661,47 @@ class _UserProfileState extends State<UserProfile> {
                   //     ),
                   //   ),
                   // ),
-                  Spacer(),
-                  InkWell(
-                      onTap: () {
-                        if (widget.userModel?.id != null) {
-                          if (((widget.userModel?.isFavourite != null) &&
-                              (widget.userModel?.isFavourite == false))) {
-                            Provider.of<FollowesProvider>(context,
-                                    listen: false)
-                                .favouriteUnfavouriteUser(
-                                    context,
-                                    widget.userModel?.id ?? 0,
-                                    FavouriteStatus.add);
-                            if (mounted) {
-                              setState(() {
-                                if (widget.userModel?.userFollowers != null) {
-                                  widget.userModel?.isFavourite = true;
-                                }
-                              });
-                            }
-                          } else {
-                            Provider.of<FollowesProvider>(context,
-                                    listen: false)
-                                .favouriteUnfavouriteUser(
-                                    context,
-                                    widget.userModel?.id ?? 0,
-                                    FavouriteStatus.delete);
-                            if (mounted) {
-                              setState(() {
-                                if (widget.userModel?.isFavourite != null) {
-                                  widget.userModel?.isFavourite = false;
-                                }
-                              });
-                            }
-                          }
-                        }
-                      },
-                      child: getProfileButton(
-                          ((widget.userModel?.isFavourite != null) &&
-                                  (widget.userModel?.isFavourite == true))
-                              ? "assets/Profile/unfavourite.png"
-                              : icFavourite)),
+                  // Spacer(),
+                  // InkWell(
+                  //     onTap: () {
+                  //       if (widget.userModel?.id != null) {
+                  //         if (((widget.userModel?.isFavourite != null) &&
+                  //             (widget.userModel?.isFavourite == false))) {
+                  //           Provider.of<FollowesProvider>(context,
+                  //                   listen: false)
+                  //               .favouriteUnfavouriteUser(
+                  //                   context,
+                  //                   widget.userModel?.id ?? 0,
+                  //                   FavouriteStatus.add);
+                  //           if (mounted) {
+                  //             setState(() {
+                  //               if (widget.userModel?.userFollowers != null) {
+                  //                 widget.userModel?.isFavourite = true;
+                  //               }
+                  //             });
+                  //           }
+                  //         } else {
+                  //           Provider.of<FollowesProvider>(context,
+                  //                   listen: false)
+                  //               .favouriteUnfavouriteUser(
+                  //                   context,
+                  //                   widget.userModel?.id ?? 0,
+                  //                   FavouriteStatus.delete);
+                  //           if (mounted) {
+                  //             setState(() {
+                  //               if (widget.userModel?.isFavourite != null) {
+                  //                 widget.userModel?.isFavourite = false;
+                  //               }
+                  //             });
+                  //           }
+                  //         }
+                  //       }
+                  //     },
+                  //     child: getProfileButton(
+                  //         ((widget.userModel?.isFavourite != null) &&
+                  //                 (widget.userModel?.isFavourite == true))
+                  //             ? "assets/Profile/unfavourite.png"
+                  //             : icFavourite)),
                 ],
               ),
             ))

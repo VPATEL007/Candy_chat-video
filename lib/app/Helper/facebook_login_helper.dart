@@ -20,6 +20,7 @@ class FacebookLoginHelper {
 
       if (loginresult.accessToken != null) {
         req["provider"] = faceBook;
+        req["registerApp"] = 'host';
         req["token"] = loginresult.accessToken?.token;
         final Map eventValues = {"af_registration_type": "facebook"};
         AppsFlyerService.appsFlyerService

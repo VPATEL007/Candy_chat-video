@@ -86,7 +86,7 @@ class VideoCallState extends State<VideoCall> with WidgetsBindingObserver {
 
     super.initState();
     // WidgetsBinding.instance?.addObserver(this);
-    WidgetsBinding.instance?.addObserver(LifecycleEventHandler(
+    WidgetsBinding.instance.addObserver(LifecycleEventHandler(
         detachedCallBack: () {},
         resumeCallBack: () {},
         pausedCallback: () {
@@ -99,7 +99,7 @@ class VideoCallState extends State<VideoCall> with WidgetsBindingObserver {
         context: context));
     // Screen.keepOn(true);
     agoraService.isOngoingCall = true;
-    WidgetsBinding.instance?.addPostFrameCallback((_) {
+    WidgetsBinding.instance.addPostFrameCallback((_) {
       initPlatformState();
       clearData();
       // init();
@@ -167,7 +167,7 @@ class VideoCallState extends State<VideoCall> with WidgetsBindingObserver {
     agoraService.openUserFeedBackPopUp(toUser?.id ?? 0);
     agoraService.isOngoingCall = false;
     // Screen.keepOn(false);
-    WidgetsBinding.instance?.removeObserver(LifecycleEventHandler(
+    WidgetsBinding.instance.removeObserver(LifecycleEventHandler(
         detachedCallBack: () {},
         resumeCallBack: () {},
         pausedCallback: () {},
@@ -184,6 +184,13 @@ class VideoCallState extends State<VideoCall> with WidgetsBindingObserver {
   void startTimer() {
     durationCounter = 0;
     duraationTimer = Timer.periodic(Duration(seconds: 1), (timer) {
+      if (callStatus?.callType?.toLowerCase() != 'paid') {
+        if (durationCounter == 30) {
+          autoEndCall();
+          endCall();
+          Navigator.pop(context);
+        }
+      }
       setState(() {
         durationCounter++;
       });
@@ -274,6 +281,7 @@ class VideoCallState extends State<VideoCall> with WidgetsBindingObserver {
 
   @override
   Widget build(BuildContext context) {
+    print('callStatus?.callType==> ${callStatus?.callType}');
     return WillPopScope(
       onWillPop: () async {
         return false;
