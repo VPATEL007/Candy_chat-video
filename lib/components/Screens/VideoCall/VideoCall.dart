@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:ui';
 
 import 'package:agora_rtc_engine/rtc_engine.dart';
 import 'package:agora_rtc_engine/rtc_local_view.dart' as RtcLocalView;
@@ -70,6 +71,7 @@ class VideoCallState extends State<VideoCall> with WidgetsBindingObserver {
   Timer? duraationTimer;
   Socket? socket = SocketHealper.socket;
   bool isSwitch = false;
+  bool isBlurryVideo=false;
 
   CallStatusModel? callStatus = Provider.of<MatchingProfileProvider>(
           navigationKey.currentContext!,
@@ -281,13 +283,18 @@ class VideoCallState extends State<VideoCall> with WidgetsBindingObserver {
         body: Stack(
           children: [
             Container(
-              child: isRemoteVideoMute == true
-                  ? Container(
-                      color: Colors.black,
-                    )
-                  : (isSwitch == true
-                      ? _renderLocalPreview()
-                      : _renderRemoteVideo()),
+              child: Stack(
+                    children: [
+                      (isSwitch == true
+                          ? _renderLocalPreview()
+                          : _renderRemoteVideo()),
+                      isRemoteVideoMute == true?BackdropFilter(
+                          filter: ImageFilter.blur(sigmaX: 80.0, sigmaY: 80.0),
+                          child: Container(
+                          ),
+                        ):SizedBox(),
+                    ],
+                  ) ,
             ),
             Positioned(bottom: getSize(120), child: chatList()),
             Positioned(
@@ -365,13 +372,38 @@ class VideoCallState extends State<VideoCall> with WidgetsBindingObserver {
                             ? " camera and microphone off"
                             : isRemoteAudioMute
                                 ? " muted this call"
-                                : isRemoteVideoMute
-                                    ? " camera off"
-                                    : ""),
+                                : isBlurryVideo&&isRemoteVideoMute
+                                    ? ""
+                                    : isRemoteVideoMute==true?"camera off":""),
                     style:
                         appTheme?.black14SemiBold.copyWith(color: Colors.white),
                   ))
                 : SizedBox(),
+
+            Padding(
+              padding: const EdgeInsets.only(bottom: 90,right: 30),
+              child: Align(
+                alignment: Alignment.bottomRight,
+                child: InkWell(
+                    onTap: () {
+                      setState(() {
+                        isBlurryVideo=!isBlurryVideo;
+                        engine?.muteLocalVideoStream(isBlurryVideo);
+                      });
+                    },
+                    child: Container(
+                      decoration: BoxDecoration(
+                          color: Colors.white, borderRadius: BorderRadius.circular(50)),
+                      child: Padding(
+                        padding: EdgeInsets.all(getSize(10)),
+                        child: getTitleText(
+                            context, 'Blur\nVideo',
+                            alignment: TextAlign.center,
+                            color: Colors.pink),
+                      ),
+                    )),
+              ),
+            ),
             Positioned(
                 bottom: getSize(40),
                 child: Container(
@@ -456,6 +488,8 @@ class VideoCallState extends State<VideoCall> with WidgetsBindingObserver {
                               SizedBox(
                                 width: getSize(12),
                               ),
+
+
                               // callEndButton()
                             ],
                           ),
