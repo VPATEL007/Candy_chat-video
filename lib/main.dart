@@ -32,6 +32,7 @@ import 'package:video_chat/provider/tags_provider.dart';
 import 'package:video_chat/provider/video_call_status_provider.dart';
 import 'package:video_chat/provider/visitor_provider.dart';
 import 'package:video_chat/provider/withdraw_provider.dart';
+import 'package:video_chat/utils/local_notifications.dart';
 
 import 'app/Helper/Themehelper.dart';
 import 'app/constant/constants.dart';
@@ -111,17 +112,17 @@ Future<void> setupFCM() async {
     });
   }
 
-  configLocalNotification();
+  LocalNotification().configLocalNotification();
 }
 
 listenNotifications() {
   FirebaseMessaging.onMessage.listen((RemoteMessage event) {
-    showNotification(event.notification);
+    LocalNotification().showNotification(event.notification);
   });
 
   // FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
   FirebaseMessaging.onMessageOpenedApp.listen((message) {
-    openNotification(message);
+    LocalNotification().openNotification(message);
     print('Message clicked!');
   });
 }
@@ -146,44 +147,44 @@ listenNotifications() {
 //   }
 // }
 
-void configLocalNotification() {
-  var initializationSettingsAndroid =
-      new AndroidInitializationSettings("@mipmap/ic_launcher");
-  var initializationSettingsIOS = new IOSInitializationSettings();
-  var initializationSettings = new InitializationSettings(
-      android: initializationSettingsAndroid, iOS: initializationSettingsIOS);
-  flutterLocalNotificationsPlugin.initialize(initializationSettings);
-}
-
-void showNotification(RemoteNotification? message) async {
-  var androidPlatformChannelSpecifics = new AndroidNotificationDetails(
-    Platform.isAndroid ? 'high_importance_channel' : 'com.sugarcam.videochat',
-    'This channel is used for important notifications.',
-    '',
-    playSound: true,
-    enableVibration: true,
-    importance: Importance.max,
-    priority: Priority.high,
-  );
-  const IOSNotificationDetails iOSPlatformChannelSpecifics =
-      IOSNotificationDetails(subtitle: 'the subtitle');
-  var platformChannelSpecifics = new NotificationDetails(
-      android: androidPlatformChannelSpecifics,
-      iOS: iOSPlatformChannelSpecifics);
-  await flutterLocalNotificationsPlugin.show(
-      0, message?.title, message?.body, platformChannelSpecifics,
-      payload: 'data');
-  print("Show Notification");
-}
-
-openNotification(RemoteMessage message) {
-  NotificationModel model = NotificationModel.fromJson(message.data);
-  if (model.type == "follow") {
-    NavigationUtilities.push(UserProfile(
-      userModel: UserModel(id: int.parse(model.userId ?? "")),
-    ));
-  }
-}
+// void configLocalNotification() {
+//   var initializationSettingsAndroid =
+//       new AndroidInitializationSettings("@mipmap/ic_launcher");
+//   var initializationSettingsIOS = new IOSInitializationSettings();
+//   var initializationSettings = new InitializationSettings(
+//       android: initializationSettingsAndroid, iOS: initializationSettingsIOS);
+//   flutterLocalNotificationsPlugin.initialize(initializationSettings);
+// }
+//
+// void showNotification(RemoteNotification? message) async {
+//   var androidPlatformChannelSpecifics = new AndroidNotificationDetails(
+//     Platform.isAndroid ? 'high_importance_channel' : 'com.sugarcam.videochat',
+//     'This channel is used for important notifications.',
+//     '',
+//     playSound: true,
+//     enableVibration: true,
+//     importance: Importance.max,
+//     priority: Priority.high,
+//   );
+//   const IOSNotificationDetails iOSPlatformChannelSpecifics =
+//       IOSNotificationDetails(subtitle: 'the subtitle');
+//   var platformChannelSpecifics = new NotificationDetails(
+//       android: androidPlatformChannelSpecifics,
+//       iOS: iOSPlatformChannelSpecifics);
+//   await flutterLocalNotificationsPlugin.show(
+//       0, message?.title, message?.body, platformChannelSpecifics,
+//       payload: 'data');
+//   print("Show Notification");
+// }
+//
+// openNotification(RemoteMessage message) {
+//   NotificationModel model = NotificationModel.fromJson(message.data);
+//   if (model.type == "follow") {
+//     NavigationUtilities.push(UserProfile(
+//       userModel: UserModel(id: int.parse(model.userId ?? "")),
+//     ));
+//   }
+// }
 
 GlobalKey navigationKey = GlobalKey();
 
