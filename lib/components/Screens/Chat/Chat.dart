@@ -31,8 +31,13 @@ import '../../Model/Chat/chat_message_model.dart';
 class Chat extends StatefulWidget {
   final int toUserId;
   final isFromProfile;
+  bool isNotification;
 
-  Chat({Key? key, required this.toUserId, this.isFromProfile = false})
+  Chat(
+      {Key? key,
+      required this.toUserId,
+      this.isFromProfile = false,
+      this.isNotification = false})
       : super(key: key);
 
   @override
@@ -53,13 +58,14 @@ class _ChatState extends State<Chat> {
 
   @override
   void initState() {
+    SocketHealper.currentUserId = widget.toUserId.toString();
     if (socket?.disconnected ?? true) {
       SocketHealper.shared.connect();
     }
 
     super.initState();
     // init();
-    WidgetsBinding.instance?.addPostFrameCallback((_) {
+    WidgetsBinding.instance.addPostFrameCallback((_) {
       getToUserDetail();
       receiveMessage();
     });
@@ -127,7 +133,12 @@ class _ChatState extends State<Chat> {
   @override
   void dispose() {
     super.dispose();
+    SocketHealper.currentUserId = '';
     messageListScrollController.dispose();
+    if (widget.isNotification) {
+      SocketHealper.shared.disconnect();
+      SocketHealper.shared.connect();
+    }
   }
 
   @override
