@@ -68,7 +68,12 @@ class _ChatState extends State<Chat> {
     WidgetsBinding.instance.addPostFrameCallback((_) {
       getToUserDetail();
       receiveMessage();
+      resetMessageCount();
     });
+  }
+
+  resetMessageCount() {
+    socket?.emit("messageCountReset", {userId, widget.toUserId});
   }
 
   receiveMessage() {

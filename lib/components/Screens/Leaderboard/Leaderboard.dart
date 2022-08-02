@@ -23,6 +23,7 @@ import 'package:video_chat/components/Screens/OnboardingVerfication/Verification
 import 'package:video_chat/components/widgets/TabBar/Tabbar.dart';
 import 'package:video_chat/main.dart';
 
+import '../Chat/Chat.dart';
 import '../Home/MatchedProfile.dart';
 import '../album/createAlbum.dart';
 import '../permissionScreen.dart';
@@ -75,31 +76,46 @@ class _LeaderBoardState extends State<LeaderBoard> {
     bool isCompleted = await CommonApiHelper.shared.getRTMToken(context);
     FirebaseMessaging.instance.getInitialMessage().then((message) {
       if (message != null) {
-        String userName = message.data['user_name'];
-        String toUserId = message.data['to_user_id'];
-        String fromUserId = message.data['from_user_id'];
-        String toImageUrl = message.data['toImageUrl'];
-        String fromImageUrl = message.data['fromImageUrl'];
-        String channelName = message.data['channel_name'];
-        String sessionId = message.data['token'];
-        String toGender = message.data['toGender'];
-        Navigator.of(context).push(MaterialPageRoute(
-          builder: (context) => MatchedProfile(
-              channelName: channelName,
-              token: sessionId,
-              fromId: toUserId.toString(),
-              fromImageUrl: fromImageUrl,
-              name: userName,
-              toImageUrl: toImageUrl,
-              id: fromUserId.toString(),
-              toGender: toGender),
-        ));
+        if (message.data['type'] == 'message') {
+          print('openNotification==> ${message.data['type']} ${message
+              .data['user_id']}');
+          NavigationUtilities.push(
+              Chat(toUserId: int.parse(message.data['user_id'])));
+          return;
+        }
+
+        if (message.data['type'] != 'videocall') {
+          String userName = message.data['user_name'];
+          String toUserId = message.data['to_user_id'];
+          String fromUserId = message.data['from_user_id'];
+          String toImageUrl = message.data['toImageUrl'];
+          String fromImageUrl = message.data['fromImageUrl'];
+          String channelName = message.data['channel_name'];
+          String sessionId = message.data['token'];
+          String toGender = message.data['toGender'];
+          Navigator.of(context).push(MaterialPageRoute(
+            builder: (context) =>
+                MatchedProfile(
+                    channelName: channelName,
+                    token: sessionId,
+                    fromId: toUserId.toString(),
+                    fromImageUrl: fromImageUrl,
+                    name: userName,
+                    toImageUrl: toImageUrl,
+                    id: fromUserId.toString(),
+                    toGender: toGender),
+          ));
+          return;
+        }
       }
     });
   }
 
   openVerificationPopUp() {
-    var status = app.resolve<PrefUtils>().getUserDetails()?.isFacVerify;
+    var status = app
+        .resolve<PrefUtils>()
+        .getUserDetails()
+        ?.isFacVerify;
     if (status == faceVerified) {
       return true;
     }
@@ -178,7 +194,7 @@ class _LeaderBoardState extends State<LeaderBoard> {
                                   children: [
                                     Column(
                                       crossAxisAlignment:
-                                          CrossAxisAlignment.start,
+                                      CrossAxisAlignment.start,
                                       children: [
                                         Text(
                                             "Submit full profile and\nget approved",
@@ -196,7 +212,7 @@ class _LeaderBoardState extends State<LeaderBoard> {
                                             style: TextStyle(
                                                 fontSize: getFontSize(14),
                                                 color: status ==
-                                                        facePandingApproval
+                                                    facePandingApproval
                                                     ? Colors.red
                                                     : ColorConstants.red,
                                                 fontWeight: FontWeight.w500))
@@ -207,7 +223,7 @@ class _LeaderBoardState extends State<LeaderBoard> {
                                       decoration: BoxDecoration(
                                           color: ColorConstants.red,
                                           borderRadius:
-                                              BorderRadius.circular(12)),
+                                          BorderRadius.circular(12)),
                                       child: Padding(
                                         padding: EdgeInsets.only(
                                             left: 16,
@@ -222,7 +238,7 @@ class _LeaderBoardState extends State<LeaderBoard> {
                                                     fontSize: getFontSize(14),
                                                     color: Colors.white,
                                                     fontWeight:
-                                                        FontWeight.w500))
+                                                    FontWeight.w500))
                                           ],
                                         ),
                                       ),
@@ -247,7 +263,10 @@ class _LeaderBoardState extends State<LeaderBoard> {
   getCallDuration({showLoader = true}) {
     Map<String, dynamic> req = {};
     req["callType"] = isCall == true ? "call" : "gift";
-    req["agency_id"] = app.resolve<PrefUtils>().getUserDetails()?.agencyId ?? 0;
+    req["agency_id"] = app
+        .resolve<PrefUtils>()
+        .getUserDetails()
+        ?.agencyId ?? 0;
 
     if (showLoader) NetworkClient.getInstance.showLoader(context);
     NetworkClient.getInstance.callApi(
@@ -384,7 +403,7 @@ class _LeaderBoardState extends State<LeaderBoard> {
                 return Container(height: 1, color: ColorConstants.borderColor);
               },
               itemCount:
-                  isCall == true ? callDuration.length : giftCoins.length),
+              isCall == true ? callDuration.length : giftCoins.length),
         )
       ],
     );
@@ -410,15 +429,15 @@ class _LeaderBoardState extends State<LeaderBoard> {
             ),
             isCall == true
                 ? Container(
-                    width: (MathUtilities.screenWidth(context) - 34) / 3,
-                    child: Center(
-                      child: Text(
-                        item.callDuration.toString() + " mins",
-                        style: appTheme?.black14SemiBold.copyWith(
-                            fontSize: getFontSize(12), color: Colors.white),
-                      ),
-                    ),
-                  )
+              width: (MathUtilities.screenWidth(context) - 34) / 3,
+              child: Center(
+                child: Text(
+                  item.callDuration.toString() + " mins",
+                  style: appTheme?.black14SemiBold.copyWith(
+                      fontSize: getFontSize(12), color: Colors.white),
+                ),
+              ),
+            )
                 : Container(),
             Container(
               width: isCall == true
@@ -427,8 +446,8 @@ class _LeaderBoardState extends State<LeaderBoard> {
               child: Center(
                 child: Text(
                   (isCall == true
-                          ? item.coins.toString()
-                          : item.giftCoins.toString()) +
+                      ? item.coins.toString()
+                      : item.giftCoins.toString()) +
                       " Coins",
                   style: appTheme?.black14SemiBold.copyWith(
                       fontSize: getFontSize(12), color: ColorConstants.red),
@@ -472,7 +491,7 @@ class _LeaderBoardState extends State<LeaderBoard> {
             style: appTheme?.black14SemiBold.copyWith(
                 fontSize: getFontSize(16),
                 color:
-                    isCurrent == true ? ColorConstants.redText : Colors.white),
+                isCurrent == true ? ColorConstants.redText : Colors.white),
           ),
           SizedBox(
             height: getSize(12),

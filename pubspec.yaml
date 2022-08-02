@@ -65,6 +65,7 @@ dependencies:
   assets_audio_player: ^3.0.3+7
   dio: ^4.0.0
   simple_tags: ^0.0.4
+  get: ^4.6.5
   firebase_crashlytics: ^2.2.1
   firebase_analytics: ^8.3.4
   pull_to_refresh: ^2.0.0
