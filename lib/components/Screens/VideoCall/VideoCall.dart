@@ -72,6 +72,7 @@ class VideoCallState extends State<VideoCall> with WidgetsBindingObserver {
   Socket? socket = SocketHealper.socket;
   bool isSwitch = false;
   bool isBlurryVideo = false;
+  bool isVideo = false;
 
   CallStatusModel? callStatus = Provider.of<MatchingProfileProvider>(
           navigationKey.currentContext!,
@@ -293,15 +294,31 @@ class VideoCallState extends State<VideoCall> with WidgetsBindingObserver {
             Container(
               child: Stack(
                 children: [
-                  (isSwitch == true
-                      ? _renderLocalPreview()
-                      : _renderRemoteVideo()),
-                  isRemoteVideoMute == true
-                      ? BackdropFilter(
-                          filter: ImageFilter.blur(sigmaX: 80.0, sigmaY: 80.0),
-                          child: Container(),
+                  isSwitch == true
+                      ? Stack(
+                          children: [
+                            _renderLocalPreview(),
+                            isBlurryVideo == true || _videoMute == true
+                                ? BackdropFilter(
+                                    filter: ImageFilter.blur(
+                                        sigmaX: 80.0, sigmaY: 80.0),
+                                    child: Container(),
+                                  )
+                                : SizedBox()
+                          ],
                         )
-                      : SizedBox(),
+                      : Stack(
+                          children: [
+                            _renderRemoteVideo(),
+                            isRemoteVideoMute == true
+                                ? BackdropFilter(
+                                    filter: ImageFilter.blur(
+                                        sigmaX: 80.0, sigmaY: 80.0),
+                                    child: Container(),
+                                  )
+                                : SizedBox()
+                          ],
+                        ),
                 ],
               ),
             ),
@@ -310,7 +327,7 @@ class VideoCallState extends State<VideoCall> with WidgetsBindingObserver {
                 left: getSize(30),
                 top: getSize(30),
                 child: Visibility(
-                  visible: !_videoMute,
+                  visible: true,
                   child: InkWell(
                     onTap: () {
                       setState(() {
@@ -323,10 +340,43 @@ class VideoCallState extends State<VideoCall> with WidgetsBindingObserver {
                         child: Container(
                           width: getSize(120),
                           height: getSize(160),
-                          color: Colors.black,
                           child: isSwitch == true
-                              ? _renderRemoteVideo()
-                              : _renderLocalPreview(),
+                              ? Stack(
+                                  children: [
+                                    _renderRemoteVideo(),
+                                    isRemoteVideoMute == true &&
+                                            isVideo == false
+                                        ? BackdropFilter(
+                                            filter: ImageFilter.blur(
+                                                sigmaX: 80.0, sigmaY: 80.0),
+                                            child: Container(
+                                              width: getSize(120),
+                                              height: getSize(160),
+                                            ),
+                                          )
+                                        : SizedBox()
+                                  ],
+                                )
+                              : Stack(
+                                  children: [
+                                    _renderLocalPreview(),
+                                    isBlurryVideo == true || _videoMute == true
+                                        ? BackdropFilter(
+                                            filter: ImageFilter.blur(
+                                                sigmaX: 80.0, sigmaY: 80.0),
+                                            child: Container(
+                                              width: getSize(120),
+                                              height: getSize(160),
+                                            ),
+                                          )
+                                        : _videoMute == true
+                                            ? Container(
+                                      width: getSize(120),
+                                      height: getSize(160),
+                                    )
+                                            : SizedBox()
+                                  ],
+                                ),
                         ),
                       ),
                     ),
@@ -391,7 +441,7 @@ class VideoCallState extends State<VideoCall> with WidgetsBindingObserver {
                   ))
                 : SizedBox(),
             Padding(
-              padding: const EdgeInsets.only(bottom: 90, right: 30),
+              padding: const EdgeInsets.only(bottom: 110, right: 30),
               child: Align(
                 alignment: Alignment.bottomRight,
                 child: InkWell(
