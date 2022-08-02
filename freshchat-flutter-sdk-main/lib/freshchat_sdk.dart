@@ -187,13 +187,13 @@ class Freshchat {
   /// Sync any change to user information with Freshchat
   ///
   /// [user] is the FreshchatUser object which is constructed with user details
-  static void setUser(FreshchatUser? user) async {
+  static void setUser({required String firstName,required String lastName,required String email,required String phonNumber}) async {
     await _channel.invokeMethod('setUser', <String, String?>{
-      'firstName': user?.getFirstName(),
-      'lastName': user?.getLastName(),
-      'email': user?.getEmail(),
-      'phoneCountryCode': user?.getPhoneCountryCode(),
-      'phoneNumber': user?.getPhone()
+      'firstName': firstName,
+      'lastName': lastName,
+      'email': email,
+      'phoneCountryCode': '91',
+      'phoneNumber': phonNumber
     });
   }
 

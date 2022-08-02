@@ -9,9 +9,12 @@ import 'package:freshchat_sdk/freshchat_user.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:video_chat/app/app.export.dart';
+import 'package:video_chat/components/Model/User/UserModel.dart';
 import 'package:video_chat/components/Screens/Setting/EarnHistory.dart';
 import 'package:video_chat/components/widgets/CommanButton.dart';
 import 'package:video_chat/provider/income_report_provider.dart';
+
+import '../../../provider/followes_provider.dart';
 
 class IncomeReport extends StatefulWidget {
   const IncomeReport({Key? key}) : super(key: key);
@@ -645,15 +648,10 @@ class _IncomeReportState extends State<IncomeReport> {
               ),
               CommanButton(onTap: () async {
                 Freshchat.showConversations();
-                var userAlias  = await Freshchat.getFreshchatUserId;
-                print('USER ALIAS ID ====${userAlias}');
-                freshchatUser?.setFirstName("Vijay");
-                freshchatUser?.setLastName("Patel");
-                freshchatUser?.setEmail("johndoe@dead.man");
-                freshchatUser?.setPhone("+91","1234234123");
-                print('SETUSER');
-                print('NAME ======${freshchatUser?.getFirstName()}');
-                Freshchat.setUser(freshchatUser);
+                UserModel? userModel= Provider.of<FollowesProvider>(context, listen: false)
+                    .userModel;
+                print('USERMODEL FIRSTNAME====${userModel?.email}');
+                Freshchat.setUser(email: userModel?.email??'',firstName: userModel?.userName??'',phonNumber: userModel?.phone??'', lastName: '');
               },),
               SizedBox(
                 height: getSize(20),
