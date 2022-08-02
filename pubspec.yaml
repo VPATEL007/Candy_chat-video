@@ -34,7 +34,6 @@ dependencies:
   permission_handler: ^8.1.6
   flutter_spinkit: ^5.1.0
   another_flushbar: ^1.10.24
-
   flutter_facebook_auth: ^3.5.1
   sign_in_with_apple: ^3.0.0
   # http_proxy: ^1.1.0
@@ -76,6 +75,9 @@ dependencies:
   flutter_dotenv: ^5.0.2
   flutter_absolute_path:
     path: ./flutter_absolute_path
+  freshchat_sdk:
+    path: ./freshchat-flutter-sdk-main
+
 
 dev_dependencies:
   flutter_test:
