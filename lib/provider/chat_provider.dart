@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:flutter/cupertino.dart';
+import 'package:get/get.dart';
 import 'package:provider/provider.dart';
 import 'package:video_chat/app/app.export.dart';
 import 'package:video_chat/app/constant/ApiConstants.dart';
@@ -12,6 +13,7 @@ import 'package:video_chat/components/Model/User/UserModel.dart';
 import 'package:video_chat/components/Screens/Chat/Chat.dart';
 
 import '../components/Model/Chat/chat_message_model.dart';
+import '../getx/chatlist_controller.dart';
 
 class ChatProvider with ChangeNotifier {
   // Create Chat...
@@ -97,6 +99,8 @@ class ChatProvider with ChangeNotifier {
       this._videoChatList = value;
 
   Future<void> getChatList(int page, BuildContext context) async {
+    ChatListController chatListController = Get.put(ChatListController());
+
     try {
       Map<String, dynamic> _parms = {
         "page": page,
@@ -123,10 +127,14 @@ class ChatProvider with ChangeNotifier {
             List<ChatListData> arrList =
                 chatListModelFromJson(jsonEncode(response));
             if (page == 1) {
+              chatListController.friendList.value = arrList;
               chatList = arrList;
             } else {
+              chatListController.friendList.addAll(arrList);
+              chatListController.update();
               chatList.addAll(arrList);
             }
+            chatListController.update();
           }
           notifyListeners();
         },
@@ -247,7 +255,7 @@ class ChatProvider with ChangeNotifier {
       message: messageChat,
       type: type,
       chatDate: DateTime.now().toString(),
-        giftUlr : giftUrl,
+      giftUlr: giftUrl,
       // status: 1,
       // createdOn : DateTime.now().toString(),
       // updatedOn = json['updatedOn'];

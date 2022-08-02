@@ -4,6 +4,7 @@ import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:firebase_analytics/observer.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
+
 // import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:firebase_performance/firebase_performance.dart';
@@ -11,12 +12,14 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+
 // import 'package:in_app_purchase/in_app_purchase.dart';
 import 'package:kiwi/kiwi.dart';
 import 'package:provider/provider.dart';
 import 'package:video_chat/app/app.export.dart';
 import 'package:video_chat/components/Model/Notification/NotificatonModel.dart';
 import 'package:video_chat/components/Model/User/UserModel.dart';
+import 'package:video_chat/components/Screens/Chat/Chat.dart';
 import 'package:video_chat/components/Screens/Splash/Splash.dart';
 import 'package:video_chat/provider/chat_provider.dart';
 import 'package:video_chat/provider/discover_provider.dart';
@@ -114,12 +117,13 @@ Future<void> setupFCM() async {
   LocalNotification().configLocalNotification();
 }
 
-listenNotifications() {
+listenNotifications() async {
   FirebaseMessaging.onMessage.listen((RemoteMessage event) {
     LocalNotification().showNotification(event.notification);
   });
 
   // FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
+
   FirebaseMessaging.onMessageOpenedApp.listen((message) {
     LocalNotification().openNotification(message);
     print('Message clicked!');
@@ -128,21 +132,9 @@ listenNotifications() {
 
 // Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
 //   await Firebase.initializeApp();
-//   if (message.data['type'] == 'videocall') {
-//     print(
-//         '_firebaseMessagingBackgroundHandler userName==> ${message.data['user_name']}');
-//     IncomingCallerData.userName = message.data['user_name'];
-//     print(
-//         '_firebaseMessagingBackgroundHandler username class==> ${IncomingCallerData.userName}');
-//     IncomingCallerData.toUserId = message.data['to_user_id'];
-//     print(
-//         '_firebaseMessagingBackgroundHandler toUserId==> ${IncomingCallerData.toUserId}');
-//     IncomingCallerData.fromUserId = message.data['from_user_id'];
-//     IncomingCallerData.toImageUrl = message.data['toImageUrl'];
-//     IncomingCallerData.fromImageUrl = message.data['fromImageUrl'];
-//     IncomingCallerData.channelName = message.data['channel_name'];
-//     IncomingCallerData.sessionId = message.data['token'];
-//     IncomingCallerData.toGender = message.data['toGender'];
+//   if (message.data['type'] == 'message') {
+//     print('message==> ${message.data['id']} ${message.data['type']}');
+//     NavigationUtilities.push(Chat(toUserId: int.parse(message.data['id'])));
 //   }
 // }
 

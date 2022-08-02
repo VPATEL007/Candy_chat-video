@@ -58,6 +58,7 @@ class ChatListData {
   String? createdOn;
   String? updatedOn;
   String? giftUrl;
+  int? unReadCount;
   ChatListUser? user;
   List<ChatListUserImages>? userImages;
 
@@ -69,6 +70,7 @@ class ChatListData {
       this.user,
       this.updatedOn,
       this.userImages,
+      this.unReadCount,
       this.giftUrl});
 
   ChatListData.fromJson(Map<String, dynamic> json) {
@@ -77,6 +79,7 @@ class ChatListData {
     message = json['message'];
     createdOn = json['createdOn'];
     updatedOn = json['updatedOn'];
+    unReadCount = json['unReadCount'];
     user =
         json['user'] != null ? new ChatListUser.fromJson(json['user']) : null;
     if (json['user_images'] != null) {
@@ -94,6 +97,7 @@ class ChatListData {
     data['message'] = this.message;
     data['createdOn'] = this.createdOn;
     data['updatedOn'] = this.updatedOn;
+    data['unReadCount'] = this.unReadCount;
     if (this.user != null) {
       data['user'] = this.user!.toJson();
     }
