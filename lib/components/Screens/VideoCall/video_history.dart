@@ -99,18 +99,18 @@ class _VideoChatHistoryState extends State<VideoChatHistory> {
                 var difference = DateUtilities().calculateDifference(
                     DateTime.parse(chatHistory[index].startedOn ?? ''));
                 print('difference==> $difference');
-                var date = DateUtilities().getFormattedDateString(
-                    DateTime.parse(chatHistory[index].startedOn ?? ''),
+                var date = DateUtilities().convertServerDateToFormatterString(
+                    chatHistory[index].startedOn ?? '',
                     formatter: 'dd-MM-yyyy hh:mm a');
                 if (difference == 0) {
                   day = 'Today';
-                  date = DateUtilities().getFormattedDateString(
-                      DateTime.parse(chatHistory[index].startedOn ?? ''),
+                  date = DateUtilities().convertServerDateToFormatterString(
+                      chatHistory[index].startedOn ?? '',
                       formatter: 'h:mm a');
                 } else if (difference == -1) {
                   day = 'Yesterday';
-                  date = DateUtilities().getFormattedDateString(
-                      DateTime.parse(chatHistory[index].startedOn ?? ''),
+                  date = DateUtilities().convertServerDateToFormatterString(
+                      chatHistory[index].startedOn ?? '',
                       formatter: 'h:mm a');
                 }
                 return LazyLoadingList(
