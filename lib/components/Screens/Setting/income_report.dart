@@ -1,10 +1,20 @@
+import 'dart:io';
+
+import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:freshchat_sdk/freshchat_sdk.dart';
+import 'package:freshchat_sdk/freshchat_user.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:video_chat/app/app.export.dart';
+import 'package:video_chat/components/Model/User/UserModel.dart';
 import 'package:video_chat/components/Screens/Setting/EarnHistory.dart';
 import 'package:video_chat/components/widgets/CommanButton.dart';
 import 'package:video_chat/provider/income_report_provider.dart';
+
+import '../../../provider/followes_provider.dart';
 
 class IncomeReport extends StatefulWidget {
   const IncomeReport({Key? key}) : super(key: key);
@@ -17,6 +27,8 @@ class _IncomeReportState extends State<IncomeReport> {
   bool isWeeklySelected = false;
   int? selectedIndex;
   int? selectedWeeklyIndex;
+  FreshchatUser? freshchatUser;
+  final GlobalKey<ScaffoldState>? _scaffoldKey = new GlobalKey<ScaffoldState>();
 
   late int todayIndex;
 
@@ -68,6 +80,38 @@ class _IncomeReportState extends State<IncomeReport> {
     }
   }
 
+  void registerFcmToken() async {
+    if (Platform.isAndroid) {
+      String? token = await FirebaseMessaging.instance.getToken();
+      print("FCM Token is generated $token");
+      Freshchat.setPushRegistrationToken(token!);
+    }
+  }
+
+  void notifyRestoreId(var event) async {
+    FreshchatUser user = await Freshchat.getUser;
+    String? restoreId = user.getRestoreId();
+    if (restoreId != null){
+      Clipboard.setData(new ClipboardData(text: restoreId));
+    }
+    _scaffoldKey!.currentState!.showSnackBar(
+        new SnackBar(content: new Text("Restore ID copied: $restoreId")));
+  }
+
+  void handleFreshchatNotification(Map<String, dynamic> message) async {
+    if (await Freshchat.isFreshchatNotification(message)) {
+      print("is Freshchat notification");
+      Freshchat.handlePushNotification(message);
+    }
+  }
+
+  Future<dynamic> myBackgroundMessageHandler(RemoteMessage message) async {
+    print("Inside background handler");
+    await Firebase.initializeApp();
+    handleFreshchatNotification(message.data);
+  }
+
+
   @override
   void initState() {
     sunDayWeeklyList();
@@ -80,12 +124,49 @@ class _IncomeReportState extends State<IncomeReport> {
       selectedIndex = todayIndex;
     });
 
+
     WidgetsBinding.instance?.addPostFrameCallback((_) {
       double _position = todayIndex.toDouble() * (getSize(40));
       setState(() {
         scrollController?.animateTo(_position,
             duration: Duration(milliseconds: 1000), curve: Curves.ease);
       });
+      Freshchat.init(FRESH_CHAT_APP_ID, FRESH_CHAT_APP_KEY, FRESH_CHAT_DOMAIN);
+      var restoreStream = Freshchat.onRestoreIdGenerated;
+      var restoreStreamSubsctiption = restoreStream.listen((event) {
+        print("Restore ID Generated: $event");
+        notifyRestoreId(event);
+      });
+
+      var unreadCountStream = Freshchat.onMessageCountUpdate;
+      unreadCountStream.listen((event) {
+        print("Have unread messages: $event");
+      });
+
+      var userInteractionStream = Freshchat.onUserInteraction;
+      userInteractionStream.listen((event) {
+        print("User interaction for Freshchat SDK");
+      });
+
+      if (Platform.isAndroid) {
+        registerFcmToken();
+        FirebaseMessaging.instance.onTokenRefresh
+            .listen(Freshchat.setPushRegistrationToken);
+
+        Freshchat.setNotificationConfig(notificationInterceptionEnabled: true);
+        var notificationInterceptStream = Freshchat.onNotificationIntercept;
+        notificationInterceptStream.listen((event) {
+          print("Freshchat Notification Intercept detected");
+          Freshchat.openFreshchatDeeplink(event["url"]);
+        });
+
+        FirebaseMessaging.onMessage.listen((RemoteMessage message) {
+          var data = message.data;
+          handleFreshchatNotification(data);
+          print("Notification Content: $data");
+        });
+        FirebaseMessaging.onBackgroundMessage(myBackgroundMessageHandler);
+      }
       Provider.of<DailyEarningDetailProvider>(context, listen: false)
           .dailyEarningReport(context,
               dateTime: DateTime.now().toIso8601String().substring(0, 10));
@@ -565,7 +646,13 @@ class _IncomeReportState extends State<IncomeReport> {
                         fontWeight: FontWeight.w500,
                         fontSize: getFontSize(14))),
               ),
-              CommanButton(),
+              CommanButton(onTap: () async {
+                Freshchat.showConversations();
+                UserModel? userModel= Provider.of<FollowesProvider>(context, listen: false)
+                    .userModel;
+                print('USERMODEL FIRSTNAME====${userModel?.email}');
+                Freshchat.setUser(email: userModel?.email??'',firstName: userModel?.userName??'',phonNumber: userModel?.phone??'', lastName: '');
+              },),
               SizedBox(
                 height: getSize(20),
               ),

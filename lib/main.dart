@@ -66,7 +66,6 @@ Future<void> main() async {
   await Firebase.initializeApp();
   await AppsFlyerService.getInstance();
   app = KiwiContainer();
-
   SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp])
       .then((value) async {
     setup();
