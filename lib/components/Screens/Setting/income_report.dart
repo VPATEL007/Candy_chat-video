@@ -650,7 +650,6 @@ class _IncomeReportState extends State<IncomeReport> {
                 Freshchat.showConversations();
                 UserModel? userModel= Provider.of<FollowesProvider>(context, listen: false)
                     .userModel;
-                print('USERMODEL FIRSTNAME====${userModel?.email}');
                 Freshchat.setUser(email: userModel?.email??'',firstName: userModel?.userName??'',phonNumber: userModel?.phone??'', lastName: '');
               },),
               SizedBox(
