@@ -44,6 +44,7 @@ class _MatchedProfileState extends State<MatchedProfile> {
 
   @override
   void initState() {
+    AgoraService.isMatchedMounted = true;
     super.initState();
     startRing();
   }
@@ -52,6 +53,7 @@ class _MatchedProfileState extends State<MatchedProfile> {
   void dispose() {
     assetsAudioPlayer.stop();
     timer?.cancel();
+    AgoraService.isMatchedMounted = false;
     super.dispose();
   }
 
