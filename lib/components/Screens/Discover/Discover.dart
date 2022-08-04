@@ -12,6 +12,7 @@ import 'package:video_chat/components/Model/Match%20Profile/video_call.dart';
 import 'package:video_chat/components/Model/User/UserModel.dart';
 import 'package:video_chat/components/Screens/Home/MatchProfile.dart';
 import 'package:video_chat/components/Screens/Home/MatchedProfile.dart';
+import 'package:video_chat/components/Screens/Notification/recharge_notification_screen.dart';
 import 'package:video_chat/components/Screens/UserProfile/UserProfile.dart';
 import 'package:video_chat/components/widgets/TabBar/Tabbar.dart';
 import 'package:video_chat/components/widgets/safeOnTap.dart';
@@ -107,6 +108,16 @@ class _DiscoverState extends State<Discover> {
                       });
                     },
                   ),
+                  SizedBox(
+                    width: getSize(10),
+                  ),
+                  InkWell(
+                    onTap: () {
+                      Navigator.push(context, MaterialPageRoute(builder: (context) {
+                        return RechargeNotificationScreen();
+                      },));
+                    },
+                      child: Icon(Icons.notifications,color: ColorConstants.red,size: getSize(28)))
                 ],
               ),
             ),
