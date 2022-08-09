@@ -36,6 +36,7 @@ class AgoraService {
   AgoraRtmChannel? _channel;
   bool isOngoingCall = false;
   String? RTMToken;
+  static bool isMatchedMounted = false;
 
   Future<void> initialize(String appId, context) async {
     try {
@@ -397,6 +398,7 @@ class AgoraService {
       }
 
       Future.delayed(Duration(seconds: 1), () {
+        if(isMatchedMounted)
         NavigationUtilities.pop();
       });
 
