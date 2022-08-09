@@ -72,6 +72,8 @@ const apple = "apple";
 const online = "online";
 const offline = "offline";
 
+
+
 //User FaceVerification Status
 const faceNotSubmitted = 0;
 const faceVerified = 1;

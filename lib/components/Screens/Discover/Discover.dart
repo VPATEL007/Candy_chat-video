@@ -2,13 +2,16 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:lazy_loading_list/lazy_loading_list.dart';
 import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:video_chat/app/Helper/inAppPurchase_service.dart';
 import 'package:video_chat/app/app.export.dart';
 import 'package:video_chat/components/Model/Match%20Profile/call_status.dart';
 import 'package:video_chat/components/Model/Match%20Profile/match_profile.dart';
 import 'package:video_chat/components/Model/Match%20Profile/video_call.dart';
+import 'package:video_chat/components/Model/Notification/recharg_notification_model.dart';
 import 'package:video_chat/components/Model/User/UserModel.dart';
 import 'package:video_chat/components/Screens/Home/MatchProfile.dart';
 import 'package:video_chat/components/Screens/Home/MatchedProfile.dart';
@@ -19,6 +22,7 @@ import 'package:video_chat/components/widgets/safeOnTap.dart';
 import 'package:video_chat/provider/discover_provider.dart';
 import 'package:video_chat/provider/followes_provider.dart';
 import 'package:video_chat/provider/matching_profile_provider.dart';
+import 'package:video_chat/provider/notification_provider.dart';
 import 'package:video_chat/provider/video_call_status_provider.dart';
 
 class Discover extends StatefulWidget {
@@ -35,6 +39,7 @@ class _DiscoverState extends State<Discover> {
   int selectedIndex = 0;
   int page = 1;
   bool _switchValue = true;
+  List unReadCountList = [];
 
   // List<MatchProfileModel> arrList = [];
 
@@ -45,6 +50,15 @@ class _DiscoverState extends State<Discover> {
     WidgetsBinding.instance?.addPostFrameCallback((_) {
       Provider.of<DiscoverProvider>(context, listen: false)
           .fetchDiscoverProfileList(context, tab[0], isbackgroundCall: false);
+      Provider.of<RechargeNotificationProvider>(context, listen: false)
+          .rechargeNotificationDetail(context, fetchInBackground: true)
+          .then((value) {
+        unReadCountList =
+            Provider.of<RechargeNotificationProvider>(context, listen: false)
+                .rechargeNotificationList
+                .where((element) => element.status == '0')
+                .toList();
+      });
     });
     // MatchProfileModel model = MatchProfileModel();
     // model.id = 123;
@@ -112,12 +126,49 @@ class _DiscoverState extends State<Discover> {
                     width: getSize(10),
                   ),
                   InkWell(
-                    onTap: () {
-                      Navigator.push(context, MaterialPageRoute(builder: (context) {
-                        return RechargeNotificationScreen();
-                      },));
-                    },
-                      child: Icon(Icons.notifications,color: ColorConstants.red,size: getSize(28)))
+                      onTap: () {
+                        WidgetsBinding.instance?.addPostFrameCallback((_) {
+                          Provider.of<RechargeNotificationProvider>(context,
+                                  listen: false)
+                              .resetRechargeNotificationDetail(context,
+                                  fetchInBackground: true)
+                              .then((value) =>
+                                  Navigator.push(context, MaterialPageRoute(
+                                    builder: (context) {
+                                      return RechargeNotificationScreen();
+                                    },
+                                  )));
+                        });
+                      },
+                      child: Stack(
+                        children: [
+                          Icon(Icons.notifications,
+                              color: ColorConstants.red, size: getSize(28)),
+                          Consumer<RechargeNotificationProvider>(
+                            builder: (context, value, child) {
+                              return Positioned(
+                                top: 3.0,
+                                right: 3.0,
+                                child: Container(
+                                  width: getSize(11),
+                                  decoration: BoxDecoration(
+                                      color: Colors.red,
+                                      shape: BoxShape.circle),
+                                  alignment: Alignment.center,
+                                  padding: EdgeInsets.all(3.0),
+                                  child: Text(
+                                    '${unReadCountList.length == 0 ? '0' : '${unReadCountList.length}'}',
+                                    style: appTheme?.black12Normal.copyWith(
+                                        color: Colors.white,
+                                        fontSize: getFontSize(8),
+                                        fontWeight: FontWeight.bold),
+                                  ),
+                                ),
+                              );
+                            },
+                          )
+                        ],
+                      ))
                 ],
               ),
             ),

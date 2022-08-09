@@ -45,6 +45,8 @@ class ApiConstants {
   static const String blockUser = "profile/block-unblock-profile";
   static const String createChat = "chat-history";
   static const String dailyEarningReport = "profile/get-daily-influencer-earning-v2";
+  static const String rechargeNotification = "notification/get-all";
+  static const String resetRechargeNotification = "notification/reset-notification";
   static const String weeklyEarningReport = "profile/get-weekly-influencer-earning-v2";
   static const String dailyEarningDetailReport = "profile/get-detailed-influencer-earning-v2?";
   static const String getProfile = "profile/";

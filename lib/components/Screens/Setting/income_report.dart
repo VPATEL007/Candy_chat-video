@@ -107,7 +107,6 @@ class _IncomeReportState extends State<IncomeReport> {
 
   Future<dynamic> myBackgroundMessageHandler(RemoteMessage message) async {
     print("Inside background handler");
-    await Firebase.initializeApp();
     handleFreshchatNotification(message.data);
   }
 

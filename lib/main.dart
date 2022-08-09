@@ -51,6 +51,7 @@ import 'components/Screens/UserProfile/UserProfile.dart';
 import 'provider/album_provider.dart';
 import 'provider/detail_earning_provider.dart';
 import 'provider/income_report_provider.dart';
+import 'provider/notification_provider.dart';
 // import 'package:in_app_purchase_android/in_app_purchase_android.dart';
 
 late KiwiContainer app;
@@ -255,6 +256,9 @@ class _BaseState extends State<Base> {
         ),
         ChangeNotifierProvider.value(
           value: DetailEarningProvider(),
+        ),
+        ChangeNotifierProvider.value(
+          value: RechargeNotificationProvider(),
         ),
       ],
       child: MaterialApp(
