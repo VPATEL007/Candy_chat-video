@@ -141,7 +141,7 @@ class _DiscoverState extends State<Discover> {
                         children: [
                           Icon(Icons.notifications,
                               color: ColorConstants.red, size: getSize(28)),
-                          Consumer<RechargeNotificationProvider>(
+                          unReadCountList.length == 0 ?SizedBox():Consumer<RechargeNotificationProvider>(
                             builder: (context, value, child) {
                               return Positioned(
                                 top: 3.0,
@@ -154,7 +154,7 @@ class _DiscoverState extends State<Discover> {
                                   alignment: Alignment.center,
                                   padding: EdgeInsets.all(3.0),
                                   child: Text(
-                                    '${unReadCountList.length == 0 ? '0' : '${unReadCountList.length}'}',
+                                    '${unReadCountList.length}',
                                     style: appTheme?.black12Normal.copyWith(
                                         color: Colors.white,
                                         fontSize: getFontSize(8),
