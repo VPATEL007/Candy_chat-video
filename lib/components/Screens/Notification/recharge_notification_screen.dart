@@ -40,33 +40,38 @@ class _RechargeNotificationScreenState
       child: Scaffold(
         backgroundColor: ColorConstants.mainBgColor,
         body: SafeArea(
-          child: SingleChildScrollView(
-            child: Column(
-              children: [
-                Padding(
-                  padding: EdgeInsets.symmetric(
-                      horizontal: getSize(30), vertical: getSize(22)),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Icon(
+          child: Column(
+            children: [
+              Padding(
+                padding: EdgeInsets.symmetric(
+                    horizontal: getSize(30), vertical: getSize(22)),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    InkWell(
+                      onTap: () {
+                        Navigator.pop(context);
+                      },
+                      child: Icon(
                         Icons.arrow_back_ios,
                         color: ColorConstants.bgColor,
                         size: getSize(18),
                       ),
-                      Text(
-                        'Notification',
-                        style: TextStyle(
-                            fontSize: getFontSize(18),
-                            color: ColorConstants.red,
-                            fontWeight: FontWeight.w700),
-                      ),
-                      Icon(Icons.notifications,
-                          color: ColorConstants.red, size: getSize(24))
-                    ],
-                  ),
+                    ),
+                    Text(
+                      'Notification',
+                      style: TextStyle(
+                          fontSize: getFontSize(18),
+                          color: ColorConstants.red,
+                          fontWeight: FontWeight.w700),
+                    ),
+                    Icon(Icons.notifications,
+                        color: ColorConstants.red, size: getSize(24))
+                  ],
                 ),
-                Consumer<RechargeNotificationProvider>(
+              ),
+              Expanded(
+                child: Consumer<RechargeNotificationProvider>(
                   builder: (context, value, child) {
                     return ListView.builder(
                       shrinkWrap: true,
@@ -101,9 +106,9 @@ class _RechargeNotificationScreenState
                       },
                     );
                   },
-                )
-              ],
-            ),
+                ),
+              )
+            ],
           ),
         ),
       ),

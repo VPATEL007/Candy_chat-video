@@ -91,7 +91,7 @@ class _IncomeReportState extends State<IncomeReport> {
   void notifyRestoreId(var event) async {
     FreshchatUser user = await Freshchat.getUser;
     String? restoreId = user.getRestoreId();
-    if (restoreId != null){
+    if (restoreId != null) {
       Clipboard.setData(new ClipboardData(text: restoreId));
     }
     _scaffoldKey!.currentState!.showSnackBar(
@@ -110,7 +110,6 @@ class _IncomeReportState extends State<IncomeReport> {
     handleFreshchatNotification(message.data);
   }
 
-
   @override
   void initState() {
     sunDayWeeklyList();
@@ -122,7 +121,6 @@ class _IncomeReportState extends State<IncomeReport> {
       todayIndex = todayindex;
       selectedIndex = todayIndex;
     });
-
 
     WidgetsBinding.instance?.addPostFrameCallback((_) {
       double _position = todayIndex.toDouble() * (getSize(40));
@@ -645,12 +643,19 @@ class _IncomeReportState extends State<IncomeReport> {
                         fontWeight: FontWeight.w500,
                         fontSize: getFontSize(14))),
               ),
-              CommanButton(onTap: () async {
-                Freshchat.showConversations();
-                UserModel? userModel= Provider.of<FollowesProvider>(context, listen: false)
-                    .userModel;
-                Freshchat.setUser(email: userModel?.email??'',firstName: userModel?.userName??'',phonNumber: userModel?.phone??'', lastName: '');
-              },),
+              CommanButton(
+                onTap: () async {
+                  Freshchat.showConversations();
+                  UserModel? userModel =
+                      Provider.of<FollowesProvider>(context, listen: false)
+                          .userModel;
+                  Freshchat.setUser(
+                      email: userModel?.email ?? '',
+                      firstName: userModel?.userName ?? '',
+                      phonNumber: userModel?.phone ?? '',
+                      lastName: '');
+                },
+              ),
               SizedBox(
                 height: getSize(20),
               ),
