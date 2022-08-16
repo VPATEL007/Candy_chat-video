@@ -43,7 +43,7 @@ android {
         applicationId "com.sugarcam.videochat"
         minSdkVersion 23
         targetSdkVersion 30
-        versionCode 6
+        versionCode 7
         versionName '6.1'
     }
 //    flavorName {

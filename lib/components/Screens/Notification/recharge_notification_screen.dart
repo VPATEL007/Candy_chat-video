@@ -24,7 +24,7 @@ class _RechargeNotificationScreenState
   @override
   void initState() {
     super.initState();
-    WidgetsBinding.instance?.addPostFrameCallback((_) {
+    WidgetsBinding.instance.addPostFrameCallback((_) {
       Provider.of<RechargeNotificationProvider>(context, listen: false)
           .rechargeNotificationDetail(context, fetchInBackground: true);
     });

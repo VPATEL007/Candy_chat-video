@@ -185,7 +185,7 @@ class VideoCallState extends State<VideoCall> with WidgetsBindingObserver {
   void startTimer() {
     durationCounter = 0;
     duraationTimer = Timer.periodic(Duration(seconds: 1), (timer) {
-      if (callStatus?.callType?.toLowerCase() != 'match') {
+      if (callStatus?.callType?.toLowerCase() == 'match') {
         if (durationCounter == 30) {
           autoEndCall();
           endCall();

@@ -73,7 +73,9 @@ class _ChatState extends State<Chat> {
   }
 
   resetMessageCount() {
-    socket?.emit("messageCountReset", {userId, widget.toUserId});
+    Provider.of<ChatProvider>(context, listen: false)
+        .resetMessageCount(widget.toUserId, context);
+    print('userId, widget.toUserId==> ${userId} ${widget.toUserId}');
   }
 
   receiveMessage() {

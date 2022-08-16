@@ -43,6 +43,7 @@ class ApiConstants {
   static const String buyPackage = "transaction/buy-coin-package";
   static const String coinBalance = "call-history/balance-status";
   static const String blockUser = "profile/block-unblock-profile";
+  static const String resetNotification = "profile/reset-notification";
   static const String createChat = "chat-history";
   static const String dailyEarningReport = "profile/get-daily-influencer-earning-v2";
   static const String rechargeNotification = "notification/get-all";

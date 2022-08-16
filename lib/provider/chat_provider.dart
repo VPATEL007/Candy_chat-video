@@ -54,6 +54,34 @@ class ChatProvider with ChangeNotifier {
     }
   }
 
+  Future<void> resetMessageCount(int toUserId, BuildContext context) async {
+    try {
+      int? userId = app.resolve<PrefUtils>().getUserDetails()?.id;
+      Map<String, dynamic> _parms = {
+        "sendBy": userId,
+        "toSend": toUserId,
+      };
+
+      print('_parms==> $_parms');
+      await NetworkClient.getInstance.callApi(
+        context: context,
+        params: _parms,
+        baseUrl: ApiConstants.apiUrl,
+        command: ApiConstants.resetNotification,
+        headers: NetworkClient.getInstance.getAuthHeaders(),
+        method: MethodType.Post,
+        successCallback: (response, message) {
+          print('reset successful');
+        },
+        failureCallback: (code, message) {},
+      );
+    } catch (e) {
+      NetworkClient.getInstance.hideProgressDialog();
+      View.showMessage(context, e.toString());
+    }
+  }
+
+
   // Get Profile...
   Future<UserModel?> getUserProfile(int userId, BuildContext context) async {
     UserModel? model;
