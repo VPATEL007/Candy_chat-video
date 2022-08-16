@@ -96,9 +96,7 @@ Future<void> setupFCM() async {
   FlutterError.onError = FirebaseCrashlytics.instance.recordFlutterError;
   _performance.setPerformanceCollectionEnabled(true);
   final FirebaseMessaging _firebaseMessaging = FirebaseMessaging.instance;
-
   listenNotifications();
-
   _firebaseMessaging.requestPermission(sound: true, badge: true, alert: true);
 
   var token = app

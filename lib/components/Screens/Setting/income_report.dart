@@ -123,7 +123,7 @@ class _IncomeReportState extends State<IncomeReport> {
     });
 
     WidgetsBinding.instance?.addPostFrameCallback((_) {
-      double _position = todayIndex.toDouble() * (getSize(40));
+      double _position = todayIndex.toDouble() * (getSize(42));
       setState(() {
         scrollController?.animateTo(_position,
             duration: Duration(milliseconds: 1000), curve: Curves.ease);
