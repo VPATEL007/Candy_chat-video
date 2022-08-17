@@ -28,6 +28,7 @@ import 'package:video_chat/provider/matching_profile_provider.dart';
 import '../../../app/Helper/socket_helper.dart';
 import '../../../utils/appLifeCycle.dart';
 import '../../Model/Chat/chat_message_model.dart';
+import 'package:wakelock/wakelock.dart';
 // import 'package:screen/screen.dart';
 
 class VideoCall extends StatefulWidget {
@@ -82,6 +83,7 @@ class VideoCallState extends State<VideoCall> with WidgetsBindingObserver {
   @override
   void initState() {
     SocketHealper.currentUserId = widget.toUserId.toString();
+    Wakelock.enable();
     if (socket?.disconnected ?? true) {
       SocketHealper.shared.connect();
     }
@@ -99,7 +101,6 @@ class VideoCallState extends State<VideoCall> with WidgetsBindingObserver {
           }
         },
         context: context));
-    // Screen.keepOn(true);
     agoraService.isOngoingCall = true;
     WidgetsBinding.instance.addPostFrameCallback((_) {
       initPlatformState();
@@ -169,7 +170,7 @@ class VideoCallState extends State<VideoCall> with WidgetsBindingObserver {
     SocketHealper.currentUserId = '';
     agoraService.openUserFeedBackPopUp(toUser?.id ?? 0);
     agoraService.isOngoingCall = false;
-    // Screen.keepOn(false);
+    Wakelock.disable();
     WidgetsBinding.instance.removeObserver(LifecycleEventHandler(
         detachedCallBack: () {},
         resumeCallBack: () {},

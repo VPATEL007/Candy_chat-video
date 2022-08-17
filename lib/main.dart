@@ -123,7 +123,6 @@ listenNotifications() async {
     LocalNotification().showNotification(event.notification);
   });
 
-
   // FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
 
   FirebaseMessaging.onMessageOpenedApp.listen((message) {
@@ -186,7 +185,7 @@ class Base extends StatefulWidget {
   _BaseState createState() => _BaseState();
 }
 
-class _BaseState extends State<Base> {
+class _BaseState extends State<Base> with WidgetsBindingObserver {
   late ThemeData themeData;
 
   @override
@@ -199,6 +198,28 @@ class _BaseState extends State<Base> {
         themeData = AppTheme.of(context).theme;
       }),
     );
+
+    WidgetsBinding.instance.addObserver(this);
+  }
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    switch (state) {
+      case AppLifecycleState.resumed:
+        // SocketHealper.shared.connect();
+        print("app in resumed");
+        break;
+      case AppLifecycleState.inactive:
+        print("app in inactive");
+        break;
+      case AppLifecycleState.paused:
+        print("app in paused");
+        // SocketHealper.shared.disconnect();
+        break;
+      case AppLifecycleState.detached:
+        print("app in detached");
+        break;
+    }
   }
 
   @override
