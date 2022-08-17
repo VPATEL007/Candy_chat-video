@@ -45,8 +45,10 @@ class LocalNotification {
             importance: Importance.max,
             priority: Priority.high,
             playSound: true,
+            sound: RawResourceAndroidNotificationSound('notification'),
             enableVibration: true,
-            ticker: 'ticker');
+            ticker: 'ticker'
+        );
     const IOSNotificationDetails iOSPlatformChannelSpecifics =
         IOSNotificationDetails(subtitle: 'the subtitle');
     var platformChannelSpecifics = new NotificationDetails(

@@ -272,8 +272,10 @@ class VideoCallState extends State<VideoCall> with WidgetsBindingObserver {
       isRemoteAudioMute = state == AudioRemoteState.Stopped ? true : false;
       setState(() {});
     }, remoteVideoStateChanged: (int uid, state, reason, int elapsed) {
-      isRemoteVideoMute = state == VideoRemoteState.Stopped ? true : false;
-      setState(() {});
+      print('Video Remote Status $state');
+      setState(() {
+        isRemoteVideoMute = state == VideoRemoteState.Stopped ? true : false;
+      });
     }, error: (e) {
       print(e);
     }));
@@ -290,40 +292,38 @@ class VideoCallState extends State<VideoCall> with WidgetsBindingObserver {
         return false;
       },
       child: Scaffold(
-        backgroundColor: ColorConstants.colorPrimary,
+        // backgroundColor: ColorConstants.colorPrimary,
         body: Stack(
           children: [
-            Container(
-              child: Stack(
-                children: [
-                  isSwitch == true
-                      ? Stack(
-                          children: [
-                            _renderLocalPreview(),
-                            isBlurryVideo == true || _videoMute == true
-                                ? BackdropFilter(
-                                    filter: ImageFilter.blur(
-                                        sigmaX: 80.0, sigmaY: 80.0),
-                                    child: Container(),
-                                  )
-                                : SizedBox()
-                          ],
-                        )
-                      : Stack(
-                          children: [
-                            _renderRemoteVideo(),
-                            isRemoteVideoMute == true
-                                ? BackdropFilter(
-                                    filter: ImageFilter.blur(
-                                        sigmaX: 80.0, sigmaY: 80.0),
-                                    child: Container(),
-                                  )
-                                : SizedBox()
-                          ],
-                        ),
-                ],
-              ),
-            ),
+            isSwitch == true
+                ? Stack(
+                    fit: StackFit.expand,
+                    children: [
+                      _renderLocalPreview(),
+                      isBlurryVideo == true || _videoMute == true
+                          ? BackdropFilter(
+                              filter:
+                                  ImageFilter.blur(sigmaX: 80.0, sigmaY: 80.0),
+                              child: Container(),
+                            )
+                          : SizedBox()
+                    ],
+                  )
+                : Stack(
+                    fit: StackFit.expand,
+                    children: [
+                      _renderRemoteVideo(),
+                      isRemoteVideoMute == true
+                          ? BackdropFilter(
+                              filter:
+                                  ImageFilter.blur(sigmaX: 90.0, sigmaY: 90.0),
+                              child: Container(
+                                color: Colors.black.withOpacity(0.20),
+                              ),
+                            )
+                          : SizedBox()
+                    ],
+                  ),
             Positioned(bottom: getSize(120), child: chatList()),
             Positioned(
                 left: getSize(30),
@@ -335,6 +335,8 @@ class VideoCallState extends State<VideoCall> with WidgetsBindingObserver {
                       setState(() {
                         isSwitch = !isSwitch;
                       });
+                      print('isSwitch Status =======$isSwitch');
+                      print('isVideoMuted Status =======$isRemoteVideoMute');
                     },
                     child: SafeArea(
                       child: ClipRRect(
@@ -350,10 +352,12 @@ class VideoCallState extends State<VideoCall> with WidgetsBindingObserver {
                                             isVideo == false
                                         ? BackdropFilter(
                                             filter: ImageFilter.blur(
-                                                sigmaX: 80.0, sigmaY: 80.0),
+                                                sigmaX: 90.0, sigmaY: 90.0),
                                             child: Container(
                                               width: getSize(120),
                                               height: getSize(160),
+                                              color: Colors.black
+                                                  .withOpacity(0.20),
                                             ),
                                           )
                                         : SizedBox()
@@ -365,10 +369,12 @@ class VideoCallState extends State<VideoCall> with WidgetsBindingObserver {
                                     isBlurryVideo == true || _videoMute == true
                                         ? BackdropFilter(
                                             filter: ImageFilter.blur(
-                                                sigmaX: 80.0, sigmaY: 80.0),
+                                                sigmaX: 90.0, sigmaY: 90.0),
                                             child: Container(
                                               width: getSize(120),
                                               height: getSize(160),
+                                              color: Colors.black
+                                                  .withOpacity(0.20),
                                             ),
                                           )
                                         : _videoMute == true
@@ -808,7 +814,10 @@ class VideoCallState extends State<VideoCall> with WidgetsBindingObserver {
   // Remote preview
   Widget _renderRemoteVideo() {
     if (_remoteUid != 0) {
-      return RtcRemoteView.SurfaceView(uid: _remoteUid, channelId: '');
+      return RtcRemoteView.SurfaceView(
+        uid: _remoteUid,
+        channelId: '',
+      );
     } else {
       return Container();
     }

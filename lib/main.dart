@@ -96,9 +96,7 @@ Future<void> setupFCM() async {
   FlutterError.onError = FirebaseCrashlytics.instance.recordFlutterError;
   _performance.setPerformanceCollectionEnabled(true);
   final FirebaseMessaging _firebaseMessaging = FirebaseMessaging.instance;
-
   listenNotifications();
-
   _firebaseMessaging.requestPermission(sound: true, badge: true, alert: true);
 
   var token = app
@@ -120,8 +118,11 @@ Future<void> setupFCM() async {
 
 listenNotifications() async {
   FirebaseMessaging.onMessage.listen((RemoteMessage event) {
+    print('Remote Message Show Notification');
+    print('EVENT NOTIFICATION DATA==${event.data}');
     LocalNotification().showNotification(event.notification);
   });
+
 
   // FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
 

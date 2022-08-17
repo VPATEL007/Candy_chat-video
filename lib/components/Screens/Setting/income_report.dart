@@ -1,6 +1,4 @@
 import 'dart:io';
-
-import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -123,7 +121,7 @@ class _IncomeReportState extends State<IncomeReport> {
     });
 
     WidgetsBinding.instance?.addPostFrameCallback((_) {
-      double _position = todayIndex.toDouble() * (getSize(40));
+      double _position = todayIndex.toDouble() * (getSize(42));
       setState(() {
         scrollController?.animateTo(_position,
             duration: Duration(milliseconds: 1000), curve: Curves.ease);
