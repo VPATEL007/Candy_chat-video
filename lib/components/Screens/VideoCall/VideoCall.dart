@@ -286,13 +286,12 @@ class VideoCallState extends State<VideoCall> with WidgetsBindingObserver {
 
   @override
   Widget build(BuildContext context) {
-    print('callStatus?.callType==> ${callStatus?.callType}');
     return WillPopScope(
       onWillPop: () async {
         return false;
       },
       child: Scaffold(
-        // backgroundColor: ColorConstants.colorPrimary,
+        backgroundColor: ColorConstants.colorPrimary,
         body: Stack(
           children: [
             isSwitch == true
@@ -300,20 +299,13 @@ class VideoCallState extends State<VideoCall> with WidgetsBindingObserver {
                     fit: StackFit.expand,
                     children: [
                       _renderLocalPreview(),
-                      isBlurryVideo == true || _videoMute == true
-                          ? BackdropFilter(
-                              filter:
-                                  ImageFilter.blur(sigmaX: 80.0, sigmaY: 80.0),
-                              child: Container(),
-                            )
-                          : SizedBox()
                     ],
                   )
                 : Stack(
                     fit: StackFit.expand,
                     children: [
                       _renderRemoteVideo(),
-                      isRemoteVideoMute == true
+                      isBlurryVideo == true
                           ? BackdropFilter(
                               filter:
                                   ImageFilter.blur(sigmaX: 90.0, sigmaY: 90.0),
@@ -335,8 +327,6 @@ class VideoCallState extends State<VideoCall> with WidgetsBindingObserver {
                       setState(() {
                         isSwitch = !isSwitch;
                       });
-                      print('isSwitch Status =======$isSwitch');
-                      print('isVideoMuted Status =======$isRemoteVideoMute');
                     },
                     child: SafeArea(
                       child: ClipRRect(
@@ -348,8 +338,7 @@ class VideoCallState extends State<VideoCall> with WidgetsBindingObserver {
                               ? Stack(
                                   children: [
                                     _renderRemoteVideo(),
-                                    isRemoteVideoMute == true &&
-                                            isVideo == false
+                                    isBlurryVideo
                                         ? BackdropFilter(
                                             filter: ImageFilter.blur(
                                                 sigmaX: 90.0, sigmaY: 90.0),
@@ -366,23 +355,6 @@ class VideoCallState extends State<VideoCall> with WidgetsBindingObserver {
                               : Stack(
                                   children: [
                                     _renderLocalPreview(),
-                                    isBlurryVideo == true || _videoMute == true
-                                        ? BackdropFilter(
-                                            filter: ImageFilter.blur(
-                                                sigmaX: 90.0, sigmaY: 90.0),
-                                            child: Container(
-                                              width: getSize(120),
-                                              height: getSize(160),
-                                              color: Colors.black
-                                                  .withOpacity(0.20),
-                                            ),
-                                          )
-                                        : _videoMute == true
-                                            ? Container(
-                                                width: getSize(120),
-                                                height: getSize(160),
-                                              )
-                                            : SizedBox()
                                   ],
                                 ),
                         ),
@@ -456,7 +428,7 @@ class VideoCallState extends State<VideoCall> with WidgetsBindingObserver {
                     onTap: () {
                       setState(() {
                         isBlurryVideo = !isBlurryVideo;
-                        engine?.muteLocalVideoStream(isBlurryVideo);
+                        // engine?.muteLocalVideoStream(isBlurryVideo);
                       });
                     },
                     child: Container(
