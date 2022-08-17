@@ -81,6 +81,7 @@ class VideoCallState extends State<VideoCall> with WidgetsBindingObserver {
 
   @override
   void initState() {
+    SocketHealper.currentUserId = widget.toUserId.toString();
     if (socket?.disconnected ?? true) {
       SocketHealper.shared.connect();
     }
@@ -165,6 +166,7 @@ class VideoCallState extends State<VideoCall> with WidgetsBindingObserver {
   @override
   void dispose() {
     // destroy sdk
+    SocketHealper.currentUserId = '';
     agoraService.openUserFeedBackPopUp(toUser?.id ?? 0);
     agoraService.isOngoingCall = false;
     // Screen.keepOn(false);

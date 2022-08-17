@@ -116,27 +116,6 @@ class _ChatState extends State<Chat> {
     });
   }
 
-  // Future<void> init() async {
-  //   agoraService.joinChannel((),
-  //       onMemberJoined: (AgoraRtmMember member) {
-  //     print(
-  //         "Member joined: " + member.userId + ', channel: ' + member.channelId);
-  //   }, onMemberLeft: (AgoraRtmMember member) {
-  //     print("Member left: " + member.userId + ', channel: ' + member.channelId);
-  //   }, onMessageReceived: (AgoraRtmMessage message, AgoraRtmMember member) {
-  //     MessageObj _chat = MessageObj(
-  //         chatDate: DateTime.now(),
-  //         message: message.text,
-  //         isSendByMe: member.userId.toString().toLowerCase() ==
-  //             userId?.toLowerCase().toLowerCase(),
-  //         sendBy: member.userId);
-  //
-  //     _chatsList.add(_chat);
-  //     if (mounted) setState(() {});
-  //     print("Channel msg: " + member.userId + ", msg: " + message.text);
-  //   });
-  // }
-
   @override
   void dispose() {
     super.dispose();
