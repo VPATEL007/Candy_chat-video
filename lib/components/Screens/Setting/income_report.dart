@@ -9,6 +9,7 @@ import 'package:provider/provider.dart';
 import 'package:video_chat/app/app.export.dart';
 import 'package:video_chat/components/Model/User/UserModel.dart';
 import 'package:video_chat/components/Screens/Setting/EarnHistory.dart';
+import 'package:video_chat/components/Screens/Setting/salary_generation.dart';
 import 'package:video_chat/components/widgets/CommanButton.dart';
 import 'package:video_chat/provider/income_report_provider.dart';
 
@@ -170,6 +171,8 @@ class _IncomeReportState extends State<IncomeReport> {
   }
 
   String selectedDate = DateTime.now().toIso8601String();
+  String weeklySelectedFirstDate = DateTime.now().toIso8601String();
+  String weeklySelectedEndDate = DateTime.now().toIso8601String();
 
   @override
   Widget build(BuildContext context) {
@@ -358,7 +361,10 @@ class _IncomeReportState extends State<IncomeReport> {
                                         DateFormat('yMMMM');
                                     monthFormatted = monthYearFormat.format(
                                         DateTime.parse(finalList[index].last));
-
+                                    weeklySelectedFirstDate =
+                                        finalList[index].first;
+                                    weeklySelectedEndDate =
+                                        finalList[index].last;
                                     selectedWeeklyIndex = index;
                                     isWeeklySelected = true;
                                     WidgetsBinding.instance
@@ -369,6 +375,13 @@ class _IncomeReportState extends State<IncomeReport> {
                                           .weeklyEarningReport(context,
                                               startDate: finalList[index].first,
                                               endDate: finalList[index].last);
+                                      // Provider.of<DailyEarningDetailProvider>(
+                                      //     context,
+                                      //     listen: false)
+                                      //     .weeklyDetailEarningReport(context,
+                                      //     page: 1,
+                                      //     startDate: finalList[index].first,
+                                      //     endDate: finalList[index].last);
                                     });
                                   });
                                 },
@@ -499,70 +512,248 @@ class _IncomeReportState extends State<IncomeReport> {
               isWeeklySelected
                   ? Column(
                       children: [
-                        getTitle(
-                            totalCoin:
-                                value.weeklyEariningReportModel?.totalCoins ??
-                                    0),
-                        getBox(
-                            context: context,
-                            title: 'Video call coins',
-                            coin: value.weeklyEariningReportModel
-                                    ?.videoCallCoins ??
-                                0,
-                            onTap: () {
-                              NavigationUtilities.push(EarnHistory(
-                                  selectedIndex: 0,
-                                  selectedDate: selectedDate.substring(0, 10)));
-                            }),
-                        getBox(
-                            context: context,
-                            title: 'Gifts coins',
-                            coin:
-                                value.weeklyEariningReportModel?.giftsCoin ?? 0,
-                            onTap: () {
-                              NavigationUtilities.push(EarnHistory(
-                                  selectedIndex: 1,
-                                  selectedDate: selectedDate.substring(0, 10)));
-                            }),
-                        getBox(
-                            context: context,
-                            title: 'Match total',
-                            onTap: () {
-                              NavigationUtilities.push(EarnHistory(
-                                  selectedIndex: 2,
-                                  selectedDate: selectedDate.substring(0, 10)));
-                            },
-                            coin: value.weeklyEariningReportModel?.matchCoin ??
-                                0),
-                        getBox(
-                            context: context,
-                            title: 'Referral Coins',
-                            onTap: () {
-                              NavigationUtilities.push(EarnHistory(
-                                  selectedIndex: 3,
-                                  selectedDate: selectedDate.substring(0, 10)));
-                            },
-                            coin:
-                                value.weeklyEariningReportModel?.refralCoins ??
-                                    0),
-                        getBox(
-                            context: context,
-                            title: 'Albums coins',
-                            onTap: () {
-                              NavigationUtilities.push(EarnHistory(
-                                  selectedIndex: 4,
-                                  selectedDate: selectedDate.substring(0, 10)));
-                            },
-                            coin: value.weeklyEariningReportModel?.albumCoin ??
-                                0),
-                        getBox(
-                            context: context,
-                            title: 'Weekly video call duration',
-                            coin: 0,
-                            isDuration: true,
-                            duration: value.weeklyEariningReportModel
-                                    ?.weeklyCallDuration ??
-                                ''),
+                        Padding(
+                          padding: EdgeInsets.symmetric(vertical: getSize(20)),
+                          child: Text(
+                            'Salary settlement progress',
+                            style: appTheme?.black16Bold.copyWith(
+                                fontWeight: FontWeight.w700,
+                                color: ColorConstants.bgColor,
+                                fontSize: getFontSize(14)),
+                          ),
+                        ),
+                        getStepProgressIndicator(context),
+                        InkWell(
+                          onTap: () {
+                            Navigator.push(context, MaterialPageRoute(
+                              builder: (context) {
+                                return SalaryGeneration(
+                                    firstDate: weeklySelectedFirstDate,
+                                    endDate: weeklySelectedEndDate);
+                              },
+                            ));
+                          },
+                          child: Container(
+                            margin: EdgeInsets.symmetric(vertical: getSize(8)),
+                            width: MathUtilities.screenWidth(context) * 0.90,
+                            decoration: BoxDecoration(
+                                color: ColorConstants.grayBackGround,
+                                borderRadius: BorderRadius.only(
+                                    topLeft: Radius.circular(10),
+                                    topRight: Radius.circular(10))),
+                            child: Column(
+                              children: [
+                                Padding(
+                                  padding: EdgeInsets.symmetric(
+                                      vertical: getSize(20)),
+                                  child: Row(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      RichText(
+                                          text: TextSpan(
+                                              text: 'Total income\t\t\t',
+                                              style: appTheme?.black16Bold
+                                                  .copyWith(
+                                                      fontWeight:
+                                                          FontWeight.w500,
+                                                      color: ColorConstants
+                                                          .bgColor,
+                                                      fontSize:
+                                                          getFontSize(14)),
+                                              children: [
+                                            TextSpan(
+                                                text: '\t--\tUSD',
+                                                style: appTheme?.black16Bold
+                                                    .copyWith(
+                                                  fontWeight: FontWeight.w700,
+                                                  color: ColorConstants.bgColor,
+                                                  fontStyle: FontStyle.italic,
+                                                ))
+                                          ])),
+                                      SizedBox(width: getSize(5)),
+                                      CircleAvatar(
+                                        minRadius: getSize(8),
+                                        maxRadius: getSize(8),
+                                        backgroundColor:
+                                            ColorConstants.calenderGreyColor,
+                                        child: Icon(Icons.question_mark_rounded,
+                                            color:
+                                                ColorConstants.grayBackGround,
+                                            size: 12),
+                                      )
+                                    ],
+                                  ),
+                                ),
+                                Container(
+                                  height: 1,
+                                  width: MathUtilities.screenWidth(context),
+                                  color: ColorConstants.greyC4Color
+                                      .withOpacity(0.60),
+                                ),
+                                Padding(
+                                  padding: EdgeInsets.symmetric(
+                                      vertical: getSize(20)),
+                                  child: Row(
+                                    children: [
+                                      SizedBox(width: getSize(17)),
+                                      Text('Ranking bonus',
+                                          style: appTheme?.black16Bold.copyWith(
+                                              fontWeight: FontWeight.w500,
+                                              color: ColorConstants.bgColor,
+                                              fontSize: getFontSize(14))),
+                                      SizedBox(width: getSize(8)),
+                                      CircleAvatar(
+                                        minRadius: getSize(8),
+                                        maxRadius: getSize(8),
+                                        backgroundColor:
+                                            ColorConstants.calenderGreyColor,
+                                        child: Icon(Icons.question_mark_rounded,
+                                            color:
+                                                ColorConstants.grayBackGround,
+                                            size: 12),
+                                      ),
+                                      const Spacer(),
+                                      Container(
+                                        width: getSize(80),
+                                        child: DropdownButton(
+                                            underline: Container(
+                                              color: Colors.transparent,
+                                            ),
+                                            style: appTheme?.black16Bold
+                                                .copyWith(
+                                                    fontWeight: FontWeight.w700,
+                                                    color:
+                                                        ColorConstants.bgColor,
+                                                    fontSize: getFontSize(14)),
+                                            icon: Icon(
+                                                Icons.keyboard_arrow_down,
+                                                color: ColorConstants.red),
+                                            isDense: true,
+                                            value: '--USD',
+                                            items: [
+                                              DropdownMenuItem(
+                                                child: Text('--USD'),
+                                                value: '--USD',
+                                              ),
+                                              DropdownMenuItem(
+                                                child: Text('Pound'),
+                                                value: 'Pound',
+                                              )
+                                            ],
+                                            onChanged: (value) {}),
+                                      )
+                                    ],
+                                  ),
+                                ),
+                                Container(
+                                  height: 1,
+                                  width: MathUtilities.screenWidth(context),
+                                  color: ColorConstants.greyC4Color
+                                      .withOpacity(0.60),
+                                ),
+                                Padding(
+                                  padding: EdgeInsets.symmetric(
+                                      vertical: getSize(20),
+                                      horizontal: getSize(17)),
+                                  child: Row(
+                                    children: [
+                                      Text('Salary',
+                                          style: appTheme?.black16Bold.copyWith(
+                                              fontWeight: FontWeight.w500,
+                                              color: ColorConstants.bgColor,
+                                              fontSize: getFontSize(14))),
+                                      SizedBox(width: getSize(8)),
+                                      CircleAvatar(
+                                        minRadius: getSize(8),
+                                        maxRadius: getSize(8),
+                                        backgroundColor:
+                                            ColorConstants.calenderGreyColor,
+                                        child: Icon(Icons.question_mark_rounded,
+                                            color:
+                                                ColorConstants.grayBackGround,
+                                            size: 12),
+                                      ),
+                                      const Spacer(),
+                                      Text('--USD',
+                                          style: appTheme?.black16Bold.copyWith(
+                                              fontWeight: FontWeight.w700,
+                                              color: ColorConstants.bgColor,
+                                              fontSize: getFontSize(14))),
+                                      SizedBox(width: getSize(20))
+                                    ],
+                                  ),
+                                ),
+                                Container(
+                                  height: 1,
+                                  width: MathUtilities.screenWidth(context),
+                                  color: ColorConstants.greyC4Color
+                                      .withOpacity(0.60),
+                                ),
+                                Padding(
+                                  padding: EdgeInsets.symmetric(
+                                      vertical: getSize(20),
+                                      horizontal: getSize(17)),
+                                  child: Row(children: [
+                                    Text('Your level',
+                                        style: appTheme?.black16Bold.copyWith(
+                                            fontWeight: FontWeight.w500,
+                                            color: ColorConstants.bgColor,
+                                            fontSize: getFontSize(14))),
+                                    const Spacer(),
+                                    Image.asset(winIcon, width: getSize(30)),
+                                    SizedBox(width: getSize(20))
+                                  ]),
+                                ),
+                                Container(
+                                  height: 1,
+                                  width: MathUtilities.screenWidth(context),
+                                  color: ColorConstants.greyC4Color
+                                      .withOpacity(0.60),
+                                ),
+                                Padding(
+                                  padding: EdgeInsets.symmetric(
+                                      vertical: getSize(20),
+                                      horizontal: getSize(17)),
+                                  child: Row(
+                                    children: [
+                                      Text('Coins rate ',
+                                          style: appTheme?.black16Bold.copyWith(
+                                              fontWeight: FontWeight.w500,
+                                              color: ColorConstants.bgColor,
+                                              fontSize: getFontSize(14))),
+                                      SizedBox(width: getSize(5)),
+                                      CircleAvatar(
+                                        minRadius: getSize(8),
+                                        maxRadius: getSize(8),
+                                        backgroundColor:
+                                            ColorConstants.calenderGreyColor,
+                                        child: Icon(Icons.question_mark_rounded,
+                                            color:
+                                                ColorConstants.grayBackGround,
+                                            size: 12),
+                                      ),
+                                      const Spacer(),
+                                      Image.asset(icCoin, width: getSize(10)),
+                                      Text(' 400 = USD',
+                                          style: appTheme?.black16Bold.copyWith(
+                                              fontWeight: FontWeight.w700,
+                                              color: ColorConstants.bgColor,
+                                              fontSize: getFontSize(14))),
+                                      SizedBox(width: getSize(20))
+                                    ],
+                                  ),
+                                ),
+                                Container(
+                                  height: 1,
+                                  width: MathUtilities.screenWidth(context),
+                                  color: ColorConstants.greyC4Color
+                                      .withOpacity(0.60),
+                                ),
+                                SizedBox(height: getSize(15))
+                              ],
+                            ),
+                          ),
+                        )
                       ],
                     )
                   : Column(

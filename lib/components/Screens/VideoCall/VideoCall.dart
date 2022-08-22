@@ -185,6 +185,7 @@ class VideoCallState extends State<VideoCall> with WidgetsBindingObserver {
     SocketHealper.shared.connect();
   }
 
+
   void startTimer() {
     durationCounter = 0;
     duraationTimer = Timer.periodic(Duration(seconds: 1), (timer) {
