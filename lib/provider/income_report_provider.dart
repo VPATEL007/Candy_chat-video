@@ -104,9 +104,6 @@ class DailyEarningDetailProvider extends ChangeNotifier {
         print('DETAIL WEEKLY EARNING DATA RESPONSE===$response');
         if (!fetchInBackground) NetworkClient.getInstance.hideProgressDialog();
 
-        if (page == 1) {
-          NetworkClient.getInstance.hideProgressDialog();
-        }
         if (response != null) {
           List<WeeklyDetailDataModel> arrList =
           weeklyDetailSalaryModelFromJson(jsonEncode(response));
@@ -116,7 +113,6 @@ class DailyEarningDetailProvider extends ChangeNotifier {
           } else {
             weeklyDetailEarningList.addAll(arrList);
           }
-          notifyListeners();
         }
       },
       failureCallback: (code, message) {
