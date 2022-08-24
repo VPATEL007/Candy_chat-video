@@ -7,11 +7,13 @@ import 'package:video_chat/app/extensions/view.dart';
 import 'package:video_chat/app/network/NetworkClient.dart';
 import 'package:video_chat/components/Model/Income/detail_weekly_earning_report_model.dart';
 import 'package:video_chat/components/Model/Income/income_earing_report_model.dart';
+import 'package:video_chat/components/Model/Income/salary_details_model.dart';
 
 class DailyEarningDetailProvider extends ChangeNotifier {
   // Object Of Model
   DailyEarningReportModel? dailyEarningReportModel;
   WeeklyEariningReportModel? weeklyEariningReportModel;
+  SalaryDetailModel? salaryDetailModel;
 
 
   List<WeeklyDetailDataModel> _weeklyDetailEarningList = [];
@@ -37,7 +39,6 @@ class DailyEarningDetailProvider extends ChangeNotifier {
       params: _parms,
       successCallback: (response, message) async {
         if (!fetchInBackground) NetworkClient.getInstance.hideProgressDialog();
-        print('======${response}');
         if (response != null) {
           dailyEarningReportModel = DailyEarningReportModel.fromJson(response);
           print(dailyEarningReportModel);
@@ -51,6 +52,7 @@ class DailyEarningDetailProvider extends ChangeNotifier {
     notifyListeners();
   }
 
+  // Weekly Earning Report API
   Future<void> weeklyEarningReport(BuildContext context,
       {bool fetchInBackground = true,
       String? startDate,
@@ -69,7 +71,6 @@ class DailyEarningDetailProvider extends ChangeNotifier {
       params: _parms,
       successCallback: (response, message) async {
         if (!fetchInBackground) NetworkClient.getInstance.hideProgressDialog();
-        print('======WEEKLY REPORT RESPONCE ${response}');
         if (response != null) {
           weeklyEariningReportModel =
               WeeklyEariningReportModel.fromJson(response);
@@ -83,6 +84,7 @@ class DailyEarningDetailProvider extends ChangeNotifier {
     notifyListeners();
   }
 
+  //Weekly Detail Earning API
   Future<void> weeklyDetailEarningReport(BuildContext context,
       {bool fetchInBackground = true,
         int? page,
@@ -101,19 +103,44 @@ class DailyEarningDetailProvider extends ChangeNotifier {
       method: MethodType.Post,
       params: _parms,
       successCallback: (response, message) async {
-        print('DETAIL WEEKLY EARNING DATA RESPONSE===$response');
         if (!fetchInBackground) NetworkClient.getInstance.hideProgressDialog();
 
         if (response != null) {
           List<WeeklyDetailDataModel> arrList =
           weeklyDetailSalaryModelFromJson(jsonEncode(response));
-          print('Arrylist====${arrList[0].status}');
           if (page == 1) {
             weeklyDetailEarningList = arrList;
           } else {
             weeklyDetailEarningList.addAll(arrList);
           }
         }
+      },
+      failureCallback: (code, message) {
+        if (!fetchInBackground) NetworkClient.getInstance.hideProgressDialog();
+        View.showMessage(context, message);
+      },
+    );
+    notifyListeners();
+  }
+
+  // Salary Details Api
+
+  Future<void> salaryDetails(BuildContext context,
+      {bool fetchInBackground = true,}) async {
+
+    if (!fetchInBackground) NetworkClient.getInstance.showLoader(context);
+    await NetworkClient.getInstance.callApi(
+      context: context,
+      baseUrl: ApiConstants.apiUrl,
+      command: ApiConstants.salaryDetails,
+      headers: NetworkClient.getInstance.getAuthHeaders(),
+      method: MethodType.Post,
+      successCallback: (response, message) async {
+        if (!fetchInBackground) NetworkClient.getInstance.hideProgressDialog();
+        if (response != null) {
+          salaryDetailModel= salaryDetailModelFromJson(jsonEncode(response));
+        }
+
       },
       failureCallback: (code, message) {
         if (!fetchInBackground) NetworkClient.getInstance.hideProgressDialog();

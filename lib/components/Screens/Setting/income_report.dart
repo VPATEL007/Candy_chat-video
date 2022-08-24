@@ -166,6 +166,7 @@ class _IncomeReportState extends State<IncomeReport> {
       Provider.of<DailyEarningDetailProvider>(context, listen: false)
           .dailyEarningReport(context,
               dateTime: DateTime.now().toIso8601String().substring(0, 10));
+      Provider.of<DailyEarningDetailProvider>(context, listen: false).salaryDetails(context);
     });
     super.initState();
   }
@@ -734,7 +735,7 @@ class _IncomeReportState extends State<IncomeReport> {
                                       ),
                                       const Spacer(),
                                       Image.asset(icCoin, width: getSize(10)),
-                                      Text(' 400 = USD',
+                                      Text(' ${value.salaryDetailModel?.coinValue} = ${value.salaryDetailModel?.currencyValue} USD',
                                           style: appTheme?.black16Bold.copyWith(
                                               fontWeight: FontWeight.w700,
                                               color: ColorConstants.bgColor,

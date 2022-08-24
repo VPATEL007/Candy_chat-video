@@ -46,6 +46,7 @@ class ApiConstants {
   static const String resetNotification = "profile/reset-notification";
   static const String createChat = "chat-history";
   static const String dailyEarningReport = "profile/get-daily-influencer-earning-v2";
+  static const String salaryDetails = "profile/get-salary-details";
   static const String rechargeNotification = "notification/get-all";
   static const String resetRechargeNotification = "notification/reset-notification";
   static const String weeklyEarningReport = "profile/get-weekly-influencer-earning-v2";
