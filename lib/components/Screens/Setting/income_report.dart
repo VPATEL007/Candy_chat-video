@@ -166,7 +166,8 @@ class _IncomeReportState extends State<IncomeReport> {
       Provider.of<DailyEarningDetailProvider>(context, listen: false)
           .dailyEarningReport(context,
               dateTime: DateTime.now().toIso8601String().substring(0, 10));
-      Provider.of<DailyEarningDetailProvider>(context, listen: false).salaryDetails(context);
+      Provider.of<DailyEarningDetailProvider>(context, listen: false)
+          .salaryDetails(context);
     });
     super.initState();
   }
@@ -220,9 +221,7 @@ class _IncomeReportState extends State<IncomeReport> {
 
                           final DateFormat formatter2 = DateFormat('M');
                           month = formatter2.format(parsedDate);
-                        } else {
-                          print('Invalid');
-                        }
+                        } else {}
                         return finalList[index]
                                 .join()
                                 .substring(11, 13)
@@ -376,13 +375,12 @@ class _IncomeReportState extends State<IncomeReport> {
                                           .weeklyEarningReport(context,
                                               startDate: finalList[index].first,
                                               endDate: finalList[index].last);
-                                      // Provider.of<DailyEarningDetailProvider>(
-                                      //     context,
-                                      //     listen: false)
-                                      //     .weeklyDetailEarningReport(context,
-                                      //     page: 1,
-                                      //     startDate: finalList[index].first,
-                                      //     endDate: finalList[index].last);
+                                      Provider.of<DailyEarningDetailProvider>(
+                                              context,
+                                              listen: false)
+                                          .salaryDetails(context,
+                                              fromDate:
+                                                  '${finalList[index].first}');
                                     });
                                   });
                                 },
@@ -523,7 +521,8 @@ class _IncomeReportState extends State<IncomeReport> {
                                 fontSize: getFontSize(14)),
                           ),
                         ),
-                        getStepProgressIndicator(context),
+                        getStepProgressIndicator(
+                            context, value.salaryDetailModel?.status ?? ''),
                         InkWell(
                           onTap: () {
                             Navigator.push(context, MaterialPageRoute(
@@ -563,7 +562,8 @@ class _IncomeReportState extends State<IncomeReport> {
                                                           getFontSize(14)),
                                               children: [
                                             TextSpan(
-                                                text: '\t--\tUSD',
+                                                text:
+                                                    '\t--\t${value.salaryDetailModel?.totalIncome}',
                                                 style: appTheme?.black16Bold
                                                     .copyWith(
                                                   fontWeight: FontWeight.w700,
@@ -581,67 +581,6 @@ class _IncomeReportState extends State<IncomeReport> {
                                             color:
                                                 ColorConstants.grayBackGround,
                                             size: 12),
-                                      )
-                                    ],
-                                  ),
-                                ),
-                                Container(
-                                  height: 1,
-                                  width: MathUtilities.screenWidth(context),
-                                  color: ColorConstants.greyC4Color
-                                      .withOpacity(0.60),
-                                ),
-                                Padding(
-                                  padding: EdgeInsets.symmetric(
-                                      vertical: getSize(20)),
-                                  child: Row(
-                                    children: [
-                                      SizedBox(width: getSize(17)),
-                                      Text('Ranking bonus',
-                                          style: appTheme?.black16Bold.copyWith(
-                                              fontWeight: FontWeight.w500,
-                                              color: ColorConstants.bgColor,
-                                              fontSize: getFontSize(14))),
-                                      SizedBox(width: getSize(8)),
-                                      CircleAvatar(
-                                        minRadius: getSize(8),
-                                        maxRadius: getSize(8),
-                                        backgroundColor:
-                                            ColorConstants.calenderGreyColor,
-                                        child: Icon(Icons.question_mark_rounded,
-                                            color:
-                                                ColorConstants.grayBackGround,
-                                            size: 12),
-                                      ),
-                                      const Spacer(),
-                                      Container(
-                                        width: getSize(80),
-                                        child: DropdownButton(
-                                            underline: Container(
-                                              color: Colors.transparent,
-                                            ),
-                                            style: appTheme?.black16Bold
-                                                .copyWith(
-                                                    fontWeight: FontWeight.w700,
-                                                    color:
-                                                        ColorConstants.bgColor,
-                                                    fontSize: getFontSize(14)),
-                                            icon: Icon(
-                                                Icons.keyboard_arrow_down,
-                                                color: ColorConstants.red),
-                                            isDense: true,
-                                            value: '--USD',
-                                            items: [
-                                              DropdownMenuItem(
-                                                child: Text('--USD'),
-                                                value: '--USD',
-                                              ),
-                                              DropdownMenuItem(
-                                                child: Text('Pound'),
-                                                value: 'Pound',
-                                              )
-                                            ],
-                                            onChanged: (value) {}),
                                       )
                                     ],
                                   ),
@@ -675,7 +614,8 @@ class _IncomeReportState extends State<IncomeReport> {
                                             size: 12),
                                       ),
                                       const Spacer(),
-                                      Text('--USD',
+                                      Text(
+                                          '--${value.salaryDetailModel?.salary}',
                                           style: appTheme?.black16Bold.copyWith(
                                               fontWeight: FontWeight.w700,
                                               color: ColorConstants.bgColor,
@@ -735,7 +675,8 @@ class _IncomeReportState extends State<IncomeReport> {
                                       ),
                                       const Spacer(),
                                       Image.asset(icCoin, width: getSize(10)),
-                                      Text(' ${value.salaryDetailModel?.coinValue} = ${value.salaryDetailModel?.currencyValue} USD',
+                                      Text(
+                                          ' ${value.salaryDetailModel?.coinValue} = ${value.salaryDetailModel?.currecy.toUpperCase()}',
                                           style: appTheme?.black16Bold.copyWith(
                                               fontWeight: FontWeight.w700,
                                               color: ColorConstants.bgColor,
@@ -1062,7 +1003,7 @@ class _IncomeReportState extends State<IncomeReport> {
 }
 
 // Strp Progress Indicator
-getStepProgressIndicator(BuildContext context) {
+getStepProgressIndicator(BuildContext context, String type) {
   return Column(
     children: [
       Row(
@@ -1071,12 +1012,18 @@ getStepProgressIndicator(BuildContext context) {
           CircleAvatar(
             minRadius: getSize(13),
             maxRadius: getSize(13),
-            backgroundColor: ColorConstants.red,
-            child: CircleAvatar(
-              minRadius: getSize(7),
-              maxRadius: getSize(7),
-              backgroundColor: ColorConstants.colorPrimary,
-            ),
+            backgroundColor: (type.toUpperCase() == 'GENERATED' ||
+                    type.toUpperCase() == 'APPROVED')
+                ? ColorConstants.red
+                : ColorConstants.calenderGreyColor,
+            child: (type.toUpperCase() == 'GENERATED' ||
+                    type.toUpperCase() == 'APPROVED')
+                ? CircleAvatar(
+                    minRadius: getSize(7),
+                    maxRadius: getSize(7),
+                    backgroundColor: ColorConstants.colorPrimary,
+                  )
+                : const SizedBox(),
           ),
           Container(
             height: 1,
@@ -1086,7 +1033,18 @@ getStepProgressIndicator(BuildContext context) {
           CircleAvatar(
             minRadius: getSize(13),
             maxRadius: getSize(13),
-            backgroundColor: ColorConstants.calenderGreyColor,
+            backgroundColor: (type.toUpperCase() == 'APPROVED' ||
+                    type.toUpperCase() == 'PAID')
+                ? ColorConstants.red
+                : ColorConstants.calenderGreyColor,
+            child: (type.toUpperCase() == 'APPROVED' ||
+                    type.toUpperCase() == 'PAID')
+                ? CircleAvatar(
+                    minRadius: getSize(7),
+                    maxRadius: getSize(7),
+                    backgroundColor: ColorConstants.colorPrimary,
+                  )
+                : const SizedBox(),
           ),
           Container(
             height: 1,
@@ -1096,7 +1054,16 @@ getStepProgressIndicator(BuildContext context) {
           CircleAvatar(
             minRadius: getSize(13),
             maxRadius: getSize(13),
-            backgroundColor: ColorConstants.calenderGreyColor,
+            backgroundColor: type.toUpperCase() == 'PAID'
+                ? ColorConstants.red
+                : ColorConstants.calenderGreyColor,
+            child: type.toUpperCase() == 'PAID'
+                ? CircleAvatar(
+                    minRadius: getSize(7),
+                    maxRadius: getSize(7),
+                    backgroundColor: ColorConstants.colorPrimary,
+                  )
+                : const SizedBox(),
           ),
         ],
       ),
@@ -1105,7 +1072,7 @@ getStepProgressIndicator(BuildContext context) {
             horizontal: getSize(45), vertical: getSize(10)),
         child: Row(
           children: [
-            Text('Calculating',
+            Text('Generated',
                 style: appTheme!.black16Bold.copyWith(
                     color: ColorConstants.red,
                     fontWeight: FontWeight.w600,
@@ -1113,7 +1080,7 @@ getStepProgressIndicator(BuildContext context) {
             SizedBox(
               width: MathUtilities.screenWidth(context) / 5,
             ),
-            Text('Paying',
+            Text('Approved',
                 style: appTheme!.black16Bold.copyWith(
                     color: ColorConstants.calenderGreyColor,
                     fontWeight: FontWeight.w600,

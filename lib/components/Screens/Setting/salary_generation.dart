@@ -3,11 +3,8 @@ import 'package:lazy_loading_list/lazy_loading_list.dart';
 import 'package:provider/provider.dart';
 import 'package:video_chat/app/Helper/Themehelper.dart';
 import 'package:video_chat/app/constant/ColorConstant.dart';
-import 'package:video_chat/app/constant/ImageConstant.dart';
 import 'package:video_chat/app/utils/math_utils.dart';
-import 'package:video_chat/components/Model/Income/detail_earning_model.dart';
 import 'package:video_chat/components/Screens/Setting/income_report.dart';
-import 'package:video_chat/provider/detail_earning_provider.dart';
 import 'package:video_chat/provider/income_report_provider.dart';
 
 class SalaryGeneration extends StatefulWidget {

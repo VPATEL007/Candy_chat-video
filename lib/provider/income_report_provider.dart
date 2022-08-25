@@ -15,14 +15,13 @@ class DailyEarningDetailProvider extends ChangeNotifier {
   WeeklyEariningReportModel? weeklyEariningReportModel;
   SalaryDetailModel? salaryDetailModel;
 
-
   List<WeeklyDetailDataModel> _weeklyDetailEarningList = [];
 
-  List<WeeklyDetailDataModel> get weeklyDetailEarningList => this._weeklyDetailEarningList;
+  List<WeeklyDetailDataModel> get weeklyDetailEarningList =>
+      this._weeklyDetailEarningList;
 
   set weeklyDetailEarningList(List<WeeklyDetailDataModel> value) =>
       this._weeklyDetailEarningList = value;
-
 
   // Daily Earning Report Model
 
@@ -87,9 +86,9 @@ class DailyEarningDetailProvider extends ChangeNotifier {
   //Weekly Detail Earning API
   Future<void> weeklyDetailEarningReport(BuildContext context,
       {bool fetchInBackground = true,
-        int? page,
-        String? startDate,
-        String? endDate}) async {
+      int? page,
+      String? startDate,
+      String? endDate}) async {
     Map<String, dynamic> _parms = {
       "start_date": startDate,
       "end_date": endDate
@@ -107,7 +106,7 @@ class DailyEarningDetailProvider extends ChangeNotifier {
 
         if (response != null) {
           List<WeeklyDetailDataModel> arrList =
-          weeklyDetailSalaryModelFromJson(jsonEncode(response));
+              weeklyDetailSalaryModelFromJson(jsonEncode(response));
           if (page == 1) {
             weeklyDetailEarningList = arrList;
           } else {
@@ -126,8 +125,10 @@ class DailyEarningDetailProvider extends ChangeNotifier {
   // Salary Details Api
 
   Future<void> salaryDetails(BuildContext context,
-      {bool fetchInBackground = true,}) async {
-
+      {bool fetchInBackground = true, String? fromDate}) async {
+    Map<String, dynamic> _parms = {
+      "fromDate": fromDate,
+    };
     if (!fetchInBackground) NetworkClient.getInstance.showLoader(context);
     await NetworkClient.getInstance.callApi(
       context: context,
@@ -135,12 +136,12 @@ class DailyEarningDetailProvider extends ChangeNotifier {
       command: ApiConstants.salaryDetails,
       headers: NetworkClient.getInstance.getAuthHeaders(),
       method: MethodType.Post,
+      params: _parms,
       successCallback: (response, message) async {
         if (!fetchInBackground) NetworkClient.getInstance.hideProgressDialog();
         if (response != null) {
-          salaryDetailModel= salaryDetailModelFromJson(jsonEncode(response));
+          salaryDetailModel = salaryDetailModelFromJson(jsonEncode(response));
         }
-
       },
       failureCallback: (code, message) {
         if (!fetchInBackground) NetworkClient.getInstance.hideProgressDialog();
