@@ -5,6 +5,7 @@ import 'package:firebase_analytics/observer.dart';
 
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
+
 // import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:firebase_performance/firebase_performance.dart';
@@ -12,13 +13,16 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+
 // import 'package:in_app_purchase/in_app_purchase.dart';
 import 'package:kiwi/kiwi.dart';
 import 'package:provider/provider.dart';
+import 'package:video_chat/app/Helper/socket_helper.dart';
 import 'package:video_chat/app/app.export.dart';
 import 'package:video_chat/components/Model/Notification/NotificatonModel.dart';
 import 'package:video_chat/components/Model/User/UserModel.dart';
 import 'package:video_chat/components/Screens/Splash/Splash.dart';
+import 'package:video_chat/provider/album_provider.dart';
 
 import 'package:video_chat/provider/chat_provider.dart';
 import 'package:video_chat/provider/discover_provider.dart';
@@ -46,13 +50,14 @@ import 'app/utils/navigator.dart';
 import 'app/utils/pref_utils.dart';
 import 'app/utils/route_observer.dart';
 import 'components/Screens/UserProfile/UserProfile.dart';
+import 'utils/local_notifications.dart';
 // import 'package:in_app_purchase_android/in_app_purchase_android.dart';
 
 late KiwiContainer app;
 FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
     FlutterLocalNotificationsPlugin();
 FirebasePerformance _performance = FirebasePerformance.instance;
-FirebaseAnalytics analytics = FirebaseAnalytics.instance;
+FirebaseAnalytics analytics = FirebaseAnalytics();
 FirebaseAnalyticsObserver observer =
     FirebaseAnalyticsObserver(analytics: analytics);
 
@@ -94,10 +99,10 @@ Future<void> setupFCM() async {
   final FirebaseMessaging _firebaseMessaging = FirebaseMessaging.instance;
 
   FirebaseMessaging.onMessage.listen((RemoteMessage event) {
-    showNotification(event.notification);
+    LocalNotification().showNotification(event.notification);
   });
   FirebaseMessaging.onMessageOpenedApp.listen((message) {
-    openNotification(message);
+    LocalNotification().openNotification(message);
     print('Message clicked!');
   });
 
@@ -117,17 +122,30 @@ Future<void> setupFCM() async {
     });
   }
 
-  configLocalNotification();
+  LocalNotification().configLocalNotification();
 }
 
-void configLocalNotification() {
-  var initializationSettingsAndroid =
-      new AndroidInitializationSettings("@mipmap/launcher_icon");
-  var initializationSettingsIOS = new IOSInitializationSettings();
-  var initializationSettings = new InitializationSettings(
-      android: initializationSettingsAndroid, iOS: initializationSettingsIOS);
-  flutterLocalNotificationsPlugin.initialize(initializationSettings);
+listenNotifications() async {
+  FirebaseMessaging.onMessage.listen((RemoteMessage event) {
+    LocalNotification().showNotification(event.notification);
+  });
+
+  // FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
+
+  FirebaseMessaging.onMessageOpenedApp.listen((message) {
+    LocalNotification().openNotification(message);
+    print('Message clicked!');
+  });
 }
+
+// void configLocalNotification() {
+//   var initializationSettingsAndroid =
+//       new AndroidInitializationSettings("@mipmap/launcher_icon");
+//   var initializationSettingsIOS = new IOSInitializationSettings();
+//   var initializationSettings = new InitializationSettings(
+//       android: initializationSettingsAndroid, iOS: initializationSettingsIOS);
+//   flutterLocalNotificationsPlugin.initialize(initializationSettings);
+// }
 
 void showNotification(RemoteNotification? message) async {
   var androidPlatformChannelSpecifics = new AndroidNotificationDetails(
@@ -168,7 +186,7 @@ class Base extends StatefulWidget {
   _BaseState createState() => _BaseState();
 }
 
-class _BaseState extends State<Base> {
+class _BaseState extends State<Base> with WidgetsBindingObserver {
   late ThemeData themeData;
 
   @override
@@ -181,6 +199,27 @@ class _BaseState extends State<Base> {
         themeData = AppTheme.of(context).theme;
       }),
     );
+    WidgetsBinding.instance.addObserver(this);
+  }
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    switch (state) {
+      case AppLifecycleState.resumed:
+        SocketHealper.shared.connect();
+        print("app in resumed");
+        break;
+      case AppLifecycleState.inactive:
+        print("app in inactive");
+        break;
+      case AppLifecycleState.paused:
+        print("app in paused");
+        SocketHealper.shared.disconnect();
+        break;
+      case AppLifecycleState.detached:
+        print("app in detached");
+        break;
+    }
   }
 
   @override
@@ -230,6 +269,9 @@ class _BaseState extends State<Base> {
         ),
         ChangeNotifierProvider.value(
           value: WithDrawProvider(),
+        ),
+        ChangeNotifierProvider.value(
+          value: AlbumProvider(),
         ),
       ],
       child: MaterialApp(
