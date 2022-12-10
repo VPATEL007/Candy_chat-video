@@ -88,7 +88,6 @@ Future<void> setupFCM() async {
       .resolve<PrefUtils>()
       .getString(app.resolve<PrefUtils>().keyIsFCMToken);
   if (token.length == 0) {
-    print("sdfsdf");
     _firebaseMessaging.getToken().then((token) {
       if (token != null) {
         app

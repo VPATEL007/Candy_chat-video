@@ -184,7 +184,6 @@ class AppTheme {
       cardColor: primaryColor,
       canvasColor: primaryColor,
       toggleableActiveColor: accentColor,
-      textSelectionHandleColor: accentColor,
     );
   }
 
